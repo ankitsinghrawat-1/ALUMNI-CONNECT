@@ -1,0 +1,33 @@
+{
+  "name": "alumni-connect",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ankitsinghrawat-1/ALUMNI-CONNECT.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ankitsinghrawat-1/ALUMNI-CONNECT/issues"
+  },
+  "homepage": "https://github.com/ankitsinghrawat-1/ALUMNI-CONNECT#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "body-parser": "^2.2.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "http": "^0.0.1-security",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.1",
+    "path": "^0.12.7",
+    "socket.io": "^4.8.1"
+  }
+}
