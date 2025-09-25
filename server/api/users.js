@@ -254,5 +254,70 @@ module.exports = (pool, upload) => {
         res.json(conversations);
     }));
 
+    // New Dashboard Stats Endpoint
+    router.get('/dashboard-stats', asyncHandler(async (req, res) => {
+        const userId = req.user.userId;
+
+        // Fetch user for profile completion
+        const [userRows] = await pool.query('SELECT * FROM users WHERE user_id = ?', [userId]);
+        if (userRows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const user = userRows[0];
+
+        // Calculate profile completion
+        const profileFields = ['full_name', 'bio', 'current_company', 'job_title', 'city', 'linkedin', 'university', 'major', 'graduation_year', 'degree'];
+        let completedFields = 0;
+        profileFields.forEach(field => {
+            if (user[field]) {
+                completedFields++;
+            }
+        });
+        const profileCompletion = Math.round((completedFields / profileFields.length) * 100);
+
+        // Fetch other stats
+        const [eventsRsvpd] = await pool.query('SELECT COUNT(*) as count FROM event_rsvps WHERE user_id = ?', [userId]);
+        const [blogsPosted] = await pool.query('SELECT COUNT(*) as count FROM blogs WHERE author_id = ?', [userId]);
+
+        res.json({
+            profileCompletion,
+            eventsRsvpd: eventsRsvpd[0].count,
+            blogsPosted: blogsPosted[0].count
+        });
+    }));
+
+    // New Dashboard Recommendations Endpoint
+    router.get('/dashboard-recommendations', asyncHandler(async (req, res) => {
+        const [featuredMentor] = await pool.query(`
+            SELECT u.user_id, u.full_name, u.job_title, u.profile_pic_url, m.expertise_areas
+            FROM mentors m JOIN users u ON m.user_id = u.user_id 
+            WHERE m.is_available = TRUE ORDER BY RAND() LIMIT 1
+        `);
+        const [recommendedEvent] = await pool.query('SELECT * FROM events WHERE date >= CURDATE() ORDER BY date ASC LIMIT 1');
+
+        res.json({
+            featuredMentor: featuredMentor.length > 0 ? featuredMentor[0] : null,
+            recommendedEvent: recommendedEvent.length > 0 ? recommendedEvent[0] : null
+        });
+    }));
+    // New Dashboard User Activity Endpoint
+router.get('/dashboard-activity', asyncHandler(async (req, res) => {
+    const userId = req.user.userId;
+
+    const [blogs] = await pool.query(`
+        SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count 
+        FROM blogs WHERE author_id = ? AND created_at >= CURDATE() - INTERVAL 6 MONTH
+        GROUP BY month ORDER BY month ASC
+    `, [userId]);
+
+    const [rsvps] = await pool.query(`
+        SELECT DATE_FORMAT(rsvp_date, '%Y-%m') as month, COUNT(*) as count 
+        FROM event_rsvps WHERE user_id = ? AND rsvp_date >= CURDATE() - INTERVAL 6 MONTH
+        GROUP BY month ORDER BY month ASC
+    `, [userId]);
+
+    res.json({ blogs, rsvps });
+}));
+
     return router;
 };

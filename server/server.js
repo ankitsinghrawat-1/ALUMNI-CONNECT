@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
+        origin: "http://localhost:3000", // Adjust this for production
         methods: ["GET", "POST"]
     }
 });
@@ -28,6 +28,7 @@ const PORT = process.env.PORT || 3000;
 // --- MIDDLEWARE SETUP ---
 const corsOptions = {
     origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin || origin.startsWith('http://localhost')) {
             callback(null, true);
         } else {
@@ -75,7 +76,6 @@ const storage = multer.diskStorage({
         }
     },
     filename: (req, file, cb) => {
-        // Use user ID from token if available, otherwise fallback
         const userIdentifier = req.user ? req.user.userId : 'user';
         cb(null, `${file.fieldname}-${userIdentifier}-${Date.now()}${path.extname(file.originalname)}`);
     }
@@ -110,6 +110,7 @@ const mentorRoutes = require('./api/mentors')(pool);
 const messageRoutes = require('./api/messages')(pool, upload);
 const notificationRoutes = require('./api/notifications')(pool);
 const userRoutes = require('./api/users')(pool, upload);
+const groupRoutes = require('./api/groups')(pool); // ADD THIS LINE
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/blogs', blogRoutes);
@@ -117,18 +118,15 @@ app.use('/api/campaigns', campaignRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/jobs', jobRoutes);
 app.use('/api/mentors', mentorRoutes);
-app.use('/api/messages', verifyToken, messageRoutes); // Protect all message routes
+app.use('/api/messages', verifyToken, messageRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/groups', groupRoutes);
 
 
 // --- CENTRAL ERROR HANDLING MIDDLEWARE ---
-// This middleware should be placed AFTER all your routes.
-// It will catch any errors that occur in the routes above.
 app.use((err, req, res, next) => {
-    console.error(err.stack); // Log the full error stack for debugging
-    
-    // Send a generic, clean error message to the client
+    console.error(err.stack);
     res.status(500).json({ message: 'An unexpected error occurred on the server.' });
 });
 

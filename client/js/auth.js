@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Check for the token in localStorage now
     const token = localStorage.getItem('alumniConnectToken');
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
     const userRole = localStorage.getItem('userRole');
@@ -15,10 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navItems = document.createElement('ul');
     navItems.className = 'nav-links';
 
-    if (token && loggedInUserEmail) { // Check for token to confirm login
+    if (token && loggedInUserEmail) {
         let profilePicUrl = '';
         let unreadCount = 0;
         let userName = 'Alumni';
+        let userId = null;
 
         // --- Nav Bar HTML Structure ---
         navItems.innerHTML = `
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <li><a href="directory.html">Directory</a></li>
                     <li><a href="mentors.html">Mentors</a></li>
                     <li><a href="events.html">Events</a></li>
+                    <li><a href="groups.html">Groups</a></li>
                 </ul>
             </li>
             <li class="nav-dropdown">
@@ -67,30 +68,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // --- Fetch initial data and set up real-time listeners ---
         try {
-            const [profileRes, notificationsRes] = await Promise.all([
-                fetch(`http://localhost:3000/api/users/profile/${loggedInUserEmail}`),
-                fetch(`http://localhost:3000/api/notifications?email=${encodeURIComponent(loggedInUserEmail)}`)
-            ]);
+            // Use the protected route to get the logged-in user's own profile data
+            const loggedInUser = await window.api.get('/users/profile');
+            
+            userId = loggedInUser.user_id;
+            userName = loggedInUser.full_name;
+            localStorage.setItem('loggedInUserName', userName);
+            localStorage.setItem('userId', userId); // Store userId for later use
 
-            let loggedInUser = null;
-            if (profileRes.ok) {
-                loggedInUser = await profileRes.json();
-                userName = loggedInUser.full_name;
-                localStorage.setItem('loggedInUserName', userName); // Use localStorage
-                profilePicUrl = loggedInUser.profile_pic_url 
-                    ? `http://localhost:3000/${loggedInUser.profile_pic_url}` 
-                    : createInitialsAvatar(userName);
-            } else {
-                 profilePicUrl = createInitialsAvatar(userName);
-            }
+            profilePicUrl = loggedInUser.profile_pic_url 
+                ? `http://localhost:3000/${loggedInUser.profile_pic_url}` 
+                : createInitialsAvatar(userName);
 
-            if (notificationsRes.ok) {
-                const notifications = await notificationsRes.json();
-                unreadCount = notifications.filter(n => !n.is_read).length;
-                if (unreadCount > 0) {
-                    const bell = navItems.querySelector('#notification-bell');
-                    bell.innerHTML += `<span class="notification-badge">${unreadCount}</span>`;
-                }
+            const notifications = await window.api.get('/notifications');
+            unreadCount = notifications.filter(n => !n.is_read).length;
+            if (unreadCount > 0) {
+                const bell = navItems.querySelector('#notification-bell');
+                bell.innerHTML += `<span class="notification-badge">${unreadCount}</span>`;
             }
 
             const navImg = navItems.querySelector('.nav-profile-pic');
@@ -107,16 +101,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             socket.on('connect', () => {
                 console.log('Connected to socket for notifications.');
-                if (loggedInUser) {
-                    socket.emit('addUser', loggedInUser.user_id);
+                if (userId) {
+                    socket.emit('addUser', userId);
                 }
             });
 
             socket.on('getNotification', ({ senderName, message }) => {
-                // Show a toast
                 showToast(`New message from ${senderName}: "${message.substring(0, 30)}..."`, 'info');
                 
-                // Update the message icon with a badge
                 const messagesLink = document.getElementById('messages-link');
                 let badge = messagesLink.querySelector('.notification-badge');
                 if (!badge) {
@@ -154,7 +146,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         messagesLink.addEventListener('click', () => {
              const badge = messagesLink.querySelector('.notification-badge');
              if (badge) {
-                 badge.style.display = 'none'; // Hide badge on click
+                 badge.style.display = 'none';
              }
         });
     }
@@ -163,12 +155,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (notificationBell) {
         notificationBell.addEventListener('click', async (e) => {
             try {
-                // We will need to add the auth token here later
-                await fetch('http://localhost:3000/api/notifications/mark-read', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: loggedInUserEmail })
-                });
+                // The api wrapper will automatically add the token
+                await window.api.post('/notifications/mark-read', {});
                 const badge = notificationBell.querySelector('.notification-badge');
                 if (badge) {
                     badge.style.display = 'none';
@@ -204,12 +192,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const logoutBtn = document.getElementById('logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-            // Clear localStorage on logout
             localStorage.removeItem('alumniConnectToken');
             localStorage.removeItem('loggedInUserEmail');
             localStorage.removeItem('userRole');
             localStorage.removeItem('loggedInUserName');
-            await fetch('http://localhost:3000/api/users/logout', { method: 'POST' });
+            localStorage.removeItem('userId');
+            // No need to await fetch for logout, just redirect
             window.location.href = 'index.html';
         });
     }
@@ -245,8 +233,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const loggedInHeader = document.getElementById('loggedIn-header');
         const loggedOutHeader = document.getElementById('loggedOut-header');
         if (loggedInHeader && loggedOutHeader) {
-            loggedInHeader.style.display = token ? 'block' : 'none'; // Check for token
-            loggedOutHeader.style.display = token ? 'none' : 'block'; // Check for token
+            loggedInHeader.style.display = token ? 'block' : 'none';
+            loggedOutHeader.style.display = token ? 'none' : 'block';
         }
     }
 });

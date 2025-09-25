@@ -2,12 +2,12 @@
 
 /*Global & Variables*/
 :root {
-    --primary-color: #1e3a5f;      /* Deep Navy */
-    --primary-dark-color: #152945; /* Darker Navy for hover states */
+    --primary-color: #4a90e2;      /* A more vibrant blue */
+    --primary-dark-color: #357ABD; /* Darker blue for hover states */
     --accent-color: #f5a623;      /* Vibrant Goldenrod */
     --accent-dark-color: #d18d1f;  /* Darker Goldenrod for hover */
     
-    --background-color: #f9fafb;   /* Soft, off-white background */
+    --background-color: #f0f2f5;   /* A softer, modern light gray */
     --surface-color: #ffffff;      /* Pure white for cards and modals */
     
     --text-color: #333333;
@@ -172,7 +172,7 @@ h1, h2, h3, h4, h5, h6 {
 .input-group textarea:focus {
     border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 .form-message {
@@ -274,7 +274,7 @@ main {
 
 /* Home Page */
 .hero-section {
-    background: linear-gradient(rgba(30, 58, 95, 0.8), rgba(30, 58, 95, 0.8)), url('https://via.placeholder.com/1920x1080?text=Alumni+Network') no-repeat center center/cover;
+    background: linear-gradient(rgba(74, 144, 226, 0.8), rgba(74, 144, 226, 0.8)), url('https://via.placeholder.com/1920x1080?text=Alumni+Network') no-repeat center center/cover;
     background-attachment: fixed;
     color: #fff;
     text-align: center;
@@ -403,7 +403,7 @@ main {
     color: var(--accent-color);
 }
 
-/* --- onboarding.html, dashboard.html, & profile.html specific styling --- */
+/* --- onboarding.html, & profile.html specific styling --- */
 
 .form-container.wide {
     max-width: 900px;
@@ -434,66 +434,109 @@ main {
     min-width: 250px;
 }
 
+/* --- New Dashboard Styles --- */
 .dashboard-main {
-    padding: 3rem 0;
+    padding: 2rem 0;
 }
 
 .dashboard-container {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
+    max-width: 1400px;
 }
 
-@media (min-width: 768px) {
-    .dashboard-container {
-        grid-template-columns: 1fr 1fr;
-    }
-    .dashboard-profile-section {
-        grid-column: 1 / 3;
-    }
-}
-
-.dashboard-section {
-    padding: 2rem;
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding: 1.5rem 2rem;
     background: var(--surface-color);
     border-radius: var(--border-radius-large);
     box-shadow: var(--box-shadow-subtle);
 }
 
-.dashboard-profile-section {
+.dashboard-header .profile-header-info {
     display: flex;
-    flex-direction: column;
     align-items: center;
-    text-align: center;
+    gap: 1.5rem;
+}
+
+.dashboard-header h1 {
+    font-size: 2rem;
+    margin: 0;
+}
+
+.dashboard-header p {
+    margin: 0;
+    color: var(--subtle-text-color);
 }
 
 .dashboard-profile-pic {
-    width: 150px;
-    height: 150px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid var(--primary-color);
-    margin-bottom: 1.5rem;
 }
 
-.dashboard-list {
-    list-style: none;
-    padding: 0;
+.weather-widget {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--subtle-text-color);
+    font-size: 1rem;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+}
+
+@media (min-width: 992px) {
+    .dashboard-grid {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+
+.dashboard-main-content, .dashboard-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Calendar Widget */
+.calendar-view {
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    padding: 1rem;
+}
+
+/* Quick Links Widget */
+.quick-links {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.dashboard-list li {
-    background: var(--background-color);
-    padding: 1rem 1.5rem;
-    border-radius: var(--border-radius-small);
-    border: 1px solid var(--border-color);
+.quick-links a {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    font-size: 0.95rem;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-medium);
+    text-decoration: none;
     color: var(--text-color);
+    font-weight: 500;
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
+}
+
+.quick-links a:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    transform: translateX(5px);
 }
 
 .profile-container {
@@ -618,7 +661,7 @@ main {
 .search-bar input:focus {
     border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 .grid-list {
@@ -892,9 +935,9 @@ main {
     height: 100%;
     background: linear-gradient(
         45deg, 
-        rgba(30, 58, 95, 0.6) 0%, 
-        rgba(30, 58, 95, 0.8) 50%, 
-        rgba(30, 58, 95, 0.6) 100%
+        rgba(74, 144, 226, 0.6) 0%, 
+        rgba(74, 144, 226, 0.8) 50%, 
+        rgba(74, 144, 226, 0.6) 100%
     );
     animation: gradientShift 20s ease-in-out infinite;
     z-index: 1;
@@ -1100,7 +1143,7 @@ a:hover::after {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(30, 58, 95, 0.8);
+    background-color: rgba(74, 144, 226, 0.8);
     backdrop-filter: blur(5px);
     display: flex;
     flex-direction: column;
@@ -2307,7 +2350,7 @@ html.dark-mode .received {
 #user-search-input:focus {
     border-color: var(--primary-color);
     outline: none;
-    box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
 .search-results-list {
@@ -2669,4 +2712,121 @@ body main {
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
+}
+
+/* --- Profile Completion Widget --- */
+#profile-completion-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.progress-bar-container {
+    width: 100%;
+    height: 20px;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+}
+
+#profile-progress-bar {
+    height: 100%;
+    background-color: var(--success-color);
+    transition: width 0.5s ease-in-out;
+}
+
+#profile-progress-text {
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* --- Recommendations Widget --- */
+#recommendations-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.recommendation-item {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.recommendation-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.recommendation-item h5 {
+    font-size: 1rem;
+    color: var(--subtle-text-color);
+    margin-bottom: 1rem;
+}
+
+.mentor-recommendation {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.mentor-recommendation img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+/* Group Details Page */
+.group-details-card .group-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.group-details-card .group-cover-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: var(--border-radius-medium);
+    margin-bottom: 1.5rem;
+}
+
+.group-details-card h1 {
+    margin-bottom: 0.5rem;
+}
+
+.group-actions {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.members-section h3 {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.members-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1.5rem;
+}
+
+.member-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.75rem;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-medium);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background-color 0.2s ease;
+}
+
+.member-item:hover {
+    background-color: #eef2f5;
+}
+
+.alumnus-pfp-round.small {
+    width: 40px;
+    height: 40px;
 }

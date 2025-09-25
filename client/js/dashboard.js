@@ -2,106 +2,141 @@ document.addEventListener('DOMContentLoaded', async () => {
     const userEmail = localStorage.getItem('loggedInUserEmail');
     const userRole = localStorage.getItem('userRole');
 
+    // --- This is the only check we need ---
     if (!userEmail) {
         window.location.href = 'login.html';
         return;
     }
-
-    if (userRole === 'admin') {
-        window.location.href = 'admin.html';
-        return;
+    
+    // Personalized Greeting
+    const greetingElement = document.getElementById('dashboard-greeting');
+    const hour = new Date().getHours();
+    let greeting = '';
+    if (hour < 12) {
+        greeting = 'Good Morning';
+    } else if (hour < 18) {
+        greeting = 'Good Afternoon';
+    } else {
+        greeting = 'Good Evening';
     }
+    greetingElement.textContent = `${greeting}, ${localStorage.getItem('loggedInUserName') || 'Alumni'}!`;
 
-    const fetchUserProfile = async () => {
+    // Weather Widget
+    const weatherWidget = document.getElementById('weather-widget');
+    weatherWidget.innerHTML = `<i class="fas fa-sun"></i> 34°C, Sunny in New Delhi`;
+
+    // Fetch and render dashboard data
+    const fetchDashboardData = async () => {
         try {
-            // This is a public route, so it doesn't need the token
-            const user = await window.api.get(`/users/profile/${userEmail}`);
-            
-            document.getElementById('profile-name').textContent = user.full_name;
-            document.getElementById('profile-info').textContent = `${user.job_title || 'N/A'} at ${user.current_company || 'N/A'}`;
-            
-            const badgeContainer = document.getElementById('dashboard-verified-badge');
-            if (user.verification_status === 'verified') {
-                badgeContainer.innerHTML = '<span class="verified-badge-sm" title="Verified"><i class="fas fa-check-circle"></i></span>';
-            }
+            const [stats, recommendations, activity] = await Promise.all([
+                window.api.get('/users/dashboard-stats'),
+                window.api.get('/users/dashboard-recommendations'),
+                window.api.get('/users/dashboard-activity')
+            ]);
 
+            // Profile Picture
+            const userProfile = await window.api.get(`/users/profile/${userEmail}`);
             const profilePic = document.getElementById('profile-pic');
-            profilePic.src = user.profile_pic_url 
-                ? `http://localhost:3000/${user.profile_pic_url}` 
-                : createInitialsAvatar(user.full_name);
+            profilePic.src = userProfile.profile_pic_url 
+                ? `http://localhost:3000/${userProfile.profile_pic_url}` 
+                : createInitialsAvatar(userProfile.full_name);
 
-            profilePic.onerror = () => {
-                profilePic.onerror = null;
-                profilePic.src = createInitialsAvatar(user.full_name);
-            };
+            // Profile Completion
+            const progressBar = document.getElementById('profile-progress-bar');
+            const progressText = document.getElementById('profile-progress-text');
+            progressBar.style.width = `${stats.profileCompletion}%`;
+            progressText.textContent = `${stats.profileCompletion}% Complete`;
 
-        } catch (error) {
-            console.error('Error fetching user profile:', error);
-        }
-    };
-
-    const fetchRecentEvents = async () => {
-        try {
-            const events = await window.api.get('/events/recent');
-            const eventsList = document.getElementById('recent-events-list');
-            eventsList.innerHTML = '';
-            if (events.length > 0) {
-                events.forEach(event => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${event.title}</strong> - ${event.location} <br><small>${new Date(event.date).toLocaleDateString()}</small>`;
-                    eventsList.appendChild(li);
-                });
-            } else {
-                eventsList.innerHTML = '<li>No recent events to display.</li>';
+            // Recommendations
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            recommendationsContainer.innerHTML = '';
+            
+            if (recommendations.featuredMentor) {
+                const mentor = recommendations.featuredMentor;
+                recommendationsContainer.innerHTML += `
+                    <div class="recommendation-item">
+                        <h5>Mentor Spotlight</h5>
+                        <div class="mentor-recommendation">
+                            <img src="${mentor.profile_pic_url ? `http://localhost:3000/${mentor.profile_pic_url}` : createInitialsAvatar(mentor.full_name)}" alt="${mentor.full_name}">
+                            <div>
+                                <strong>${sanitizeHTML(mentor.full_name)}</strong>
+                                <p>${sanitizeHTML(mentor.job_title)}</p>
+                            </div>
+                        </div>
+                        <a href="mentors.html" class="btn btn-secondary btn-sm">Connect</a>
+                    </div>
+                `;
             }
-        } catch (error) {
-            console.error('Error fetching events:', error);
-        }
-    };
-
-    const fetchRecentJobs = async () => {
-        try {
-            const jobs = await window.api.get('/jobs/recent');
-            const jobsList = document.getElementById('recent-jobs-list');
-            jobsList.innerHTML = '';
-            if (jobs.length > 0) {
-                jobs.forEach(job => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${job.title}</strong> at ${job.company} <br><small>${job.location}</small>`;
-                    jobsList.appendChild(li);
-                });
-            } else {
-                jobsList.innerHTML = '<li>No recent job postings to display.</li>';
+            if (recommendations.recommendedEvent) {
+                const event = recommendations.recommendedEvent;
+                recommendationsContainer.innerHTML += `
+                    <div class="recommendation-item">
+                        <h5>Upcoming Event</h5>
+                        <strong>${sanitizeHTML(event.title)}</strong>
+                        <p>${new Date(event.date).toLocaleDateString()}</p>
+                        <a href="event-details.html?id=${event.event_id}" class="btn btn-secondary btn-sm">View Details</a>
+                    </div>
+                `;
             }
+
+            // User Activity Chart
+            renderActivityChart(activity);
+
         } catch (error) {
-            console.error('Error fetching jobs:', error);
+            console.error('Error fetching dashboard data:', error);
         }
     };
 
-    const fetchMyRsvps = async () => {
-        const myEventsList = document.getElementById('my-events-list');
-        try {
-            const rsvpEventIds = await window.api.get('/events/user/rsvps');
+    const renderActivityChart = (activityData) => {
+        const ctx = document.getElementById('userActivityChart').getContext('2d');
+        
+        const labels = [];
+        for (let i = 5; i >= 0; i--) {
+            const d = new Date();
+            d.setMonth(d.getMonth() - i);
+            labels.push(d.toLocaleString('default', { month: 'short' }));
+        }
 
-            if (rsvpEventIds.length > 0) {
-                const events = await window.api.post('/events/by-ids', { event_ids: rsvpEventIds });
-                myEventsList.innerHTML = '';
-                events.forEach(event => {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<strong>${event.title}</strong> - ${event.location} <br><small>${event.date}</small>`;
-                    myEventsList.appendChild(li);
-                });
-            } else {
-                myEventsList.innerHTML = '<li>You have not responded to any upcoming events yet.</li>';
+        const blogCounts = new Array(6).fill(0);
+        const rsvpCounts = new Array(6).fill(0);
+
+        activityData.blogs.forEach(item => {
+            const monthIndex = (new Date(item.month + '-01').getMonth() - new Date().getMonth() + 5 + 12) % 12;
+            blogCounts[monthIndex] = item.count;
+        });
+
+        activityData.rsvps.forEach(item => {
+            const monthIndex = (new Date(item.month + '-01').getMonth() - new Date().getMonth() + 5 + 12) % 12;
+            rsvpCounts[monthIndex] = item.count;
+        });
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Blogs Posted',
+                    data: blogCounts,
+                    backgroundColor: 'rgba(74, 144, 226, 0.7)',
+                    borderColor: 'rgba(74, 144, 226, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Events RSVP\'d',
+                    data: rsvpCounts,
+                    backgroundColor: 'rgba(245, 166, 35, 0.7)',
+                    borderColor: 'rgba(245, 166, 35, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
             }
-        } catch (error) {
-            console.error('Error fetching your RSVP\'d events:', error);
-            myEventsList.innerHTML = '<li>Could not load your events.</li>';
-        }
+        });
     };
-
-    fetchUserProfile();
-    fetchRecentEvents();
-    fetchRecentJobs();
-    fetchMyRsvps();
+    
+    fetchDashboardData();
 });

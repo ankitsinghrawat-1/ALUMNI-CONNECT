@@ -16,63 +16,89 @@
     </script>
 </head>
 <body>
-    
+
     <header class="main-header">
         <nav class="main-nav container">
             <a href="index.html" class="logo">AlumniConnect</a>
             <ul id="nav-links" class="nav-links">
-                </ul>
+            </ul>
         </nav>
     </header>
 
     <main class="dashboard-main">
         <div class="dashboard-container">
-            <section class="dashboard-profile-section">
-                <img id="profile-pic" class="dashboard-profile-pic" src="https://via.placeholder.com/150" alt="Profile Picture">
-                <div class="dashboard-name-container">
-                    <h2 id="profile-name"></h2>
-                    <span id="dashboard-verified-badge"></span>
+            <div class="dashboard-header">
+                <div class="profile-header-info">
+                    <img id="profile-pic" class="dashboard-profile-pic" src="https://via.placeholder.com/150" alt="Profile Picture">
+                    <div>
+                        <h1 id="dashboard-greeting"></h1>
+                        <p>Welcome back to your Alumni Hub.</p>
+                    </div>
                 </div>
-                <p id="profile-info"></p>
-                <a href="profile.html" class="btn btn-secondary">Edit Profile</a>
-            </section>
-            
-            <section class="dashboard-section">
-                <h3>Recent Events</h3>
-                <ul id="recent-events-list" class="dashboard-list">
-                    </ul>
-                <a href="events.html" class="view-all-link">View All Events &rarr;</a>
-            </section>
-            
-            <section class="dashboard-section">
-                <h3>Recent Job Postings</h3>
-                <ul id="recent-jobs-list" class="dashboard-list">
-                    </ul>
-                <a href="jobs.html" class="view-all-link">View All Jobs &rarr;</a>
-            </section>
-            
-            <section class="dashboard-section">
-                <h3>My Upcoming Events</h3>
-                <ul id="my-events-list" class="dashboard-list">
-                    </ul>
-                <a href="events.html" class="view-all-link">Discover More Events &rarr;</a>
-            </section>
+                <div id="weather-widget" class="weather-widget"></div>
+            </div>
 
-            <section class="dashboard-section card">
-                <h3>My Content</h3>
-                <p>Manage your contributions to the community.</p>
-                <a href="my-blogs.html" class="btn btn-primary"><i class="fas fa-feather-alt"></i> Manage My Blogs</a>
-            </section>
-            
+            <div class="dashboard-grid">
+                <div class="dashboard-main-content">
+                    <section class="dashboard-section card">
+                        <h3>Your Week at a Glance</h3>
+                        <div id="calendar-view" class="calendar-view">
+                            </div>
+                    </section>
+
+                    <section class="dashboard-section card">
+                        <h3>Your Activity</h3>
+                        <div class="chart-container">
+                            <canvas id="userActivityChart"></canvas>
+                        </div>
+                    </section>
+                </div>
+
+                <div class="dashboard-sidebar">
+                    <section id="profile-completion-section" class="dashboard-section card">
+                        <h3>Your Profile</h3>
+                        <p>A complete profile helps you connect with opportunities.</p>
+                        <div class="progress-bar-container">
+                            <div id="profile-progress-bar" class="progress-bar-fill"></div>
+                        </div>
+                        <span id="profile-progress-text"></span>
+                        <a href="profile.html" class="btn btn-secondary btn-sm">Update Profile</a>
+                    </section>
+                    
+                    <section class="dashboard-section card">
+                        <h3>For You</h3>
+                        <div id="recommendations-container">
+                            </div>
+                    </section>
+
+                    <section class="dashboard-section card">
+                        <h3>Quick Links</h3>
+                        <div class="quick-links">
+                            <a href="directory.html"><i class="fas fa-search"></i> Find Alumni</a>
+                            <a href="jobs.html"><i class="fas fa-briefcase"></i> Browse Jobs</a>
+                            <a href="events.html"><i class="fas fa-calendar-check"></i> View Events</a>
+                            <a href="my-blogs.html"><i class="fas fa-feather-alt"></i> My Blogs</a>
+                        </div>
+                    </section>
+
+                    <section class="dashboard-section card">
+                        <h3>Recent Announcements</h3>
+                        <ul id="announcements-list" class="dashboard-list">
+                            <li>No new announcements.</li>
+                        </ul>
+                    </section>
+                </div>
+            </div>
         </div>
     </main>
-    
+
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
         </div>
     </footer>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
