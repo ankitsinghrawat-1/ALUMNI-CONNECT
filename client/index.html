@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Connect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links">
+                </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="loggedIn-header" class="hero-section">
+            <div class="hero-content">
+                <h1>Welcome Back, Alumni!</h1>
+                <p>Explore your personalized dashboard, connect with fellow graduates, and discover new opportunities.</p>
+                <a href="dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+            </div>
+        </section>
+
+        <section id="loggedOut-header" class="hero-section">
+            <div class="hero-content">
+                <h1>Connecting Our Community, Together.</h1>
+                <p>Join the largest network of our university's alumni. Find old friends, build your career, and give back.</p>
+                <a href="signup.html" class="btn btn-primary">Join Our Network</a>
+            </div>
+        </section>
+
+        <section class="features-section">
+            <div class="feature-card">
+                <i class="fas fa-user-friends"></i>
+                <h3>Alumni Directory</h3>
+                <p>Reconnect with old classmates and find alumni in your industry.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-briefcase"></i>
+                <h3>Career Opportunities</h3>
+                <p>Discover job postings and career advice from the alumni community.</p>
+            </div>
+            <div class="feature-card">
+                <i class="fas fa-calendar-alt"></i>
+                <h3>Events & Reunions</h3>
+                <p>Stay up-to-date with upcoming events and special reunions.</p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

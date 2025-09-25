@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links">
+                </ul>
+        </nav>
+    </header>
+
+    <main class="events-main">
+        <div class="events-container">
+            <h2>Upcoming Events</h2>
+            <div id="events-list" class="events-list">
+                </div>
+            <div id="message" class="info-message"></div>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/events.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Job Posting</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links">
+                </ul>
+        </nav>
+    </header>
+
+    <main class="form-main">
+        <section class="form-container">
+            <h2>Add New Job Posting</h2>
+            <form id="add-job-form">
+                <div class="input-group">
+                    <label for="title">Job Title</label>
+                    <input type="text" id="title" required>
+                </div>
+                <div class="input-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" required>
+                </div>
+                <div class="input-group">
+                    <label for="location">Location</label>
+                    <input type="text" id="location" required>
+                </div>
+                <div class="input-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" rows="5" required></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="contact-email">Contact Email</label>
+                    <input type="email" id="contact-email" required>
+                </div>
+                <div id="message" class="form-message"></div>
+                <button type="submit" class="btn btn-primary btn-full-width">Submit Job Posting</button>
+            </form>
+        </section>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/add-job.js"></script>
+</body>
+</html>

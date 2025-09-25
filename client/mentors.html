@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Mentor</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="directory-main">
+        <div class="directory-container">
+            <h2>Find a Mentor</h2>
+            <p>Connect with experienced alumni who can guide you in your career.</p>
+            <div id="mentor-action-area" class="admin-actions">
+                 <a href="become-mentor.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Become a Mentor</a>
+            </div>
+            <div id="mentors-list" class="directory-list">
+                </div>
+        </div>
+    </main>
+
+    <div id="request-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Send Mentorship Request</h3>
+            <form id="request-form">
+                <input type="hidden" id="mentor-id-input">
+                <div class="input-group">
+                    <label for="request-message">Message (Optional)</label>
+                    <textarea id="request-message" rows="4" placeholder="Introduce yourself and what you're looking for in a mentor..."></textarea>
+                </div>
+                <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-full-width">Send Request</button>
+            </form>
+        </div>
+    </div>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/mentors.js"></script>
+</body>
+</html>
