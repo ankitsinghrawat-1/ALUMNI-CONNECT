@@ -17,8 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (token && loggedInUserEmail) {
         let profilePicUrl = '';
         let unreadCount = 0;
-        let userName = 'Alumni';
-        let userId = null;
+        let userName = localStorage.getItem('loggedInUserName') || 'Alumni';
 
         // --- Nav Bar HTML Structure ---
         navItems.innerHTML = `
@@ -53,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             </li>
             <li class="profile-dropdown nav-dropdown">
                 <a href="#" class="dropdown-toggle profile-toggle">
-                    <img src="" alt="Profile" class="nav-profile-pic">
+                    <img src="" alt="Profile" id="nav-profile-pic-img" class="nav-profile-pic">
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
@@ -65,42 +64,52 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </ul>
             </li>
         `;
-        
-        // --- Fetch initial data and set up real-time listeners ---
-        try {
-            // Use the protected route to get the logged-in user's own profile data
-            const loggedInUser = await window.api.get('/users/profile');
-            
-            userId = loggedInUser.user_id;
-            userName = loggedInUser.full_name;
-            localStorage.setItem('loggedInUserName', userName);
-            localStorage.setItem('userId', userId); // Store userId for later use
 
-            profilePicUrl = loggedInUser.profile_pic_url 
-                ? `http://localhost:3000/${loggedInUser.profile_pic_url}` 
-                : createInitialsAvatar(userName);
+        // --- Set the profile picture immediately from localStorage if available ---
+        const navImg = navItems.querySelector('#nav-profile-pic-img');
+        const storedPfpUrl = localStorage.getItem('userPfpUrl');
+
+        if (storedPfpUrl) {
+            navImg.src = `http://localhost:3000/${storedPfpUrl}?t=${new Date().getTime()}`;
+        } else {
+            navImg.src = createInitialsAvatar(userName);
+        }
+
+        // Add the error handler
+        navImg.onerror = function() {
+            this.onerror = null;
+            this.src = createInitialsAvatar(localStorage.getItem('loggedInUserName') || 'Alumni');
+        };
+
+        // Asynchronously fetch latest data to keep localStorage and notifications fresh
+        try {
+            const loggedInUser = await window.api.get('/users/profile');
+            localStorage.setItem('loggedInUserName', loggedInUser.full_name);
+            if (loggedInUser.profile_pic_url) {
+                localStorage.setItem('userPfpUrl', loggedInUser.profile_pic_url);
+            } else {
+                localStorage.removeItem('userPfpUrl');
+            }
+            
+            // This ensures that even if localStorage was out of sync, it gets corrected.
+            const freshPfpUrl = localStorage.getItem('userPfpUrl');
+            if (freshPfpUrl) {
+                 navImg.src = `http://localhost:3000/${freshPfpUrl}?t=${new Date().getTime()}`;
+            } else {
+                 navImg.src = createInitialsAvatar(loggedInUser.full_name);
+            }
 
             const notifications = await window.api.get('/notifications');
-            unreadCount = notifications.filter(n => !n.is_read).length;
+            const unreadCount = notifications.filter(n => !n.is_read).length;
             if (unreadCount > 0) {
                 const bell = navItems.querySelector('#notification-bell');
                 bell.innerHTML += `<span class="notification-badge">${unreadCount}</span>`;
             }
-
-            const navImg = navItems.querySelector('.nav-profile-pic');
-            if (navImg) {
-                navImg.src = profilePicUrl;
-                navImg.onerror = function() {
-                    this.onerror = null;
-                    this.src = createInitialsAvatar(localStorage.getItem('loggedInUserName') || 'Alumni');
-                };
-            }
             
-            // --- REAL-TIME NOTIFICATION LOGIC ---
+            const userId = loggedInUser.user_id;
             const socket = io("http://localhost:3000");
 
             socket.on('connect', () => {
-                console.log('Connected to socket for notifications.');
                 if (userId) {
                     socket.emit('addUser', userId);
                 }
@@ -119,11 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
         } catch (error) {
-            console.error('Could not fetch initial nav data:', error);
-            const navImg = navItems.querySelector('.nav-profile-pic');
-             if (navImg) {
-                navImg.src = createInitialsAvatar(userName);
-            }
+            console.error('Could not fetch latest profile data for navbar:', error);
         }
 
     } else {
@@ -139,7 +144,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     navLinks.innerHTML = '';
     navLinks.appendChild(navItems);
-
+    
     // --- Event Listeners (Dropdown, Logout, Theme, etc.) ---
     const messagesLink = document.getElementById('messages-link');
     if (messagesLink) {
@@ -155,7 +160,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (notificationBell) {
         notificationBell.addEventListener('click', async (e) => {
             try {
-                // The api wrapper will automatically add the token
                 await window.api.post('/notifications/mark-read', {});
                 const badge = notificationBell.querySelector('.notification-badge');
                 if (badge) {
@@ -197,7 +201,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             localStorage.removeItem('userRole');
             localStorage.removeItem('loggedInUserName');
             localStorage.removeItem('userId');
-            // No need to await fetch for logout, just redirect
+            localStorage.removeItem('userPfpUrl');
             window.location.href = 'index.html';
         });
     }

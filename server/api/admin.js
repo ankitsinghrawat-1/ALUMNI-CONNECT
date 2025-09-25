@@ -37,6 +37,28 @@ module.exports = (pool) => {
             totalApplications: applications[0].count
         });
     }));
+    
+    // --- NEW ENDPOINT for pending request counts ---
+    router.get('/pending-requests-summary', asyncHandler(async (req, res) => {
+        const [[verifications]] = await pool.query("SELECT COUNT(*) as count FROM users WHERE verification_status = 'pending'");
+        const [[groupCreations]] = await pool.query("SELECT COUNT(*) as count FROM group_creation_requests WHERE status = 'pending'");
+        const [[groupJoins]] = await pool.query("SELECT COUNT(*) as count FROM group_join_requests WHERE status = 'pending'");
+        
+        res.json({
+            verifications: verifications.count,
+            groupCreations: groupCreations.count,
+            groupJoins: groupJoins.count,
+        });
+    }));
+
+    router.get('/analytics/signups', asyncHandler(async (req, res) => {
+        const [rows] = await pool.query(`
+            SELECT DATE(created_at) as date, COUNT(*) as count 
+            FROM users WHERE created_at >= CURDATE() - INTERVAL 30 DAY
+            GROUP BY DATE(created_at) ORDER BY date ASC
+        `);
+        res.json(rows);
+    }));
 
     router.get('/analytics/signups', asyncHandler(async (req, res) => {
         const [rows] = await pool.query(`

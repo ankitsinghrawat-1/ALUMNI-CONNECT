@@ -193,36 +193,42 @@ module.exports = (pool, upload) => {
         res.json(user);
     }));
 
-    // This route handles updating the logged-in user's own profile
-    router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
-        const email = req.user.email;
-        const { full_name, bio, current_company, job_title, city, linkedin, university, major, graduation_year, degree, industry, skills } = req.body;
-        let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
+// This route handles updating the logged-in user's own profile
+router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
+    const email = req.user.email;
+    const { full_name, bio, current_company, job_title, city, linkedin, university, major, graduation_year, degree, industry, skills } = req.body;
+    let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
 
-        const [userRows] = await pool.query('SELECT profile_pic_url FROM users WHERE email = ?', [email]);
-        if (userRows.length === 0) { return res.status(404).json({ message: 'User not found' }); }
-        const user = userRows[0];
-        
-        const updateFields = { full_name, bio, current_company, job_title, city, linkedin, university, major, graduation_year, degree, industry, skills };
-        
-        // Sanitize empty strings to null for the database
-        for (const key in updateFields) {
-            if (updateFields[key] === '') {
-                updateFields[key] = null;
-            }
+    const [userRows] = await pool.query('SELECT profile_pic_url FROM users WHERE email = ?', [email]);
+    if (userRows.length === 0) { return res.status(404).json({ message: 'User not found' }); }
+    const user = userRows[0];
+    
+    const updateFields = { full_name, bio, current_company, job_title, city, linkedin, university, major, graduation_year, degree, industry, skills };
+    
+    for (const key in updateFields) {
+        if (updateFields[key] === '') {
+            updateFields[key] = null;
         }
-        
-        if (profile_pic_url) {
-            updateFields.profile_pic_url = profile_pic_url;
-            if (user.profile_pic_url) {
-                const oldPicPath = path.join(__dirname, '..','..', user.profile_pic_url);
-                fs.unlink(oldPicPath).catch(err => console.error("Failed to delete old profile pic:", err));
-            }
+    }
+    
+    if (profile_pic_url) {
+        updateFields.profile_pic_url = profile_pic_url;
+        if (user.profile_pic_url) {
+            const oldPicPath = path.join(__dirname, '..','..', user.profile_pic_url);
+            fs.unlink(oldPicPath).catch(err => console.error("Failed to delete old profile pic:", err));
         }
+    }
 
-        await pool.query('UPDATE users SET ? WHERE email = ?', [updateFields, email]);
-        res.status(200).json({ message: 'Profile updated successfully' });
-    }));
+    // Update the user in the database
+    await pool.query('UPDATE users SET ? WHERE email = ?', [updateFields, email]);
+
+    // --- Fetch the fully updated user profile ---
+    const [updatedUserRows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    const updatedUser = updatedUserRows[0];
+    delete updatedUser.password_hash; // Ensure password hash is not sent
+
+    res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
+}));
     
     router.get('/privacy', asyncHandler(async (req, res) => {
         const email = req.user.email;

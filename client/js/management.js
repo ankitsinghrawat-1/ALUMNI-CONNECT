@@ -99,10 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const config = apiConfig[pageType];
         if (!config) return;
         
-        // Admin routes are prefixed in api.js now, so we just use the relative path
-        const url = (pageType === 'events' || pageType === 'jobs' || pageType === 'campaigns' || pageType === 'blogs')
-            ? `/${pageType}`
-            : `/admin/${pageType}`;
+        // --- THIS IS THE CORRECTED LOGIC ---
+        const url = config.url;
 
         try {
             const items = await window.api.get(url);

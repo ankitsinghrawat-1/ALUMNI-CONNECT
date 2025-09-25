@@ -157,10 +157,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
             const formData = new FormData(form);
             try {
-                const data = await window.api.putForm(`/users/profile`, formData);
-                displayMessage(data.message, 'success');
-                document.querySelectorAll('.edit-icon.fa-save').forEach(icon => icon.click());
-                await fetchUserProfile();
+                // Submit the form data and get the result containing the updated user
+                const result = await window.api.putForm(`/users/profile`, formData);
+                showToast(result.message, 'success');
+
+                const updatedProfile = result.user; // This object has the latest data
+                
+                // --- FIX: Save the new profile picture URL to localStorage ---
+                if (updatedProfile.profile_pic_url) {
+                    localStorage.setItem('userPfpUrl', updatedProfile.profile_pic_url);
+                } else {
+                    localStorage.removeItem('userPfpUrl');
+                }
+                
+                // Reload the page to ensure all components (like the navbar) are updated
+                setTimeout(() => window.location.reload(), 1500);
+                
             } catch (error) {
                 displayMessage(`Error: ${error.message}`);
             }

@@ -50,9 +50,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const profilePicUrl = alumnus.profile_pic_url 
                         ? `http://localhost:3000/${alumnus.profile_pic_url}` 
                         : createInitialsAvatar(alumnus.full_name);
-
+                    
+                    // --- FIX: Added the onerror attribute ---
                     alumnusItem.innerHTML = `
-                        <img src="${profilePicUrl}" alt="${sanitizeHTML(alumnus.full_name)}" class="alumnus-pfp-round">
+                        <img src="${profilePicUrl}" alt="${sanitizeHTML(alumnus.full_name)}" class="alumnus-pfp-round" onerror="this.onerror=null; this.src=createInitialsAvatar('${alumnus.full_name.replace(/'/g, "\\'")}');">
                         <div class="alumnus-details">
                             <h3>
                                 ${sanitizeHTML(alumnus.full_name)}

@@ -13,14 +13,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- Fetch and Display PENDING REQUESTS ---
+    const fetchPendingRequests = async () => {
+        try {
+            const requests = await window.api.get('/admin/pending-requests-summary');
+            const container = document.getElementById('pending-requests-summary');
+            container.innerHTML = `
+                <a href="verification-requests.html" class="pending-item">
+                    <span>User Verifications</span>
+                    <span class="count">${requests.verifications}</span>
+                </a>
+                <a href="#" class="pending-item">
+                    <span>Group Creations</span>
+                    <span class="count">${requests.groupCreations}</span>
+                </a>
+                <a href="#" class="pending-item">
+                    <span>Group Join Requests</span>
+                    <span class="count">${requests.groupJoins}</span>
+                </a>
+            `;
+        } catch (error) {
+            console.error('Error fetching pending requests:', error);
+        }
+    };
+
     // --- Fetch and Render CHARTS ---
     const renderCharts = async () => {
         try {
-            // Fetch data for both charts simultaneously
-            const [signupsRes, contentRes] = await Promise.all([
-                window.api.get('/admin/analytics/signups'),
-                window.api.get('/admin/analytics/content-overview')
-            ]);
+            const signupsRes = await window.api.get('/admin/analytics/signups');
 
             // 1. Render User Signups Line Chart
             const userSignupsCtx = document.getElementById('userSignupsChart').getContext('2d');
@@ -34,48 +54,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     datasets: [{
                         label: 'New Users per Day',
                         data: data,
-                        backgroundColor: 'rgba(245, 166, 35, 0.2)',
-                        borderColor: 'rgba(245, 166, 35, 1)',
+                        backgroundColor: 'rgba(74, 144, 226, 0.2)',
+                        borderColor: 'rgba(74, 144, 226, 1)',
                         borderWidth: 2,
                         tension: 0.3,
                         fill: true
                     }]
                 },
                 options: {
+                    responsive: true, // Make sure chart is responsive
+                    maintainAspectRatio: false, // Allow chart to fill container height
                     scales: {
                         y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-
-            // 2. Render Content Overview Bar Chart
-            const contentOverviewCtx = document.getElementById('contentOverviewChart').getContext('2d');
-            new Chart(contentOverviewCtx, {
-                type: 'bar',
-                data: {
-                    labels: ['Blogs', 'Jobs', 'Events'],
-                    datasets: [{
-                        label: 'Total Content',
-                        data: [contentRes.blogs, contentRes.jobs, contentRes.events],
-                        backgroundColor: [
-                            'rgba(30, 58, 95, 0.7)',
-                            'rgba(52, 152, 219, 0.7)',
-                            'rgba(46, 204, 113, 0.7)'
-                        ],
-                        borderColor: [
-                            'rgba(30, 58, 95, 1)',
-                            'rgba(52, 152, 219, 1)',
-                            'rgba(46, 204, 113, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    indexAxis: 'y', // Makes it a horizontal bar chart
-                    scales: {
-                        x: {
                             beginAtZero: true
                         }
                     }
@@ -87,7 +77,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // --- Logout Button ---
+    const logoutBtn = document.getElementById('admin-logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+    }
+
     // --- Initial Load ---
     fetchAdminStats();
+    fetchPendingRequests();
     renderCharts();
 });

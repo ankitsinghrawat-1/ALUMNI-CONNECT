@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
-            // Default to "Become a Mentor" if there's an error
              mentorActionArea.innerHTML = `<a href="become-mentor.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Become a Mentor</a>`;
         }
     };
@@ -44,8 +43,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     mentorItem.classList.add('alumnus-list-item');
                     const profilePicUrl = mentor.profile_pic_url ? `http://localhost:3000/${mentor.profile_pic_url}` : createInitialsAvatar(mentor.full_name);
 
+                    // --- FIX: Added the onerror attribute ---
                     mentorItem.innerHTML = `
-                        <img src="${profilePicUrl}" alt="${sanitizeHTML(mentor.full_name)}" class="alumnus-pfp-round">
+                        <img src="${profilePicUrl}" alt="${sanitizeHTML(mentor.full_name)}" class="alumnus-pfp-round" onerror="this.onerror=null; this.src=createInitialsAvatar('${mentor.full_name.replace(/'/g, "\\'")}');">
                         <div class="alumnus-details">
                             <h3>${sanitizeHTML(mentor.full_name)} ${mentor.verification_status === 'verified' ? '<span class="verified-badge-sm" title="Verified"><i class="fas fa-check-circle"></i></span>' : ''}</h3>
                             <p><i class="fas fa-briefcase"></i> ${sanitizeHTML(mentor.job_title || 'N/A')} at ${sanitizeHTML(mentor.current_company || 'N/A')}</p>
