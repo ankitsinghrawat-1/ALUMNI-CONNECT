@@ -1,4 +1,5 @@
 // server/server.js
+require('dotenv').config(); // This line must be at the very top
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -9,7 +10,6 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs').promises;
 const cookieParser = require('cookie-parser');
-require('dotenv').config();
 
 // Import middleware
 const { verifyToken } = require('./middleware/authMiddleware');
@@ -47,10 +47,10 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // --- DATABASE CONNECTION POOL ---
 const pool = mysql.createPool({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'ankit@54328',
-    database: process.env.DB_NAME || 'alumni_db',
+    host: process.env.DB_HOST,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -178,7 +178,7 @@ io.on("connection", (socket) => {
             }
         }
     });
-    
+
     socket.on("typing", ({ receiverId, isTyping }) => {
          const user = getUser(receiverId);
          if(user) {

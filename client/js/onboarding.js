@@ -10,32 +10,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'login.html';
         return;
     }
-    
+
     if (userRole === 'admin') {
         window.location.href = 'admin.html';
         return;
-    }
-    
-    const emailInput = document.getElementById('university-email');
-    if (emailInput) {
-        emailInput.value = loggedInUserEmail;
     }
 
     if (onboardForm) {
         onboardForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            
+
             const onboardData = {
-                university: document.getElementById('university').value,
-                university_email: document.getElementById('university-email').value,
+                institute_name: document.getElementById('institute_name').value,
+                city: document.getElementById('city').value,
                 graduation_year: document.getElementById('graduation-year').value,
                 major: document.getElementById('major').value,
-                degree: document.getElementById('degree').value,
-                current_company: document.getElementById('current-company').value,
+                department: document.getElementById('department').value,
+                company: document.getElementById('company').value,
                 job_title: document.getElementById('job-title').value,
-                city: document.getElementById('city').value,
                 bio: document.getElementById('bio').value,
-                linkedin: document.getElementById('linkedin').value
+                linkedin_profile: document.getElementById('linkedin_profile').value,
+                skills: document.getElementById('skills').value,
             };
 
             try {

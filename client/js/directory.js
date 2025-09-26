@@ -46,11 +46,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 alumni.forEach(alumnus => {
                     const alumnusItem = document.createElement('div');
                     alumnusItem.classList.add('alumnus-list-item');
-                    
-                    const profilePicUrl = alumnus.profile_pic_url 
-                        ? `http://localhost:3000/${alumnus.profile_pic_url}` 
+
+                    const profilePicUrl = alumnus.profile_pic_url
+                        ? `http://localhost:3000/${alumnus.profile_pic_url}`
                         : createInitialsAvatar(alumnus.full_name);
-                    
+
                     // --- FIX: Added the onerror attribute ---
                     alumnusItem.innerHTML = `
                         <img src="${profilePicUrl}" alt="${sanitizeHTML(alumnus.full_name)}" class="alumnus-pfp-round" onerror="this.onerror=null; this.src=createInitialsAvatar('${alumnus.full_name.replace(/'/g, "\\'")}');">
@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 ${sanitizeHTML(alumnus.full_name)}
                                 ${alumnus.verification_status === 'verified' ? '<span class="verified-badge-sm" title="Verified"><i class="fas fa-check-circle"></i></span>' : ''}
                             </h3>
+                            <p>${sanitizeHTML(alumnus.headline || '')}</p>
                             <p><i class="fas fa-briefcase"></i> ${sanitizeHTML(alumnus.job_title ? alumnus.job_title + ' at ' : '')}${sanitizeHTML(alumnus.current_company || 'N/A')}</p>
                             <p><i class="fas fa-graduation-cap"></i> ${sanitizeHTML(alumnus.major || 'N/A')} | Class of ${sanitizeHTML(alumnus.graduation_year || 'N/A')}</p>
                             <a href="view-profile.html?email=${alumnus.email}" class="btn btn-secondary">View Profile</a>

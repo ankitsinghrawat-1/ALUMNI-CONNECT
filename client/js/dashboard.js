@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'login.html';
         return;
     }
-    
+
     // Personalized Greeting
     const greetingElement = document.getElementById('dashboard-greeting');
     const hour = new Date().getHours();
@@ -28,17 +28,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Fetch and render dashboard data
     const fetchDashboardData = async () => {
         try {
-            const [stats, recommendations, activity] = await Promise.all([
+            const [stats, recommendations, activity, announcements] = await Promise.all([
                 window.api.get('/users/dashboard-stats'),
                 window.api.get('/users/dashboard-recommendations'),
-                window.api.get('/users/dashboard-activity')
+                window.api.get('/users/dashboard-activity'),
+                window.api.get('/users/announcements')
             ]);
 
             // Profile Picture
             const userProfile = await window.api.get(`/users/profile/${userEmail}`);
             const profilePic = document.getElementById('profile-pic');
-            profilePic.src = userProfile.profile_pic_url 
-                ? `http://localhost:3000/${userProfile.profile_pic_url}` 
+            profilePic.src = userProfile.profile_pic_url
+                ? `http://localhost:3000/${userProfile.profile_pic_url}`
                 : createInitialsAvatar(userProfile.full_name);
 
             // Profile Completion
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Recommendations
             const recommendationsContainer = document.getElementById('recommendations-container');
             recommendationsContainer.innerHTML = '';
-            
+
             if (recommendations.featuredMentor) {
                 const mentor = recommendations.featuredMentor;
                 recommendationsContainer.innerHTML += `
@@ -82,6 +83,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             // User Activity Chart
             renderActivityChart(activity);
 
+            // Announcements
+            const announcementsList = document.getElementById('announcements-list');
+            if (announcements.length > 0) {
+                announcementsList.innerHTML = announcements.map(announcement => `
+                    <li>
+                        <strong>${sanitizeHTML(announcement.title)}</strong>
+                        <p>${sanitizeHTML(announcement.content)}</p>
+                    </li>
+                `).join('');
+            }
+
         } catch (error) {
             console.error('Error fetching dashboard data:', error);
         }
@@ -89,7 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const renderActivityChart = (activityData) => {
         const ctx = document.getElementById('userActivityChart').getContext('2d');
-        
+
         const labels = [];
         for (let i = 5; i >= 0; i--) {
             const d = new Date();
@@ -109,7 +121,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const monthIndex = (new Date(item.month + '-01').getMonth() - new Date().getMonth() + 5 + 12) % 12;
             rsvpCounts[monthIndex] = item.count;
         });
-        
+
         new Chart(ctx, {
             type: 'bar',
             data: {
@@ -137,6 +149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     };
-    
+
     fetchDashboardData();
 });

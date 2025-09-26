@@ -62,16 +62,16 @@ module.exports = (pool, upload) => {
 
     router.get('/directory', asyncHandler(async (req, res) => {
         const { query, university, major, graduation_year, city, industry, skills } = req.query;
-        let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, current_company, major, graduation_year, city, is_email_visible, is_company_visible, is_location_visible 
+        let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, is_email_visible, is_company_visible, is_location_visible
                    FROM users WHERE is_profile_public = TRUE`;
         const params = [];
 
         if (query) {
-            sql += ' AND (full_name LIKE ? OR current_company LIKE ?)';
+            sql += ' AND (full_name LIKE ? OR company LIKE ?)';
             params.push(`%${query}%`, `%${query}%`);
         }
         if (university) {
-            sql += ' AND university LIKE ?';
+            sql += ' AND institute_name LIKE ?';
             params.push(`%${university}%`);
         }
         if (major) {
@@ -96,14 +96,14 @@ module.exports = (pool, upload) => {
         }
 
         const [rows] = await pool.query(sql, params);
-        
+
         const publicProfiles = rows.map(user => ({
             user_id: user.user_id,
             full_name: user.full_name,
             profile_pic_url: user.profile_pic_url,
             verification_status: user.verification_status,
             job_title: user.is_company_visible ? user.job_title : 'N/A',
-            current_company: user.is_company_visible ? user.current_company : 'N/A',
+            current_company: user.is_company_visible ? user.company : 'N/A',
             major: user.major,
             graduation_year: user.graduation_year,
             email: user.is_email_visible ? user.email : null,
@@ -113,34 +113,34 @@ module.exports = (pool, upload) => {
 
     router.get('/profile/:email', asyncHandler(async (req, res) => {
          const { email } = req.params;
-         const [rows] = await pool.query('SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, current_company, city, bio, linkedin, university, major, graduation_year, degree, is_profile_public, is_email_visible, is_company_visible, is_location_visible FROM users WHERE email = ?', [email]);
+         const [rows] = await pool.query('SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, city, bio, linkedin_profile, institute_name, major, graduation_year, department, is_profile_public, is_email_visible, is_company_visible, is_location_visible FROM users WHERE email = ?', [email]);
          if (rows.length === 0) {
              return res.status(404).json({ message: 'Profile not found' });
          }
          const user = rows[0];
-         
+
          if (!user.is_profile_public) {
-             return res.status(403).json({ 
+             return res.status(200).json({
                  message: 'This profile is private.',
                  full_name: user.full_name,
                  profile_pic_url: user.profile_pic_url,
                  verification_status: user.verification_status
              });
          }
-         
+
          const publicProfile = {
             full_name: user.full_name,
             profile_pic_url: user.profile_pic_url,
             verification_status: user.verification_status,
             job_title: user.is_company_visible ? user.job_title : null,
-            current_company: user.is_company_visible ? user.current_company : null,
+            current_company: user.is_company_visible ? user.company : null,
             city: user.is_location_visible ? user.city : null,
             bio: user.bio,
-            linkedin: user.linkedin,
-            university: user.university,
+            linkedin: user.linkedin_profile,
+            university: user.institute_name,
             major: user.major,
             graduation_year: user.graduation_year,
-            degree: user.degree,
+            degree: user.department,
             email: user.is_email_visible ? user.email : null,
          };
          res.json(publicProfile);
@@ -173,11 +173,11 @@ module.exports = (pool, upload) => {
     }));
 
     router.post('/onboard', asyncHandler(async (req, res) => {
-        const { university, university_email, city, graduation_year, major, degree, current_company, job_title, bio, linkedin } = req.body;
+        const { institute_name, city, graduation_year, major, department, company, job_title, bio, linkedin_profile, skills } = req.body;
         const email = req.user.email;
         await pool.query(
-            'UPDATE users SET university = ?, university_email = ?, city = ?, graduation_year = ?, major = ?, degree = ?, current_company = ?, job_title = ?, bio = ?, linkedin = ?, onboarding_complete = TRUE WHERE email = ?',
-            [university, university_email || null, city, graduation_year || null, major, degree, current_company, job_title, bio, linkedin || null, email]
+            'UPDATE users SET institute_name = ?, city = ?, graduation_year = ?, major = ?, department = ?, company = ?, job_title = ?, bio = ?, linkedin_profile = ?, skills = ?, onboarding_complete = TRUE WHERE email = ?',
+            [institute_name, city, graduation_year || null, major, department, company, job_title, bio, linkedin_profile || null, skills, email]
         );
         res.status(200).json({ message: 'Onboarding complete' });
     }));
@@ -193,43 +193,43 @@ module.exports = (pool, upload) => {
         res.json(user);
     }));
 
-// This route handles updating the logged-in user's own profile
-router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
-    const email = req.user.email;
-    const { full_name, bio, current_company, job_title, city, linkedin, university, major, graduation_year, degree, industry, skills } = req.body;
-    let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
+    // This route handles updating the logged-in user's own profile
+    router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
+        const email = req.user.email;
+        const { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills } = req.body;
+        let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
 
-    const [userRows] = await pool.query('SELECT profile_pic_url FROM users WHERE email = ?', [email]);
-    if (userRows.length === 0) { return res.status(404).json({ message: 'User not found' }); }
-    const user = userRows[0];
-    
-    const updateFields = { full_name, bio, current_company, job_title, city, linkedin, university, major, graduation_year, degree, industry, skills };
-    
-    for (const key in updateFields) {
-        if (updateFields[key] === '') {
-            updateFields[key] = null;
+        const [userRows] = await pool.query('SELECT profile_pic_url FROM users WHERE email = ?', [email]);
+        if (userRows.length === 0) { return res.status(404).json({ message: 'User not found' }); }
+        const user = userRows[0];
+
+        const updateFields = { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills };
+
+        for (const key in updateFields) {
+            if (updateFields[key] === '') {
+                updateFields[key] = null;
+            }
         }
-    }
-    
-    if (profile_pic_url) {
-        updateFields.profile_pic_url = profile_pic_url;
-        if (user.profile_pic_url) {
-            const oldPicPath = path.join(__dirname, '..','..', user.profile_pic_url);
-            fs.unlink(oldPicPath).catch(err => console.error("Failed to delete old profile pic:", err));
+
+        if (profile_pic_url) {
+            updateFields.profile_pic_url = profile_pic_url;
+            if (user.profile_pic_url) {
+                const oldPicPath = path.join(__dirname, '..','..', user.profile_pic_url);
+                fs.unlink(oldPicPath).catch(err => console.error("Failed to delete old profile pic:", err));
+            }
         }
-    }
 
-    // Update the user in the database
-    await pool.query('UPDATE users SET ? WHERE email = ?', [updateFields, email]);
+        // Update the user in the database
+        await pool.query('UPDATE users SET ? WHERE email = ?', [updateFields, email]);
 
-    // --- Fetch the fully updated user profile ---
-    const [updatedUserRows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-    const updatedUser = updatedUserRows[0];
-    delete updatedUser.password_hash; // Ensure password hash is not sent
+        // --- Fetch the fully updated user profile ---
+        const [updatedUserRows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+        const updatedUser = updatedUserRows[0];
+        delete updatedUser.password_hash; // Ensure password hash is not sent
 
-    res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
-}));
-    
+        res.status(200).json({ message: 'Profile updated successfully', user: updatedUser });
+    }));
+
     router.get('/privacy', asyncHandler(async (req, res) => {
         const email = req.user.email;
         const [rows] = await pool.query('SELECT is_profile_public, is_email_visible, is_company_visible, is_location_visible FROM users WHERE email = ?', [email]);
@@ -246,7 +246,7 @@ router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req
         );
         res.status(200).json({ message: 'Privacy settings updated successfully' });
     }));
-    
+
     router.get('/conversations', asyncHandler(async (req, res) => {
         const userId = req.user.userId;
         const [conversations] = await pool.query(`
@@ -272,7 +272,7 @@ router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req
         const user = userRows[0];
 
         // Calculate profile completion
-        const profileFields = ['full_name', 'bio', 'current_company', 'job_title', 'city', 'linkedin', 'university', 'major', 'graduation_year', 'degree'];
+        const profileFields = ['full_name', 'bio', 'company', 'job_title', 'city', 'linkedin_profile', 'institute_name', 'major', 'graduation_year', 'department', 'skills'];
         let completedFields = 0;
         profileFields.forEach(field => {
             if (user[field]) {
@@ -296,7 +296,7 @@ router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req
     router.get('/dashboard-recommendations', asyncHandler(async (req, res) => {
         const [featuredMentor] = await pool.query(`
             SELECT u.user_id, u.full_name, u.job_title, u.profile_pic_url, m.expertise_areas
-            FROM mentors m JOIN users u ON m.user_id = u.user_id 
+            FROM mentors m JOIN users u ON m.user_id = u.user_id
             WHERE m.is_available = TRUE ORDER BY RAND() LIMIT 1
         `);
         const [recommendedEvent] = await pool.query('SELECT * FROM events WHERE date >= CURDATE() ORDER BY date ASC LIMIT 1');
@@ -307,23 +307,36 @@ router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req
         });
     }));
     // New Dashboard User Activity Endpoint
-router.get('/dashboard-activity', asyncHandler(async (req, res) => {
-    const userId = req.user.userId;
+    router.get('/dashboard-activity', asyncHandler(async (req, res) => {
+        const userId = req.user.userId;
 
-    const [blogs] = await pool.query(`
-        SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count 
+        const [blogs] = await pool.query(`
+        SELECT DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as count
         FROM blogs WHERE author_id = ? AND created_at >= CURDATE() - INTERVAL 6 MONTH
         GROUP BY month ORDER BY month ASC
     `, [userId]);
 
-    const [rsvps] = await pool.query(`
-        SELECT DATE_FORMAT(rsvp_date, '%Y-%m') as month, COUNT(*) as count 
+        const [rsvps] = await pool.query(`
+        SELECT DATE_FORMAT(rsvp_date, '%Y-%m') as month, COUNT(*) as count
         FROM event_rsvps WHERE user_id = ? AND rsvp_date >= CURDATE() - INTERVAL 6 MONTH
         GROUP BY month ORDER BY month ASC
     `, [userId]);
 
-    res.json({ blogs, rsvps });
-}));
+        res.json({ blogs, rsvps });
+    }));
+
+    // New Announcements Endpoint
+    router.get('/announcements', asyncHandler(async (req, res) => {
+        const [announcements] = await pool.query(`
+            SELECT a.announcement_id, a.title, a.content, a.created_at, u.full_name as author
+            FROM announcements a
+            JOIN users u ON a.author_id = u.user_id
+            ORDER BY a.created_at DESC
+            LIMIT 5
+        `);
+        res.json(announcements);
+    }));
+
 
     return router;
 };
