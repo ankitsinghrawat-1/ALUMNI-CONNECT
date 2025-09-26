@@ -12,14 +12,27 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error("Error: The message element with ID 'message' was not found.");
     }
 
-    // Check for token instead of email
     const token = localStorage.getItem('alumniConnectToken');
     if (token) {
         const userRole = localStorage.getItem('userRole');
-        if (userRole === 'admin') {
-            window.location.href = 'admin.html';
-        } else {
-            window.location.href = 'dashboard.html';
+        switch (userRole) {
+            case 'admin':
+                window.location.href = 'admin.html';
+                break;
+            case 'student':
+                window.location.href = 'student-dashboard.html';
+                break;
+            case 'faculty':
+                window.location.href = 'faculty-dashboard.html';
+                break;
+            case 'employer':
+                window.location.href = 'employer-dashboard.html';
+                break;
+            case 'institute':
+                window.location.href = 'institute-dashboard.html';
+                break;
+            default:
+                window.location.href = 'dashboard.html'; // Alumni dashboard
         }
         return;
     }
@@ -30,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
 
-        // --- Validation Checks ---
         if (!email || !password) {
             showToast('Please enter both email and password.', 'error');
             return;
@@ -53,21 +65,35 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Store the token and other info in localStorage
                 localStorage.setItem('alumniConnectToken', data.token);
                 localStorage.setItem('loggedInUserEmail', data.email);
                 localStorage.setItem('userRole', data.role);
+                localStorage.setItem('loggedInUserName', data.full_name);
+
 
                 if (messageDiv) {
                     messageDiv.textContent = 'Login successful!';
                     messageDiv.className = 'form-message success';
                 }
 
-                if (data.role === 'admin') {
-                    window.location.href = 'admin.html';
-                } else {
-                    // All other roles go to the main dashboard
-                    window.location.href = 'dashboard.html';
+                switch (data.role) {
+                    case 'admin':
+                        window.location.href = 'admin.html';
+                        break;
+                    case 'student':
+                        window.location.href = 'student-dashboard.html';
+                        break;
+                    case 'faculty':
+                        window.location.href = 'faculty-dashboard.html';
+                        break;
+                    case 'employer':
+                        window.location.href = 'employer-dashboard.html';
+                        break;
+                    case 'institute':
+                        window.location.href = 'institute-dashboard.html';
+                        break;
+                    default:
+                        window.location.href = 'dashboard.html'; // Alumni dashboard
                 }
             } else {
                 if (messageDiv) {

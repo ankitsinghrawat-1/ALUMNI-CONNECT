@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('profile-form');
     const userEmail = localStorage.getItem('loggedInUserEmail');
+    const userRole = localStorage.getItem('userRole');
     const navLinks = document.querySelectorAll('.profile-nav a');
     const pages = document.querySelectorAll('.profile-page');
     const profilePic = document.getElementById('profile-pic');
@@ -81,8 +82,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         verificationSection.innerHTML = content;
     };
 
+    const updateProfileViewForRole = (role) => {
+        const profilePage = document.getElementById('edit-profile');
+        if (!profilePage) return;
+
+        // Hide all role-specific fields
+        profilePage.querySelectorAll('[data-role]').forEach(el => {
+            el.style.display = 'none';
+        });
+
+        // Show fields relevant to the current user's role
+        profilePage.querySelectorAll(`[data-role*="${role}"]`).forEach(el => {
+            el.style.display = 'flex'; // Use flex for profile-field
+        });
+        
+        // Adjust labels based on role
+        const nameLabel = document.getElementById('full_name_label');
+        if (role === 'employer') {
+            nameLabel.innerHTML = '<i class="fas fa-building"></i> Company Name';
+        } else if (role === 'institute') {
+            nameLabel.innerHTML = '<i class="fas fa-university"></i> Institute Name';
+        } else {
+            nameLabel.innerHTML = '<i class="fas fa-user"></i> Full Name';
+        }
+    };
+
+
     const populateProfileData = (data) => {
-        const fields = ['full_name', 'bio', 'current_company', 'job_title', 'city', 'linkedin', 'university', 'major', 'graduation_year', 'degree', 'industry', 'skills'];
+        const fields = ['full_name', 'bio', 'company', 'job_title', 'city', 'linkedin_profile', 'institute_name', 'major', 'graduation_year', 'department', 'industry', 'skills', 'website'];
         fields.forEach(id => {
             const displayElement = document.querySelector(`.display-field[data-field="${id}"]`);
             const inputElement = document.querySelector(`.edit-field[name="${id}"]`);
@@ -100,6 +127,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         profilePic.src = data.profile_pic_url ? `http://localhost:3000/${data.profile_pic_url}` : createInitialsAvatar(data.full_name);
         profilePic.onerror = () => { profilePic.src = createInitialsAvatar(data.full_name); };
+        
+        // Update the view based on the user's role
+        updateProfileViewForRole(userRole);
     };
 
     const fetchUserProfile = async () => {
@@ -157,20 +187,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
             const formData = new FormData(form);
             try {
-                // Submit the form data and get the result containing the updated user
                 const result = await window.api.putForm(`/users/profile`, formData);
                 showToast(result.message, 'success');
 
-                const updatedProfile = result.user; // This object has the latest data
+                const updatedProfile = result.user;
                 
-                // --- FIX: Save the new profile picture URL to localStorage ---
                 if (updatedProfile.profile_pic_url) {
                     localStorage.setItem('userPfpUrl', updatedProfile.profile_pic_url);
                 } else {
                     localStorage.removeItem('userPfpUrl');
                 }
                 
-                // Reload the page to ensure all components (like the navbar) are updated
                 setTimeout(() => window.location.reload(), 1500);
                 
             } catch (error) {
