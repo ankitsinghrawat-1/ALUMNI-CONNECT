@@ -22,7 +22,7 @@ module.exports = (pool) => {
             res.status(401).json({ message: 'Invalid credentials' });
         }
     }));
-
+    
     router.use(verifyToken, isAdmin);
 
     router.get('/stats', asyncHandler(async (req, res) => {
@@ -37,32 +37,28 @@ module.exports = (pool) => {
             totalApplications: applications[0].count
         });
     }));
-
-    // --- NEW ENDPOINT for pending request counts ---
+    
     router.get('/pending-requests-summary', asyncHandler(async (req, res) => {
         const [[verifications]] = await pool.query("SELECT COUNT(*) as count FROM users WHERE verification_status = 'pending'");
         const [[groupCreations]] = await pool.query("SELECT COUNT(*) as count FROM group_creation_requests WHERE status = 'pending'");
         const [[groupJoins]] = await pool.query("SELECT COUNT(*) as count FROM group_join_requests WHERE status = 'pending'");
-
+        const [[pendingJobs]] = await pool.query("SELECT COUNT(*) as count FROM jobs WHERE status = 'pending'");
+        const [[pendingEvents]] = await pool.query("SELECT COUNT(*) as count FROM events WHERE status = 'pending'");
+        const [[pendingCampaigns]] = await pool.query("SELECT COUNT(*) as count FROM campaigns WHERE status = 'pending'");
+        
         res.json({
             verifications: verifications.count,
             groupCreations: groupCreations.count,
             groupJoins: groupJoins.count,
+            pendingJobs: pendingJobs.count,
+            pendingEvents: pendingEvents.count,
+            pendingCampaigns: pendingCampaigns.count
         });
     }));
 
     router.get('/analytics/signups', asyncHandler(async (req, res) => {
         const [rows] = await pool.query(`
-            SELECT DATE(created_at) as date, COUNT(*) as count
-            FROM users WHERE created_at >= CURDATE() - INTERVAL 30 DAY
-            GROUP BY DATE(created_at) ORDER BY date ASC
-        `);
-        res.json(rows);
-    }));
-
-    router.get('/analytics/signups', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query(`
-            SELECT DATE(created_at) as date, COUNT(*) as count
+            SELECT DATE(created_at) as date, COUNT(*) as count 
             FROM users WHERE created_at >= CURDATE() - INTERVAL 30 DAY
             GROUP BY DATE(created_at) ORDER BY date ASC
         `);
@@ -92,7 +88,7 @@ module.exports = (pool) => {
         if (!['accepted', 'rejected'].includes(status)) {
             return res.status(400).json({ message: 'Invalid status provided.' });
         }
-
+        
         const [application] = await pool.query(
             'SELECT ja.user_email, j.title FROM job_applications ja JOIN jobs j ON ja.job_id = j.job_id WHERE ja.application_id = ?',
             [id]
@@ -100,7 +96,7 @@ module.exports = (pool) => {
         if (application.length === 0) {
             return res.status(404).json({ message: 'Application not found.' });
         }
-
+        
         const { user_email, title } = application[0];
         const [user] = await pool.query('SELECT user_id FROM users WHERE email = ?', [user_email]);
         if (user.length > 0) {
@@ -139,14 +135,56 @@ module.exports = (pool) => {
         res.status(200).json({ message: 'User deleted successfully' });
     }));
 
-    // New route to create an announcement
-    router.post('/announcements', asyncHandler(async (req, res) => {
-        const { title, content } = req.body;
-        const author_id = req.user.userId;
-        await pool.query('INSERT INTO announcements (title, content, author_id) VALUES (?, ?, ?)', [title, content, author_id]);
-        res.status(201).json({ message: 'Announcement created successfully' });
+    router.get('/pending-jobs', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const [rows] = await pool.query("SELECT * FROM jobs WHERE status = 'pending' ORDER BY created_at DESC");
+        res.json(rows);
     }));
 
+    router.get('/pending-events', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const [rows] = await pool.query("SELECT * FROM events WHERE status = 'pending' ORDER BY created_at DESC");
+        res.json(rows);
+    }));
 
+    router.get('/pending-campaigns', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const [rows] = await pool.query("SELECT * FROM campaigns WHERE status = 'pending' ORDER BY created_at DESC");
+        res.json(rows);
+    }));
+
+    router.post('/approve/:type/:id', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const { type, id } = req.params;
+        const validTypes = {
+            job: 'jobs',
+            event: 'events',
+            campaign: 'campaigns'
+        };
+        const tableName = validTypes[type];
+        const idColumn = `${type}_id`;
+
+        if (!tableName) {
+            return res.status(400).json({ message: 'Invalid type' });
+        }
+
+        await pool.query(`UPDATE ${tableName} SET status = 'approved' WHERE ${idColumn} = ?`, [id]);
+        res.status(200).json({ message: `${type} approved successfully.` });
+    }));
+
+    router.post('/reject/:type/:id', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const { type, id } = req.params;
+         const validTypes = {
+            job: 'jobs',
+            event: 'events',
+            campaign: 'campaigns'
+        };
+        const tableName = validTypes[type];
+        const idColumn = `${type}_id`;
+
+        if (!tableName) {
+            return res.status(400).json({ message: 'Invalid type' });
+        }
+
+        await pool.query(`UPDATE ${tableName} SET status = 'rejected' WHERE ${idColumn} = ?`, [id]);
+        res.status(200).json({ message: `${type} rejected successfully.` });
+    }));
+    
     return router;
 };

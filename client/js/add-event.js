@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addEventForm = document.getElementById('add-event-form');
     const messageDiv = document.getElementById('message');
 
-    if (localStorage.getItem('userRole') !== 'admin') {
+    if (localStorage.getItem('userRole') !== 'admin' && localStorage.getItem('userRole') !== 'institute') {
         window.location.href = 'events.html';
         return;
     }
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             try {
                 const result = await window.api.post('/events', eventData);
-                messageDiv.textContent = 'Event added successfully!';
+                messageDiv.textContent = 'Event submitted for approval!';
                 messageDiv.className = 'form-message success';
                 addEventForm.reset();
             } catch (error) {

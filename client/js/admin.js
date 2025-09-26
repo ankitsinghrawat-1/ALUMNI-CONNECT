@@ -23,6 +23,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span>User Verifications</span>
                     <span class="count">${requests.verifications}</span>
                 </a>
+                 <a href="approval-management.html" class="pending-item">
+                    <span>Job Approvals</span>
+                    <span class="count">${requests.pendingJobs}</span>
+                </a>
+                 <a href="approval-management.html" class="pending-item">
+                    <span>Event Approvals</span>
+                    <span class="count">${requests.pendingEvents}</span>
+                </a>
+                 <a href="approval-management.html" class="pending-item">
+                    <span>Campaign Approvals</span>
+                    <span class="count">${requests.pendingCampaigns}</span>
+                </a>
                 <a href="#" class="pending-item">
                     <span>Group Creations</span>
                     <span class="count">${requests.groupCreations}</span>

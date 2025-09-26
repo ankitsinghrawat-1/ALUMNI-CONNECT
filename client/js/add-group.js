@@ -1,33 +1,34 @@
-// client/js/add-group.js
 document.addEventListener('DOMContentLoaded', () => {
-    const addGroupForm = document.getElementById('add-group-form');
-
-    if (!localStorage.getItem('alumniConnectToken')) {
-        window.location.href = 'login.html';
+    const addJobForm = document.getElementById('add-job-form');
+    const messageDiv = document.getElementById('message');
+    
+    if (localStorage.getItem('userRole') !== 'admin' && localStorage.getItem('userRole') !== 'employer') {
+        window.location.href = 'jobs.html';
         return;
     }
 
-    addGroupForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    if (addJobForm) {
+        addJobForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        const groupData = {
-            name: document.getElementById('name').value,
-            description: document.getElementById('description').value,
-            image_url: document.getElementById('image_url').value,
-        };
+            const jobData = {
+                title: document.getElementById('title').value,
+                company: document.getElementById('company').value,
+                location: document.getElementById('location').value,
+                description: document.getElementById('description').value,
+                contact_email: document.getElementById('contact-email').value,
+            };
 
-        if (!groupData.name || !groupData.description) {
-            showToast('Group Name and Description are required.', 'error');
-            return;
-        }
-
-        try {
-            const result = await window.api.post('/groups', groupData);
-            showToast(result.message, 'success');
-            setTimeout(() => window.location.href = `group-details.html?id=${result.groupId}`, 1500);
-        } catch (error) {
-            console.error('Error creating group:', error);
-            showToast(`Error: ${error.message}`, 'error');
-        }
-    });
+            try {
+                await window.api.post('/jobs', jobData);
+                messageDiv.textContent = 'Job submitted for approval!';
+                messageDiv.className = 'form-message success';
+                addJobForm.reset();
+            } catch (error) {
+                console.error('Error adding job:', error);
+                messageDiv.textContent = `Error: ${error.message}`;
+                messageDiv.className = 'form-message error';
+            }
+        });
+    }
 });

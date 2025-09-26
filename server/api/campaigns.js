@@ -5,32 +5,22 @@ const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
 
 module.exports = (pool) => {
 
-    router.post('/', verifyToken, isAdmin, asyncHandler(async (req, res) => {
-        const { title, description, goal_amount, start_date, end_date, image_url } = req.body;
-        const created_by = req.user.userId;
-        await pool.query(
-            'INSERT INTO campaigns (title, description, goal_amount, start_date, end_date, image_url, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [title, description, goal_amount, start_date, end_date, image_url, created_by]
-        );
-        res.status(201).json({ message: 'Campaign created successfully!' });
-    }));
-
-    router.get('/', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query('SELECT * FROM campaigns ORDER BY end_date DESC');
-        res.json(rows);
-    }));
     router.post('/', verifyToken, asyncHandler(async (req, res) => {
-        // Allow admin or institute to create campaigns
         if (req.user.role !== 'admin' && req.user.role !== 'institute') {
             return res.status(403).json({ message: 'You are not authorized to create campaigns.' });
         }
         const { title, description, goal_amount, start_date, end_date, image_url } = req.body;
         const created_by = req.user.userId;
         await pool.query(
-            'INSERT INTO campaigns (title, description, goal_amount, start_date, end_date, image_url, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [title, description, goal_amount, start_date, end_date, image_url, created_by]
+            'INSERT INTO campaigns (title, description, goal_amount, start_date, end_date, image_url, created_by, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+            [title, description, goal_amount, start_date, end_date, image_url, created_by, 'pending']
         );
-        res.status(201).json({ message: 'Campaign created successfully!' });
+        res.status(201).json({ message: 'Campaign submitted for approval!' });
+    }));
+
+    router.get('/', asyncHandler(async (req, res) => {
+        const [rows] = await pool.query("SELECT * FROM campaigns WHERE status = 'approved' ORDER BY end_date DESC");
+        res.json(rows);
     }));
 
     router.get('/:id', asyncHandler(async (req, res) => {
@@ -44,10 +34,10 @@ module.exports = (pool) => {
     router.put('/:id', verifyToken, isAdmin, asyncHandler(async (req, res) => {
         const { title, description, goal_amount, start_date, end_date, image_url } = req.body;
         await pool.query(
-            'UPDATE campaigns SET title = ?, description = ?, goal_amount = ?, start_date = ?, end_date = ?, image_url = ? WHERE campaign_id = ?',
+            'UPDATE campaigns SET title = ?, description = ?, goal_amount = ?, start_date = ?, end_date = ?, image_url = ?, status = "pending" WHERE campaign_id = ?',
             [title, description, goal_amount, start_date, end_date, image_url, req.params.id]
         );
-        res.status(200).json({ message: 'Campaign updated successfully!' });
+        res.status(200).json({ message: 'Campaign updated and resubmitted for approval!' });
     }));
 
     router.delete('/:id', verifyToken, isAdmin, asyncHandler(async (req, res) => {

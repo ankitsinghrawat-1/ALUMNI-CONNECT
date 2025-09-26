@@ -15,7 +15,7 @@ module.exports = (pool, createGlobalNotification) => {
             if (error.code === 'ER_DUP_ENTRY') {
                 return res.status(409).json({ message: 'You have already RSVP\'d to this event.' });
             }
-            throw error; // Let the central handler catch other errors
+            throw error;
         }
     }));
 
@@ -42,7 +42,7 @@ module.exports = (pool, createGlobalNotification) => {
     }));
 
     router.get('/recent', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query('SELECT event_id, title, date, location FROM events ORDER BY date DESC LIMIT 3');
+        const [rows] = await pool.query("SELECT event_id, title, date, location FROM events WHERE status = 'approved' ORDER BY date DESC LIMIT 3");
         res.json(rows);
     }));
 
@@ -50,12 +50,12 @@ module.exports = (pool, createGlobalNotification) => {
         const { event_ids } = req.body;
         if (!event_ids || event_ids.length === 0) return res.json([]);
         const placeholders = event_ids.map(() => '?').join(',');
-        const [rows] = await pool.query(`SELECT event_id, title, date, location FROM events WHERE event_id IN (${placeholders}) ORDER BY date DESC`, event_ids);
+        const [rows] = await pool.query(`SELECT event_id, title, date, location FROM events WHERE event_id IN (${placeholders}) AND status = 'approved' ORDER BY date DESC`, event_ids);
         res.json(rows);
     }));
 
     router.get('/', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query('SELECT * FROM events ORDER BY date DESC');
+        const [rows] = await pool.query("SELECT * FROM events WHERE status = 'approved' ORDER BY date DESC");
         res.json(rows);
     }));
 
@@ -70,10 +70,10 @@ module.exports = (pool, createGlobalNotification) => {
     router.put('/:id', verifyToken, isAdmin, asyncHandler(async (req, res) => {
         const { title, description, date, location, organizer } = req.body;
         await pool.query(
-            'UPDATE events SET title = ?, description = ?, date = ?, location = ?, organizer = ? WHERE event_id = ?',
+            'UPDATE events SET title = ?, description = ?, date = ?, location = ?, organizer = ?, status = "pending" WHERE event_id = ?',
             [title, description, date, location, organizer, req.params.id]
         );
-        res.status(200).json({ message: 'Event updated successfully!' });
+        res.status(200).json({ message: 'Event updated and resubmitted for approval!' });
     }));
 
     router.delete('/:id', verifyToken, isAdmin, asyncHandler(async (req, res) => {
@@ -84,21 +84,12 @@ module.exports = (pool, createGlobalNotification) => {
     }));
 
     router.post('/', verifyToken, asyncHandler(async (req, res) => {
-        // Allow admin or institute to post events
         if (req.user.role !== 'admin' && req.user.role !== 'institute') {
             return res.status(403).json({ message: 'You are not authorized to create events.' });
         }
         const { title, date, location, organizer, description } = req.body;
-        await pool.query('INSERT INTO events (title, date, location, organizer, description) VALUES (?, ?, ?, ?, ?)', [title, date, location, organizer, description]);
-        await createGlobalNotification(`A new event has been scheduled: "${title}" on ${new Date(date).toLocaleDateString()}.`, '/events.html');
-        res.status(201).json({ message: 'Event added successfully' });
-    }));
-    
-    router.post('/', verifyToken, isAdmin, asyncHandler(async (req, res) => {
-        const { title, date, location, organizer, description } = req.body;
-        await pool.query('INSERT INTO events (title, date, location, organizer, description) VALUES (?, ?, ?, ?, ?)', [title, date, location, organizer, description]);
-        await createGlobalNotification(`A new event has been scheduled: "${title}" on ${new Date(date).toLocaleDateString()}.`, '/events.html');
-        res.status(201).json({ message: 'Event added successfully' });
+        await pool.query('INSERT INTO events (title, date, location, organizer, description, status) VALUES (?, ?, ?, ?, ?, ?)', [title, date, location, organizer, description, 'pending']);
+        res.status(201).json({ message: 'Event submitted for approval!' });
     }));
 
     return router;

@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const addCampaignForm = document.getElementById('add-campaign-form');
 
-    if (localStorage.getItem('userRole') !== 'admin') {
+    if (localStorage.getItem('userRole') !== 'admin' && localStorage.getItem('userRole') !== 'institute') {
         window.location.href = 'index.html';
         return;
     }
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const result = await window.api.post('/campaigns', campaignData);
-            showToast(result.message, 'success');
+            showToast('Campaign submitted for approval!', 'success');
             addCampaignForm.reset();
         } catch (error) {
             console.error('Error creating campaign:', error);
