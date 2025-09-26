@@ -27,6 +27,10 @@ module.exports = (pool, upload, createGlobalNotification) => {
     // New route for employer dashboard
     router.get('/employer/:email', verifyToken, asyncHandler(async (req, res) => {
         const { email } = req.params;
+        // Security check to ensure the logged-in user can only access their own jobs
+        if (req.user.email !== email) {
+            return res.status(403).json({ message: 'Forbidden' });
+        }
         const [rows] = await pool.query('SELECT * FROM jobs WHERE contact_email = ? ORDER BY created_at DESC', [email]);
         res.json(rows);
     }));
@@ -56,11 +60,15 @@ module.exports = (pool, upload, createGlobalNotification) => {
     }));
 
     router.put('/:id', verifyToken, asyncHandler(async (req, res) => {
-        // Allow admin or employer to edit
-        if (req.user.role !== 'admin' && req.user.role !== 'employer') {
-            return res.status(403).json({ message: 'You are not authorized to edit jobs.' });
-        }
         const { title, description, company, location, contact_email } = req.body;
+        // Allow admin or the employer who posted the job to edit
+        const [jobRows] = await pool.query('SELECT contact_email FROM jobs WHERE job_id = ?', [req.params.id]);
+        if (jobRows.length === 0) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+        if (req.user.role !== 'admin' && req.user.email !== jobRows[0].contact_email) {
+            return res.status(403).json({ message: 'You are not authorized to edit this job.' });
+        }
         await pool.query(
             'UPDATE jobs SET title = ?, description = ?, company = ?, location = ?, contact_email = ? WHERE job_id = ?',
             [title, description, company, location, contact_email, req.params.id]
@@ -69,9 +77,13 @@ module.exports = (pool, upload, createGlobalNotification) => {
     }));
 
     router.delete('/:id', verifyToken, asyncHandler(async (req, res) => {
-        // Allow admin or employer to delete
-         if (req.user.role !== 'admin' && req.user.role !== 'employer') {
-            return res.status(403).json({ message: 'You are not authorized to delete jobs.' });
+        // Allow admin or the employer who posted the job to delete
+        const [jobRows] = await pool.query('SELECT contact_email FROM jobs WHERE job_id = ?', [req.params.id]);
+        if (jobRows.length === 0) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+        if (req.user.role !== 'admin' && req.user.email !== jobRows[0].contact_email) {
+            return res.status(403).json({ message: 'You are not authorized to delete this job.' });
         }
         await pool.query('DELETE FROM job_applications WHERE job_id = ?', [req.params.id]);
         await pool.query('DELETE FROM jobs WHERE job_id = ?', [req.params.id]);

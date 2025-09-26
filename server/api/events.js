@@ -83,6 +83,17 @@ module.exports = (pool, createGlobalNotification) => {
         res.status(200).json({ message: 'Event and all related RSVPs deleted successfully.' });
     }));
 
+    router.post('/', verifyToken, asyncHandler(async (req, res) => {
+        // Allow admin or institute to post events
+        if (req.user.role !== 'admin' && req.user.role !== 'institute') {
+            return res.status(403).json({ message: 'You are not authorized to create events.' });
+        }
+        const { title, date, location, organizer, description } = req.body;
+        await pool.query('INSERT INTO events (title, date, location, organizer, description) VALUES (?, ?, ?, ?, ?)', [title, date, location, organizer, description]);
+        await createGlobalNotification(`A new event has been scheduled: "${title}" on ${new Date(date).toLocaleDateString()}.`, '/events.html');
+        res.status(201).json({ message: 'Event added successfully' });
+    }));
+    
     router.post('/', verifyToken, isAdmin, asyncHandler(async (req, res) => {
         const { title, date, location, organizer, description } = req.body;
         await pool.query('INSERT INTO events (title, date, location, organizer, description) VALUES (?, ?, ?, ?, ?)', [title, date, location, organizer, description]);

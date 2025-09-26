@@ -19,6 +19,19 @@ module.exports = (pool) => {
         const [rows] = await pool.query('SELECT * FROM campaigns ORDER BY end_date DESC');
         res.json(rows);
     }));
+    router.post('/', verifyToken, asyncHandler(async (req, res) => {
+        // Allow admin or institute to create campaigns
+        if (req.user.role !== 'admin' && req.user.role !== 'institute') {
+            return res.status(403).json({ message: 'You are not authorized to create campaigns.' });
+        }
+        const { title, description, goal_amount, start_date, end_date, image_url } = req.body;
+        const created_by = req.user.userId;
+        await pool.query(
+            'INSERT INTO campaigns (title, description, goal_amount, start_date, end_date, image_url, created_by) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [title, description, goal_amount, start_date, end_date, image_url, created_by]
+        );
+        res.status(201).json({ message: 'Campaign created successfully!' });
+    }));
 
     router.get('/:id', asyncHandler(async (req, res) => {
         const [rows] = await pool.query('SELECT * FROM campaigns WHERE campaign_id = ?', [req.params.id]);
