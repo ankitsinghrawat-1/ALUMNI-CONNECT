@@ -7,7 +7,7 @@ module.exports = (pool) => {
 
     router.get('/', asyncHandler(async (req, res) => {
         const [mentors] = await pool.query(`
-            SELECT u.user_id, u.full_name, u.job_title, u.current_company, u.profile_pic_url, u.email, m.expertise_areas, u.verification_status
+            SELECT u.user_id, u.full_name, u.job_title, u.company, u.profile_pic_url, u.email, m.expertise_areas, u.verification_status
             FROM mentors m JOIN users u ON m.user_id = u.user_id WHERE m.is_available = TRUE
         `);
         res.json(mentors);

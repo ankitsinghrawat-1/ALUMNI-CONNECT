@@ -42,7 +42,7 @@ module.exports = (pool, createGlobalNotification) => {
     }));
 
     router.get('/recent', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query("SELECT event_id, title, date, location FROM events WHERE status = 'approved' ORDER BY date DESC LIMIT 3");
+        const [rows] = await pool.query("SELECT event_id, title, date, location FROM events WHERE status = 'approved' AND date >= CURDATE() ORDER BY date ASC LIMIT 3");
         res.json(rows);
     }));
 

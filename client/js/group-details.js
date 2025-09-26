@@ -9,53 +9,215 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    groupDetailsContainer.innerHTML = `<div class="loading-spinner"><div class="spinner"></div></div>`;
+    const loadGroupDetails = async () => {
+        groupDetailsContainer.innerHTML = `<div class="loading-spinner"><div class="spinner"></div></div>`;
+        try {
+            const group = await window.api.get(`/groups/${groupId}`);
+            const membership = await window.api.get(`/groups/${groupId}/membership-status`);
+            
+            document.title = group.name;
 
-    try {
-        const group = await window.api.get(`/groups/${groupId}`);
-        document.title = group.name;
-
-        groupDetailsContainer.innerHTML = `
-            <div class="group-details-card card">
-                <h1>${sanitizeHTML(group.name)}</h1>
-                <p>${sanitizeHTML(group.description)}</p>
-                <div class="group-actions">
-                    <button id="join-request-btn" class="btn btn-primary">Request to Join</button>
-                </div>
-                <div class="members-section">
-                    <h3>Members</h3>
-                    <div id="members-list" class="members-list"></div>
-                </div>
-            </div>
-        `;
-
-        const joinRequestBtn = document.getElementById('join-request-btn');
-        joinRequestBtn.addEventListener('click', async () => {
-            try {
-                await window.api.post(`/groups/${groupId}/request-join`);
-                showToast('Your request to join has been sent!', 'success');
-                joinRequestBtn.textContent = 'Request Sent';
-                joinRequestBtn.disabled = true;
-            } catch (error) {
-                showToast(error.message, 'error');
+            let actionButton = '';
+            if (membership.status === 'none') {
+                actionButton = `<button id="join-request-btn" class="btn btn-primary">Request to Join</button>`;
+            } else if (membership.status === 'pending') {
+                actionButton = `<button class="btn btn-secondary" disabled>Request Sent</button>`;
             }
-        });
 
-        const membersList = document.getElementById('members-list');
-        const members = await window.api.get(`/groups/${groupId}/members`);
-        if (members.length > 0) {
-            membersList.innerHTML = members.map(member => `
-                <div class="member-item">
-                    <img src="${member.profile_pic_url ? `http://localhost:3000/${member.profile_pic_url}` : createInitialsAvatar(member.full_name)}" alt="${member.full_name}" class="alumnus-pfp-round small">
-                    <span>${sanitizeHTML(member.full_name)}</span>
+            groupDetailsContainer.innerHTML = `
+                <div class="group-details-card card">
+                    <div class="group-header">
+                        <img src="${group.image_url || 'https://via.placeholder.com/800x200?text=Group+Banner'}" alt="${group.name}" class="group-cover-image">
+                        <h1>${sanitizeHTML(group.name)}</h1>
+                        <p>${sanitizeHTML(group.description)}</p>
+                        <div class="group-actions">${actionButton}</div>
+                    </div>
+
+                    <div class="group-tabs">
+                        <button class="tab-link active" data-tab="discussion">Discussion</button>
+                        <button class="tab-link" data-tab="members">Members</button>
+                        ${membership.status === 'admin' ? `<button class="tab-link" data-tab="requests">Join Requests</button>` : ''}
+                    </div>
+
+                    <div id="discussion" class="tab-content active">
+                        ${membership.status === 'member' || membership.status === 'admin' ? `
+                        <form id="new-post-form">
+                            <div class="input-group">
+                                <textarea id="post-content" placeholder="Share something with the group..." required></textarea>
+                                <button type="submit" class="btn btn-primary">Post</button>
+                            </div>
+                        </form>
+                        ` : '<p class="info-message">You must be a member to post in this group.</p>'}
+                        <div id="posts-container" class="posts-container"></div>
+                    </div>
+
+                    <div id="members" class="tab-content">
+                        <div id="members-list" class="members-list"></div>
+                    </div>
+                    
+                    ${membership.status === 'admin' ? `
+                    <div id="requests" class="tab-content">
+                        <div id="requests-list" class="requests-list"></div>
+                    </div>
+                    ` : ''}
                 </div>
-            `).join('');
-        } else {
-            membersList.innerHTML = '<p>No members yet.</p>';
+            `;
+            
+            attachEventListeners();
+            loadTabData('discussion'); // Load initial tab
+            
+        } catch (error) {
+            console.error('Error fetching group details:', error);
+            groupDetailsContainer.innerHTML = '<h1>Error loading group</h1><p class="info-message error">The group could not be found or there was a server error.</p>';
         }
+    };
+    
+    const loadTabData = (tab) => {
+        switch(tab) {
+            case 'discussion':
+                loadPosts();
+                break;
+            case 'members':
+                loadMembers();
+                break;
+            case 'requests':
+                loadJoinRequests();
+                break;
+        }
+    };
 
-    } catch (error) {
-        console.error('Error fetching group details:', error);
-        groupDetailsContainer.innerHTML = '<h1>Error loading group</h1><p class="info-message error">The group could not be found or there was a server error.</p>';
-    }
+    const loadPosts = async () => {
+        const postsContainer = document.getElementById('posts-container');
+        try {
+            const posts = await window.api.get(`/groups/${groupId}/posts`);
+            if (posts.length > 0) {
+                postsContainer.innerHTML = posts.map(post => `
+                    <div class="group-post card">
+                        <div class="post-author">
+                            <img src="${post.profile_pic_url ? `http://localhost:3000/${post.profile_pic_url}` : createInitialsAvatar(post.author)}" alt="${post.author}">
+                            <div>
+                                <strong>${sanitizeHTML(post.author)}</strong>
+                                <small>${new Date(post.created_at).toLocaleString()}</small>
+                            </div>
+                        </div>
+                        <p>${sanitizeHTML(post.content)}</p>
+                    </div>
+                `).join('');
+            } else {
+                postsContainer.innerHTML = '<p class="info-message">No posts in this group yet. Be the first to share something!</p>';
+            }
+        } catch (error) {
+            console.error('Error loading posts:', error);
+        }
+    };
+    
+    const loadMembers = async () => {
+         const membersList = document.getElementById('members-list');
+        try {
+            const members = await window.api.get(`/groups/${groupId}/members`);
+            if (members.length > 0) {
+                membersList.innerHTML = members.map(member => `
+                    <a href="view-profile.html?email=${member.email}" class="member-item">
+                        <img src="${member.profile_pic_url ? `http://localhost:3000/${member.profile_pic_url}` : createInitialsAvatar(member.full_name)}" alt="${member.full_name}" class="alumnus-pfp-round small">
+                        <span>${sanitizeHTML(member.full_name)}</span>
+                    </a>
+                `).join('');
+            } else {
+                 membersList.innerHTML = '<p class="info-message">No members yet.</p>';
+            }
+        } catch (error) {
+             console.error('Error loading members:', error);
+        }
+    };
+    
+    const loadJoinRequests = async () => {
+        const requestsList = document.getElementById('requests-list');
+        try {
+            const requests = await window.api.get(`/groups/${groupId}/join-requests`);
+             if (requests.length > 0) {
+                requestsList.innerHTML = requests.map(req => `
+                    <div class="request-item">
+                        <span>${sanitizeHTML(req.full_name)}</span>
+                        <div>
+                            <button class="btn btn-success btn-sm approve-join-btn" data-id="${req.request_id}">Approve</button>
+                            <button class="btn btn-danger btn-sm reject-join-btn" data-id="${req.request_id}">Reject</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                 requestsList.innerHTML = '<p class="info-message">No pending join requests.</p>';
+            }
+        } catch(error) {
+            console.error('Error loading join requests:', error);
+        }
+    };
+
+    const attachEventListeners = () => {
+        const joinRequestBtn = document.getElementById('join-request-btn');
+        if (joinRequestBtn) {
+            joinRequestBtn.addEventListener('click', async () => {
+                try {
+                    await window.api.post(`/groups/${groupId}/request-join`);
+                    showToast('Your request to join has been sent!', 'success');
+                    joinRequestBtn.textContent = 'Request Sent';
+                    joinRequestBtn.disabled = true;
+                } catch (error) {
+                    showToast(error.message, 'error');
+                }
+            });
+        }
+        
+        const newPostForm = document.getElementById('new-post-form');
+        if(newPostForm) {
+            newPostForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const content = document.getElementById('post-content').value;
+                try {
+                    await window.api.post(`/groups/${groupId}/posts`, { content });
+                    document.getElementById('post-content').value = '';
+                    loadPosts();
+                } catch(error) {
+                    showToast('Failed to create post.', 'error');
+                }
+            });
+        }
+        
+        const tabs = document.querySelectorAll('.tab-link');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                tabs.forEach(t => t.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                const tabName = e.target.dataset.tab;
+                document.getElementById(tabName).classList.add('active');
+                
+                loadTabData(tabName);
+            });
+        });
+        
+        const requestsList = document.getElementById('requests-list');
+        if(requestsList) {
+            requestsList.addEventListener('click', async (e) => {
+                const target = e.target;
+                const requestId = target.dataset.id;
+                let action = '';
+                
+                if(target.classList.contains('approve-join-btn')) action = 'approve';
+                if(target.classList.contains('reject-join-btn')) action = 'reject';
+                
+                if(action) {
+                    try {
+                        await window.api.post(`/groups/${groupId}/join-requests/${requestId}`, { action });
+                        showToast(`Request ${action}d.`, 'success');
+                        loadJoinRequests();
+                    } catch(error) {
+                         showToast('Action failed.', 'error');
+                    }
+                }
+            });
+        }
+    };
+
+    loadGroupDetails();
 });
