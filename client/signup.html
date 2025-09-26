@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up</title>
+    <title>Create Your Account - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -16,7 +16,7 @@
     </script>
 </head>
 <body>
-    
+
     <header class="main-header">
         <nav class="main-nav container">
             <a href="index.html" class="logo">AlumniConnect</a>
@@ -24,38 +24,136 @@
                 </ul>
         </nav>
     </header>
-    
+
     <main class="form-main">
-        <section class="form-container">
-            <h2>Sign Up</h2>
+        <section class="form-container wide">
+            <h2>Create Your Account</h2>
+            <div class="role-selector">
+                <button class="role-tab active" data-role="alumni"><i class="fas fa-user-graduate"></i> Alumni</button>
+                <button class="role-tab" data-role="student"><i class="fas fa-user-pen"></i> Student</button>
+                <button class="role-tab" data-role="faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</button>
+                <button class="role-tab" data-role="employer"><i class="fas fa-briefcase"></i> Employer</button>
+                <button class="role-tab" data-role="institute"><i class="fas fa-university"></i> Institute</button>
+            </div>
             <form id="signup-form">
-                <div class="input-group">
-                    <label for="full_name">Full Name</label>
-                    <input type="text" id="full_name" required>
+                <input type="hidden" id="role-input" name="role" value="alumni">
+
+                <div class="form-row">
+                    <div class="input-group" data-role-field="full_name">
+                        <label for="full_name">Full Name</label>
+                        <input type="text" id="full_name" name="full_name" required>
+                    </div>
+                    <div class="input-group" data-role-field="email">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
+
+                <div class="form-row">
+                    <div class="input-group" data-role-field="password">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <div class="input-group" data-role-field="confirm_password">
+                        <label for="confirm_password">Confirm Password</label>
+                        <input type="password" id="confirm_password" required>
+                    </div>
                 </div>
-                <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required>
+
+                <div class="form-row">
+                    <div class="input-group" data-role-field="dob">
+                        <label for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob">
+                    </div>
+                    <div class="input-group" data-role-field="address">
+                        <label for="address">Address</label>
+                        <input type="text" id="address" name="address">
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group" data-role-field="city">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city">
+                    </div>
+                    <div class="input-group" data-role-field="country">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" name="country">
+                    </div>
+                </div>
+
+                 <div class="form-row">
+                    <div class="input-group" data-role-field="phone_number">
+                        <label for="phone_number">Phone Number</label>
+                        <input type="tel" id="phone_number" name="phone_number">
+                    </div>
+                    <div class="input-group" data-role-field="linkedin_profile">
+                        <label for="linkedin_profile">LinkedIn Profile URL</label>
+                        <input type="url" id="linkedin_profile" name="linkedin_profile">
+                    </div>
+                </div>
+
+                <div class="form-row" data-role-field="academic">
+                    <div class="input-group">
+                        <label for="graduation_year">Graduation Year</label>
+                        <input type="number" id="graduation_year" name="graduation_year" min="1900" max="2100">
+                    </div>
+                    <div class="input-group">
+                        <label for="major">Major/Field of Study</label>
+                        <input type="text" id="major" name="major">
+                    </div>
+                </div>
+
+                <div class="form-row" data-role-field="professional">
+                     <div class="input-group">
+                        <label for="job_title">Current Job Title</label>
+                        <input type="text" id="job_title" name="job_title">
+                    </div>
+                    <div class="input-group">
+                        <label for="company">Company/Institution</label>
+                        <input type="text" id="company" name="company">
+                    </div>
+                </div>
+
+                <div class="input-group" data-role-field="institute_name">
+                    <label for="institute_name">Institute Name</label>
+                    <input type="text" id="institute_name" name="institute_name">
+                </div>
+
+                <div class="input-group" data-role-field="industry">
+                    <label for="industry">Industry</label>
+                    <input type="text" id="industry" name="industry">
+                </div>
+
+                <div class="input-group" data-role-field="website">
+                    <label for="website">Website</label>
+                    <input type="url" id="website" name="website">
+                </div>
+
+                <div class="input-group" data-role-field="bio">
+                    <label for="bio">Bio: Tell us about yourself</label>
+                    <textarea id="bio" name="bio" rows="3"></textarea>
+                </div>
+
+                <div class="input-group" data-role-field="skills">
+                    <label for="skills">Skills (comma-separated)</label>
+                    <input type="text" id="skills" name="skills">
                 </div>
 
                 <div id="message" class="form-message"></div>
-                
+
                 <button type="submit" class="btn btn-primary btn-full-width">Sign Up</button>
             </form>
             <p>Already have an account? <a href="login.html">Log In</a></p>
         </section>
     </main>
-    
+
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
         </div>
     </footer>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>

@@ -1,4 +1,4 @@
-// docs/login.js
+// client/js/login.js
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.getElementById('login-form');
     const messageDiv = document.getElementById('message');
@@ -15,7 +15,12 @@ document.addEventListener('DOMContentLoaded', () => {
     // Check for token instead of email
     const token = localStorage.getItem('alumniConnectToken');
     if (token) {
-        window.location.href = 'dashboard.html';
+        const userRole = localStorage.getItem('userRole');
+        if (userRole === 'admin') {
+            window.location.href = 'admin.html';
+        } else {
+            window.location.href = 'dashboard.html';
+        }
         return;
     }
 
@@ -61,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (data.role === 'admin') {
                     window.location.href = 'admin.html';
                 } else {
+                    // All other roles go to the main dashboard
                     window.location.href = 'dashboard.html';
                 }
             } else {
