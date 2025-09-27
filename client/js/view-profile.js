@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fetchUserBlogs = async (email) => {
         const postsContainer = document.getElementById('user-blog-posts');
         try {
-            // This is a public route
-            const blogs = await window.api.get(`/blogs/user/${email}`);
+            // UPDATED API ENDPOINT
+            const blogs = await window.api.get(`/blogs/by-author/${email}`);
 
             if (blogs.length > 0) {
                 postsContainer.innerHTML = blogs.map(post => `
@@ -33,10 +33,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const fetchUserProfile = async (email) => {
         try {
-            // This is a public route
             const user = await window.api.get(`/users/profile/${email}`);
             
-            // The API now handles private profiles, so we just render what we get
             if (user.message && user.message.includes('private')) {
                 const badgeHTML = user.verification_status === 'verified' ? '<span class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i> Verified</span>' : '';
                 document.querySelector('.profile-container-view').innerHTML = `

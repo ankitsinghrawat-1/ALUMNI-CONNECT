@@ -1,26 +1,25 @@
 const express = require('express');
 const router = express.Router();
 const asyncHandler = require('express-async-handler');
-const { verifyToken, isAdmin } = require('../middleware/authMiddleware');
+const { verifyToken } = require('../middleware/authMiddleware');
+const path = require('path');
+const fs = require('fs').promises;
 
-module.exports = (pool) => {
+module.exports = (pool, upload) => {
 
     // GET all blogs (Public)
     router.get('/', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query('SELECT b.blog_id, b.title, b.content, u.full_name AS author, b.created_at FROM blogs b JOIN users u ON b.author_id = u.user_id ORDER BY b.created_at DESC');
+        const [rows] = await pool.query('SELECT b.blog_id, b.title, b.content, b.image_url, u.full_name AS author, u.email as author_email, b.created_at FROM blogs b JOIN users u ON b.author_id = u.user_id ORDER BY b.created_at DESC');
         res.json(rows);
     }));
     
-    // GET blogs for the currently logged-in user (Protected)
-    // MOVED THIS ROUTE UP so it's matched before '/user/:email'
     router.get('/user/my-blogs', verifyToken, asyncHandler(async (req, res) => {
         const author_id = req.user.userId;
         const [rows] = await pool.query('SELECT blog_id, title, created_at FROM blogs WHERE author_id = ? ORDER BY created_at DESC', [author_id]);
         res.json(rows);
     }));
 
-    // GET all blogs by a specific user (Public)
-    router.get('/user/:email', asyncHandler(async (req, res) => {
+    router.get('/by-author/:email', asyncHandler(async (req, res) => {
         const [user] = await pool.query('SELECT user_id FROM users WHERE email = ?', [req.params.email]);
         if (user.length === 0) {
             return res.status(404).json({ message: 'User not found' });
@@ -35,29 +34,31 @@ module.exports = (pool) => {
 
     // GET a single blog post (Public)
     router.get('/:id', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query('SELECT b.blog_id, b.title, b.content, u.full_name AS author, u.email as author_email, b.created_at FROM blogs b JOIN users u ON b.author_id = u.user_id WHERE b.blog_id = ?', [req.params.id]);
+        const [rows] = await pool.query('SELECT b.blog_id, b.title, b.content, b.image_url, u.full_name AS author, u.email as author_email, b.created_at FROM blogs b JOIN users u ON b.author_id = u.user_id WHERE b.blog_id = ?', [req.params.id]);
         if (rows.length === 0) {
             return res.status(404).json({ message: 'Blog post not found' });
         }
         res.json(rows[0]);
     }));
 
-    // POST a new blog (Protected)
-    router.post('/', verifyToken, asyncHandler(async (req, res) => {
+    // POST a new blog (Protected & handles image upload)
+    router.post('/', verifyToken, upload.single('blog_image'), asyncHandler(async (req, res) => {
         const { title, content } = req.body;
         const author_id = req.user.userId;
-        await pool.query('INSERT INTO blogs (title, content, author_id) VALUES (?, ?, ?)', [title, content, author_id]);
+        const image_url = req.file ? `uploads/blogs/${req.file.filename}` : null;
+
+        await pool.query('INSERT INTO blogs (title, content, image_url, author_id) VALUES (?, ?, ?, ?)', [title, content, image_url, author_id]);
         res.status(201).json({ message: 'Blog post created successfully' });
     }));
 
-    // PUT (update) a blog post (Protected)
-    router.put('/:id', verifyToken, asyncHandler(async (req, res) => {
+    // PUT (update) a blog post (Protected & handles image upload)
+    router.put('/:id', verifyToken, upload.single('blog_image'), asyncHandler(async (req, res) => {
         const { title, content } = req.body;
         const blog_id = req.params.id;
         const current_user_id = req.user.userId;
         const user_role = req.user.role;
 
-        const [blog] = await pool.query('SELECT author_id FROM blogs WHERE blog_id = ?', [blog_id]);
+        const [blog] = await pool.query('SELECT author_id, image_url FROM blogs WHERE blog_id = ?', [blog_id]);
         if (blog.length === 0) {
             return res.status(404).json({ message: 'Blog post not found' });
         }
@@ -66,7 +67,17 @@ module.exports = (pool) => {
             return res.status(403).json({ message: 'You are not authorized to edit this post.' });
         }
 
-        await pool.query('UPDATE blogs SET title = ?, content = ? WHERE blog_id = ?', [title, content, blog_id]);
+        let new_image_url = blog[0].image_url;
+        if (req.file) {
+            new_image_url = `uploads/blogs/${req.file.filename}`;
+            // If there was an old image, delete it
+            if (blog[0].image_url) {
+                const oldImagePath = path.join(__dirname, '..', '..', blog[0].image_url);
+                fs.unlink(oldImagePath).catch(err => console.error("Failed to delete old blog image:", err));
+            }
+        }
+
+        await pool.query('UPDATE blogs SET title = ?, content = ?, image_url = ? WHERE blog_id = ?', [title, content, new_image_url, blog_id]);
         res.status(200).json({ message: 'Blog post updated successfully!' });
     }));
 
@@ -76,13 +87,19 @@ module.exports = (pool) => {
         const current_user_id = req.user.userId;
         const user_role = req.user.role;
 
-        const [blog] = await pool.query('SELECT author_id FROM blogs WHERE blog_id = ?', [blog_id]);
+        const [blog] = await pool.query('SELECT author_id, image_url FROM blogs WHERE blog_id = ?', [blog_id]);
         if (blog.length === 0) {
             return res.status(200).json({ message: 'Blog post already deleted.' });
         }
 
         if (blog[0].author_id !== current_user_id && user_role !== 'admin') {
             return res.status(403).json({ message: 'You are not authorized to delete this post.' });
+        }
+
+        // Delete the image file if it exists
+        if (blog[0].image_url) {
+            const imagePath = path.join(__dirname, '..', '..', blog[0].image_url);
+            fs.unlink(imagePath).catch(err => console.error("Failed to delete blog image:", err));
         }
 
         await pool.query('DELETE FROM blogs WHERE blog_id = ?', [blog_id]);

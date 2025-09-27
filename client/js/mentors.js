@@ -4,12 +4,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const mentorActionArea = document.getElementById('mentor-action-area');
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
     
-    // Modal elements
-    const modal = document.getElementById('request-modal');
-    const closeModalBtn = document.querySelector('.close-btn');
-    const requestForm = document.getElementById('request-form');
-    const mentorIdInput = document.getElementById('mentor-id-input');
-    const requestMessageInput = document.getElementById('request-message');
+    // Modals
+    const requestModal = document.getElementById('request-modal');
+    const editRequestModal = document.getElementById('edit-request-modal');
 
     const checkMentorStatus = async () => {
         if (!loggedInUserEmail || !mentorActionArea) return;
@@ -25,32 +22,62 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
-             mentorActionArea.innerHTML = `<a href="become-mentor.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Become a Mentor</a>`;
+            mentorActionArea.innerHTML = `<a href="become-mentor.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Become a Mentor</a>`;
         }
     };
 
     const fetchAndRenderMentors = async () => {
         mentorsListContainer.innerHTML = `<div class="loading-spinner"><div class="spinner"></div></div>`;
         try {
-            const mentors = await window.api.get('/mentors');
+            const [mentors, sentRequests] = await Promise.all([
+                window.api.get('/mentors'),
+                loggedInUserEmail ? window.api.get('/mentors/requests/sent') : Promise.resolve([])
+            ]);
+            
+            const sentRequestsMap = new Map(sentRequests.map(req => [req.mentor_user_id, {status: req.status, message: req.request_message}]));
+
             mentorsListContainer.innerHTML = '';
 
             if (mentors.length > 0) {
                 mentors.forEach(mentor => {
                     if (mentor.email === loggedInUserEmail) return;
 
+                    const requestStatus = sentRequestsMap.get(mentor.user_id);
+                    let buttonsHtml = '';
+
+                    // Always show view profile button
+                    buttonsHtml += `<a href="view-profile.html?email=${mentor.email}" class="btn btn-secondary">View Profile</a>`;
+
+                    if (requestStatus) {
+                        switch (requestStatus.status) {
+                            case 'pending':
+                                buttonsHtml += `
+                                    <button class="btn btn-secondary edit-request-btn" data-id="${mentor.user_id}" data-name="${sanitizeHTML(mentor.full_name)}" data-message="${sanitizeHTML(requestStatus.message)}">Edit Request</button>
+                                    <button class="btn btn-danger cancel-request-btn" data-id="${mentor.user_id}">Cancel Request</button>
+                                `;
+                                break;
+                            case 'accepted':
+                                buttonsHtml += `<a href="messages.html" class="btn btn-success">Message Mentor</a>`;
+                                break;
+                            case 'declined':
+                                buttonsHtml += `<button class="btn btn-primary request-mentor-btn" data-id="${mentor.user_id}" data-name="${sanitizeHTML(mentor.full_name)}">Request Again</button>`;
+                                break;
+                        }
+                    } else {
+                        buttonsHtml += `<button class="btn btn-primary request-mentor-btn" data-id="${mentor.user_id}" data-name="${sanitizeHTML(mentor.full_name)}">Request Mentorship</button>`;
+                    }
+
                     const mentorItem = document.createElement('div');
                     mentorItem.classList.add('alumnus-list-item');
                     const profilePicUrl = mentor.profile_pic_url ? `http://localhost:3000/${mentor.profile_pic_url}` : createInitialsAvatar(mentor.full_name);
 
-                    // --- FIX: Added the onerror attribute ---
                     mentorItem.innerHTML = `
                         <img src="${profilePicUrl}" alt="${sanitizeHTML(mentor.full_name)}" class="alumnus-pfp-round" onerror="this.onerror=null; this.src=createInitialsAvatar('${mentor.full_name.replace(/'/g, "\\'")}');">
                         <div class="alumnus-details">
                             <h3>${sanitizeHTML(mentor.full_name)} ${mentor.verification_status === 'verified' ? '<span class="verified-badge-sm" title="Verified"><i class="fas fa-check-circle"></i></span>' : ''}</h3>
-                            <p><i class="fas fa-briefcase"></i> ${sanitizeHTML(mentor.job_title || 'N/A')} at ${sanitizeHTML(mentor.current_company || 'N/A')}</p>
+                            <p><i class="fas fa-briefcase"></i> ${sanitizeHTML(mentor.job_title || 'N/A')} at ${sanitizeHTML(mentor.company || 'N/A')}</p>
                             <p><i class="fas fa-star"></i> <strong>Expertise:</strong> ${sanitizeHTML(mentor.expertise_areas || 'N/A')}</p>
-                            <button class="btn btn-primary request-mentor-btn" data-id="${mentor.user_id}" data-name="${sanitizeHTML(mentor.full_name)}">Request Mentorship</button>
+                            <div class="alumnus-actions">${buttonsHtml}</div>
                         </div>
                     `;
                     mentorsListContainer.appendChild(mentorItem);
@@ -64,58 +91,88 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    function openModal(mentorId, mentorName) {
-        modal.style.display = 'block';
-        mentorIdInput.value = mentorId;
-        document.getElementById('modal-title').textContent = `Send Mentorship Request to ${mentorName}`;
-    }
+    // --- Modal Handling ---
+    const setupModals = () => {
+        const modals = document.querySelectorAll('.modal');
+        modals.forEach(modal => {
+            const closeBtn = modal.querySelector('.close-btn');
+            closeBtn.onclick = () => modal.style.display = 'none';
+        });
+        window.onclick = (event) => {
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        };
+    };
 
-    function closeModal() {
-        modal.style.display = 'none';
-        requestForm.reset();
-    }
+    // --- Event Listeners ---
+    mentorsListContainer.addEventListener('click', async (e) => {
+        const target = e.target;
 
-    closeModalBtn.onclick = closeModal;
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            closeModal();
-        }
-    }
-
-    mentorsListContainer.addEventListener('click', (e) => {
-        const target = e.target.closest('.request-mentor-btn');
-        if (target) {
+        if (target.matches('.request-mentor-btn')) {
             if (!loggedInUserEmail) {
                 showToast('Please log in to request mentorship.', 'info');
                 return;
             }
-            const mentorId = target.dataset.id;
-            const mentorName = target.dataset.name;
-            openModal(mentorId, mentorName);
+            document.getElementById('modal-title').textContent = `Send Mentorship Request to ${target.dataset.name}`;
+            document.getElementById('mentor-id-input').value = target.dataset.id;
+            requestModal.style.display = 'block';
+        }
+
+        if (target.matches('.edit-request-btn')) {
+            document.getElementById('edit-modal-title').textContent = `Edit Mentorship Request to ${target.dataset.name}`;
+            document.getElementById('edit-mentor-id-input').value = target.dataset.id;
+            document.getElementById('edit-request-message').value = target.dataset.message;
+            editRequestModal.style.display = 'block';
+        }
+
+        if (target.matches('.cancel-request-btn')) {
+            if (confirm('Are you sure you want to cancel this mentorship request?')) {
+                try {
+                    await window.api.del(`/mentors/requests/sent/${target.dataset.id}`);
+                    showToast('Request canceled.', 'success');
+                    await fetchAndRenderMentors();
+                } catch (error) {
+                    showToast(`Error: ${error.message}`, 'error');
+                }
+            }
         }
     });
 
-    requestForm.addEventListener('submit', async (e) => {
+    // Handle NEW request submission
+    document.getElementById('request-form').addEventListener('submit', async (e) => {
         e.preventDefault();
-        const mentorId = mentorIdInput.value;
-        const message = requestMessageInput.value;
-
-        const submitBtn = document.getElementById('modal-submit-btn');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Sending...';
-
+        const mentorId = document.getElementById('mentor-id-input').value;
+        const message = document.getElementById('request-message').value;
         try {
-            const result = await window.api.post('/mentors/request', { mentor_id: mentorId, message });
-            showToast(result.message, 'success');
-            closeModal();
+            await window.api.post('/mentors/request', { mentor_id: mentorId, message });
+            showToast('Request sent!', 'success');
+            requestModal.style.display = 'none';
+            await fetchAndRenderMentors();
         } catch (error) {
             showToast(`Error: ${error.message}`, 'error');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Send Request';
         }
     });
 
+    // Handle EDIT request submission
+    document.getElementById('edit-request-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const mentorId = document.getElementById('edit-mentor-id-input').value;
+        const message = document.getElementById('edit-request-message').value;
+        try {
+            await window.api.put(`/mentors/requests/sent/${mentorId}`, { message });
+            showToast('Request updated!', 'success');
+            editRequestModal.style.display = 'none';
+            await fetchAndRenderMentors();
+        } catch (error) {
+            showToast(`Error: ${error.message}`, 'error');
+        }
+    });
+
+    // --- Initial Load ---
+    setupModals();
     await checkMentorStatus();
     await fetchAndRenderMentors();
 });

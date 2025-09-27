@@ -2,12 +2,11 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const alumniListContainer = document.getElementById('directory-list');
     const searchInput = document.getElementById('directory-search-input');
-    const universityFilter = document.getElementById('university-filter');
     const majorFilter = document.getElementById('major-filter');
     const yearFilter = document.getElementById('year-filter');
     const cityFilter = document.getElementById('city-filter');
-    const industryFilter = document.getElementById('industry-filter'); // New
-    const skillsFilter = document.getElementById('skills-filter');     // New
+    const industryFilter = document.getElementById('industry-filter');
+    const skillsFilter = document.getElementById('skills-filter');
     const searchButton = document.getElementById('directory-search-button');
 
     const showLoading = () => {
@@ -26,32 +25,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     const fetchAndRenderAlumni = async () => {
         showLoading();
 
-        // Read values from all filters, including the new ones
-        const params = new URLSearchParams({
-            query: searchInput.value,
-            university: universityFilter.value,
-            major: majorFilter.value,
-            graduation_year: yearFilter.value,
-            city: cityFilter.value,
-            industry: industryFilter.value,
-            skills: skillsFilter.value
-        });
-
+        const params = new URLSearchParams();
+        if (searchInput.value) params.append('query', searchInput.value);
+        if (majorFilter.value) params.append('major', majorFilter.value);
+        if (yearFilter.value) params.append('graduation_year', yearFilter.value);
+        if (cityFilter.value) params.append('city', cityFilter.value);
+        if (industryFilter.value) params.append('industry', industryFilter.value);
+        if (skillsFilter.value) params.append('skills', skillsFilter.value);
+        
         try {
-            // The api.js helper will automatically handle the request
             const alumni = await window.api.get(`/users/directory?${params.toString()}`);
             alumniListContainer.innerHTML = '';
 
             if (alumni.length > 0) {
                 alumni.forEach(alumnus => {
                     const alumnusItem = document.createElement('div');
-                    alumnusItem.classList.add('alumnus-list-item');
-
-                    const profilePicUrl = alumnus.profile_pic_url
-                        ? `http://localhost:3000/${alumnus.profile_pic_url}`
+                    alumnusItem.classList.add('alumnus-list-item', 'card');
+                    
+                    const profilePicUrl = alumnus.profile_pic_url 
+                        ? `http://localhost:3000/${alumnus.profile_pic_url}` 
                         : createInitialsAvatar(alumnus.full_name);
-
-                    // --- FIX: Added the onerror attribute ---
+                    
                     alumnusItem.innerHTML = `
                         <img src="${profilePicUrl}" alt="${sanitizeHTML(alumnus.full_name)}" class="alumnus-pfp-round" onerror="this.onerror=null; this.src=createInitialsAvatar('${alumnus.full_name.replace(/'/g, "\\'")}');">
                         <div class="alumnus-details">
@@ -59,7 +53,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 ${sanitizeHTML(alumnus.full_name)}
                                 ${alumnus.verification_status === 'verified' ? '<span class="verified-badge-sm" title="Verified"><i class="fas fa-check-circle"></i></span>' : ''}
                             </h3>
-                            <p>${sanitizeHTML(alumnus.headline || '')}</p>
                             <p><i class="fas fa-briefcase"></i> ${sanitizeHTML(alumnus.job_title ? alumnus.job_title + ' at ' : '')}${sanitizeHTML(alumnus.current_company || 'N/A')}</p>
                             <p><i class="fas fa-graduation-cap"></i> ${sanitizeHTML(alumnus.major || 'N/A')} | Class of ${sanitizeHTML(alumnus.graduation_year || 'N/A')}</p>
                             <a href="view-profile.html?email=${alumnus.email}" class="btn btn-secondary">View Profile</a>
@@ -78,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     searchButton?.addEventListener('click', fetchAndRenderAlumni);
 
-    const filterInputs = [searchInput, universityFilter, majorFilter, yearFilter, cityFilter, industryFilter, skillsFilter];
+    const filterInputs = [searchInput, majorFilter, yearFilter, cityFilter, industryFilter, skillsFilter];
     filterInputs.forEach(input => {
         input?.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
@@ -88,5 +81,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    await fetchAndRenderAlumni();
+    // Initial load
+    fetchAndRenderAlumni();
 });

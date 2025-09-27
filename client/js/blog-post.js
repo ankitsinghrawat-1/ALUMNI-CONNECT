@@ -16,11 +16,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.title = post.title;
 
         const postDate = new Date(post.created_at).toLocaleDateString();
-        // Use a library like DOMPurify in a real project for full XSS protection if content is user-generated HTML
+        const imageUrl = post.image_url ? `http://localhost:3000/${post.image_url}` : '';
+
         postContainer.innerHTML = `
             <article class="blog-post-full card">
+                ${imageUrl ? `<img src="${imageUrl}" alt="${sanitizeHTML(post.title)}" class="blog-post-image">` : ''}
                 <h1>${sanitizeHTML(post.title)}</h1>
-                <p class="post-meta">By ${sanitizeHTML(post.author)} on ${postDate}</p>
+                <p class="post-meta">By <a href="view-profile.html?email=${post.author_email}">${sanitizeHTML(post.author)}</a> on ${postDate}</p>
                 <div class="post-content">${sanitizeHTML(post.content).replace(/\n/g, '<br>')}</div>
             </article>
         `;

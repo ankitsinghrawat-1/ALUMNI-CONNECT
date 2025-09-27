@@ -95,7 +95,8 @@ module.exports = (pool, upload) => {
     }));
 
     router.get('/directory', asyncHandler(async (req, res) => {
-        const { query, university, major, graduation_year, city, industry, skills } = req.query;
+        const { query, major, graduation_year, city, industry, skills } = req.query;
+        
         let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, is_email_visible, is_company_visible, is_location_visible 
                    FROM users WHERE is_profile_public = TRUE`;
         const params = [];
@@ -103,10 +104,6 @@ module.exports = (pool, upload) => {
         if (query) {
             sql += ' AND (full_name LIKE ? OR company LIKE ?)';
             params.push(`%${query}%`, `%${query}%`);
-        }
-        if (university) {
-            sql += ' AND institute_name LIKE ?';
-            params.push(`%${university}%`);
         }
         if (major) {
             sql += ' AND major LIKE ?';
@@ -144,6 +141,7 @@ module.exports = (pool, upload) => {
         }));
         res.json(publicProfiles);
     }));
+
 
     router.get('/profile/:email', asyncHandler(async (req, res) => {
          const { email } = req.params;

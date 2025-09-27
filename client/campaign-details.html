@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Directory</title>
+    <title>Campaign Details</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -20,38 +20,40 @@
     <header class="main-header">
         <nav class="main-nav container">
             <a href="index.html" class="logo">AlumniConnect</a>
-            <ul id="nav-links" class="nav-links">
-                </ul>
+            <ul id="nav-links" class="nav-links"></ul>
         </nav>
     </header>
 
-    <main class="directory-main">
-        <div class="directory-container">
-            <h2>Alumni Directory</h2>
-            <div class="search-bar card">
-                <input type="text" id="directory-search-input" placeholder="Search by name, company...">
-                <input type="text" id="major-filter" placeholder="Major (e.g., Computer Science)">
-                <input type="number" id="year-filter" placeholder="Graduation Year">
-                <input type="text" id="city-filter" placeholder="City">
-                <input type="text" id="industry-filter" placeholder="Industry (e.g., Tech)">
-                <input type="text" id="skills-filter" placeholder="Skills (e.g., JavaScript)">
-                <button id="directory-search-button" class="btn btn-primary">Search</button>
+    <main class="static-page-main">
+        <div id="campaign-details-container" class="container">
             </div>
-            <div id="directory-list" class="directory-list">
-                </div>
-        </div>
     </main>
+    
+    <div id="donation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Donate to Campaign</h3>
+            <form id="donation-form">
+                <input type="hidden" id="campaign-id-input">
+                <div class="input-group">
+                    <label for="donation-amount">Amount ($)</label>
+                    <input type="number" id="donation-amount" min="1" step="1" required placeholder="Enter amount">
+                </div>
+                <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-full-width">Submit Donation</button>
+            </form>
+        </div>
+    </div>
     
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
         </div>
-    </footer>
+    </footer>  
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/directory.js"></script>
+    <script src="js/campaign-details.js"></script>
 </body>
 </html>

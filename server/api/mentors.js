@@ -13,7 +13,10 @@ module.exports = (pool) => {
         res.json(mentors);
     }));
 
-    router.post('/', verifyToken, asyncHandler(async (req, res) => {
+    // This route is protected by verifyToken
+    router.use(verifyToken);
+
+    router.post('/', asyncHandler(async (req, res) => {
         const { expertise_areas } = req.body;
         const user_id = req.user.userId;
         const [existingMentor] = await pool.query('SELECT * FROM mentors WHERE user_id = ?', [user_id]);
@@ -24,7 +27,7 @@ module.exports = (pool) => {
         res.status(201).json({ message: 'Successfully registered as a mentor!' });
     }));
 
-    router.post('/request', verifyToken, asyncHandler(async (req, res) => {
+    router.post('/request', asyncHandler(async (req, res) => {
         const { mentor_id, message } = req.body;
         const mentee_user_id = req.user.userId;
         try {
@@ -40,8 +43,52 @@ module.exports = (pool) => {
             throw error;
         }
     }));
+    
+    // UPDATED: Now returns status and message for each sent request
+    router.get('/requests/sent', asyncHandler(async (req, res) => {
+        const mentee_user_id = req.user.userId;
+        const [requests] = await pool.query(
+            "SELECT mentor_user_id, status, request_message FROM mentor_requests WHERE mentee_user_id = ?",
+            [mentee_user_id]
+        );
+        res.json(requests);
+    }));
+    
+    // NEW: Route to update a pending request message
+    router.put('/requests/sent/:mentorId', asyncHandler(async (req, res) => {
+        const { message } = req.body;
+        const { mentorId } = req.params;
+        const mentee_user_id = req.user.userId;
+        
+        const [result] = await pool.query(
+            "UPDATE mentor_requests SET request_message = ? WHERE mentee_user_id = ? AND mentor_user_id = ? AND status = 'pending'",
+            [message, mentee_user_id, mentorId]
+        );
 
-    router.get('/requests', verifyToken, asyncHandler(async (req, res) => {
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'No pending request found to update.' });
+        }
+        res.status(200).json({ message: 'Mentorship request updated successfully!' });
+    }));
+
+    // NEW: Route to cancel (delete) a pending request
+    router.delete('/requests/sent/:mentorId', asyncHandler(async (req, res) => {
+        const { mentorId } = req.params;
+        const mentee_user_id = req.user.userId;
+
+        const [result] = await pool.query(
+            "DELETE FROM mentor_requests WHERE mentee_user_id = ? AND mentor_user_id = ? AND status = 'pending'",
+            [mentee_user_id, mentorId]
+        );
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'No pending request found to cancel.' });
+        }
+        res.status(200).json({ message: 'Mentorship request canceled.' });
+    }));
+
+
+    router.get('/requests', asyncHandler(async (req, res) => {
         const mentor_user_id = req.user.userId;
         const [requests] = await pool.query(`
             SELECT mr.request_id, mr.request_message, mr.created_at, u.full_name as mentee_name, u.email as mentee_email, u.profile_pic_url 
@@ -52,7 +99,7 @@ module.exports = (pool) => {
         res.json(requests);
     }));
 
-    router.post('/requests/:requestId/respond', verifyToken, asyncHandler(async (req, res) => {
+    router.post('/requests/:requestId/respond', asyncHandler(async (req, res) => {
         const { requestId } = req.params;
         const { action } = req.body;
         if (!['accepted', 'declined'].includes(action)) {
@@ -62,13 +109,13 @@ module.exports = (pool) => {
         res.status(200).json({ message: `Request has been ${action}.` });
     }));
     
-    router.get('/status', verifyToken, asyncHandler(async (req, res) => {
+    router.get('/status', asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
         const [mentor] = await pool.query('SELECT * FROM mentors WHERE user_id = ?', [user_id]);
         res.json({ isMentor: mentor.length > 0 });
     }));
 
-    router.get('/profile', verifyToken, asyncHandler(async (req, res) => {
+    router.get('/profile', asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
         const [mentor] = await pool.query('SELECT expertise_areas FROM mentors WHERE user_id = ?', [user_id]);
         if (mentor.length === 0) {
@@ -77,7 +124,7 @@ module.exports = (pool) => {
         res.json(mentor[0]);
     }));
 
-    router.put('/profile', verifyToken, asyncHandler(async (req, res) => {
+    router.put('/profile', asyncHandler(async (req, res) => {
         const { expertise_areas } = req.body;
         const user_id = req.user.userId;
         const [result] = await pool.query('UPDATE mentors SET expertise_areas = ? WHERE user_id = ?', [expertise_areas, user_id]);
@@ -87,7 +134,7 @@ module.exports = (pool) => {
         res.status(200).json({ message: 'Mentor profile updated successfully!' });
     }));
 
-    router.delete('/profile', verifyToken, asyncHandler(async (req, res) => {
+    router.delete('/profile', asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
         await pool.query('DELETE FROM mentors WHERE user_id = ?', [user_id]);
         res.status(200).json({ message: 'You have been unlisted as a mentor.' });

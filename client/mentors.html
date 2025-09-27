@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale-1.0">
     <title>Find a Mentor</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -47,6 +47,21 @@
                     <textarea id="request-message" rows="4" placeholder="Introduce yourself and what you're looking for in a mentor..."></textarea>
                 </div>
                 <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-full-width">Send Request</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="edit-request-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="edit-modal-title">Edit Mentorship Request</h3>
+            <form id="edit-request-form">
+                <input type="hidden" id="edit-mentor-id-input">
+                <div class="input-group">
+                    <label for="edit-request-message">Your Message</label>
+                    <textarea id="edit-request-message" rows="4" required></textarea>
+                </div>
+                <button type="submit" id="edit-modal-submit-btn" class="btn btn-primary btn-full-width">Save Changes</button>
             </form>
         </div>
     </div>

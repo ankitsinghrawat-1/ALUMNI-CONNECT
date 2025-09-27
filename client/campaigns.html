@@ -33,6 +33,21 @@
         </div>
     </main>
     
+    <div id="donation-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Donate to Campaign</h3>
+            <form id="donation-form">
+                <input type="hidden" id="campaign-id-input">
+                <div class="input-group">
+                    <label for="donation-amount">Amount ($)</label>
+                    <input type="number" id="donation-amount" min="1" step="1" required placeholder="Enter amount">
+                </div>
+                <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-full-width">Submit Donation</button>
+            </form>
+        </div>
+    </div>
+    
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>

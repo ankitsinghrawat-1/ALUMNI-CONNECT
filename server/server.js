@@ -1,5 +1,5 @@
 // server/server.js
-require('dotenv').config(); // This line must be at the very top
+require('dotenv').config(); 
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -18,7 +18,7 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000", // Adjust this for production
+        origin: "http://localhost:3000", 
         methods: ["GET", "POST"]
     }
 });
@@ -61,9 +61,13 @@ module.exports = pool;
 const uploadDir = path.join(__dirname, '..', 'uploads');
 const resumeDir = path.join(__dirname, '..', 'uploads', 'resumes');
 const chatImagesDir = path.join(__dirname, '..', 'uploads', 'chat');
+const blogImagesDir = path.join(__dirname, '..', 'uploads', 'blogs'); // New directory for blog images
+
+// Create all directories asynchronously
 fs.mkdir(uploadDir, { recursive: true }).catch(console.error);
 fs.mkdir(resumeDir, { recursive: true }).catch(console.error);
 fs.mkdir(chatImagesDir, { recursive: true }).catch(console.error);
+fs.mkdir(blogImagesDir, { recursive: true }).catch(console.error); // Ensure blog images directory exists
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -71,7 +75,10 @@ const storage = multer.diskStorage({
             cb(null, resumeDir);
         } else if (file.fieldname === 'chat_image') {
             cb(null, chatImagesDir);
-        } else {
+        } else if (file.fieldname === 'blog_image') {
+            cb(null, blogImagesDir);
+        }
+        else {
             cb(null, uploadDir);
         }
     },
@@ -102,7 +109,7 @@ const createGlobalNotification = async (message, link) => {
 
 // --- API ROUTERS ---
 const adminRoutes = require('./api/admin')(pool);
-const blogRoutes = require('./api/blogs')(pool);
+const blogRoutes = require('./api/blogs')(pool, upload);
 const campaignRoutes = require('./api/campaigns')(pool);
 const eventRoutes = require('./api/events')(pool, createGlobalNotification);
 const jobRoutes = require('./api/jobs')(pool, upload, createGlobalNotification);
@@ -110,7 +117,7 @@ const mentorRoutes = require('./api/mentors')(pool);
 const messageRoutes = require('./api/messages')(pool, upload);
 const notificationRoutes = require('./api/notifications')(pool);
 const userRoutes = require('./api/users')(pool, upload);
-const groupRoutes = require('./api/groups')(pool); // ADD THIS LINE
+const groupRoutes = require('./api/groups')(pool);
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/blogs', blogRoutes);
@@ -178,7 +185,7 @@ io.on("connection", (socket) => {
             }
         }
     });
-
+    
     socket.on("typing", ({ receiverId, isTyping }) => {
          const user = getUser(receiverId);
          if(user) {

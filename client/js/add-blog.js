@@ -12,18 +12,24 @@ document.addEventListener('DOMContentLoaded', () => {
         addBlogForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const blogData = {
-                title: document.getElementById('title').value,
-                content: document.getElementById('content').value,
-            };
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('content', document.getElementById('content').value);
+            
+            const imageFile = document.getElementById('blog_image').files[0];
+            if (imageFile) {
+                formData.append('blog_image', imageFile);
+            }
 
-            if (!blogData.title || !blogData.content) {
+            if (!formData.get('title') || !formData.get('content')) {
                 showToast('Please fill out both the title and content fields.', 'error');
                 return;
             }
 
             try {
-                await window.api.post('/blogs', blogData);
+                // Use postForm for multipart/form-data
+                await window.api.postForm('/blogs', formData); 
+                
                 showToast('Blog post submitted successfully!', 'success');
                 messageDiv.textContent = 'Post submitted! Redirecting you to your blog posts...';
                 messageDiv.className = 'form-message success';
