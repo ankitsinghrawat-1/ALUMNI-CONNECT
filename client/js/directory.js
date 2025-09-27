@@ -46,6 +46,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         ? `http://localhost:3000/${alumnus.profile_pic_url}` 
                         : createInitialsAvatar(alumnus.full_name);
                     
+                    const viewProfileButton = alumnus.email ? `<a href="view-profile.html?email=${alumnus.email}" class="btn btn-secondary">View Profile</a>` : '<button class="btn btn-secondary" disabled>Profile Unavailable</button>';
+                    
                     alumnusItem.innerHTML = `
                         <img src="${profilePicUrl}" alt="${sanitizeHTML(alumnus.full_name)}" class="alumnus-pfp-round" onerror="this.onerror=null; this.src=createInitialsAvatar('${alumnus.full_name.replace(/'/g, "\\'")}');">
                         <div class="alumnus-details">
@@ -55,7 +57,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </h3>
                             <p><i class="fas fa-briefcase"></i> ${sanitizeHTML(alumnus.job_title ? alumnus.job_title + ' at ' : '')}${sanitizeHTML(alumnus.current_company || 'N/A')}</p>
                             <p><i class="fas fa-graduation-cap"></i> ${sanitizeHTML(alumnus.major || 'N/A')} | Class of ${sanitizeHTML(alumnus.graduation_year || 'N/A')}</p>
-                            <a href="view-profile.html?email=${alumnus.email}" class="btn btn-secondary">View Profile</a>
+                            ${viewProfileButton}
                         </div>
                     `;
                     alumniListContainer.appendChild(alumnusItem);
