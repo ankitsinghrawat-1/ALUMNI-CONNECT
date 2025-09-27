@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         groupDetailsContainer.innerHTML = '<h1>Group not found</h1>';
         return;
     }
+    
+    const inviteModal = document.getElementById('invite-modal');
+    const inviteForm = document.getElementById('invite-form');
 
     const loadGroupDetails = async () => {
         groupDetailsContainer.innerHTML = `<div class="loading-spinner"><div class="spinner"></div></div>`;
@@ -17,11 +20,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             document.title = group.name;
 
-            let actionButton = '';
-            if (membership.status === 'none') {
-                actionButton = `<button id="join-request-btn" class="btn btn-primary">Request to Join</button>`;
+            let actionButtons = '';
+            if (membership.status === 'admin') {
+                actionButtons += `<a href="group-management.html?id=${groupId}" class="btn btn-secondary">Manage Group</a>`;
+            }
+             if (membership.status === 'member' || membership.status === 'admin') {
+                actionButtons += `<button id="invite-btn" class="btn btn-primary">Invite Members</button>`;
+            } else if (membership.status === 'none') {
+                actionButtons += `<button id="join-request-btn" class="btn btn-primary">Request to Join</button>`;
             } else if (membership.status === 'pending') {
-                actionButton = `<button class="btn btn-secondary" disabled>Request Sent</button>`;
+                actionButtons += `<button class="btn btn-secondary" disabled>Request Sent</button>`;
             }
 
             groupDetailsContainer.innerHTML = `
@@ -29,8 +37,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="group-header">
                         <img src="${group.image_url || 'https://via.placeholder.com/800x200?text=Group+Banner'}" alt="${group.name}" class="group-cover-image">
                         <h1>${sanitizeHTML(group.name)}</h1>
+                        <p class="group-creator">Created by: ${sanitizeHTML(group.creator_name)}</p>
                         <p>${sanitizeHTML(group.description)}</p>
-                        <div class="group-actions">${actionButton}</div>
+                        <div class="group-actions">${actionButtons}</div>
                     </div>
 
                     <div class="group-tabs">
@@ -64,7 +73,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
             
             attachEventListeners();
-            loadTabData('discussion'); // Load initial tab
+            loadTabData('discussion');
             
         } catch (error) {
             console.error('Error fetching group details:', error);
@@ -132,6 +141,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const loadJoinRequests = async () => {
         const requestsList = document.getElementById('requests-list');
+        if (!requestsList) return;
         try {
             const requests = await window.api.get(`/groups/${groupId}/join-requests`);
              if (requests.length > 0) {
@@ -153,19 +163,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const attachEventListeners = () => {
-        const joinRequestBtn = document.getElementById('join-request-btn');
-        if (joinRequestBtn) {
-            joinRequestBtn.addEventListener('click', async () => {
-                try {
+        groupDetailsContainer.addEventListener('click', async (e) => {
+            const target = e.target;
+            
+            if (target && target.id === 'join-request-btn') {
+                 try {
                     await window.api.post(`/groups/${groupId}/request-join`);
                     showToast('Your request to join has been sent!', 'success');
-                    joinRequestBtn.textContent = 'Request Sent';
-                    joinRequestBtn.disabled = true;
+                    target.textContent = 'Request Sent';
+                    target.disabled = true;
                 } catch (error) {
                     showToast(error.message, 'error');
                 }
-            });
-        }
+            }
+            
+            if (target && target.matches('.tab-link')) {
+                document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
+                target.classList.add('active');
+                
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                const tabName = target.dataset.tab;
+                document.getElementById(tabName).classList.add('active');
+                
+                loadTabData(tabName);
+            }
+
+            if (target && (target.matches('.approve-join-btn') || target.matches('.reject-join-btn'))) {
+                const requestId = target.dataset.id;
+                const action = target.matches('.approve-join-btn') ? 'approve' : 'reject';
+                
+                 try {
+                    await window.api.post(`/groups/${groupId}/join-requests/${requestId}`, { action });
+                    showToast(`Request ${action}d.`, 'success');
+                    loadJoinRequests();
+                } catch(error) {
+                     showToast('Action failed.', 'error');
+                }
+            }
+            
+            if (target && target.id === 'invite-btn') {
+                inviteModal.style.display = 'block';
+            }
+        });
         
         const newPostForm = document.getElementById('new-post-form');
         if(newPostForm) {
@@ -182,42 +221,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
         
-        const tabs = document.querySelectorAll('.tab-link');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                tabs.forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-                
-                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                const tabName = e.target.dataset.tab;
-                document.getElementById(tabName).classList.add('active');
-                
-                loadTabData(tabName);
-            });
-        });
-        
-        const requestsList = document.getElementById('requests-list');
-        if(requestsList) {
-            requestsList.addEventListener('click', async (e) => {
-                const target = e.target;
-                const requestId = target.dataset.id;
-                let action = '';
-                
-                if(target.classList.contains('approve-join-btn')) action = 'approve';
-                if(target.classList.contains('reject-join-btn')) action = 'reject';
-                
-                if(action) {
-                    try {
-                        await window.api.post(`/groups/${groupId}/join-requests/${requestId}`, { action });
-                        showToast(`Request ${action}d.`, 'success');
-                        loadJoinRequests();
-                    } catch(error) {
-                         showToast('Action failed.', 'error');
-                    }
-                }
-            });
-        }
-    };
+        inviteModal.querySelector('.close-btn').onclick = () => inviteModal.style.display = 'none';
+        window.onclick = (event) => {
+            if (event.target == inviteModal) {
+                inviteModal.style.display = 'none';
+            }
+        };
 
+        inviteForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const invitee_email = document.getElementById('user-search-input').value;
+            try {
+                const result = await window.api.post(`/groups/${groupId}/invites`, { invitee_email });
+                showToast(result.message, 'success');
+                inviteModal.style.display = 'none';
+                inviteForm.reset();
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+            }
+        });
+    };
+    
     loadGroupDetails();
 });

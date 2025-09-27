@@ -185,6 +185,67 @@ module.exports = (pool) => {
         await pool.query(`UPDATE ${tableName} SET status = 'rejected' WHERE ${idColumn} = ?`, [id]);
         res.status(200).json({ message: `${type} rejected successfully.` });
     }));
+
+     // --- Group Request Management ---
+    
+     router.get('/group-creation-requests', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const [requests] = await pool.query("SELECT gcr.*, u.full_name FROM group_creation_requests gcr JOIN users u ON gcr.user_id = u.user_id WHERE gcr.status = 'pending'");
+        res.json(requests);
+    }));
+
+    router.post('/group-creation-requests/:requestId', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const { requestId } = req.params;
+        const { action } = req.body; // 'approve' or 'reject'
+
+        const [requestResult] = await pool.query('SELECT * FROM group_creation_requests WHERE request_id = ?', [requestId]);
+        if (requestResult.length === 0) {
+            return res.status(404).json({ message: 'Request not found.' });
+        }
+        const request = requestResult[0];
+
+        if (action === 'approve') {
+            const { group_name, group_description, user_id } = request;
+            // Create the group
+            const [newGroup] = await pool.query('INSERT INTO `groups` (name, description, created_by) VALUES (?, ?, ?)', [group_name, group_description, user_id]);
+            const groupId = newGroup.insertId;
+            // Add creator as a member
+            await pool.query('INSERT INTO group_members (group_id, user_id) VALUES (?, ?)', [groupId, user_id]);
+            // Update the request status
+            await pool.query('UPDATE group_creation_requests SET status = "approved" WHERE request_id = ?', [requestId]);
+            res.status(200).json({ message: 'Group creation request approved.' });
+        } else { // 'reject'
+            await pool.query('UPDATE group_creation_requests SET status = "rejected" WHERE request_id = ?', [requestId]);
+            res.status(200).json({ message: 'Group creation request rejected.' });
+        }
+    }));
+
+    router.get('/group-join-requests', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const [requests] = await pool.query("SELECT gjr.*, u.full_name, g.name as group_name FROM group_join_requests gjr JOIN users u ON gjr.user_id = u.user_id JOIN `groups` g ON gjr.group_id = g.group_id WHERE gjr.status = 'pending'");
+        res.json(requests);
+    }));
+    
+    router.post('/group-join-requests/:requestId', verifyToken, isAdmin, asyncHandler(async (req, res) => {
+        const { requestId } = req.params;
+        const { action } = req.body; // 'approve' or 'reject'
+
+        const [requestResult] = await pool.query('SELECT * FROM group_join_requests WHERE request_id = ?', [requestId]);
+        if (requestResult.length === 0) {
+            return res.status(404).json({ message: 'Request not found.' });
+        }
+        const request = requestResult[0];
+
+        if (action === 'approve') {
+            const { group_id, user_id } = request;
+            // Add user to the group
+            await pool.query('INSERT INTO group_members (group_id, user_id) VALUES (?, ?)', [group_id, user_id]);
+            // Update the request status
+            await pool.query('UPDATE group_join_requests SET status = "approved" WHERE request_id = ?', [requestId]);
+            res.status(200).json({ message: 'Join request approved.' });
+        } else { // 'reject'
+            await pool.query('UPDATE group_join_requests SET status = "rejected" WHERE request_id = ?', [requestId]);
+            res.status(200).json({ message: 'Join request rejected.' });
+        }
+    }));
     
     return router;
 };

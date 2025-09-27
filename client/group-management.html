@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Management</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="profile-main">
+        <div class="profile-container">
+             <div class="profile-sidebar">
+                <h3 id="group-name-sidebar">Group Settings</h3>
+                <nav class="profile-nav">
+                    <ul>
+                        <li><a href="#" class="profile-link active" data-tab="edit-settings">Edit Settings</a></li>
+                        <li><a href="#" class="profile-link" data-tab="manage-members">Manage Members</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="profile-content">
+                <div id="edit-settings" class="profile-page active">
+                    <h2>Edit Group Settings</h2>
+                    <form id="edit-group-form">
+                         <div class="input-group">
+                            <label for="name">Group Name</label>
+                            <input type="text" id="name" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="description">Group Description</label>
+                            <textarea id="description" rows="5" required></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label for="group_image">New Cover Image (Optional)</label>
+                            <input type="file" id="group_image" name="group_image" accept="image/*">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full-width">Save Changes</button>
+                    </form>
+                </div>
+                <div id="manage-members" class="profile-page">
+                    <h2>Manage Members</h2>
+                    <div id="members-list" class="requests-list"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/group-management.js"></script>
+</body>
+</html>

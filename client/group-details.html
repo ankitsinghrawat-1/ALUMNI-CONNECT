@@ -6,14 +6,6 @@
     <title>Group Details</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        (function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark-mode') {
-                document.documentElement.classList.add('dark-mode');
-            }
-        })();
-    </script>
 </head>
 <body>
     
@@ -28,6 +20,20 @@
         <div id="group-details-container" class="container">
             </div>
     </main>
+    
+    <div id="invite-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Invite Members</h3>
+            <form id="invite-form">
+                <div class="input-group">
+                    <label for="user-search-input">Search for user by email</label>
+                    <input type="email" id="user-search-input" required placeholder="user@example.com">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full-width">Send Invite</button>
+            </form>
+        </div>
+    </div>
     
     <footer class="main-footer">
         <div class="container">

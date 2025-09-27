@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog Post</title>
+    <title>Group Creation Requests</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         (function() {
             const theme = localStorage.getItem('theme');
@@ -22,26 +23,28 @@
         </nav>
     </header>
 
-    <main class="static-page-main">
+    <main class="management-main">
         <div class="container">
-            <div id="blog-post-content">
-                </div>
-
-            <section id="comment-section" class="card">
-                <h3>Comments</h3>
-                <div id="comments-list" class="comments-list">
-                    </div>
-                <form id="comment-form">
-                    <div class="input-group">
-                        <label for="comment-content">Leave a Comment</label>
-                        <textarea id="comment-content" rows="4" placeholder="Write your comment here..." required></textarea>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Post Comment</button>
-                </form>
-            </section>
+            <div class="management-header">
+                <h2><i class="fas fa-users-cog"></i> Group Creation Requests</h2>
+                <a href="admin.html" class="btn btn-secondary">&larr; Back to Dashboard</a>
+            </div>
+            <div class="card">
+                <table class="management-table">
+                    <thead>
+                        <tr>
+                            <th>Proposed Name</th>
+                            <th>Description</th>
+                            <th>Requested By</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="creation-requests-list"></tbody>
+                </table>
+            </div>
         </div>
     </main>
-
+    
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
@@ -52,6 +55,6 @@
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/blog-post.js"></script>
+    <script src="js/group-creation-management.js"></script>
 </body>
 </html>

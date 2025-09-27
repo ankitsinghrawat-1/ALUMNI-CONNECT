@@ -70,7 +70,6 @@ module.exports = (pool, upload) => {
         let new_image_url = blog[0].image_url;
         if (req.file) {
             new_image_url = `uploads/blogs/${req.file.filename}`;
-            // If there was an old image, delete it
             if (blog[0].image_url) {
                 const oldImagePath = path.join(__dirname, '..', '..', blog[0].image_url);
                 fs.unlink(oldImagePath).catch(err => console.error("Failed to delete old blog image:", err));
@@ -96,7 +95,6 @@ module.exports = (pool, upload) => {
             return res.status(403).json({ message: 'You are not authorized to delete this post.' });
         }
 
-        // Delete the image file if it exists
         if (blog[0].image_url) {
             const imagePath = path.join(__dirname, '..', '..', blog[0].image_url);
             fs.unlink(imagePath).catch(err => console.error("Failed to delete blog image:", err));
@@ -105,6 +103,39 @@ module.exports = (pool, upload) => {
         await pool.query('DELETE FROM blogs WHERE blog_id = ?', [blog_id]);
         res.status(200).json({ message: 'Blog post deleted successfully' });
     }));
+
+    // --- NEW BLOG COMMENT ROUTES ---
+
+    // GET all comments for a blog post
+    router.get('/:id/comments', asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const [comments] = await pool.query(`
+            SELECT bc.comment_id, bc.content, bc.created_at, u.full_name as author, u.profile_pic_url
+            FROM blog_comments bc
+            JOIN users u ON bc.user_id = u.user_id
+            WHERE bc.blog_id = ?
+            ORDER BY bc.created_at ASC
+        `, [id]);
+        res.json(comments);
+    }));
+
+    // POST a new comment on a blog post
+    router.post('/:id/comments', verifyToken, asyncHandler(async (req, res) => {
+        const { id } = req.params;
+        const { content } = req.body;
+        const user_id = req.user.userId;
+
+        if (!content) {
+            return res.status(400).json({ message: 'Comment content cannot be empty.' });
+        }
+
+        await pool.query(
+            'INSERT INTO blog_comments (blog_id, user_id, content) VALUES (?, ?, ?)',
+            [id, user_id, content]
+        );
+        res.status(201).json({ message: 'Comment posted successfully!' });
+    }));
+
 
     return router;
 };

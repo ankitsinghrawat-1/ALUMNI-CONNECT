@@ -3229,3 +3229,54 @@ body main {
     text-decoration: none;
     color: inherit;
 }
+/* --- New Blog Comment Styles --- */
+#comment-section {
+    margin-top: 2rem;
+}
+
+.comments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.comment-item {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.comment-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-author div {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-author strong {
+    font-weight: 600;
+}
+
+.comment-author small {
+    color: var(--subtle-text-color);
+    font-size: 0.85rem;
+}
+
+.comment-item p {
+    margin-left: 50px; /* Align comment text with author name */
+}

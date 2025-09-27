@@ -24,22 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     <span class="count">${requests.verifications}</span>
                 </a>
                  <a href="approval-management.html" class="pending-item">
-                    <span>Job Approvals</span>
-                    <span class="count">${requests.pendingJobs}</span>
+                    <span>Content Approvals</span>
+                    <span class="count">${requests.pendingJobs + requests.pendingEvents + requests.pendingCampaigns}</span>
                 </a>
-                 <a href="approval-management.html" class="pending-item">
-                    <span>Event Approvals</span>
-                    <span class="count">${requests.pendingEvents}</span>
-                </a>
-                 <a href="approval-management.html" class="pending-item">
-                    <span>Campaign Approvals</span>
-                    <span class="count">${requests.pendingCampaigns}</span>
-                </a>
-                <a href="#" class="pending-item">
+                <a href="group-creation-management.html" class="pending-item">
                     <span>Group Creations</span>
                     <span class="count">${requests.groupCreations}</span>
                 </a>
-                <a href="#" class="pending-item">
+                <a href="group-join-management.html" class="pending-item">
                     <span>Group Join Requests</span>
                     <span class="count">${requests.groupJoins}</span>
                 </a>
@@ -54,7 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const signupsRes = await window.api.get('/admin/analytics/signups');
 
-            // 1. Render User Signups Line Chart
             const userSignupsCtx = document.getElementById('userSignupsChart').getContext('2d');
             const labels = signupsRes.map(item => new Date(item.date).toLocaleDateString());
             const data = signupsRes.map(item => item.count);
@@ -74,8 +65,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }]
                 },
                 options: {
-                    responsive: true, // Make sure chart is responsive
-                    maintainAspectRatio: false, // Allow chart to fill container height
+                    responsive: true,
+                    maintainAspectRatio: false,
                     scales: {
                         y: {
                             beginAtZero: true
@@ -89,7 +80,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- Logout Button ---
     const logoutBtn = document.getElementById('admin-logout-btn');
     if (logoutBtn) {
         logoutBtn.addEventListener('click', () => {
@@ -98,7 +88,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- Initial Load ---
     fetchAdminStats();
     fetchPendingRequests();
     renderCharts();

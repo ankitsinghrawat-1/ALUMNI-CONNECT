@@ -33,12 +33,12 @@
                     <input type="text" id="name" required placeholder="e.g., Bay Area Tech Alumni">
                 </div>
                 <div class="input-group">
-                    <label for="description">Group Description</label>
-                    <textarea id="description" rows="5" required placeholder="What is the purpose of this group? Who should join?"></textarea>
+                    <label for="group_image">Cover Image (Optional)</label>
+                    <input type="file" id="group_image" name="group_image" accept="image/*">
                 </div>
                 <div class="input-group">
-                    <label for="image_url">Cover Image URL (Optional)</label>
-                    <input type="url" id="image_url" placeholder="https://example.com/image.jpg">
+                    <label for="description">Group Description</label>
+                    <textarea id="description" rows="5" required placeholder="What is the purpose of this group? Who should join?"></textarea>
                 </div>
                 <div id="message" class="form-message"></div>
                 <button type="submit" class="btn btn-primary btn-full-width">Create Group</button>

@@ -1,5 +1,5 @@
 // server/server.js
-require('dotenv').config(); 
+require('dotenv').config();
 const express = require('express');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -11,24 +11,21 @@ const path = require('path');
 const fs = require('fs').promises;
 const cookieParser = require('cookie-parser');
 
-// Import middleware
 const { verifyToken } = require('./middleware/authMiddleware');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000", 
-        methods: ["GET", "POST"]
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST", "PUT", "DELETE"]
     }
 });
 
 const PORT = process.env.PORT || 3000;
 
-// --- MIDDLEWARE SETUP ---
 const corsOptions = {
     origin: function (origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin || origin.startsWith('http://localhost')) {
             callback(null, true);
         } else {
@@ -41,11 +38,9 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-// --- SERVE STATIC FILES ---
 app.use(express.static(path.join(__dirname, '..', 'client')));
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-// --- DATABASE CONNECTION POOL ---
 const pool = mysql.createPool({
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
@@ -61,13 +56,14 @@ module.exports = pool;
 const uploadDir = path.join(__dirname, '..', 'uploads');
 const resumeDir = path.join(__dirname, '..', 'uploads', 'resumes');
 const chatImagesDir = path.join(__dirname, '..', 'uploads', 'chat');
-const blogImagesDir = path.join(__dirname, '..', 'uploads', 'blogs'); // New directory for blog images
+const blogImagesDir = path.join(__dirname, '..', 'uploads', 'blogs');
+const groupImagesDir = path.join(__dirname, '..', 'uploads', 'groups'); // New directory for group images
 
-// Create all directories asynchronously
 fs.mkdir(uploadDir, { recursive: true }).catch(console.error);
 fs.mkdir(resumeDir, { recursive: true }).catch(console.error);
 fs.mkdir(chatImagesDir, { recursive: true }).catch(console.error);
-fs.mkdir(blogImagesDir, { recursive: true }).catch(console.error); // Ensure blog images directory exists
+fs.mkdir(blogImagesDir, { recursive: true }).catch(console.error);
+fs.mkdir(groupImagesDir, { recursive: true }).catch(console.error); // Ensure group images directory exists
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -77,6 +73,8 @@ const storage = multer.diskStorage({
             cb(null, chatImagesDir);
         } else if (file.fieldname === 'blog_image') {
             cb(null, blogImagesDir);
+        } else if (file.fieldname === 'group_image') {
+            cb(null, groupImagesDir);
         }
         else {
             cb(null, uploadDir);
@@ -90,7 +88,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-// --- HELPER FUNCTIONS ---
 const createGlobalNotification = async (message, link) => {
     try {
         const [users] = await pool.query('SELECT user_id FROM users WHERE role != "admin"');
@@ -117,7 +114,7 @@ const mentorRoutes = require('./api/mentors')(pool);
 const messageRoutes = require('./api/messages')(pool, upload);
 const notificationRoutes = require('./api/notifications')(pool);
 const userRoutes = require('./api/users')(pool, upload);
-const groupRoutes = require('./api/groups')(pool);
+const groupRoutes = require('./api/groups')(pool, upload); // Pass upload to group routes
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/blogs', blogRoutes);
