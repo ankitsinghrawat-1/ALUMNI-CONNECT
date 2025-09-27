@@ -1,8 +1,5 @@
 // client/js/group-details.js
 document.addEventListener('DOMContentLoaded', async () => {
-    // Wait for the auth script to be ready before doing anything else
-    await window.authReady;
-
     const groupDetailsContainer = document.getElementById('group-details-container');
     const params = new URLSearchParams(window.location.search);
     const groupId = params.get('id');
@@ -11,17 +8,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         groupDetailsContainer.innerHTML = '<h1>Group not found</h1>';
         return;
     }
-
+    
     const inviteModal = document.getElementById('invite-modal');
     const inviteForm = document.getElementById('invite-form');
 
     const loadGroupDetails = async () => {
         groupDetailsContainer.innerHTML = `<div class="loading-spinner"><div class="spinner"></div></div>`;
         try {
-            // These API calls will now reliably have the auth token
             const group = await window.api.get(`/groups/${groupId}`);
             const membership = await window.api.get(`/groups/${groupId}/membership-status`);
-
+            
             document.title = group.name;
 
             let actionButtons = '';
@@ -36,9 +32,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 actionButtons += `<button class="btn btn-secondary" disabled>Request Sent</button>`;
             }
 
-            // --- FIX: Prepend base URL to image paths ---
-            const groupLogoUrl = group.image_url ? `http://localhost:3000/${group.image_url}` : createInitialsAvatar(group.name);
-            const groupBackgroundUrl = group.background_image_url ? `http://localhost:3000/${group.background_image_url}` : 'https://via.placeholder.com/800x250?text=Alumni+Group';
+            const groupLogoUrl = group.image_url || createInitialsAvatar(group.name);
+            const groupBackgroundUrl = group.background_image_url || 'https://via.placeholder.com/800x250?text=Alumni+Group';
 
             groupDetailsContainer.innerHTML = `
                 <div class="group-details-card card">
@@ -72,7 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div id="members" class="tab-content">
                         <div id="members-list" class="members-list"></div>
                     </div>
-
+                    
                     ${membership.status === 'admin' ? `
                     <div id="requests" class="tab-content">
                         <div id="requests-list" class="requests-list"></div>
@@ -80,20 +75,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ` : ''}
                 </div>
             `;
-
+            
             attachEventListeners();
             loadTabData('discussion');
-
+            
         } catch (error) {
             console.error('Error fetching group details:', error);
-            if (error.response && error.response.status === 401) {
-                 groupDetailsContainer.innerHTML = '<h1>Access Denied</h1><p class="info-message error">You must be logged in to view this group.</p>';
-            } else {
-                 groupDetailsContainer.innerHTML = '<h1>Error loading group</h1><p class="info-message error">The group could not be found or there was a server error.</p>';
-            }
+            groupDetailsContainer.innerHTML = '<h1>Error loading group</h1><p class="info-message error">The group could not be found or there was a server error.</p>';
         }
     };
-
+    
     const loadTabData = (tab) => {
         switch(tab) {
             case 'discussion':
@@ -132,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error loading posts:', error);
         }
     };
-
+    
     const loadMembers = async () => {
          const membersList = document.getElementById('members-list');
         try {
@@ -151,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
              console.error('Error loading members:', error);
         }
     };
-
+    
     const loadJoinRequests = async () => {
         const requestsList = document.getElementById('requests-list');
         if (!requestsList) return;
@@ -178,7 +169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const attachEventListeners = () => {
         groupDetailsContainer.addEventListener('click', async (e) => {
             const target = e.target;
-
+            
             if (target && target.id === 'join-request-btn') {
                  try {
                     await window.api.post(`/groups/${groupId}/request-join`);
@@ -189,22 +180,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showToast(error.message, 'error');
                 }
             }
-
+            
             if (target && target.matches('.tab-link')) {
                 document.querySelectorAll('.tab-link').forEach(t => t.classList.remove('active'));
                 target.classList.add('active');
-
+                
                 document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
                 const tabName = target.dataset.tab;
                 document.getElementById(tabName).classList.add('active');
-
+                
                 loadTabData(tabName);
             }
 
             if (target && (target.matches('.approve-join-btn') || target.matches('.reject-join-btn'))) {
                 const requestId = target.dataset.id;
                 const action = target.matches('.approve-join-btn') ? 'approve' : 'reject';
-
+                
                  try {
                     await window.api.post(`/groups/${groupId}/join-requests/${requestId}`, { action });
                     showToast(`Request ${action}d.`, 'success');
@@ -213,12 +204,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                      showToast('Action failed.', 'error');
                 }
             }
-
+            
             if (target && target.id === 'invite-btn') {
                 inviteModal.style.display = 'block';
             }
         });
-
+        
         const newPostForm = document.getElementById('new-post-form');
         if(newPostForm) {
             newPostForm.addEventListener('submit', async (e) => {
@@ -233,7 +224,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         }
-
+        
         inviteModal.querySelector('.close-btn').onclick = () => inviteModal.style.display = 'none';
         window.onclick = (event) => {
             if (event.target == inviteModal) {
@@ -254,6 +245,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     };
-
+    
     loadGroupDetails();
 });
