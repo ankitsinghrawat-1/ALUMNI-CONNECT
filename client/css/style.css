@@ -2963,73 +2963,140 @@ body main {
     height: 350px; /* Give the container a fixed height */
     width: 100%;
 }
-/* --- New Sign Up Page Styles --- */
-.role-selector {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-}
 
-.role-tab {
-    padding: 1rem 1.5rem;
-    cursor: pointer;
-    border: none;
-    background-color: transparent;
-    color: var(--subtle-text-color);
-    font-size: 1rem;
-    font-weight: 600;
-    border-bottom: 3px solid transparent;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.role-tab:hover {
-    color: var(--primary-color);
-}
-
-.role-tab.active {
-    color: var(--primary-color);
-    border-bottom-color: var(--primary-color);
-}
-
-#signup-form .form-row {
-    display: flex;
-    gap: 1.5rem;
-}
-
-#signup-form .form-row .input-group {
-    flex: 1;
-}
-
-/* Hide fields by default, JS will show them */
-[data-role-field] {
-    display: none;
-}
-
-/* --- New Group Details Page Styles --- */
+/* --- Corrected Group Details Page Header Styles --- */
 .group-header {
     text-align: center;
     margin-bottom: 2rem;
+    position: relative;
+    padding-top: 75px; /* Space for the logo to not overlap text */
 }
+
+.group-cover-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: var(--border-radius-medium) var(--border-radius-medium) 0 0;
+}
+
+.group-logo {
+    position: relative; /* Bring it in front of the cover image */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--surface-color);
+    box-shadow: var(--box-shadow-elevated);
+    margin-bottom: 1rem;
+    background-color: var(--surface-color);
+}
+
+.group-header h1 {
+    position: relative;
+}
+
+.group-header p {
+    position: relative;
+}
+
+/* --- Group Listing Page Card Styles --- */
+.groups-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.group-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: left;
+    padding: 1.5rem;
+}
+
+.group-card .group-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image fills the circle without distortion */
+    border: 3px solid var(--accent-color);
+    flex-shrink: 0; /* Prevents the image from shrinking */
+}
+
+.group-content {
+    flex-grow: 1;
+}
+
+.group-cta {
+    margin-top: 1rem;
+}
+
+
+/* --- Group Details Page Styles --- */
+.group-details-card.card {
+    padding: 0; /* Remove padding to allow header to be full-width */
+    overflow: hidden; /* Ensures cover image respects border radius */
+}
+
+.group-header {
+    text-align: center;
+    position: relative;
+    padding-bottom: 2rem;
+}
+
 .group-cover-image {
     width: 100%;
     height: 250px;
     object-fit: cover;
-    border-radius: var(--border-radius-medium);
-    margin-bottom: 1.5rem;
+    display: block;
 }
+
+.group-logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--surface-color);
+    box-shadow: var(--box-shadow-elevated);
+    background-color: var(--surface-color);
+    margin-top: -75px; /* Pulls the PFP up over the cover image */
+    margin-bottom: 1rem;
+    position: relative; /* Bring it in front of the cover image */
+    z-index: 2;
+}
+
+.group-header h1 {
+    margin-top: 0;
+}
+
+.group-creator {
+    font-size: 0.9rem;
+    color: var(--subtle-text-color);
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
 .group-actions {
     margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
 }
 
 .group-tabs {
     display: flex;
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 2rem;
+    margin: 0 2rem 2rem 2rem; /* Add padding to align with content */
 }
+
 .tab-link {
     padding: 1rem 1.5rem;
     cursor: pointer;
@@ -3039,7 +3106,13 @@ body main {
     font-weight: 600;
     color: var(--subtle-text-color);
     border-bottom: 3px solid transparent;
+    transition: all 0.2s ease-in-out;
 }
+
+.tab-link:hover {
+    color: var(--primary-dark-color);
+}
+
 .tab-link.active {
     color: var(--primary-color);
     border-bottom-color: var(--primary-color);
@@ -3047,236 +3120,213 @@ body main {
 
 .tab-content {
     display: none;
+    padding: 0 2rem 2rem 2rem; /* Add padding to align with tabs */
 }
+
 .tab-content.active {
     display: block;
+    animation: fadeIn 0.5s;
 }
 
-#new-post-form .input-group {
-    display: flex;
-    gap: 1rem;
-}
-#new-post-form textarea {
-    flex-grow: 1;
-}
-
-.posts-container {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-top: 2rem;
-}
-.group-post {
-    padding: 1.5rem;
-}
-.post-author {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin-bottom: 1rem;
-}
-.post-author img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-.post-author div {
-    display: flex;
-    flex-direction: column;
-}
-.post-author strong {
-    font-weight: 600;
-}
-.post-author small {
-    color: var(--subtle-text-color);
-    font-size: 0.9rem;
-}
-
-.members-list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
-}
-.member-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    padding: 0.75rem;
-    background-color: var(--background-color);
-    border-radius: var(--border-radius-medium);
-}
-.alumnus-pfp-round.small {
-    width: 40px;
-    height: 40px;
-}
-.requests-list {
+/* --- Group Management Page Styles --- */
+.member-management-list {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
-.request-item {
+
+.member-management-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
     background-color: var(--background-color);
     border-radius: var(--border-radius-medium);
+    border: 1px solid var(--border-color);
 }
 
-/* --- New Blog Image Styles --- */
-.blog-summary-image {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: var(--border-radius-medium);
-    margin-bottom: 1.5rem;
-}
-
-.blog-post-image {
-    width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border-radius: var(--border-radius-large);
-    margin-bottom: 2rem;
-}
-
-.blog-post-summary {
-    padding: 0; /* Remove padding to let image touch edges */
-    overflow: hidden; /* Keep rounded corners */
-}
-
-.blog-summary-content {
-    padding: 2rem;
-}
-
-/* --- New Campaign Card Meta Styles --- */
-.campaign-meta {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--border-color);
-    font-size: 0.9rem;
-    color: var(--subtle-text-color);
-}
-
-.campaign-meta span {
+.member-info {
     display: flex;
     align-items: center;
+    gap: 1rem;
+    font-weight: 500;
+}
+
+.member-actions {
+    display: flex;
     gap: 0.5rem;
 }
 
-/* --- Campaign Details Page Styles --- */
-.campaign-details-image {
-    width: 100%;
-    max-height: 400px;
-    object-fit: cover;
-    border-radius: var(--border-radius-large);
-    margin-bottom: 2rem;
+.role-badge.creator {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.campaign-full-description {
-    line-height: 1.8;
-    margin-bottom: 2rem;
+.role-badge.admin {
+    background-color: var(--accent-color);
+    color: white;
 }
-
-.campaign-details-grid {
+/* --- Group Listing Page Card Styles --- */
+.groups-grid {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 2rem;
-    margin-top: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 1.5rem;
 }
 
-.campaign-progress-box {
-    padding: 2rem;
-    background-color: var(--background-color);
-    border-radius: var(--border-radius-medium);
-}
-
-.campaign-progress-box .btn {
-    margin-top: 1.5rem;
-}
-
-.recent-donors-box h3 {
-    margin-top: 0;
-}
-
-.donors-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    max-height: 300px;
-    overflow-y: auto;
-}
-
-.donor-item {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.donor-item div {
-    display: flex;
-    flex-direction: column;
-}
-
-.donor-item small {
-    color: var(--subtle-text-color);
-}
-
-.campaign-card-link {
+.card-link {
     text-decoration: none;
     color: inherit;
 }
-/* --- New Blog Comment Styles --- */
-#comment-section {
-    margin-top: 2rem;
+
+.group-card {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    text-align: left;
+    padding: 1.5rem;
 }
 
-.comments-list {
+.group-card .group-image {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image fills the circle without distortion */
+    border: 3px solid var(--accent-color);
+    flex-shrink: 0; /* Prevents the image from shrinking */
+}
+
+.group-content {
+    flex-grow: 1;
+}
+
+.group-cta {
+    margin-top: 1rem;
+}
+
+
+/* --- Group Details Page Styles --- */
+.group-details-card.card {
+    padding: 0; /* Remove padding to allow header to be full-width */
+    overflow: hidden; /* Ensures cover image respects border radius */
+}
+
+.group-header {
+    text-align: center;
+    position: relative;
+    padding-bottom: 2rem;
+}
+
+.group-cover-image {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+}
+
+.group-logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid var(--surface-color);
+    box-shadow: var(--box-shadow-elevated);
+    background-color: var(--surface-color);
+    margin-top: -75px; /* Pulls the PFP up over the cover image */
+    margin-bottom: 1rem;
+    position: relative; /* Bring it in front of the cover image */
+    z-index: 2;
+}
+
+.group-header h1 {
+    margin-top: 0;
+}
+
+.group-creator {
+    font-size: 0.9rem;
+    color: var(--subtle-text-color);
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.group-actions {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.group-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin: 0 2rem 2rem 2rem; /* Add padding to align with content */
+}
+
+.tab-link {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--subtle-text-color);
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease-in-out;
+}
+
+.tab-link:hover {
+    color: var(--primary-dark-color);
+}
+
+.tab-link.active {
+    color: var(--primary-color);
+    border-bottom-color: var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+    padding: 0 2rem 2rem 2rem; /* Add padding to align with tabs */
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.5s;
+}
+
+/* --- Group Management Page Styles --- */
+.member-management-list {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
+    gap: 1rem;
 }
 
-.comment-item {
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-}
-.comment-item:last-child {
-    border-bottom: none;
+.member-management-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: var(--background-color);
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--border-color);
 }
 
-.comment-author {
+.member-info {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 0.75rem;
+    font-weight: 500;
 }
 
-.comment-author img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.comment-author div {
+.member-actions {
     display: flex;
-    flex-direction: column;
+    gap: 0.5rem;
 }
 
-.comment-author strong {
-    font-weight: 600;
+.role-badge.creator {
+    background-color: var(--primary-color);
+    color: white;
 }
 
-.comment-author small {
-    color: var(--subtle-text-color);
-    font-size: 0.85rem;
-}
-
-.comment-item p {
-    margin-left: 50px; /* Align comment text with author name */
+.role-badge.admin {
+    background-color: var(--accent-color);
+    color: white;
 }

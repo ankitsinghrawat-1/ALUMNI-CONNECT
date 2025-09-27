@@ -10,12 +10,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const formData = new FormData();
         formData.append('group_name', document.getElementById('group_name').value);
         formData.append('group_description', document.getElementById('group_description').value);
-        const imageFile = document.getElementById('group_image').files[0];
-        if (imageFile) {
-            formData.append('group_image', imageFile);
+        
+        const logoFile = document.getElementById('group_logo').files[0];
+        if (logoFile) {
+            formData.append('group_logo', logoFile);
         }
+        const backgroundFile = document.getElementById('group_background').files[0];
+        if (backgroundFile) {
+            formData.append('group_background', backgroundFile);
+        }
+
         if (!formData.get('group_name') || !formData.get('group_description')) {
-            showToast('Please fill out both fields.', 'error');
+            showToast('Please fill out both name and description.', 'error');
             return;
         }
         try {

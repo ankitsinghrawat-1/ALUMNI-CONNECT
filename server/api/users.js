@@ -70,7 +70,15 @@ module.exports = (pool, upload) => {
         if (isMatch) {
             const payload = { userId: user.user_id, email: user.email, role: user.role };
             const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '8h' });
-            res.status(200).json({ message: 'Login successful', token, role: user.role, email: user.email });
+            // UPDATED: Added user_id and full_name to the response
+            res.status(200).json({ 
+                message: 'Login successful', 
+                token, 
+                role: user.role, 
+                email: user.email, 
+                user_id: user.user_id, 
+                full_name: user.full_name 
+            });
         } else {
             res.status(401).json({ message: 'Invalid email or password' });
         }

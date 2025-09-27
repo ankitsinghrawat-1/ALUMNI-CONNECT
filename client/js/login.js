@@ -56,19 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const response = await fetch('http://localhost:3000/api/users/login', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
+                // Store all necessary info in localStorage
                 localStorage.setItem('alumniConnectToken', data.token);
                 localStorage.setItem('loggedInUserEmail', data.email);
                 localStorage.setItem('userRole', data.role);
                 localStorage.setItem('loggedInUserName', data.full_name);
+                localStorage.setItem('loggedInUserId', data.user_id); // UPDATED: Store the user's ID
 
 
                 if (messageDiv) {

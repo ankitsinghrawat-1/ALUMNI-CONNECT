@@ -57,32 +57,30 @@ const uploadDir = path.join(__dirname, '..', 'uploads');
 const resumeDir = path.join(__dirname, '..', 'uploads', 'resumes');
 const chatImagesDir = path.join(__dirname, '..', 'uploads', 'chat');
 const blogImagesDir = path.join(__dirname, '..', 'uploads', 'blogs');
-const groupImagesDir = path.join(__dirname, '..', 'uploads', 'groups'); // New directory for group images
+const groupImagesDir = path.join(__dirname, '..', 'uploads', 'groups');
 
 fs.mkdir(uploadDir, { recursive: true }).catch(console.error);
 fs.mkdir(resumeDir, { recursive: true }).catch(console.error);
 fs.mkdir(chatImagesDir, { recursive: true }).catch(console.error);
 fs.mkdir(blogImagesDir, { recursive: true }).catch(console.error);
-fs.mkdir(groupImagesDir, { recursive: true }).catch(console.error); // Ensure group images directory exists
+fs.mkdir(groupImagesDir, { recursive: true }).catch(console.error);
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        if (file.fieldname === 'resume') {
-            cb(null, resumeDir);
-        } else if (file.fieldname === 'chat_image') {
-            cb(null, chatImagesDir);
-        } else if (file.fieldname === 'blog_image') {
-            cb(null, blogImagesDir);
-        } else if (file.fieldname === 'group_image') {
-            cb(null, groupImagesDir);
-        }
-        else {
-            cb(null, uploadDir);
-        }
+        const fieldToDir = {
+            'resume': resumeDir,
+            'chat_image': chatImagesDir,
+            'blog_image': blogImagesDir,
+            'group_logo': groupImagesDir,
+            'group_background': groupImagesDir
+        };
+        const dir = fieldToDir[file.fieldname] || uploadDir;
+        cb(null, dir);
     },
     filename: (req, file, cb) => {
         const userIdentifier = req.user ? req.user.userId : 'user';
-        cb(null, `${file.fieldname}-${userIdentifier}-${Date.now()}${path.extname(file.originalname)}`);
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        cb(null, `${file.fieldname}-${userIdentifier}-${uniqueSuffix}${path.extname(file.originalname)}`);
     }
 });
 
@@ -114,7 +112,7 @@ const mentorRoutes = require('./api/mentors')(pool);
 const messageRoutes = require('./api/messages')(pool, upload);
 const notificationRoutes = require('./api/notifications')(pool);
 const userRoutes = require('./api/users')(pool, upload);
-const groupRoutes = require('./api/groups')(pool, upload); // Pass upload to group routes
+const groupRoutes = require('./api/groups')(pool, upload);
 
 app.use('/api/admin', adminRoutes);
 app.use('/api/blogs', blogRoutes);
@@ -182,7 +180,7 @@ io.on("connection", (socket) => {
             }
         }
     });
-    
+
     socket.on("typing", ({ receiverId, isTyping }) => {
          const user = getUser(receiverId);
          if(user) {
