@@ -26,7 +26,9 @@ const PORT = process.env.PORT || 3000;
 
 const corsOptions = {
     origin: function (origin, callback) {
-        if (!origin || origin.startsWith('http://localhost')) {
+        // For production, you should have a whitelist of allowed domains
+        const allowedOrigins = ['http://localhost:3000', 'http://localhost:3001'];
+        if (!origin || allowedOrigins.includes(origin)) {
             callback(null, true);
         } else {
             callback(new Error('Not allowed by CORS'));
@@ -78,7 +80,8 @@ const storage = multer.diskStorage({
         cb(null, dir);
     },
     filename: (req, file, cb) => {
-        const userIdentifier = req.user ? req.user.userId : 'user';
+        // Securely get user identifier, default to 'guest' if not logged in
+        const userIdentifier = (req.user && req.user.userId) ? req.user.userId : 'guest';
         const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
         cb(null, `${file.fieldname}-${userIdentifier}-${uniqueSuffix}${path.extname(file.originalname)}`);
     }
@@ -114,16 +117,17 @@ const notificationRoutes = require('./api/notifications')(pool);
 const userRoutes = require('./api/users')(pool, upload);
 const groupRoutes = require('./api/groups')(pool, upload);
 
-app.use('/api/admin', adminRoutes);
-app.use('/api/blogs', blogRoutes);
-app.use('/api/campaigns', campaignRoutes);
-app.use('/api/events', eventRoutes);
-app.use('/api/jobs', jobRoutes);
-app.use('/api/mentors', mentorRoutes);
+// Apply verifyToken middleware to all routes that require authentication
+app.use('/api/admin', verifyToken, adminRoutes);
+app.use('/api/blogs', verifyToken, blogRoutes);
+app.use('/api/campaigns', verifyToken, campaignRoutes);
+app.use('/api/events', verifyToken, eventRoutes);
+app.use('/api/jobs', verifyToken, jobRoutes);
+app.use('/api/mentors', verifyToken, mentorRoutes);
 app.use('/api/messages', verifyToken, messageRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/groups', groupRoutes);
+app.use('/api/notifications', verifyToken, notificationRoutes);
+app.use('/api/users', userRoutes); // User creation and login don't need a token
+app.use('/api/groups', verifyToken, groupRoutes);
 
 
 // --- CENTRAL ERROR HANDLING MIDDLEWARE ---
@@ -156,7 +160,7 @@ io.on("connection", (socket) => {
         io.emit("getUsers", onlineUsers);
     });
 
-    socket.on("sendMessage", async ({ senderId, receiverId, content, conversationId, messageType }) => {
+    socket.on("sendMessage", async ({ senderId, senderName, receiverId, content, conversationId, messageType }) => {
         const user = getUser(receiverId);
         if (user) {
             io.to(user.socketId).emit("getMessage", {
@@ -167,17 +171,10 @@ io.on("connection", (socket) => {
                 message_type: messageType,
             });
 
-            try {
-                const [sender] = await pool.query('SELECT full_name FROM users WHERE user_id = ?', [senderId]);
-                if (sender.length > 0) {
-                     io.to(user.socketId).emit("getNotification", {
-                        senderName: sender[0].full_name,
-                        message: messageType === 'text' ? content : 'Sent an image',
-                    });
-                }
-            } catch (error) {
-                console.error("Error fetching sender name for notification:", error);
-            }
+            io.to(user.socketId).emit("getNotification", {
+                senderName: senderName,
+                message: messageType === 'text' ? content : 'Sent an image',
+            });
         }
     });
 

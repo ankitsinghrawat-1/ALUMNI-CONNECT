@@ -20,11 +20,11 @@ module.exports = (pool, upload) => {
     }));
 
     router.get('/:id', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query(`
-            SELECT g.*, u.full_name as creator_name
-            FROM \`groups\` g
-            LEFT JOIN users u ON g.created_by = u.user_id
-            WHERE g.group_id = ?`,
+        const [rows] = await pool.query(
+            `SELECT g.*, u.full_name as creator_name
+             FROM \`groups\` g
+             LEFT JOIN users u ON g.created_by = u.user_id
+             WHERE g.group_id = ?`,
             [req.params.id]
         );
         if (rows.length === 0) {
@@ -34,11 +34,12 @@ module.exports = (pool, upload) => {
     }));
 
     router.get('/:id/members', asyncHandler(async (req, res) => {
-        const [members] = await pool.query(`
-            SELECT u.user_id, u.full_name, u.profile_pic_url, u.email, gm.role
-            FROM users u JOIN group_members gm ON u.user_id = gm.user_id
-            WHERE gm.group_id = ?
-        `, [req.params.id]);
+        const [members] = await pool.query(
+            `SELECT u.user_id, u.full_name, u.profile_pic_url, u.email, gm.role
+             FROM users u JOIN group_members gm ON u.user_id = gm.user_id
+             WHERE gm.group_id = ?`,
+            [req.params.id]
+        );
         res.json(members);
     }));
 
@@ -49,26 +50,24 @@ module.exports = (pool, upload) => {
         const group_id = req.params.id;
         const user_id = req.user.userId;
 
-        // ** THIS IS THE CORRECTED LOGIC **
-        // First, check if the user has an 'admin' role within the group_members table.
-        // Also, check if the user is a platform-level admin.
-        if (req.user.role === 'admin' || (await isGroupAdmin(user_id, group_id))) {
+        if (await isGroupAdmin(user_id, group_id)) {
             return res.json({ status: 'admin' });
         }
 
-        // Then check for regular member status
         const [member] = await pool.query('SELECT * FROM group_members WHERE group_id = ? AND user_id = ?', [group_id, user_id]);
         if (member.length > 0) {
             return res.json({ status: 'member' });
         }
+        
+        if (req.user.role === 'admin') {
+            return res.json({ status: 'admin' });
+        }
 
-        // Check for a pending join request
         const [request] = await pool.query('SELECT * FROM group_join_requests WHERE group_id = ? AND user_id = ? AND status = "pending"', [group_id, user_id]);
         if (request.length > 0) {
             return res.json({ status: 'pending' });
         }
 
-        // If none of the above, they have no relationship to the group
         res.json({ status: 'none' });
     }));
 
@@ -109,13 +108,14 @@ module.exports = (pool, upload) => {
 
     // --- Group Posts ---
     router.get('/:id/posts', asyncHandler(async (req, res) => {
-        const [posts] = await pool.query(`
-            SELECT gp.post_id, gp.content, gp.created_at, u.full_name as author, u.profile_pic_url
-            FROM group_posts gp
-            JOIN users u ON gp.user_id = u.user_id
-            WHERE gp.group_id = ?
-            ORDER BY gp.created_at DESC
-        `, [req.params.id]);
+        const [posts] = await pool.query(
+            `SELECT gp.post_id, gp.content, gp.created_at, u.full_name as author, u.profile_pic_url
+             FROM group_posts gp
+             JOIN users u ON gp.user_id = u.user_id
+             WHERE gp.group_id = ?
+             ORDER BY gp.created_at DESC`,
+            [req.params.id]
+        );
         res.json(posts);
     }));
 

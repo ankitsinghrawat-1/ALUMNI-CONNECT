@@ -1,8 +1,11 @@
 // client/js/group-management.js
 document.addEventListener('DOMContentLoaded', async () => {
+    // --- FIX: Wait for the auth script to be ready ---
+    await window.authReady;
+
     const params = new URLSearchParams(window.location.search);
     const groupId = params.get('id');
-    const currentUserId = localStorage.getItem('loggedInUserId');
+    const currentUserId = parseInt(localStorage.getItem('loggedInUserId'), 10);
 
     // DOM Elements
     const editGroupForm = document.getElementById('edit-group-form');
@@ -17,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
+        // This API call will now reliably have the auth token
         const membership = await window.api.get(`/groups/${groupId}/membership-status`);
         if (membership.status !== 'admin') {
             showToast('You are not an admin of this group.', 'error');
@@ -25,6 +29,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (error) {
         console.error('Permission check failed:', error);
+        // This redirect will now only happen for legitimate errors, not race conditions.
+        showToast('You do not have permission to access this page.', 'error');
         window.location.href = 'groups.html';
         return;
     }
@@ -58,7 +64,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 let actionButtons = '';
                 // Only the group creator can manage roles
-                if (currentUserId == groupData.created_by && member.user_id != currentUserId) {
+                if (currentUserId === groupData.created_by && member.user_id !== currentUserId) {
                     if (member.role === 'member') {
                         actionButtons += `<button class="btn btn-success btn-sm promote-btn" data-id="${member.user_id}">Promote</button>`;
                     } else {
