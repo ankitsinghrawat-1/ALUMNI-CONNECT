@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads - Social Feed</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="threads-main">
+        <div class="threads-container">
+            <div class="threads-header">
+                <h1>Social Feed</h1>
+                <p>Share your thoughts, experiences and connect with the community</p>
+                <a href="add-thread.html" class="btn btn-primary thread-compose-btn">
+                    <i class="fas fa-plus"></i> New Thread
+                </a>
+            </div>
+
+            <!-- Thread Feed -->
+            <div id="threads-feed" class="threads-feed">
+                <div class="loading-container">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                    </div>
+                    <p>Loading threads...</p>
+                </div>
+            </div>
+
+            <!-- Load More Button -->
+            <div class="load-more-container" style="display: none;">
+                <button id="load-more-btn" class="btn btn-secondary">
+                    <i class="fas fa-chevron-down"></i> Load More
+                </button>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Thread Detail Modal -->
+    <div id="thread-modal" class="modal">
+        <div class="modal-content thread-modal-content">
+            <div class="modal-header">
+                <h3>Thread Details</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div id="thread-modal-body" class="modal-body">
+                <!-- Thread content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="share-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Share Thread</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Share this thread:</p>
+                <div class="share-options">
+                    <button class="btn btn-secondary" onclick="copyThreadLink()">
+                        <i class="fas fa-link"></i> Copy Link
+                    </button>
+                    <button class="btn btn-secondary" onclick="shareToMessages()">
+                        <i class="fas fa-paper-plane"></i> Send in Message
+                    </button>
+                </div>
+                <input type="text" id="thread-link-input" readonly style="margin-top: 1rem; width: 100%;">
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/threads.js"></script>
+</body>
+</html>

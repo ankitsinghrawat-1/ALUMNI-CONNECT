@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <a href="#" class="dropdown-toggle">Resources <i class="fas fa-chevron-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="blogs.html">Blog</a></li>
+                    <li><a href="threads.html">Social Feed</a></li>
                     <li><a href="jobs.html">Job Board</a></li>
                     <li><a href="campaigns.html">Campaigns</a></li>
                 </ul>
