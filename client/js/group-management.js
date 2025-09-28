@@ -11,7 +11,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const editGroupForm = document.getElementById('edit-group-form');
     const membersListContainer = document.getElementById('members-list');
     const groupNameSidebar = document.getElementById('group-name-sidebar');
+    const backToGroupDetailsBtn = document.getElementById('back-to-group-details');
     const mainContainer = document.querySelector('.profile-container');
+
+    // Back button functionality
+    if (backToGroupDetailsBtn) {
+        backToGroupDetailsBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = `group-details.html?id=${groupId}`;
+        });
+    }
 
     // Initial Permission Check
     if (!groupId || !currentUserId) {
