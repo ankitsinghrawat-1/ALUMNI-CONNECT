@@ -295,14 +295,25 @@ document.addEventListener('DOMContentLoaded', () => {
                         <i class="fas fa-eye"></i>
                         View Full Details
                     </a>
+                    ${membership.status === 'admin' ? 
+                        `<button class="btn btn-info group-add-member-modal-btn" data-group-id="${group.group_id}">
+                            <i class="fas fa-user-plus"></i>
+                            Add Member
+                        </button>` : ''
+                    }
                     ${membership.status === 'none' ? 
                         `<button class="btn btn-success group-join-modal-btn" data-group-id="${group.group_id}">
                             <i class="fas fa-plus"></i>
                             ${group.privacy === 'private' ? 'Request to Join' : 'Join Group'}
                         </button>` : 
+                        membership.status === 'member' || membership.status === 'admin' ? 
                         `<span class="btn btn-secondary" disabled>
                             <i class="fas fa-check"></i>
-                            ${membership.status === 'member' ? 'Already a Member' : membership.status === 'admin' ? 'Group Admin' : 'Request Sent'}
+                            ${membership.status === 'admin' ? 'Group Admin' : 'Member'}
+                        </span>` :
+                        `<span class="btn btn-secondary" disabled>
+                            <i class="fas fa-clock"></i>
+                            Request Sent
                         </span>`
                     }
                 </div>
@@ -345,7 +356,59 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.target === modal) {
             modal.style.display = 'none';
         }
+        if (event.target === document.getElementById('add-member-quick-modal')) {
+            document.getElementById('add-member-quick-modal').style.display = 'none';
+        }
     };
+
+    // Add Member modal functionality
+    const addMemberQuickModal = document.getElementById('add-member-quick-modal');
+    const addMemberQuickForm = document.getElementById('add-member-quick-form');
+    let currentGroupIdForAdd = null;
+
+    // Event delegation for add member button in quick modal
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target.classList.contains('group-add-member-modal-btn')) {
+                currentGroupIdForAdd = e.target.getAttribute('data-group-id');
+                addMemberQuickModal.style.display = 'block';
+            }
+        });
+    }
+
+    // Handle add member form submission
+    if (addMemberQuickForm) {
+        addMemberQuickForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const memberEmail = document.getElementById('member-email-quick-input').value;
+            
+            if (!currentGroupIdForAdd) {
+                showToast('Error: No group selected', 'error');
+                return;
+            }
+
+            try {
+                const result = await window.api.post(`/groups/${currentGroupIdForAdd}/add-member`, {
+                    member_email: memberEmail
+                });
+                showToast(result.message || 'Member added successfully!', 'success');
+                addMemberQuickModal.style.display = 'none';
+                addMemberQuickForm.reset();
+                currentGroupIdForAdd = null;
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+            }
+        });
+    }
+
+    // Close add member modal
+    const addMemberQuickCloseBtn = addMemberQuickModal?.querySelector('.close-btn');
+    if (addMemberQuickCloseBtn) {
+        addMemberQuickCloseBtn.onclick = () => {
+            addMemberQuickModal.style.display = 'none';
+            currentGroupIdForAdd = null;
+        };
+    }
 
     // Initialize
     fetchAndRenderGroups();

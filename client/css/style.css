@@ -4847,34 +4847,37 @@ html.dark-mode .modal-content {
 
 /* Fix modal content overflow */
 .group-details-modal-content {
-    max-width: 700px;
-    width: 95%;
+    max-width: 600px; /* Reduced from 700px to prevent horizontal scroll */
+    width: 90%; /* Reduced from 95% */
     max-height: 90vh;
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .group-modal-description p {
     margin: 0;
     color: var(--text-color);
-    line-height: 1.6;
+    line-height: 1.5; /* Reduced from 1.6 for better spacing */
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-size: 0.95rem; /* Added to control text size */
 }
 
 .group-modal-info h2 {
     margin: 0 0 0.5rem 0;
     color: var(--text-color);
-    font-size: 1.4rem;
+    font-size: 1.3rem; /* Reduced from 1.4rem to prevent overflow */
     font-weight: 600;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    line-height: 1.3; /* Added for better control */
 }
 
 .group-modal-actions {
     display: flex;
-    gap: 0.75rem; /* Reduced from 1rem to reduce spacing */
+    gap: 0.5rem; /* Further reduced from 0.75rem for tighter spacing */
     justify-content: flex-end;
-    padding-top: 1rem; /* Reduced from 1.5rem */
+    padding-top: 0.75rem; /* Reduced from 1rem */
     border-top: 1px solid var(--border-color);
 }
 
@@ -5795,6 +5798,15 @@ body main {
 
 .manage-members-header h2 {
     margin: 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1.5rem;
 }
 /* Admin Dashboard Layout */
 .admin-body {
@@ -10450,12 +10462,13 @@ fieldset.form-section legend {
     align-items: center;
     gap: 0.25rem;
     color: var(--subtle-text-color);
-    font-size: 0.9rem; /* Increased from 0.8rem for better visibility */
+    font-size: 1rem; /* Further increased from 0.9rem for better visibility */
+    font-weight: 500; /* Added font weight for emphasis */
 }
 
 .group-stats .stat-item i {
     color: var(--accent-color);
-    font-size: 0.85rem; /* Increased from 0.75rem */
+    font-size: 0.95rem; /* Increased from 0.85rem */
 }
 
 .group-card-footer {
@@ -10584,6 +10597,15 @@ fieldset.form-section legend {
     overflow: hidden;
 }
 
+/* Ensure group stats are visible in list view body */
+.groups-grid.list-view .group-card-body .group-stats {
+    display: flex !important;
+    flex-direction: row;
+    gap: 1rem;
+    margin: 1rem 0;
+    justify-content: flex-start;
+}
+
 .groups-grid.list-view .group-card-footer {
     flex-shrink: 0;
     border-top: none;
@@ -10605,7 +10627,8 @@ fieldset.form-section legend {
 }
 
 .groups-grid.list-view .group-stats .stat-item {
-    font-size: 0.9rem; /* Increased from 0.85rem for consistency */
+    font-size: 1rem; /* Further increased from 0.9rem for consistency */
+    font-weight: 500; /* Added font weight for emphasis */
 }
 
 .groups-grid.list-view .group-actions {
