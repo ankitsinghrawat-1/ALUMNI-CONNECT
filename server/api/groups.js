@@ -78,8 +78,27 @@ module.exports = (pool, upload) => {
     router.post('/:id/request-join', asyncHandler(async (req, res) => {
         const group_id = req.params.id;
         const user_id = req.user.userId;
+        
+        // Check if user is already a member
+        const [existingMember] = await pool.query(
+            'SELECT * FROM group_members WHERE group_id = ? AND user_id = ?',
+            [group_id, user_id]
+        );
+        if (existingMember.length > 0) {
+            return res.status(400).json({ message: 'You are already a member of this group.' });
+        }
+        
+        // Check if there's already a pending request
+        const [existingRequest] = await pool.query(
+            'SELECT * FROM group_join_requests WHERE group_id = ? AND user_id = ? AND status = "pending"',
+            [group_id, user_id]
+        );
+        if (existingRequest.length > 0) {
+            return res.status(400).json({ message: 'You already have a pending request for this group.' });
+        }
+        
         await pool.query(
-            'INSERT INTO group_join_requests (group_id, user_id) VALUES (?, ?)',
+            'INSERT INTO group_join_requests (group_id, user_id, status) VALUES (?, ?, "pending")',
             [group_id, user_id]
         );
         res.status(201).json({ message: 'Request to join group sent successfully!' });
