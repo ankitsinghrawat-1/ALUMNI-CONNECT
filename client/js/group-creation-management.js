@@ -23,17 +23,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         requests.forEach(req => {
-            // FIX: Add user_id to the data-request-id for easier removal
-            const rowId = `request-${req.group_id}-${req.created_by}`;
             const row = `
-                <tr data-request-id="${req.group_id}">
+                <tr data-request-id="${req.request_id}">
                     <td>${req.name}</td>
                     <td title="${req.description}">${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}</td>
                     <td>${req.creator_name}</td>
                     <td>${new Date(req.requested_at).toLocaleString()}</td>
                     <td class="action-buttons">
-                        <button class="btn btn-sm btn-success approve-btn" data-id="${req.group_id}">Approve</button>
-                        <button class="btn btn-sm btn-danger reject-btn" data-id="${req.group_id}">Reject</button>
+                        <button class="btn btn-sm btn-success approve-btn" data-id="${req.request_id}">Approve</button>
+                        <button class="btn btn-sm btn-danger reject-btn" data-id="${req.request_id}">Reject</button>
                     </td>
                 </tr>
             `;
@@ -41,16 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const handleUpdateRequest = async (groupId, status) => {
+    const handleUpdateRequest = async (requestId, status) => {
         try {
-            // Note: For approval, the status is 'active'
-            const apiStatus = status === 'approved' ? 'active' : 'rejected';
-            const response = await window.api.put(`/admin/group-creation-requests/${groupId}`, { status: apiStatus });
+            // Note: For approval, the status is 'approve' not 'active'  
+            const apiStatus = status === 'approved' ? 'approve' : 'reject';
+            const response = await window.api.put(`/admin/group-creation-requests/${requestId}`, { status: apiStatus });
             
             showToast(response.message, 'success');
             
             // Remove the processed row from the table
-            const rowToRemove = document.querySelector(`tr[data-request-id="${groupId}"]`);
+            const rowToRemove = document.querySelector(`tr[data-request-id="${requestId}"]`);
             if (rowToRemove) {
                 rowToRemove.remove();
             }
@@ -70,18 +68,19 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners ---
     tableBody.addEventListener('click', (e) => {
         const target = e.target;
-        // FIX: Get both groupId and userId from the button's data attributes
-        const groupId = target.dataset.groupId;
-        const userId = target.dataset.userId;
-
-        if (!groupId || !userId) return; // Ignore clicks on non-button areas
+        
+        // Check if the clicked element is a button with the required classes
+        if (!target.classList.contains('approve-btn') && !target.classList.contains('reject-btn')) {
+            return; // Ignore clicks on non-button areas
+        }
+        
+        const requestId = target.dataset.id;
+        if (!requestId) return; // Ignore clicks if no request ID is present
 
         if (target.classList.contains('approve-btn')) {
-            const groupId = target.dataset.id;
-            handleUpdateRequest(groupId, 'approved');
+            handleUpdateRequest(requestId, 'approved');
         } else if (target.classList.contains('reject-btn')) {
-            const groupId = target.dataset.id;
-            handleUpdateRequest(groupId, 'rejected');
+            handleUpdateRequest(requestId, 'rejected');
         }
     });
     
