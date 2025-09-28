@@ -15,11 +15,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Comprehensive dropdown data with suggestions
     const dropdownData = {
         skills: [
-            'JavaScript', 'Python', 'Java', 'C++', 'React', 'Angular', 'Vue.js', 'Node.js', 
-            'Express.js', 'MongoDB', 'MySQL', 'PostgreSQL', 'Docker', 'Kubernetes', 'AWS', 
-            'Azure', 'Google Cloud', 'Machine Learning', 'Data Science', 'Artificial Intelligence',
-            'UI/UX Design', 'Figma', 'Adobe Photoshop', 'Digital Marketing', 'SEO', 'Content Writing',
-            'Project Management', 'Agile', 'Scrum', 'Leadership', 'Team Management', 'Communication'
+            'JavaScript', 'Python', 'Java', 'C++', 'C#', 'PHP', 'Ruby', 'Go', 'Rust', 'Swift', 'Kotlin',
+            'React', 'Angular', 'Vue.js', 'Node.js', 'Express.js', 'Django', 'Flask', 'Spring Boot', 'Laravel',
+            'MongoDB', 'MySQL', 'PostgreSQL', 'Redis', 'Elasticsearch', 'Oracle', 'SQL Server',
+            'Docker', 'Kubernetes', 'Jenkins', 'Git', 'GitHub', 'GitLab', 'Terraform', 'Ansible',
+            'AWS', 'Azure', 'Google Cloud', 'Firebase', 'Heroku', 'Netlify', 'Vercel',
+            'Machine Learning', 'Deep Learning', 'Data Science', 'Artificial Intelligence', 'TensorFlow', 'PyTorch',
+            'Data Analysis', 'Data Visualization', 'Tableau', 'Power BI', 'Excel', 'R', 'Pandas', 'NumPy',
+            'UI/UX Design', 'Figma', 'Adobe XD', 'Sketch', 'Adobe Photoshop', 'Adobe Illustrator', 'InDesign',
+            'Digital Marketing', 'SEO', 'SEM', 'Google Analytics', 'Social Media Marketing', 'Content Marketing', 'Email Marketing',
+            'Content Writing', 'Copywriting', 'Technical Writing', 'Blog Writing', 'Grant Writing',
+            'Project Management', 'Agile', 'Scrum', 'Kanban', 'Jira', 'Trello', 'Asana', 'Monday.com',
+            'Leadership', 'Team Management', 'Strategic Planning', 'Business Analysis', 'Process Improvement',
+            'Communication', 'Public Speaking', 'Presentation Skills', 'Negotiation', 'Sales', 'Customer Service',
+            'Accounting', 'Financial Analysis', 'Investment Analysis', 'Risk Management', 'Auditing', 'Taxation',
+            'HR Management', 'Recruitment', 'Training & Development', 'Performance Management', 'Employee Relations',
+            'Supply Chain Management', 'Logistics', 'Procurement', 'Quality Assurance', 'Six Sigma', 'Lean Manufacturing',
+            'Cybersecurity', 'Network Security', 'Information Security', 'Penetration Testing', 'CISSP', 'CEH',
+            'Mobile Development', 'iOS Development', 'Android Development', 'Flutter', 'React Native', 'Xamarin',
+            'Game Development', 'Unity', 'Unreal Engine', 'C++ Game Programming', '3D Modeling', 'Animation',
+            'Blockchain', 'Cryptocurrency', 'Smart Contracts', 'Solidity', 'Web3', 'DeFi',
+            'DevOps', 'CI/CD', 'Linux', 'Shell Scripting', 'System Administration', 'Network Administration',
+            'Business Intelligence', 'ETL', 'Data Warehousing', 'OLAP', 'Reporting', 'Dashboard Development',
+            'Video Editing', 'Audio Production', 'Graphic Design', '3D Design', 'Web Design', 'Brand Design',
+            'Teaching', 'Training', 'Curriculum Development', 'Educational Technology', 'E-learning Development',
+            'Research', 'Statistical Analysis', 'Survey Design', 'Academic Writing', 'Literature Review'
         ],
         specialization: [
             'Full Stack Development', 'Frontend Development', 'Backend Development', 'Mobile App Development',
@@ -308,28 +328,61 @@ document.addEventListener('DOMContentLoaded', async () => {
         const dropdown = document.createElement('div');
         dropdown.className = 'dropdown-list';
         
+        // Check if field supports adding new items (currently skills, but can be expanded)
+        const allowCustomItems = ['skills', 'specialization', 'languages'].includes(field);
+        
         const filterOptions = (query) => {
             const filtered = options.filter(option => 
                 option.toLowerCase().includes(query.toLowerCase())
             );
             
             dropdown.innerHTML = '';
-            if (filtered.length === 0) {
+            
+            // Show matching options first
+            filtered.slice(0, 10).forEach(option => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = option;
+                item.addEventListener('click', () => {
+                    input.value = option;
+                    dropdown.classList.remove('show');
+                });
+                dropdown.appendChild(item);
+            });
+            
+            // Add "Add New" option for fields that support it
+            if (allowCustomItems && query.trim().length > 0) {
+                // Check if the query is not already in the options
+                const exactMatch = options.find(option => 
+                    option.toLowerCase() === query.toLowerCase()
+                );
+                
+                if (!exactMatch && filtered.length < 10) {
+                    const addNewItem = document.createElement('div');
+                    addNewItem.className = 'dropdown-item add-new-item';
+                    addNewItem.innerHTML = `<i class="fas fa-plus"></i> Add "${query.trim()}"`;
+                    addNewItem.addEventListener('click', () => {
+                        const newValue = query.trim();
+                        // Add to the options array for future use
+                        if (!options.includes(newValue)) {
+                            options.push(newValue);
+                        }
+                        input.value = newValue;
+                        dropdown.classList.remove('show');
+                        
+                        // Show success message
+                        showToast(`Added "${newValue}" as a new ${field.replace('_', ' ')}`, 'success');
+                    });
+                    dropdown.appendChild(addNewItem);
+                }
+            }
+            
+            // Show "no results" message only if no options and no add-new option
+            if (filtered.length === 0 && (!allowCustomItems || query.trim().length === 0)) {
                 const noResults = document.createElement('div');
                 noResults.className = 'dropdown-item no-results';
                 noResults.textContent = 'No matching options found';
                 dropdown.appendChild(noResults);
-            } else {
-                filtered.slice(0, 10).forEach(option => {
-                    const item = document.createElement('div');
-                    item.className = 'dropdown-item';
-                    item.textContent = option;
-                    item.addEventListener('click', () => {
-                        input.value = option;
-                        dropdown.classList.remove('show');
-                    });
-                    dropdown.appendChild(item);
-                });
             }
         };
         
