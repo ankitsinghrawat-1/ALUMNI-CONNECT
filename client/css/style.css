@@ -3818,6 +3818,80 @@ fieldset.form-section legend {
     border-radius: 50%;
 }
 
+/* Join Requests Styles */
+.group-join-requests-card {
+    margin-top: 2rem;
+}
+
+.join-requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 40vh;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.join-request-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-medium);
+    border: 1px solid var(--border-color);
+    gap: 1rem;
+}
+
+.request-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.requester-name {
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.request-date {
+    font-size: 0.85rem;
+    color: var(--subtle-text-color);
+}
+
+.request-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.request-actions .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.request-actions .btn i {
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments for join requests */
+@media (max-width: 768px) {
+    .join-request-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .request-actions {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 /* Discussion Page Specific Styles */
 .discussion-header {
     text-align: center;

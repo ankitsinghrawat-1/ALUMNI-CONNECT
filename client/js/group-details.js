@@ -61,11 +61,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <h3>Members (<span id="member-count">0</span>)</h3>
                             <div id="members-list" class="members-list-sidebar"></div>
                         </div>
+                        ${membership.status === 'admin' ? `
+                        <div class="group-join-requests-card card">
+                            <h3>Join Requests (<span id="join-request-count">0</span>)</h3>
+                            <div id="join-requests-list" class="join-requests-list"></div>
+                        </div>
+                        ` : ''}
                     </div>
                 </div>
             `;
             
             loadMembers();
+            if (membership.status === 'admin') {
+                loadJoinRequests();
+            }
             attachEventListeners();
             
         } catch (error) {
@@ -95,6 +104,58 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    const loadJoinRequests = async () => {
+        const joinRequestsList = document.getElementById('join-requests-list');
+        const joinRequestCount = document.getElementById('join-request-count');
+        
+        if (!joinRequestsList) return; // Only load if the element exists (admin users)
+        
+        try {
+            const requests = await window.api.get(`/groups/${groupId}/join-requests`);
+            joinRequestCount.textContent = requests.length;
+            
+            if (requests.length > 0) {
+                joinRequestsList.innerHTML = requests.map(request => `
+                    <div class="join-request-item" data-request-id="${request.request_id}">
+                        <div class="request-info">
+                            <span class="requester-name">${sanitizeHTML(request.full_name)}</span>
+                            <span class="request-date">${new Date(request.created_at || Date.now()).toLocaleDateString()}</span>
+                        </div>
+                        <div class="request-actions">
+                            <button class="btn btn-sm btn-success approve-request-btn" data-request-id="${request.request_id}">
+                                <i class="fas fa-check"></i> Approve
+                            </button>
+                            <button class="btn btn-sm btn-danger reject-request-btn" data-request-id="${request.request_id}">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                joinRequestsList.innerHTML = '<p class="info-message">No pending join requests.</p>';
+            }
+        } catch (error) {
+            console.error('Error loading join requests:', error);
+            if (joinRequestsList) {
+                joinRequestsList.innerHTML = '<p class="info-message error">Failed to load join requests.</p>';
+            }
+        }
+    };
+
+    const handleJoinRequest = async (requestId, action) => {
+        try {
+            await window.api.post(`/groups/${groupId}/join-requests/${requestId}`, { action });
+            showToast(`Join request ${action}d successfully!`, 'success');
+            
+            // Reload both join requests and members (in case someone was approved)
+            loadJoinRequests();
+            loadMembers();
+        } catch (error) {
+            console.error(`Error ${action}ing join request:`, error);
+            showToast(`Failed to ${action} join request: ${error.message}`, 'error');
+        }
+    };
+
     const attachEventListeners = () => {
         groupDetailsContainer.addEventListener('click', async (e) => {
             const target = e.target.closest('button');
@@ -113,6 +174,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             if (target.id === 'invite-btn') {
                 inviteModal.style.display = 'block';
+            }
+            
+            // Handle join request approval/rejection
+            if (target.classList.contains('approve-request-btn')) {
+                const requestId = target.dataset.requestId;
+                await handleJoinRequest(requestId, 'approve');
+            }
+            
+            if (target.classList.contains('reject-request-btn')) {
+                const requestId = target.dataset.requestId;
+                await handleJoinRequest(requestId, 'reject');
             }
         });
         

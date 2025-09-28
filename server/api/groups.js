@@ -12,6 +12,18 @@ module.exports = (pool, upload) => {
         return member.length > 0 && member[0].role === 'admin';
     };
 
+    const isGroupAdminOrCreator = async (userId, groupId) => {
+        // Check if user is group admin
+        const [member] = await pool.query('SELECT role FROM group_members WHERE user_id = ? AND group_id = ?', [userId, groupId]);
+        if (member.length > 0 && member[0].role === 'admin') {
+            return true;
+        }
+        
+        // Check if user is group creator
+        const [group] = await pool.query('SELECT created_by FROM `groups` WHERE group_id = ?', [groupId]);
+        return group.length > 0 && group[0].created_by == userId;
+    };
+
     router.get('/', asyncHandler(async (req, res) => {
         const [rows] = await pool.query("SELECT * FROM `groups` WHERE status = 'active' ORDER BY name ASC");
         res.json(rows);
@@ -44,7 +56,7 @@ module.exports = (pool, upload) => {
         const group_id = req.params.id;
         const user_id = req.user.userId;
 
-        if (req.user.role === 'admin' || (await isGroupAdmin(user_id, group_id))) {
+        if (req.user.role === 'admin' || (await isGroupAdminOrCreator(user_id, group_id))) {
             return res.json({ status: 'admin' });
         }
         const [member] = await pool.query('SELECT * FROM group_members WHERE group_id = ? AND user_id = ?', [group_id, user_id]);
@@ -135,7 +147,7 @@ module.exports = (pool, upload) => {
         const { name, description } = req.body;
         const group_id = req.params.id;
 
-        if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, group_id))) {
+        if (req.user.role !== 'admin' && !(await isGroupAdminOrCreator(req.user.userId, group_id))) {
             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
 
@@ -166,7 +178,7 @@ module.exports = (pool, upload) => {
     router.delete('/:groupId/members/:memberId', asyncHandler(async (req, res) => {
         const { groupId, memberId } = req.params;
 
-        if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
+        if (req.user.role !== 'admin' && !(await isGroupAdminOrCreator(req.user.userId, groupId))) {
             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
 
@@ -183,7 +195,7 @@ module.exports = (pool, upload) => {
     router.post('/:groupId/members/:memberId/promote', asyncHandler(async (req, res) => {
         const { groupId, memberId } = req.params;
 
-        if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
+        if (req.user.role !== 'admin' && !(await isGroupAdminOrCreator(req.user.userId, groupId))) {
             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
 
@@ -194,7 +206,7 @@ module.exports = (pool, upload) => {
     router.post('/:groupId/members/:memberId/demote', asyncHandler(async (req, res) => {
         const { groupId, memberId } = req.params;
 
-        if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
+        if (req.user.role !== 'admin' && !(await isGroupAdminOrCreator(req.user.userId, groupId))) {
             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
 
@@ -250,7 +262,7 @@ module.exports = (pool, upload) => {
 
     router.get('/:id/join-requests', verifyToken, asyncHandler(async (req, res) => {
         const group_id = req.params.id;
-        if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, group_id))) {
+        if (req.user.role !== 'admin' && !(await isGroupAdminOrCreator(req.user.userId, group_id))) {
             return res.status(403).json({ message: 'Forbidden' });
         }
         const [requests] = await pool.query("SELECT gjr.*, u.full_name FROM group_join_requests gjr JOIN users u ON gjr.user_id = u.user_id WHERE gjr.group_id = ? AND gjr.status = 'pending'", [group_id]);
@@ -261,7 +273,7 @@ module.exports = (pool, upload) => {
         const { groupId, requestId } = req.params;
         const { action } = req.body;
 
-        if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
+        if (req.user.role !== 'admin' && !(await isGroupAdminOrCreator(req.user.userId, groupId))) {
             return res.status(403).json({ message: 'Forbidden' });
         }
 
