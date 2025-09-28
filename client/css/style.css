@@ -25,6 +25,24 @@
     --box-shadow-subtle: 0 2px 10px rgba(0, 0, 0, 0.05);
     --box-shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
+/* Dark Mode Variables */
+.dark-mode {
+    --primary-color: #5da9f0;
+    --primary-dark-color: #4a90e2;
+    --accent-color: #f7b731;
+    --accent-dark-color: #f5a623;
+    
+    --background-color: #1a252f;   /* Dark navy background */
+    --surface-color: #2c3e50;      /* Lighter navy for cards */
+    
+    --text-color: #ecf0f1;         /* Light gray text */
+    --subtle-text-color: #bdc3c7;   /* Softer gray for details */
+    --border-color: #34495e;
+    
+    --success-color: #2ecc71;
+    --error-color: #e74c3c;
+    --info-color: #3498db;
+}
 
 * {
     box-sizing: border-box;
@@ -3382,4 +3400,521 @@ fieldset.form-section {
 fieldset.form-section legend {
     font-size: 1.1rem;
     font-weight: 600;
+}
+
+/* === GROUP DETAILS & DISCUSSION PAGE === */
+
+.group-details-card {
+    padding: 0;
+    overflow: hidden;
+}
+
+.group-header {
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    color: #fff;
+    padding: 4rem 2rem;
+}
+
+.group-header-overlay {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(0,0,0,0.5);
+    padding: 2rem;
+    border-radius: var(--border-radius-medium);
+}
+
+.group-header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+}
+
+.group-logo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 4px solid var(--surface-color);
+    object-fit: cover;
+}
+
+.group-header-info h1 {
+    color: #fff;
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.group-header-info .group-creator {
+    color: rgba(255,255,255,0.8);
+    margin: 0;
+    font-size: 1rem;
+}
+
+.group-meta-bar {
+    padding: 1.5rem 2rem;
+    background: var(--surface-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.group-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.group-tabs {
+    display: flex;
+    background: var(--surface-color);
+    padding: 0 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-link {
+    padding: 1rem 1.5rem;
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--subtle-text-color);
+    position: relative;
+    transition: color 0.3s;
+}
+
+.tab-link:hover {
+    color: var(--primary-color);
+}
+
+.tab-link.active {
+    color: var(--primary-color);
+    border-bottom: 3px solid var(--primary-color);
+}
+
+.tab-content {
+    display: none;
+    padding: 2rem;
+    background: #f7f9fc;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Discussion Feed styling */
+.discussion-feed {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.posts-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    max-height: 60vh;
+}
+
+.group-post {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.post-author-pic {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.group-post .post-content {
+    background: var(--surface-color);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--border-radius-large);
+    flex: 1;
+    box-shadow: var(--box-shadow-subtle);
+}
+
+.group-post.current-user {
+    flex-direction: row-reverse;
+}
+
+.group-post.current-user .post-content {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+.post-author {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.5rem;
+}
+
+.post-author strong {
+    font-weight: 600;
+}
+
+.group-post.current-user .post-author strong,
+.group-post.current-user .post-author .post-timestamp {
+    color: #f0f2f5;
+}
+
+.post-timestamp {
+    font-size: 0.8rem;
+    color: var(--subtle-text-color);
+}
+
+.group-post p {
+    margin: 0;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.new-post-form {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.new-post-form .input-group {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    background: var(--surface-color);
+    padding: 0.5rem;
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--box-shadow-subtle);
+}
+
+.new-post-form textarea {
+    flex: 1;
+    border: none;
+    padding: 0.5rem;
+    resize: none;
+    overflow-y: hidden;
+    font-size: 1rem;
+    line-height: 1.5;
+    background: transparent;
+}
+
+.new-post-form textarea:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.new-post-form .btn {
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+/* Members and Requests List */
+.members-list, .requests-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.member-item, .request-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-medium);
+    box-shadow: var(--box-shadow-subtle);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.member-item:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--box-shadow-elevated);
+}
+
+.member-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.request-item {
+    justify-content: space-between;
+}
+
+.request-item div {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+}
+
+.btn-success { background-color: var(--success-color); color: #fff; }
+.btn-danger { background-color: var(--error-color); color: #fff; }
+
+/* === GROUP DETAILS & DISCUSSION REDESIGN === */
+
+/* Two-Column Layout for Group Details */
+.group-details-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.group-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.group-sidebar {
+    position: sticky;
+    top: 100px; /* Adjust based on header height */
+}
+
+@media (max-width: 992px) {
+    .group-details-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Styled Cards for Group Details */
+.group-header-card {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+.group-logo-large {
+    width: 120px;
+    height: 120px;
+    border-radius: var(--border-radius-large);
+    object-fit: cover;
+    border: 4px solid var(--border-color);
+}
+
+.group-info-text h1 {
+    margin: 0;
+    font-size: 2.2rem;
+}
+.group-info-text p {
+    margin: 0;
+    color: var(--subtle-text-color);
+}
+
+.group-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.group-members-card .members-list-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.member-item-sidebar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-radius: var(--border-radius-medium);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: background-color 0.2s;
+}
+
+.member-item-sidebar:hover {
+    background-color: var(--background-color);
+}
+
+.member-item-sidebar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+/* Discussion Page Specific Styles */
+.discussion-header {
+    text-align: center;
+    padding: 2rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-large);
+    margin-bottom: 2rem;
+    box-shadow: var(--box-shadow-subtle);
+}
+
+.discussion-header h2 {
+    margin: 0 0 0.5rem;
+}
+
+.discussion-header p {
+    margin: 0 0 1.5rem;
+    color: var(--subtle-text-color);
+}
+
+.discussion-feed {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.new-post-form {
+    margin-bottom: 2rem;
+}
+
+.new-post-form textarea {
+    width: 100%;
+    min-height: 80px;
+    margin-bottom: 1rem;
+}
+
+.posts-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.discussion-post {
+    padding: 1.5rem;
+}
+
+.post-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-author-pic {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.post-author-info strong {
+    display: block;
+    font-size: 1.1rem;
+}
+
+.post-body {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+/* === DARK MODE PROFILE PAGE === */
+
+/* General Profile Layout in Dark Mode */
+.dark-mode .profile-container {
+    background-color: var(--background-color); /* Use main dark background */
+}
+
+.dark-mode .profile-sidebar {
+    background-color: var(--background-color); /* Match main background */
+    border-right-color: var(--border-color);
+}
+
+.dark-mode .profile-content {
+    background-color: var(--surface-color); /* Use lighter card color */
+}
+
+/* Sidebar Navigation Links */
+.dark-mode .profile-sidebar h3 {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.dark-mode .profile-nav a {
+    color: var(--subtle-text-color);
+    font-weight: 500;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.dark-mode .profile-nav a:hover {
+    background-color: var(--surface-color);
+    color: var(--accent-color);
+}
+
+.dark-mode .profile-nav a.active {
+    background-color: var(--accent-color);
+    color: #1a252f; /* Dark text on the bright accent color */
+    font-weight: 600;
+}
+
+/* Content Area Fields */
+.dark-mode .profile-page h2 {
+    color: var(--text-color);
+}
+
+.dark-mode .form-section {
+    background-color: transparent; /* Remove the inner background */
+    border-color: var(--border-color);
+}
+
+.dark-mode .form-section h3 {
+    color: var(--accent-color);
+}
+
+.dark-mode .profile-field {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .profile-field label {
+    color: var(--subtle-text-color);
+}
+
+.dark-mode .display-field {
+    color: var(--text-color);
+}
+
+.dark-mode .edit-icon {
+    color: var(--subtle-text-color);
+    background-color: var(--border-color);
+}
+
+.dark-mode .edit-icon:hover {
+    color: var(--accent-color);
+}
+
+.dark-mode .privacy-option {
+    border-color: var(--border-color);
+}
+
+.dark-mode .privacy-label-group label {
+    color: var(--text-color);
+}
+
+.dark-mode .privacy-label-group small {
+    color: var(--subtle-text-color);
 }

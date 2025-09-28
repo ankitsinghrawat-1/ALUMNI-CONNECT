@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Details</title>
+    <title>Group Discussion</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -25,24 +25,10 @@
     </header>
 
     <main class="static-page-main">
-        <div id="group-details-container" class="container">
-            <!-- Group details will be dynamically loaded here -->
+        <div id="discussion-page-container" class="container">
+            <!-- Content will be dynamically loaded here -->
         </div>
     </main>
-    
-    <div id="invite-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3>Invite Members</h3>
-            <form id="invite-form">
-                <div class="input-group">
-                    <label for="user-search-input">Search for user by email</label>
-                    <input type="email" id="user-search-input" required placeholder="user@example.com">
-                </div>
-                <button type="submit" class="btn btn-primary btn-full-width">Send Invite</button>
-            </form>
-        </div>
-    </div>
     
     <footer class="main-footer">
         <div class="container">
@@ -54,6 +40,6 @@
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/group-details.js"></script>
+    <script src="js/group-discussion.js"></script>
 </body>
 </html>
