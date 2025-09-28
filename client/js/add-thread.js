@@ -117,14 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.append('thread_media', selectedFile);
             }
 
-            const response = await window.api.postForm('/threads', formData);
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to create thread');
-            }
-
-            const result = await response.json();
+            const result = await window.api.postForm('/threads', formData);
             
             showToast('Thread posted successfully!', 'success');
             

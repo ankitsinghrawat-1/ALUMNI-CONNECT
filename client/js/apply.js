@@ -33,17 +33,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Using the special postForm for multipart/form-data
-            const response = await window.api.postForm(`/jobs/${jobId}/apply`, formData);
-            const result = await response.json();
-
-            if (response.ok) {
-                messageDiv.textContent = result.message;
-                messageDiv.className = 'form-message success';
-                applyForm.reset();
-            } else {
-                messageDiv.textContent = `Error: ${result.message}`;
-                messageDiv.className = 'form-message error';
-            }
+            const result = await window.api.postForm(`/jobs/${jobId}/apply`, formData);
+            
+            messageDiv.textContent = result.message;
+            messageDiv.className = 'form-message success';
+            applyForm.reset();
         } catch (error) {
             console.error('Application submission error:', error);
             messageDiv.textContent = 'An unexpected error occurred. Please try again.';
