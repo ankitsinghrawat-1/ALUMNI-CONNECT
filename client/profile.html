@@ -54,96 +54,113 @@
                             </div>
                         </div>
 
-                        <div class="form-section">
-                            <h3>Basic Information</h3>
-                            <div class="profile-field" data-role="alumni student faculty employer institute">
-                                <label id="full_name_label"><i class="fas fa-user"></i> Full Name</label>
-                                <div class="profile-display-field">
-                                    <span id="full_name" class="display-field" data-field="full_name"></span>
-                                    <span id="profile-verified-badge"></span>
+                        <!-- Profile Section Tabs -->
+                        <div class="profile-section-tabs">
+                            <button class="profile-section-tab active" data-section="basic">Basic Information</button>
+                            <button class="profile-section-tab" data-section="professional">Professional Details</button>
+                            <button class="profile-section-tab" data-section="academic">Academic Details</button>
+                        </div>
+
+                        <!-- Basic Information Tab -->
+                        <div class="profile-section-content active" id="basic-info">
+                            <div class="form-section">
+                                <div class="profile-field" data-role="alumni student faculty employer institute">
+                                    <label id="full_name_label"><i class="fas fa-user"></i> Full Name</label>
+                                    <div class="profile-display-field">
+                                        <span id="full_name" class="display-field" data-field="full_name"></span>
+                                        <span id="profile-verified-badge"></span>
+                                    </div>
+                                    <input type="text" id="full_name_input" name="full_name" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
                                 </div>
-                                <input type="text" id="full_name_input" name="full_name" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                            <div class="profile-field" data-role="alumni student faculty employer institute">
-                                <label><i class="fas fa-envelope"></i> Email Address</label>
-                                <span class="display-field" id="email"></span>
-                            </div>
-                             <div class="profile-field" data-role="alumni student faculty employer institute">
-                                <label><i class="fas fa-info-circle"></i> Bio</label>
-                                <span class="display-field" data-field="bio"></span>
-                                <textarea id="bio_input" name="bio" class="edit-field" style="display:none;" rows="4"></textarea>
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                            <div class="profile-field" data-role="alumni student faculty">
-                                <label><i class="fab fa-linkedin"></i> LinkedIn Profile URL</label>
-                                <span class="display-field" data-field="linkedin_profile"></span>
-                                <input type="url" id="linkedin_profile_input" name="linkedin_profile" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                             <div class="profile-field" data-role="employer institute">
-                                <label><i class="fas fa-globe"></i> Website</label>
-                                <span class="display-field" data-field="website"></span>
-                                <input type="url" id="website_input" name="website" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
+                                <div class="profile-field" data-role="alumni student faculty employer institute">
+                                    <label><i class="fas fa-envelope"></i> Email Address</label>
+                                    <span class="display-field" id="email"></span>
+                                </div>
+                                 <div class="profile-field" data-role="alumni student faculty employer institute">
+                                    <label><i class="fas fa-info-circle"></i> Bio</label>
+                                    <span class="display-field" data-field="bio"></span>
+                                    <textarea id="bio_input" name="bio" class="edit-field" style="display:none;" rows="4"></textarea>
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                <div class="profile-field" data-role="alumni student faculty">
+                                    <label><i class="fab fa-linkedin"></i> LinkedIn Profile URL</label>
+                                    <span class="display-field" data-field="linkedin_profile"></span>
+                                    <input type="url" id="linkedin_profile_input" name="linkedin_profile" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                 <div class="profile-field" data-role="employer institute">
+                                    <label><i class="fas fa-globe"></i> Website</label>
+                                    <span class="display-field" data-field="website"></span>
+                                    <input type="url" id="website_input" name="website" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                <div class="profile-field" data-role="alumni student faculty employer institute">
+                                    <label><i class="fas fa-map-marker-alt"></i> City</label>
+                                    <span class="display-field" data-field="city"></span>
+                                    <input type="text" id="city_input" name="city" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="form-section">
-                            <h3>Professional & Academic Details</h3>
-                            <div class="profile-field" data-role="alumni faculty employer">
-                                <label><i class="fas fa-building"></i> Company / Institution</label>
-                                <span class="display-field" data-field="company"></span>
-                                <input type="text" id="company_input" name="company" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
+                        <!-- Professional Details Tab -->
+                        <div class="profile-section-content" id="professional-info">
+                            <div class="form-section">
+                                <div class="profile-field" data-role="alumni faculty employer">
+                                    <label><i class="fas fa-building"></i> Company / Institution</label>
+                                    <span class="display-field" data-field="company"></span>
+                                    <input type="text" id="company_input" name="company" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                <div class="profile-field" data-role="alumni faculty">
+                                    <label><i class="fas fa-briefcase"></i> Job Title</label>
+                                    <span class="display-field" data-field="job_title"></span>
+                                    <input type="text" id="job_title_input" name="job_title" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                 <div class="profile-field" data-role="alumni faculty employer">
+                                    <label><i class="fas fa-industry"></i> Industry</label>
+                                    <span class="display-field" data-field="industry"></span>
+                                    <input type="text" id="industry_input" name="industry" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                 <div class="profile-field" data-role="alumni student faculty">
+                                    <label><i class="fas fa-cogs"></i> Skills</label>
+                                    <span class="display-field" data-field="skills"></span>
+                                    <textarea id="skills_input" name="skills" class="edit-field" style="display:none;" rows="3" placeholder="e.g. JavaScript, Python, Marketing"></textarea>
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
                             </div>
-                            <div class="profile-field" data-role="alumni faculty">
-                                <label><i class="fas fa-briefcase"></i> Job Title</label>
-                                <span class="display-field" data-field="job_title"></span>
-                                <input type="text" id="job_title_input" name="job_title" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                            <div class="profile-field" data-role="alumni student faculty employer institute">
-                                <label><i class="fas fa-map-marker-alt"></i> City</label>
-                                <span class="display-field" data-field="city"></span>
-                                <input type="text" id="city_input" name="city" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                             <div class="profile-field" data-role="alumni faculty employer">
-                                <label><i class="fas fa-industry"></i> Industry</label>
-                                <span class="display-field" data-field="industry"></span>
-                                <input type="text" id="industry_input" name="industry" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                             <div class="profile-field" data-role="alumni student faculty">
-                                <label><i class="fas fa-cogs"></i> Skills</label>
-                                <span class="display-field" data-field="skills"></span>
-                                <textarea id="skills_input" name="skills" class="edit-field" style="display:none;" rows="3" placeholder="e.g. JavaScript, Python, Marketing"></textarea>
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                            <div class="profile-field" data-role="alumni student">
-                                <label><i class="fas fa-university"></i> Institute Name</label>
-                                <span class="display-field" data-field="institute_name"></span>
-                                <input type="text" id="institute_name_input" name="institute_name" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                            <div class="profile-field" data-role="alumni student">
-                                <label><i class="fas fa-calendar-alt"></i> Graduation Year</label>
-                                <span class="display-field" data-field="graduation_year"></span>
-                                <input type="number" id="graduation_year_input" name="graduation_year" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                            <div class="profile-field" data-role="alumni student faculty">
-                                <label><i class="fas fa-graduation-cap"></i> Department</label>
-                                <span class="display-field" data-field="department"></span>
-                                <input type="text" id="department_input" name="department" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
-                            </div>
-                            <div class="profile-field" data-role="alumni student">
-                                <label><i class="fas fa-book"></i> Major</label>
-                                <span class="display-field" data-field="major"></span>
-                                <input type="text" id="major_input" name="major" class="edit-field" style="display:none;">
-                                <i class="fas fa-edit edit-icon"></i>
+                        </div>
+
+                        <!-- Academic Details Tab -->
+                        <div class="profile-section-content" id="academic-info">
+                            <div class="form-section">
+                                <div class="profile-field" data-role="alumni student">
+                                    <label><i class="fas fa-university"></i> Institute Name</label>
+                                    <span class="display-field" data-field="institute_name"></span>
+                                    <input type="text" id="institute_name_input" name="institute_name" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                <div class="profile-field" data-role="alumni student">
+                                    <label><i class="fas fa-calendar-alt"></i> Graduation Year</label>
+                                    <span class="display-field" data-field="graduation_year"></span>
+                                    <input type="number" id="graduation_year_input" name="graduation_year" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                <div class="profile-field" data-role="alumni student faculty">
+                                    <label><i class="fas fa-graduation-cap"></i> Department</label>
+                                    <span class="display-field" data-field="department"></span>
+                                    <input type="text" id="department_input" name="department" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
+                                <div class="profile-field" data-role="alumni student">
+                                    <label><i class="fas fa-book"></i> Major</label>
+                                    <span class="display-field" data-field="major"></span>
+                                    <input type="text" id="major_input" name="major" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
                             </div>
                         </div>
                         

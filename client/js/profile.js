@@ -21,6 +21,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         institute: ['full_name', 'bio', 'city', 'website']
     };
 
+    // Profile section tab functionality
+    const profileSectionTabs = document.querySelectorAll('.profile-section-tab');
+    const profileSectionContents = document.querySelectorAll('.profile-section-content');
+
+    // Profile section tab switching
+    profileSectionTabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetSection = e.currentTarget.getAttribute('data-section');
+            
+            // Remove active class from all tabs and contents
+            profileSectionTabs.forEach(t => t.classList.remove('active'));
+            profileSectionContents.forEach(c => c.classList.remove('active'));
+            
+            // Add active class to current tab and content
+            e.currentTarget.classList.add('active');
+            const targetContent = document.getElementById(`${targetSection}-info`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
+    });
+
     const displayMessage = (message, type = 'error', containerId = 'message') => {
         const messageContainer = document.getElementById(containerId);
         if (messageContainer) {
@@ -79,13 +102,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         let content = '';
         switch(status) {
             case 'verified':
-                content = `<h3>Account Status</h3><p class="status-badge status-verified"><i class="fas fa-check-circle"></i> Verified</p>`;
+                content = `
+                    <div class="account-status-card verified">
+                        <div class="status-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="status-content">
+                            <span class="status-label">Account Status</span>
+                            <span class="status-value verified">Verified</span>
+                        </div>
+                    </div>`;
                 break;
             case 'pending':
-                content = `<h3>Account Status</h3><p class="status-badge status-pending"><i class="fas fa-clock"></i> Verification Request Pending</p>`;
+                content = `
+                    <div class="account-status-card pending">
+                        <div class="status-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="status-content">
+                            <span class="status-label">Account Status</span>
+                            <span class="status-value pending">Verification Pending</span>
+                        </div>
+                    </div>`;
                 break;
             default:
-                content = `<h3>Account Status</h3><p class="status-badge status-unverified"><i class="fas fa-times-circle"></i> Unverified</p><p>Request verification to get a badge on your profile.</p><button id="request-verification-btn" class="btn btn-primary">Request Verification</button>`;
+                content = `
+                    <div class="account-status-card unverified">
+                        <div class="status-icon">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="status-content">
+                            <span class="status-label">Account Status</span>
+                            <span class="status-value unverified">Unverified</span>
+                            <button id="request-verification-btn" class="btn btn-outline btn-sm">Request Verification</button>
+                        </div>
+                    </div>`;
                 break;
         }
         verificationSection.innerHTML = content;

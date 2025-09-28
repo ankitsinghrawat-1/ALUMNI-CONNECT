@@ -2641,6 +2641,33 @@ main {
     margin-bottom: 1.5rem;
 }
 
+/* Group Management Header */
+.group-management-header {
+    margin-bottom: 1.5rem;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+    width: 100%;
+    transition: color 0.2s ease;
+}
+
+.back-link:hover {
+    color: var(--link-color);
+}
+
+.back-link i {
+    font-size: 0.8rem;
+}
+
 .profile-nav {
     list-style: none;
     padding: 0;
@@ -2683,6 +2710,51 @@ main {
 .profile-page.active {
     display: block;
     animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Profile Section Tabs */
+.profile-section-tabs {
+    display: flex;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--border-color);
+}
+
+.profile-section-tab {
+    flex: 1;
+    padding: 1rem 2rem;
+    background: transparent;
+    border: none;
+    border-radius: 6px;
+    font-weight: 600;
+    color: var(--text-color-light);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.profile-section-tab.active {
+    background: linear-gradient(135deg, var(--primary-color), #357ABD);
+    color: white;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.profile-section-tab:hover:not(.active) {
+    background: var(--background-light);
+    color: var(--primary-color);
+}
+
+/* Profile Section Content */
+.profile-section-content {
+    display: none;
+}
+
+.profile-section-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease-in-out;
 }
 
 .profile-pic-section {
@@ -4380,6 +4452,151 @@ html.dark-mode .modal-content {
     background-color: var(--surface-color);
 }
 
+/* Group Details Modal */
+.group-details-modal-content {
+    max-width: 650px;
+    width: 90%;
+}
+
+.group-modal-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.group-modal-logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.group-modal-info {
+    flex: 1;
+}
+
+.group-modal-info h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.group-modal-creator,
+.group-modal-category {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+
+.group-modal-creator i,
+.group-modal-category i {
+    width: 16px;
+    text-align: center;
+    color: var(--primary-color);
+}
+
+.group-modal-badge {
+    align-self: flex-start;
+}
+
+.group-modal-description {
+    margin-bottom: 2rem;
+}
+
+.group-modal-description h3 {
+    margin: 0 0 1rem 0;
+    color: var(--text-color);
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.group-modal-description p {
+    margin: 0;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.group-modal-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--background-light);
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.stat-card i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    width: 24px;
+    text-align: center;
+}
+
+.stat-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-number {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    color: var(--text-color-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.group-modal-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.group-modal-actions .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .group-modal-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .group-modal-actions {
+        flex-direction: column;
+    }
+    
+    .group-modal-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
 /* --- Notification Bell --- */
 .notification-bell {
     position: relative;
@@ -5005,6 +5222,90 @@ body main {
 
 .status-badge i {
     margin-right: 0.5rem;
+}
+
+/* Account Status Card */
+.account-status-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--card-bg);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid transparent;
+    max-width: 320px;
+}
+
+.account-status-card.verified {
+    border-left-color: var(--success-color);
+    background: linear-gradient(135deg, #f0fff0 0%, #e8f8e8 100%);
+}
+
+.account-status-card.pending {
+    border-left-color: var(--warning-color);
+    background: linear-gradient(135deg, #fffaf0 0%, #fef7e8 100%);
+}
+
+.account-status-card.unverified {
+    border-left-color: var(--text-color-light);
+    background: linear-gradient(135deg, #f8f9fa 0%, #f1f3f4 100%);
+}
+
+.account-status-card .status-icon {
+    font-size: 1.5rem;
+    opacity: 0.8;
+}
+
+.account-status-card.verified .status-icon {
+    color: var(--success-color);
+}
+
+.account-status-card.pending .status-icon {
+    color: var(--warning-color);
+}
+
+.account-status-card.unverified .status-icon {
+    color: var(--text-color-light);
+}
+
+.account-status-card .status-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.account-status-card .status-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--text-color-light);
+    opacity: 0.8;
+}
+
+.account-status-card .status-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.account-status-card .status-value.verified {
+    color: var(--success-color);
+}
+
+.account-status-card .status-value.pending {
+    color: var(--warning-color);
+}
+
+.account-status-card .status-value.unverified {
+    color: var(--text-color-light);
+}
+
+.account-status-card .btn {
+    margin-top: 0.5rem;
+    align-self: flex-start;
 }
 
 /* --- Mentorship Request Styles --- */

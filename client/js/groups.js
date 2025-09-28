@@ -31,31 +31,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const groupItemRenderer = (group) => {
         const imageUrl = group.image_url || createInitialsAvatar(group.name);
-        const memberCount = group.member_count || Math.floor(Math.random() * 100) + 5;
+        const memberCount = group.member_count || 0; // Use 0 instead of random fake data
+        const discussionCount = group.discussion_count || 0; // Use real discussion count
         const isPrivate = group.privacy === 'private';
         
         return `
             <a href="group-details.html?id=${group.group_id}" class="enhanced-group-card-link">
                 <div class="enhanced-group-card card">
                     <div class="group-card-header">
-                        <img src="${sanitizeHTML(imageUrl)}" alt="${sanitizeHTML(group.name)}" class="group-image">
+                        <img src="${sanitizeHTML(imageUrl)}" alt="${sanitizeHTML(group.name)}" class="group-image" onerror="this.src='${createInitialsAvatar(group.name)}'">
                         <div class="group-badge">
                             ${isPrivate ? '<span class="private-badge"><i class="fas fa-lock"></i> Private</span>' : '<span class="public-badge"><i class="fas fa-globe"></i> Public</span>'}
                         </div>
                     </div>
                     <div class="group-card-body">
-                        <div class="group-category">${group.category || 'General'}</div>
+                        <div class="group-category">${sanitizeHTML(group.category) || 'General'}</div>
                         <h3>${sanitizeHTML(group.name)}</h3>
-                        <p class="group-description">${sanitizeHTML(group.description.substring(0, 120))}...</p>
+                        <p class="group-description">${sanitizeHTML((group.description || 'No description available').substring(0, 120))}${group.description && group.description.length > 120 ? '...' : ''}</p>
                         
                         <div class="group-stats">
                             <div class="stat-item">
                                 <i class="fas fa-users"></i>
-                                <span>${memberCount} members</span>
+                                <span>${memberCount} member${memberCount !== 1 ? 's' : ''}</span>
                             </div>
                             <div class="stat-item">
                                 <i class="fas fa-comments"></i>
-                                <span>${Math.floor(Math.random() * 20) + 1} discussions</span>
+                                <span>${discussionCount} discussion${discussionCount !== 1 ? 's' : ''}</span>
                             </div>
                         </div>
                     </div>
@@ -64,9 +65,13 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="btn btn-primary btn-sm group-join-btn">
                                 ${isPrivate ? 'Request to Join' : 'Join Group'}
                             </span>
+                            <button class="btn btn-outline btn-sm group-details-btn" data-group-id="${group.group_id}">
+                                <i class="fas fa-info-circle"></i>
+                                Quick View
+                            </button>
                             <div class="activity-indicator">
-                                <i class="fas fa-circle active"></i>
-                                <span>Active</span>
+                                <i class="fas fa-circle ${group.is_active !== false ? 'active' : 'inactive'}"></i>
+                                <span>${group.is_active !== false ? 'Active' : 'Inactive'}</span>
                             </div>
                         </div>
                     </div>
@@ -119,6 +124,129 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (categoryFilter) categoryFilter.addEventListener('change', applyFilters);
     if (sizeFilter) sizeFilter.addEventListener('change', applyFilters);
+
+    // Group details modal functionality
+    const modal = document.getElementById('group-details-modal');
+    const modalContent = document.getElementById('group-modal-content');
+    const closeBtn = document.querySelector('.close-btn');
+
+    // Function to open group details modal
+    const openGroupDetailsModal = async (groupId) => {
+        try {
+            modalContent.innerHTML = `<div class="loading-spinner"><div class="spinner"></div></div>`;
+            modal.style.display = 'block';
+            
+            const group = await window.api.get(`/groups/${groupId}`);
+            const membership = await window.api.get(`/groups/${groupId}/membership-status`).catch(() => ({ status: 'none' }));
+            
+            const imageUrl = group.image_url || createInitialsAvatar(group.name);
+            const memberCount = group.member_count || 0;
+            const discussionCount = group.discussion_count || 0;
+            
+            modalContent.innerHTML = `
+                <div class="group-modal-header">
+                    <img src="${sanitizeHTML(imageUrl)}" alt="${sanitizeHTML(group.name)}" class="group-modal-logo" onerror="this.src='${createInitialsAvatar(group.name)}'">
+                    <div class="group-modal-info">
+                        <h2>${sanitizeHTML(group.name)}</h2>
+                        <p class="group-modal-creator">
+                            <i class="fas fa-user"></i>
+                            Created by: <strong>${sanitizeHTML(group.creator_name || 'Unknown')}</strong>
+                        </p>
+                        <p class="group-modal-category">
+                            <i class="fas fa-tag"></i>
+                            Category: <strong>${sanitizeHTML(group.category || 'General')}</strong>
+                        </p>
+                    </div>
+                    <div class="group-modal-badge">
+                        ${group.privacy === 'private' ? '<span class="private-badge"><i class="fas fa-lock"></i> Private</span>' : '<span class="public-badge"><i class="fas fa-globe"></i> Public</span>'}
+                    </div>
+                </div>
+                
+                <div class="group-modal-description">
+                    <h3>About this group</h3>
+                    <p>${sanitizeHTML(group.description || 'No description available')}</p>
+                </div>
+                
+                <div class="group-modal-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <div class="stat-info">
+                            <span class="stat-number">${memberCount}</span>
+                            <span class="stat-label">Member${memberCount !== 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-comments"></i>
+                        <div class="stat-info">
+                            <span class="stat-number">${discussionCount}</span>
+                            <span class="stat-label">Discussion${discussionCount !== 1 ? 's' : ''}</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-calendar"></i>
+                        <div class="stat-info">
+                            <span class="stat-number">${new Date(group.created_at).toLocaleDateString()}</span>
+                            <span class="stat-label">Created</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="group-modal-actions">
+                    <a href="group-details.html?id=${group.group_id}" class="btn btn-primary">
+                        <i class="fas fa-eye"></i>
+                        View Full Details
+                    </a>
+                    ${membership.status === 'none' ? 
+                        `<button class="btn btn-success group-join-modal-btn" data-group-id="${group.group_id}">
+                            <i class="fas fa-plus"></i>
+                            ${group.privacy === 'private' ? 'Request to Join' : 'Join Group'}
+                        </button>` : 
+                        `<span class="btn btn-secondary" disabled>
+                            <i class="fas fa-check"></i>
+                            ${membership.status === 'member' ? 'Already a Member' : membership.status === 'admin' ? 'Group Admin' : 'Request Sent'}
+                        </span>`
+                    }
+                </div>
+            `;
+        } catch (error) {
+            console.error('Error loading group details:', error);
+            modalContent.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Unable to load group details</h3>
+                    <p>Please try again later.</p>
+                </div>
+            `;
+        }
+    };
+
+    // Event delegation for group details buttons
+    if (groupsGrid) {
+        groupsGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('group-details-btn') || e.target.closest('.group-details-btn')) {
+                e.preventDefault();
+                e.stopPropagation();
+                const btn = e.target.classList.contains('group-details-btn') ? e.target : e.target.closest('.group-details-btn');
+                const groupId = btn.getAttribute('data-group-id');
+                if (groupId) {
+                    openGroupDetailsModal(groupId);
+                }
+            }
+        });
+    }
+
+    // Modal close functionality
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+        };
+    }
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
 
     // Initialize
     fetchAndRenderGroups();
