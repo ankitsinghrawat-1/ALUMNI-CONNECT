@@ -10302,7 +10302,12 @@ fieldset.form-section legend {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
     border: 1px solid var(--border-color);
-    max-width: 320px; /* Make cards smaller */
+    max-width: 320px; /* Keep for grid view */
+}
+
+/* Remove max-width constraint for list view */
+.groups-grid.list-view .enhanced-group-card {
+    max-width: none;
 }
 
 .enhanced-group-card:hover {
@@ -10544,14 +10549,23 @@ fieldset.form-section legend {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start; /* Changed from space-between to show all content */
     padding: 1.5rem;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to show all content */
 }
 
 .groups-grid.list-view .group-card-body .group-category {
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
+}
+
+.groups-grid.list-view .group-card-body .group-creator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--subtle-text-color);
 }
 
 .groups-grid.list-view .group-card-body h3 {
@@ -10561,12 +10575,11 @@ fieldset.form-section legend {
 }
 
 .groups-grid.list-view .group-card-body .group-description {
-    flex: 1;
     margin: 0.5rem 0;
     font-size: 0.9rem;
     line-height: 1.4;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3; /* Increased from 2 to show more content */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -10588,11 +10601,11 @@ fieldset.form-section legend {
     display: flex;
     flex-direction: row;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin: 1rem 0; /* Added margin top and bottom for better spacing */
 }
 
 .groups-grid.list-view .group-stats .stat-item {
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* Increased from 0.85rem for consistency */
 }
 
 .groups-grid.list-view .group-actions {
