@@ -170,6 +170,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // Add Member Modal functionality
+    const addMemberModal = document.getElementById('add-member-modal');
+    const addMemberBtn = document.getElementById('add-member-btn');
+    const addMemberForm = document.getElementById('add-member-form');
+    const addMemberCloseBtn = addMemberModal.querySelector('.close-btn');
+
+    // Open add member modal
+    if (addMemberBtn) {
+        addMemberBtn.addEventListener('click', () => {
+            addMemberModal.style.display = 'block';
+        });
+    }
+
+    // Close add member modal
+    if (addMemberCloseBtn) {
+        addMemberCloseBtn.addEventListener('click', () => {
+            addMemberModal.style.display = 'none';
+        });
+    }
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === addMemberModal) {
+            addMemberModal.style.display = 'none';
+        }
+    });
+
+    // Handle add member form submission
+    if (addMemberForm) {
+        addMemberForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const memberEmail = document.getElementById('member-email-input').value;
+            
+            try {
+                const result = await window.api.post(`/groups/${groupId}/add-member`, { 
+                    member_email: memberEmail 
+                });
+                showToast(result.message || 'Member added successfully!', 'success');
+                addMemberModal.style.display = 'none';
+                addMemberForm.reset();
+                await loadMembers(); // Reload members list
+            } catch (error) {
+                showToast(`Error: ${error.message}`, 'error');
+            }
+        });
+    }
+
     // Initial Load
     await loadGroupData();
     await loadMembers();

@@ -4847,34 +4847,37 @@ html.dark-mode .modal-content {
 
 /* Fix modal content overflow */
 .group-details-modal-content {
-    max-width: 700px;
-    width: 95%;
+    max-width: 600px; /* Reduced from 700px to prevent horizontal scroll */
+    width: 90%; /* Reduced from 95% */
     max-height: 90vh;
     overflow-y: auto;
+    overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 .group-modal-description p {
     margin: 0;
     color: var(--text-color);
-    line-height: 1.6;
+    line-height: 1.5; /* Reduced from 1.6 for better spacing */
     word-wrap: break-word;
     overflow-wrap: break-word;
+    font-size: 0.95rem; /* Added to control text size */
 }
 
 .group-modal-info h2 {
     margin: 0 0 0.5rem 0;
     color: var(--text-color);
-    font-size: 1.4rem;
+    font-size: 1.3rem; /* Reduced from 1.4rem to prevent overflow */
     font-weight: 600;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    line-height: 1.3; /* Added for better control */
 }
 
 .group-modal-actions {
     display: flex;
-    gap: 1rem;
+    gap: 0.5rem; /* Further reduced from 0.75rem for tighter spacing */
     justify-content: flex-end;
-    padding-top: 1.5rem;
+    padding-top: 0.75rem; /* Reduced from 1rem */
     border-top: 1px solid var(--border-color);
 }
 
@@ -5772,6 +5775,39 @@ body main {
     width: 40px;
     height: 40px;
 }
+
+.member-sidebar-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.member-sidebar-info .role-badge {
+    margin-left: 0;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.4rem;
+}
+
+.manage-members-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.manage-members-header h2 {
+    margin: 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    margin-top: 1.5rem;
+}
 /* Admin Dashboard Layout */
 .admin-body {
     background-color: var(--background-color);
@@ -6102,11 +6138,31 @@ body main {
 .role-badge.creator {
     background-color: var(--primary-color);
     color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
 }
 
 .role-badge.admin {
     background-color: var(--accent-color);
     color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.role-badge.member {
+    background-color: var(--subtle-text-color);
+    color: white;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
 }
 /* --- Group Listing Page Card Styles --- */
 .groups-grid {
@@ -6633,8 +6689,8 @@ fieldset.form-section legend {
 }
 
 .group-logo-large {
-    width: 120px;
-    height: 120px;
+    width: 150px; /* Increased from 120px to make logo bigger */
+    height: 150px; /* Increased from 120px to make logo bigger */
     border-radius: var(--border-radius-large);
     object-fit: cover;
     border: 4px solid var(--border-color);
@@ -10258,7 +10314,12 @@ fieldset.form-section legend {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
     border: 1px solid var(--border-color);
-    max-width: 320px; /* Make cards smaller */
+    max-width: 320px; /* Keep for grid view */
+}
+
+/* Remove max-width constraint for list view */
+.groups-grid.list-view .enhanced-group-card {
+    max-width: none;
 }
 
 .enhanced-group-card:hover {
@@ -10287,8 +10348,8 @@ fieldset.form-section legend {
 }
 
 .group-card-header .group-image {
-    width: 50px; /* Smaller image */
-    height: 50px;
+    width: 70px; /* Increased from 50px to make logos bigger */
+    height: 70px; /* Increased from 50px to make logos bigger */
     border-radius: 50%;
     object-fit: cover;
     transition: transform 0.3s ease;
@@ -10401,12 +10462,13 @@ fieldset.form-section legend {
     align-items: center;
     gap: 0.25rem;
     color: var(--subtle-text-color);
-    font-size: 0.8rem; /* Smaller stats */
+    font-size: 1rem; /* Further increased from 0.9rem for better visibility */
+    font-weight: 500; /* Added font weight for emphasis */
 }
 
 .group-stats .stat-item i {
     color: var(--accent-color);
-    font-size: 0.75rem;
+    font-size: 0.95rem; /* Increased from 0.85rem */
 }
 
 .group-card-footer {
@@ -10456,39 +10518,67 @@ fieldset.form-section legend {
     min-height: 160px;
     max-height: 200px;
     width: 100%;
+    max-width: none; /* Remove max-width limitation for horizontal cards */
 }
 
 .groups-grid.list-view .group-card-header {
     flex: 0 0 200px;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    position: relative;
 }
 
 .groups-grid.list-view .group-card-header .group-image-container {
     height: 100%;
+    width: 100%;
     position: relative;
     overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .groups-grid.list-view .group-card-header .group-image {
-    height: 100%;
-    width: 100%;
+    height: 80%;
+    width: 80%;
+    max-width: 120px;
+    max-height: 120px;
     object-fit: cover;
-    border-radius: 8px 0 0 8px;
+    border-radius: 8px;
+    border: 3px solid var(--accent-color);
+}
+
+.groups-grid.list-view .group-card-header .group-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2;
 }
 
 .groups-grid.list-view .group-card-body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: flex-start; /* Changed from space-between to show all content */
     padding: 1.5rem;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to show all content */
 }
 
 .groups-grid.list-view .group-card-body .group-category {
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
+}
+
+.groups-grid.list-view .group-card-body .group-creator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--subtle-text-color);
 }
 
 .groups-grid.list-view .group-card-body h3 {
@@ -10498,14 +10588,22 @@ fieldset.form-section legend {
 }
 
 .groups-grid.list-view .group-card-body .group-description {
-    flex: 1;
     margin: 0.5rem 0;
     font-size: 0.9rem;
     line-height: 1.4;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 3; /* Increased from 2 to show more content */
     -webkit-box-orient: vertical;
     overflow: hidden;
+}
+
+/* Ensure group stats are visible in list view body */
+.groups-grid.list-view .group-card-body .group-stats {
+    display: flex !important;
+    flex-direction: row;
+    gap: 1rem;
+    margin: 1rem 0;
+    justify-content: flex-start;
 }
 
 .groups-grid.list-view .group-card-footer {
@@ -10525,11 +10623,12 @@ fieldset.form-section legend {
     display: flex;
     flex-direction: row;
     gap: 1rem;
-    margin-top: 0.5rem;
+    margin: 1rem 0; /* Added margin top and bottom for better spacing */
 }
 
 .groups-grid.list-view .group-stats .stat-item {
-    font-size: 0.85rem;
+    font-size: 1rem; /* Further increased from 0.9rem for consistency */
+    font-weight: 500; /* Added font weight for emphasis */
 }
 
 .groups-grid.list-view .group-actions {

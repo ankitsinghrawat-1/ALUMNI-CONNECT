@@ -82,6 +82,25 @@
         </div>
     </div>
     
+    <!-- Add Member Modal -->
+    <div id="add-member-quick-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Add Member to Group</h3>
+            <p>Add a member directly to this group (for users with privacy restrictions).</p>
+            <form id="add-member-quick-form">
+                <div class="input-group">
+                    <label for="member-email-quick-input">Member Email</label>
+                    <input type="email" id="member-email-quick-input" required placeholder="member@example.com">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('add-member-quick-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>

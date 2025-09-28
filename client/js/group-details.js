@@ -32,14 +32,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 actionButtons = `<button class="btn btn-secondary" disabled>Request Sent</button>`;
             }
 
-            const groupLogoUrl = group.image_url || createInitialsAvatar(group.name);
+            const groupLogoUrl = group.image_url ? `http://localhost:3000/${group.image_url}` : createInitialsAvatar(group.name);
 
             groupDetailsContainer.innerHTML = `
                 <div class="group-details-layout">
                     <!-- Left Column -->
                     <div class="group-main-content">
                         <div class="group-header-card card">
-                            <img src="${sanitizeHTML(groupLogoUrl)}" alt="${group.name} Logo" class="group-logo-large">
+                            <img src="${sanitizeHTML(groupLogoUrl)}" alt="${group.name} Logo" class="group-logo-large" onerror="this.src='${createInitialsAvatar(group.name)}'">
                             <div class="group-info-text">
                                 <h1>${sanitizeHTML(group.name)}</h1>
                                 <p class="group-creator">Created by: ${sanitizeHTML(group.creator_name)}</p>
@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             `;
             
-            loadMembers();
+            loadMembers(group);
             if (membership.status === 'admin') {
                 loadJoinRequests();
             }
@@ -83,19 +83,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
     
-    const loadMembers = async () => {
+    const loadMembers = async (group) => {
         const membersList = document.getElementById('members-list');
         const memberCount = document.getElementById('member-count');
         try {
             const members = await window.api.get(`/groups/${groupId}/members`);
             memberCount.textContent = members.length;
             if (members.length > 0) {
-                membersList.innerHTML = members.map(member => `
+                membersList.innerHTML = members.map(member => {
+                    let roleBadge = '';
+                    if (member.user_id === group.created_by) {
+                        roleBadge = `<span class="role-badge creator">Creator</span>`;
+                    } else if (member.role === 'admin') {
+                        roleBadge = `<span class="role-badge admin">Admin</span>`;
+                    } else {
+                        roleBadge = `<span class="role-badge member">Member</span>`;
+                    }
+                    
+                    return `
                     <a href="view-profile.html?email=${member.email}" class="member-item-sidebar">
                         <img src="${member.profile_pic_url ? `http://localhost:3000/${member.profile_pic_url}` : createInitialsAvatar(member.full_name)}" alt="${member.full_name}" class="alumnus-pic">
-                        <span>${sanitizeHTML(member.full_name)}</span>
+                        <div class="member-sidebar-info">
+                            <span>${sanitizeHTML(member.full_name)}</span>
+                            ${roleBadge}
+                        </div>
                     </a>
-                `).join('');
+                `;
+                }).join('');
             } else {
                  membersList.innerHTML = '<p class="info-message">No members yet.</p>';
             }
