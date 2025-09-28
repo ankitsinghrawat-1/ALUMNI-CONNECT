@@ -331,16 +331,18 @@ module.exports = function (pool) {
 
     // --- GROUP CREATION MANAGEMENT (CORRECTED) ---
     router.get('/group-creation-requests', isAdmin, asyncHandler(async (req, res) => {
-        // This query has been fixed to remove the non-existent 'created_at' column.
+        // Fixed query to include the requested_at timestamp from the database
         const [requests] = await pool.query(`
         SELECT 
             gcr.request_id,
             gcr.group_name as name,
             gcr.group_description as description,
+            gcr.requested_at,
             u.full_name as creator_name
         FROM \`group_creation_requests\` gcr
         JOIN users u ON gcr.user_id = u.user_id
         WHERE gcr.status = 'pending'
+        ORDER BY gcr.requested_at ASC
     `);
         res.json(requests);
     }));
@@ -398,14 +400,14 @@ module.exports = function (pool) {
                     gjr.request_id,
                     gjr.user_id,
                     gjr.group_id,
-                    gjr.created_at as joined_at,
+                    gjr.requested_at as joined_at,
                     u.full_name as user_name,
                     g.name as group_name
                 FROM group_join_requests gjr
                 JOIN users u ON gjr.user_id = u.user_id
                 JOIN \`groups\` g ON gjr.group_id = g.group_id
                 WHERE gjr.status = 'pending'
-                ORDER BY gjr.created_at ASC
+                ORDER BY gjr.requested_at ASC
             `);
             res.json(requests);
         } catch (error) {
