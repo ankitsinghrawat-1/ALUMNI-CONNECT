@@ -78,8 +78,27 @@ module.exports = (pool, upload) => {
     router.post('/:id/request-join', asyncHandler(async (req, res) => {
         const group_id = req.params.id;
         const user_id = req.user.userId;
+        
+        // Check if user is already a member
+        const [existingMember] = await pool.query(
+            'SELECT * FROM group_members WHERE group_id = ? AND user_id = ?',
+            [group_id, user_id]
+        );
+        if (existingMember.length > 0) {
+            return res.status(400).json({ message: 'You are already a member of this group.' });
+        }
+        
+        // Check if there's already a pending request
+        const [existingRequest] = await pool.query(
+            'SELECT * FROM group_join_requests WHERE group_id = ? AND user_id = ? AND status = "pending"',
+            [group_id, user_id]
+        );
+        if (existingRequest.length > 0) {
+            return res.status(400).json({ message: 'You already have a pending request for this group.' });
+        }
+        
         await pool.query(
-            'INSERT INTO group_join_requests (group_id, user_id) VALUES (?, ?)',
+            'INSERT INTO group_join_requests (group_id, user_id, status) VALUES (?, ?, "pending")',
             [group_id, user_id]
         );
         res.status(201).json({ message: 'Request to join group sent successfully!' });
@@ -225,31 +244,8 @@ module.exports = (pool, upload) => {
             [name, description, logo_url, background_url, created_by]
         );
         const groupId = result.insertId;
-        await pool.query("INSERT INTO group_members (group_id, user_id, role) VALUES (?, ?, 'admin')", [groupId, created_by]);
+        await pool.query("INSERT INTO group_members (group_id, user_id, role, status) VALUES (?, ?, 'admin', 'approved')", [groupId, created_by]);
         res.status(201).json({ message: 'Group created successfully!', groupId });
-    }));
-
-    router.post('/admin/creation-requests/:requestId', isAdmin, asyncHandler(async (req, res) => {
-        const { requestId } = req.params;
-        const { action } = req.body;
-
-        const [requestResult] = await pool.query('SELECT * FROM group_creation_requests WHERE request_id = ?', [requestId]);
-        if (requestResult.length === 0) {
-            return res.status(404).json({ message: 'Request not found.' });
-        }
-        const request = requestResult[0];
-
-        if (action === 'approve') {
-            const { group_name, group_description, user_id, image_url, background_image_url } = request;
-            const [newGroup] = await pool.query('INSERT INTO `groups` (name, description, created_by, image_url, background_image_url) VALUES (?, ?, ?, ?, ?)', [group_name, group_description, user_id, image_url, background_image_url]);
-            const newGroupId = newGroup.insertId;
-            await pool.query("INSERT INTO group_members (group_id, user_id, role) VALUES (?,?, 'admin')", [newGroupId, user_id]);
-            await pool.query('UPDATE group_creation_requests SET status = "approved" WHERE request_id = ?', [requestId]);
-            res.status(200).json({ message: 'Group creation request approved.' });
-        } else {
-            await pool.query('UPDATE group_creation_requests SET status = "rejected" WHERE request_id = ?', [requestId]);
-            res.status(200).json({ message: 'Group creation request rejected.' });
-        }
     }));
 
     router.get('/:id/join-requests', verifyToken, asyncHandler(async (req, res) => {
@@ -274,7 +270,8 @@ module.exports = (pool, upload) => {
 
         const { user_id } = request[0];
         if (action === 'approve') {
-            await pool.query('INSERT INTO group_members (group_id, user_id) VALUES (?, ?)', [groupId, user_id]);
+            // Add user to group_members with proper role and status
+            await pool.query('INSERT INTO group_members (group_id, user_id, role, status) VALUES (?, ?, "member", "approved")', [groupId, user_id]);
         }
         await pool.query(`UPDATE group_join_requests SET status = ? WHERE request_id = ?`, [action === 'approve' ? 'approved' : 'rejected', requestId]);
         res.status(200).json({ message: `Join request ${action}d.` });

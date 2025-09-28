@@ -24,14 +24,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         requests.forEach(req => {
             const row = `
-                <tr data-request-id="${req.group_id}">
+                <tr data-request-id="${req.request_id}">
                     <td>${req.name}</td>
                     <td title="${req.description}">${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}</td>
                     <td>${req.creator_name}</td>
-                    <td>${new Date(req.created_at).toLocaleString()}</td>
+                    <td>-</td>
                     <td class="action-buttons">
-                        <button class="btn btn-sm btn-success approve-btn" data-id="${req.group_id}">Approve</button>
-                        <button class="btn btn-sm btn-danger reject-btn" data-id="${req.group_id}">Reject</button>
+                        <button class="btn btn-sm btn-success approve-btn" data-id="${req.request_id}">Approve</button>
+                        <button class="btn btn-sm btn-danger reject-btn" data-id="${req.request_id}">Reject</button>
                     </td>
                 </tr>
             `;
@@ -39,16 +39,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const handleUpdateRequest = async (groupId, status) => {
+    const handleUpdateRequest = async (requestId, status) => {
         try {
-            // Note: For approval, the status is 'active'
-            const apiStatus = status === 'approved' ? 'active' : 'rejected';
-            const response = await window.api.put(`/admin/group-creation-requests/${groupId}`, { status: apiStatus });
+            // Send the correct status format to the backend
+            const apiStatus = status === 'approved' ? 'approve' : 'reject';
+            const response = await window.api.put(`/admin/group-creation-requests/${requestId}`, { status: apiStatus });
             
             showToast(response.message, 'success');
             
             // Remove the processed row from the table
-            const rowToRemove = document.querySelector(`tr[data-request-id="${groupId}"]`);
+            const rowToRemove = document.querySelector(`tr[data-request-id="${requestId}"]`);
             if (rowToRemove) {
                 rowToRemove.remove();
             }
@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (error) {
-            console.error(`Error updating group to ${status}:`, error);
+            console.error(`Error updating group request to ${status}:`, error);
             showToast(`Error: ${error.message}`, 'error');
         }
     };
@@ -69,11 +69,11 @@ document.addEventListener('DOMContentLoaded', () => {
     tableBody.addEventListener('click', (e) => {
         const target = e.target;
         if (target.classList.contains('approve-btn')) {
-            const groupId = target.dataset.id;
-            handleUpdateRequest(groupId, 'approved');
+            const requestId = target.dataset.id;
+            handleUpdateRequest(requestId, 'approved');
         } else if (target.classList.contains('reject-btn')) {
-            const groupId = target.dataset.id;
-            handleUpdateRequest(groupId, 'rejected');
+            const requestId = target.dataset.id;
+            handleUpdateRequest(requestId, 'rejected');
         }
     });
     
