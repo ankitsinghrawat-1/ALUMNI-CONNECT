@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale-1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find a Mentor</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -24,16 +24,105 @@
         </nav>
     </header>
 
-    <main class="directory-main">
-        <div class="directory-container">
-            <h2>Find a Mentor</h2>
-            <p>Connect with experienced alumni who can guide you in your career.</p>
-            <div id="mentor-action-area" class="admin-actions">
-                 <a href="become-mentor.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Become a Mentor</a>
-            </div>
-            <div id="mentors-list" class="directory-list">
+    <main class="mentors-main modern-page">
+        <section class="mentors-hero">
+            <div class="container">
+                <div class="mentors-header">
+                    <h1 class="page-title">Find Your Perfect Mentor</h1>
+                    <p class="page-subtitle">Connect with experienced alumni who can guide your career journey and help you achieve your professional goals.</p>
+                    <div class="mentors-actions">
+                        <a href="become-mentor.html" class="btn btn-primary btn-large">
+                            <i class="fas fa-user-plus"></i> Become a Mentor
+                        </a>
+                        <button class="btn btn-outline btn-large" onclick="document.getElementById('search-section').scrollIntoView()">
+                            <i class="fas fa-search"></i> Find Mentors
+                        </button>
+                    </div>
                 </div>
-        </div>
+                <div class="mentors-stats">
+                    <div class="mentor-stat">
+                        <div class="mentor-stat-number">200+</div>
+                        <div class="mentor-stat-label">Active Mentors</div>
+                    </div>
+                    <div class="mentor-stat">
+                        <div class="mentor-stat-number">15+</div>
+                        <div class="mentor-stat-label">Industries</div>
+                    </div>
+                    <div class="mentor-stat">
+                        <div class="mentor-stat-number">500+</div>
+                        <div class="mentor-stat-label">Success Stories</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="search-section" class="mentors-search-section">
+            <div class="container">
+                <h2>Search for Mentors</h2>
+                <div class="mentors-search">
+                    <div class="search-filters">
+                        <div class="filter-group">
+                            <input type="text" placeholder="Search by name, company, or expertise..." class="search-input">
+                            <button class="btn btn-primary search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                        <div class="filter-row">
+                            <select class="filter-select">
+                                <option>All Industries</option>
+                                <option>Technology</option>
+                                <option>Finance</option>
+                                <option>Marketing</option>
+                                <option>Healthcare</option>
+                                <option>Education</option>
+                            </select>
+                            <select class="filter-select">
+                                <option>Experience Level</option>
+                                <option>5+ years</option>
+                                <option>10+ years</option>
+                                <option>15+ years</option>
+                                <option>20+ years</option>
+                            </select>
+                            <select class="filter-select">
+                                <option>Location</option>
+                                <option>Remote</option>
+                                <option>United States</option>
+                                <option>Europe</option>
+                                <option>Asia</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="mentors-list-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Available Mentors</h2>
+                    <div class="view-controls">
+                        <button class="view-toggle active" data-view="grid">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-toggle" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+                <div id="mentors-list" class="mentors-grid">
+                    <div class="mentor-placeholder">
+                        <div class="placeholder-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>No Mentors Available</h3>
+                        <p>Mentors will appear here once the system is connected to the database.</p>
+                        <button class="btn btn-secondary" onclick="window.location.reload()">
+                            <i class="fas fa-sync"></i> Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <div id="request-modal" class="modal">
