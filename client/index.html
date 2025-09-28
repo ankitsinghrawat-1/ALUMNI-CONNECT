@@ -26,37 +26,195 @@
     </header>
 
     <main>
-        <section id="loggedIn-header" class="hero-section">
+        <!-- Hero Section for Logged In Users -->
+        <section id="loggedIn-header" class="hero-section modern-hero">
             <div class="hero-content">
-                <h1>Welcome Back, Alumni!</h1>
-                <p>Explore your personalized dashboard, connect with fellow graduates, and discover new opportunities.</p>
-                <a href="dashboard.html" class="btn btn-primary">Go to Dashboard</a>
+                <div class="hero-text">
+                    <h1 class="hero-title">Welcome Back, Alumni!</h1>
+                    <p class="hero-subtitle">Explore your personalized dashboard, connect with fellow graduates, and discover new opportunities.</p>
+                    <a href="dashboard.html" class="btn btn-primary btn-large">Go to Dashboard</a>
+                </div>
+                <div class="hero-visual">
+                    <div class="network-animation">
+                        <div class="network-node"></div>
+                        <div class="network-node"></div>
+                        <div class="network-node"></div>
+                        <div class="network-node"></div>
+                        <div class="connection-line"></div>
+                        <div class="connection-line"></div>
+                        <div class="connection-line"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section id="loggedOut-header" class="hero-section">
+        <!-- Hero Section for Non-Logged In Users -->
+        <section id="loggedOut-header" class="hero-section modern-hero">
             <div class="hero-content">
-                <h1>Connecting Our Community, Together.</h1>
-                <p>Join the largest network of our university's alumni. Find old friends, build your career, and give back.</p>
-                <a href="signup.html" class="btn btn-primary">Join Our Network</a>
+                <div class="hero-text">
+                    <h1 class="hero-title">The Ultimate Alumni Network</h1>
+                    <p class="hero-subtitle">More than just connections - build your career, find mentors, access exclusive opportunities, and give back to your community. All in one powerful platform.</p>
+                    <div class="hero-actions">
+                        <a href="signup.html" class="btn btn-primary btn-large">Join Our Network</a>
+                        <a href="#features" class="btn btn-outline btn-large">Explore Features</a>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">10,000+</span>
+                            <span class="stat-label">Active Alumni</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Companies</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">50+</span>
+                            <span class="stat-label">Countries</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-visual">
+                    <div class="network-animation">
+                        <div class="network-node active"></div>
+                        <div class="network-node active"></div>
+                        <div class="network-node active"></div>
+                        <div class="network-node active"></div>
+                        <div class="network-node active"></div>
+                        <div class="network-node active"></div>
+                        <div class="connection-line animated"></div>
+                        <div class="connection-line animated"></div>
+                        <div class="connection-line animated"></div>
+                        <div class="connection-line animated"></div>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <section class="features-section">
-            <div class="feature-card">
-                <i class="fas fa-user-friends"></i>
-                <h3>Alumni Directory</h3>
-                <p>Reconnect with old classmates and find alumni in your industry.</p>
+        <!-- Enhanced Features Section -->
+        <section id="features" class="features-section enhanced-features">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Everything You Need in One Place</h2>
+                    <p>Discover why we're better than LinkedIn, Graduway, and other alumni platforms</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card enhanced">
+                        <div class="feature-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h3>Smart Alumni Discovery</h3>
+                        <p>AI-powered matching system that connects you with the right alumni based on industry, interests, and career goals.</p>
+                        <div class="feature-highlight">Beyond basic search</div>
+                    </div>
+                    <div class="feature-card enhanced">
+                        <div class="feature-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>Career Acceleration</h3>
+                        <p>Exclusive job opportunities, salary insights, interview prep, and career path guidance from successful alumni.</p>
+                        <div class="feature-highlight">Premium career tools</div>
+                    </div>
+                    <div class="feature-card enhanced">
+                        <div class="feature-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Mentorship Matching</h3>
+                        <p>Advanced algorithm matches you with ideal mentors and mentees based on compatibility and goals.</p>
+                        <div class="feature-highlight">Smart pairing system</div>
+                    </div>
+                    <div class="feature-card enhanced">
+                        <div class="feature-icon">
+                            <i class="fas fa-globe-americas"></i>
+                        </div>
+                        <h3>Global Community</h3>
+                        <p>Connect with alumni worldwide through virtual events, regional chapters, and international opportunities.</p>
+                        <div class="feature-highlight">Worldwide network</div>
+                    </div>
+                    <div class="feature-card enhanced">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3>Success Analytics</h3>
+                        <p>Track your networking progress, career growth, and impact within the alumni community.</p>
+                        <div class="feature-highlight">Data-driven insights</div>
+                    </div>
+                    <div class="feature-card enhanced">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Verified Network</h3>
+                        <p>All alumni profiles are verified through university records, ensuring authentic and trustworthy connections.</p>
+                        <div class="feature-highlight">100% verified</div>
+                    </div>
+                </div>
             </div>
-            <div class="feature-card">
-                <i class="fas fa-briefcase"></i>
-                <h3>Career Opportunities</h3>
-                <p>Discover job postings and career advice from the alumni community.</p>
+        </section>
+
+        <!-- Success Stories Section -->
+        <section class="success-stories-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Alumni Success Stories</h2>
+                    <p>See how our platform has transformed careers and built lasting connections</p>
+                </div>
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-image">
+                            <div class="story-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            <blockquote>"Through AlumniConnect, I found my dream job and three incredible mentors. The platform's smart matching helped me connect with the right people at the right time."</blockquote>
+                            <div class="story-author">
+                                <strong>Sarah Chen</strong>
+                                <span>Software Engineer at Google, Class of 2020</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="story-card">
+                        <div class="story-image">
+                            <div class="story-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            <blockquote>"I've mentored over 20 students through this platform. The matching algorithm is incredibly accurate - I only get paired with mentees whose goals align with my expertise."</blockquote>
+                            <div class="story-author">
+                                <strong>Michael Rodriguez</strong>
+                                <span>VP of Marketing at Tesla, Class of 2015</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="story-card">
+                        <div class="story-image">
+                            <div class="story-avatar">
+                                <i class="fas fa-user-circle"></i>
+                            </div>
+                        </div>
+                        <div class="story-content">
+                            <blockquote>"From finding co-founders to securing funding, this network has been instrumental in launching my startup. The quality of connections is unmatched."</blockquote>
+                            <div class="story-author">
+                                <strong>Priya Patel</strong>
+                                <span>CEO & Founder of TechStart, Class of 2018</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="feature-card">
-                <i class="fas fa-calendar-alt"></i>
-                <h3>Events & Reunions</h3>
-                <p>Stay up-to-date with upcoming events and special reunions.</p>
+        </section>
+
+        <!-- Call to Action Section -->
+        <section class="cta-section">
+            <div class="container">
+                <div class="cta-content">
+                    <h2>Ready to Unlock Your Potential?</h2>
+                    <p>Join thousands of alumni who are already leveraging the power of our platform</p>
+                    <div class="cta-actions">
+                        <a href="signup.html" class="btn btn-primary btn-large">Get Started Now</a>
+                        <a href="about.html" class="btn btn-outline btn-large">Learn More</a>
+                    </div>
+                </div>
             </div>
         </section>
 
