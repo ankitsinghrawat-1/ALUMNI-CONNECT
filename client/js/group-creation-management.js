@@ -1,53 +1,89 @@
-// client/js/group-creation-management.js
 document.addEventListener('DOMContentLoaded', () => {
-    const listContainer = document.getElementById('creation-requests-list');
+    const tableBody = document.getElementById('group-creation-table-body');
+    const logoutBtn = document.getElementById('admin-logout-btn');
 
-    const loadRequests = async () => {
-        listContainer.innerHTML = '<tr><td colspan="4"><div class="loading-spinner"><div class="spinner"></div></div></td></tr>';
+    const fetchGroupCreationRequests = async () => {
+        if (!tableBody) return;
+
         try {
             const requests = await window.api.get('/admin/group-creation-requests');
-            if (requests.length > 0) {
-                listContainer.innerHTML = requests.map(req => `
-                    <tr>
-                        <td>${sanitizeHTML(req.group_name)}</td>
-                        <td>${sanitizeHTML(req.group_description.substring(0, 100))}...</td>
-                        <td>${sanitizeHTML(req.full_name)}</td>
-                        <td>
-                            <button class="btn btn-success btn-sm approve-btn" data-id="${req.request_id}">Approve</button>
-                            <button class="btn btn-danger btn-sm reject-btn" data-id="${req.request_id}">Reject</button>
-                        </td>
-                    </tr>
-                `).join('');
-            } else {
-                listContainer.innerHTML = '<tr><td colspan="4" class="info-message">No pending group creation requests.</td></tr>';
-            }
+            renderTable(requests);
         } catch (error) {
-            console.error('Error fetching requests:', error);
-            listContainer.innerHTML = '<tr><td colspan="4" class="info-message error">Could not load requests.</td></tr>';
+            console.error('Error fetching group creation requests:', error);
+            tableBody.innerHTML = `<tr><td colspan="5" class="text-center error-message">Failed to load requests. ${error.message}</td></tr>`;
         }
     };
 
-    listContainer.addEventListener('click', async (e) => {
-        const target = e.target;
-        const requestId = target.dataset.id;
-        let action = null;
+    const renderTable = (requests) => {
+        tableBody.innerHTML = '';
 
-        if (target.classList.contains('approve-btn')) {
-            action = 'approve';
-        } else if (target.classList.contains('reject-btn')) {
-            action = 'reject';
+        if (requests.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="text-center">No pending group creation requests found.</td></tr>';
+            return;
         }
 
-        if (action) {
-            try {
-                await window.api.post(`/admin/group-creation-requests/${requestId}`, { action });
-                showToast(`Request has been ${action}d.`, 'success');
-                loadRequests(); // Refresh the list
-            } catch (error) {
-                showToast(`Error: ${error.message}`, 'error');
+        requests.forEach(req => {
+            const row = `
+                <tr data-request-id="${req.group_id}">
+                    <td>${req.name}</td>
+                    <td title="${req.description}">${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}</td>
+                    <td>${req.creator_name}</td>
+                    <td>${new Date(req.created_at).toLocaleString()}</td>
+                    <td class="action-buttons">
+                        <button class="btn btn-sm btn-success approve-btn" data-id="${req.group_id}">Approve</button>
+                        <button class="btn btn-sm btn-danger reject-btn" data-id="${req.group_id}">Reject</button>
+                    </td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', row);
+        });
+    };
+
+    const handleUpdateRequest = async (groupId, status) => {
+        try {
+            // Note: For approval, the status is 'active'
+            const apiStatus = status === 'approved' ? 'active' : 'rejected';
+            const response = await window.api.put(`/admin/group-creation-requests/${groupId}`, { status: apiStatus });
+            
+            showToast(response.message, 'success');
+            
+            // Remove the processed row from the table
+            const rowToRemove = document.querySelector(`tr[data-request-id="${groupId}"]`);
+            if (rowToRemove) {
+                rowToRemove.remove();
             }
+
+            // Check if the table is now empty
+            if (tableBody.children.length === 0) {
+                 renderTable([]); // Re-render to show the "No pending requests" message
+            }
+
+        } catch (error) {
+            console.error(`Error updating group to ${status}:`, error);
+            showToast(`Error: ${error.message}`, 'error');
+        }
+    };
+
+
+    // --- Event Listeners ---
+    tableBody.addEventListener('click', (e) => {
+        const target = e.target;
+        if (target.classList.contains('approve-btn')) {
+            const groupId = target.dataset.id;
+            handleUpdateRequest(groupId, 'approved');
+        } else if (target.classList.contains('reject-btn')) {
+            const groupId = target.dataset.id;
+            handleUpdateRequest(groupId, 'rejected');
         }
     });
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        });
+    }
 
-    loadRequests();
+    // --- Initial Load ---
+    fetchGroupCreationRequests();
 });

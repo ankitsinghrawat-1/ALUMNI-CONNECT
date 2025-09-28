@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Join Requests</title>
+    <title>Group Join Management - Admin Panel</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -15,45 +15,59 @@
         })();
     </script>
 </head>
-<body>
-    <header class="main-header">
-        <nav class="main-nav container">
-            <a href="index.html" class="logo">AlumniConnect</a>
-            <ul id="nav-links" class="nav-links"></ul>
-        </nav>
-    </header>
-
-    <main class="management-main">
-        <div class="container">
-            <div class="management-header">
-                <h2><i class="fas fa-user-plus"></i> Group Join Requests</h2>
-                <a href="admin.html" class="btn btn-secondary">&larr; Back to Dashboard</a>
-            </div>
-            <div class="card">
-                <table class="management-table">
-                    <thead>
-                        <tr>
-                            <th>User Name</th>
-                            <th>Group Name</th>
-                            <th>Date Requested</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="join-requests-list"></tbody>
-                </table>
-            </div>
-        </div>
-    </main>
+<body class="admin-body">
     
-    <footer class="main-footer">
-        <div class="container">
-            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
-        </div>
-    </footer>
+    <div class="admin-dashboard-layout">
+        <aside class="admin-sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="logo">AlumniConnect</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="admin.html" class="nav-item"><i class="fas fa-tachometer-alt"></i> Admin Panel</a>
+                <a href="user-management.html" class="nav-item"><i class="fas fa-users-cog"></i> User Management</a>
+                <a href="verification-requests.html" class="nav-item"><i class="fas fa-user-check"></i> Verification Requests</a>
+                <a href="approval-management.html" class="nav-item"><i class="fas fa-check-double"></i> Content Approvals</a>
+                <a href="group-creation-management.html" class="nav-item"><i class="fas fa-users"></i> Group Creation</a>
+                <a href="group-join-management.html" class="nav-item active"><i class="fas fa-user-plus"></i> Group Join Requests</a>
+                <a href="event-management.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Event Management</a>
+                <a href="job-management.html" class="nav-item"><i class="fas fa-briefcase"></i> Job Management</a>
+                <a href="campaign-management.html" class="nav-item"><i class="fas fa-bullhorn"></i> Campaigns</a>
+                <a href="blog-management.html" class="nav-item"><i class="fas fa-newspaper"></i> Blogs</a>
+                <a href="application-management.html" class="nav-item"><i class="fas fa-file-alt"></i> Applications</a>
+            </nav>
+            <div class="sidebar-footer">
+                 <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> Your Profile</a>
+                 <a href="#" id="admin-logout-btn" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </div>
+        </aside>
+
+        <main class="admin-main-content">
+            <header class="admin-content-header">
+                <h1>Pending Group Join Requests</h1>
+            </header>
+
+            <section class="admin-section card">
+                <div class="table-responsive">
+                    <table class="data-table" id="group-join-table">
+                        <thead>
+                            <tr>
+                                <th>User Name</th>
+                                <th>Group Name</th>
+                                <th>Requested On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="group-join-table-body">
+                            <!-- Group join request rows will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/utils.js"></script>
-    <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
     <script src="js/group-join-management.js"></script>
 </body>

@@ -30,15 +30,16 @@
             <form id="request-group-form">
                 <div class="input-group">
                     <label for="group_name">Proposed Group Name</label>
-                    <input type="text" id="group_name" required placeholder="e.g., Alumni Chess Club">
+                    <input type="text" id="group_name" name="group_name" required placeholder="e.g., Alumni Chess Club">
                 </div>
                 <div class="input-group">
-                    <label for="group_image">Proposed Cover Image (Optional)</label>
-                    <input type="file" id="group_image" name="group_image" accept="image/*">
+                    <label for="group_logo">Proposed Cover Image (Optional)</label>
+                    <!-- CORRECTED: The 'name' attribute is now 'group_logo' to match the backend -->
+                    <input type="file" id="group_logo" name="group_logo" accept="image/*">
                 </div>
                 <div class="input-group">
                     <label for="group_description">Proposed Group Description</label>
-                    <textarea id="group_description" rows="5" required placeholder="What is the purpose of this group? Who should join?"></textarea>
+                    <textarea id="group_description" name="group_description" rows="5" required placeholder="What is the purpose of this group? Who should join?"></textarea>
                 </div>
                 <div id="message" class="form-message"></div>
                 <button type="submit" class="btn btn-primary btn-full-width">Submit Request</button>

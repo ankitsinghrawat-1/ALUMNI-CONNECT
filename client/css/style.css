@@ -1,5 +1,62 @@
 @import url("https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css");
 
+/* === CORE THEME & COLOR VARIABLES === */
+:root {
+    --primary-color: #4A90E2;
+    --success-color: #50E3C2;
+    --danger-color: #D0021B;
+    --warning-color: #F5A623;
+    
+    --text-color: #333;
+    --text-color-light: #777;
+    --link-color: #4A90E2;
+    
+    --background-color: #F4F7FC;
+    --background-light: #E9EDF5;
+    --card-bg: #FFFFFF;
+    --border-color: #E0E6F1;
+    --sidebar-bg: #2C3E50;
+    --sidebar-text: #ECF0F1;
+    --sidebar-active: #34495E;
+    --sidebar-hover: #34495E;
+}
+
+html.dark-mode {
+    --text-color: #EAEAEA;
+    --text-color-light: #999;
+    --link-color: #58A6FF;
+
+    --background-color: #0D1117;
+    --background-light: #161B22;
+    --card-bg: #1A222C;
+    --border-color: #30363D;
+    --sidebar-bg: #161B22;
+    --sidebar-text: #EAEAEA;
+    --sidebar-active: #0D1117;
+    --sidebar-hover: #0D1117;
+}
+
+/* === GENERAL BODY & LAYOUT === */
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.card {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 1.5rem;
+}
+html.dark-mode .card {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+
 /*Global & Variables*/
 :root {
     --primary-color: #4a90e2;      /* A more vibrant blue */
@@ -4130,4 +4187,255 @@ fieldset.form-section legend {
     .analytics-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* === USER MANAGEMENT PAGE === */
+
+.table-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+}
+
+.search-container {
+    position: relative;
+    width: 300px;
+}
+
+.search-container i {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-color-light);
+}
+
+.search-container input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 40px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.data-table th,
+.data-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    vertical-align: middle;
+}
+
+.data-table th {
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-color-light);
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--background-light);
+}
+
+.data-table .btn-sm {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+}
+
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1.5rem;
+    gap: 1rem;
+}
+
+.pagination-controls .page-info {
+    font-size: 0.9rem;
+    color: var(--text-color-light);
+}
+
+.text-center {
+    text-align: center;
+}
+
+.error-message {
+    color: var(--danger-color);
+}
+
+/* --- Badges for Status --- */
+.badge {
+    padding: 0.3em 0.6em;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #fff;
+}
+.badge-success { background-color: var(--success-color); }
+.badge-warning { background-color: #f5a623; color: #fff; }
+.badge-danger { background-color: var(--danger-color); }
+.badge-secondary { background-color: #9b9b9b; }
+
+
+/* --- Modal for Editing --- */
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slide-down 0.3s ease-out;
+}
+
+@keyframes slide-down {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.75rem;
+    font-weight: bold;
+    color: var(--text-color-light);
+    cursor: pointer;
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-body p {
+    margin: 0 0 1rem 0;
+}
+
+.modal-body .input-group {
+    margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+}
+
+.verification-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* === FIX & ENHANCEMENT: GENERAL BUTTON STYLES === */
+
+/* Base button style - This will fix the unstyled "Edit" button */
+.btn {
+    display: inline-block;
+    font-weight: 600;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-radius: 8px;
+    transition: all 0.15s ease-in-out;
+}
+
+.btn-primary {
+    color: #fff;
+    background-color: #4A90E2;
+    border-color: #4A90E2;
+}
+
+.btn-primary:hover {
+    background-color: #357ABD;
+    border-color: #357ABD;
+}
+
+.btn-secondary {
+    color: var(--text-color);
+    background-color: var(--background-light);
+    border-color: var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: var(--border-color);
+}
+
+
+/* === FIX: USER MANAGEMENT SEARCH BAR === */
+
+/* This ensures the input text does not overlap the icon */
+.search-container input {
+    box-sizing: border-box; /* Ensures padding is included inside the element's width */
+    padding-left: 40px !important; /* Overrides other styles to create space for the icon */
+}
+
+/* === FIX: VISIBILITY FOR SUCCESS & DANGER BUTTONS === */
+
+/* Rule for the green 'Approve' button */
+.btn-success {
+    color: #fff !important; /* Ensures text is white */
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+}
+
+.btn-success:hover {
+    background-color: #48C9B0; /* A slightly darker green for hover */
+    border-color: #48C9B0;
+}
+
+/* Rule for the red 'Reject' button */
+.btn-danger {
+    color: #fff !important; /* Ensures text is white */
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+.btn-danger:hover {
+    background-color: #B70018; /* A slightly darker red for hover */
+    border-color: #B70018;
 }

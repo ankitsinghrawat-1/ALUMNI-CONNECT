@@ -7,15 +7,13 @@ const path = require('path');
 
 module.exports = (pool, upload) => {
 
-    // --- Helper function to check for group admin ---
     const isGroupAdmin = async (userId, groupId) => {
         const [member] = await pool.query('SELECT role FROM group_members WHERE user_id = ? AND group_id = ?', [userId, groupId]);
         return member.length > 0 && member[0].role === 'admin';
     };
 
-    // --- Public Routes ---
     router.get('/', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query('SELECT * FROM `groups` ORDER BY name ASC');
+        const [rows] = await pool.query("SELECT * FROM `groups` WHERE status = 'active' ORDER BY name ASC");
         res.json(rows);
     }));
 
@@ -27,9 +25,7 @@ module.exports = (pool, upload) => {
             WHERE g.group_id = ?`,
             [req.params.id]
         );
-        if (rows.length === 0) {
-            return res.status(404).json({ message: 'Group not found' });
-        }
+        if (rows.length === 0) return res.status(404).json({ message: 'Group not found' });
         res.json(rows[0]);
     }));
 
@@ -42,7 +38,6 @@ module.exports = (pool, upload) => {
         res.json(members);
     }));
 
-    // All routes below this require a user to be logged in
     router.use(verifyToken);
 
     router.get('/:id/membership-status', asyncHandler(async (req, res) => {
@@ -52,30 +47,26 @@ module.exports = (pool, upload) => {
         if (req.user.role === 'admin' || (await isGroupAdmin(user_id, group_id))) {
             return res.json({ status: 'admin' });
         }
-
         const [member] = await pool.query('SELECT * FROM group_members WHERE group_id = ? AND user_id = ?', [group_id, user_id]);
-        if (member.length > 0) {
-            return res.json({ status: 'member' });
-        }
+        if (member.length > 0) return res.json({ status: member[0].status });
 
         const [request] = await pool.query('SELECT * FROM group_join_requests WHERE group_id = ? AND user_id = ? AND status = "pending"', [group_id, user_id]);
-        if (request.length > 0) {
-            return res.json({ status: 'pending' });
-        }
+        if (request.length > 0) return res.json({ status: 'pending' });
 
         res.json({ status: 'none' });
     }));
 
-
-    // --- User Group Requests ---
+    // --- User Group Requests (FINAL CORRECTED VERSION) ---
     router.post('/request-creation', upload.fields([
         { name: 'group_logo', maxCount: 1 },
         { name: 'group_background', maxCount: 1 }
     ]), asyncHandler(async (req, res) => {
         const { group_name, group_description } = req.body;
         const user_id = req.user.userId;
-        const logo_url = req.files['group_logo'] ? `uploads/groups/${req.files['group_logo'][0].filename}` : null;
-        const background_url = req.files['group_background'] ? `uploads/groups/${req.files['group_background'][0].filename}` : null;
+
+        // This robustly checks for files and constructs the path
+        const logo_url = (req.files && req.files['group_logo']) ? `uploads/groups/${req.files['group_logo'][0].filename}` : null;
+        const background_url = (req.files && req.files['group_background']) ? `uploads/groups/${req.files['group_background'][0].filename}` : null;
 
         await pool.query(
             'INSERT INTO group_creation_requests (user_id, group_name, group_description, image_url, background_image_url) VALUES (?, ?, ?, ?, ?)',
@@ -124,15 +115,15 @@ module.exports = (pool, upload) => {
     ]), asyncHandler(async (req, res) => {
         const { name, description } = req.body;
         const group_id = req.params.id;
-        
+
         if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, group_id))) {
-             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
+            return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
-        
+
         const [group] = await pool.query('SELECT image_url, background_image_url FROM `groups` WHERE group_id = ?', [group_id]);
-        
+
         let new_logo_url = group[0].image_url;
-        if(req.files['group_logo']) {
+        if (req.files['group_logo']) {
             new_logo_url = `uploads/groups/${req.files['group_logo'][0].filename}`;
             if (group[0].image_url) {
                 const oldImagePath = path.join(__dirname, '..', '..', group[0].image_url);
@@ -141,23 +132,23 @@ module.exports = (pool, upload) => {
         }
 
         let new_background_url = group[0].background_image_url;
-        if(req.files['group_background']) {
+        if (req.files['group_background']) {
             new_background_url = `uploads/groups/${req.files['group_background'][0].filename}`;
             if (group[0].background_image_url) {
                 const oldImagePath = path.join(__dirname, '..', '..', group[0].background_image_url);
                 fs.unlink(oldImagePath).catch(err => console.error("Failed to delete old group background:", err));
             }
         }
-        
+
         await pool.query('UPDATE `groups` SET name = ?, description = ?, image_url = ?, background_image_url = ? WHERE group_id = ?', [name, description, new_logo_url, new_background_url, group_id]);
         res.status(200).json({ message: 'Group updated successfully!' });
     }));
 
     router.delete('/:groupId/members/:memberId', asyncHandler(async (req, res) => {
         const { groupId, memberId } = req.params;
-        
+
         if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
-             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
+            return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
 
         const [group] = await pool.query('SELECT created_by FROM `groups` WHERE group_id = ?', [groupId]);
@@ -168,13 +159,13 @@ module.exports = (pool, upload) => {
         await pool.query('DELETE FROM group_members WHERE group_id = ? AND user_id = ?', [groupId, memberId]);
         res.status(200).json({ message: 'Member removed successfully.' });
     }));
-    
+
     // --- Group Role Management ---
     router.post('/:groupId/members/:memberId/promote', asyncHandler(async (req, res) => {
         const { groupId, memberId } = req.params;
-        
+
         if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
-             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
+            return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
 
         await pool.query("UPDATE group_members SET role = 'admin' WHERE group_id = ? AND user_id = ?", [groupId, memberId]);
@@ -183,14 +174,14 @@ module.exports = (pool, upload) => {
 
     router.post('/:groupId/members/:memberId/demote', asyncHandler(async (req, res) => {
         const { groupId, memberId } = req.params;
-        
+
         if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
-             return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
+            return res.status(403).json({ message: 'Forbidden: You are not an admin of this group.' });
         }
-        
+
         const [group] = await pool.query('SELECT created_by FROM `groups` WHERE group_id = ?', [groupId]);
         if (group[0].created_by == memberId) {
-             return res.status(400).json({ message: 'The group creator cannot be demoted.' });
+            return res.status(400).json({ message: 'The group creator cannot be demoted.' });
         }
 
         await pool.query("UPDATE group_members SET role = 'member' WHERE group_id = ? AND user_id = ?", [groupId, memberId]);
@@ -204,11 +195,11 @@ module.exports = (pool, upload) => {
         const inviter_id = req.user.userId;
 
         const [invitee] = await pool.query('SELECT user_id FROM users WHERE email = ?', [invitee_email]);
-        if(invitee.length === 0) {
+        if (invitee.length === 0) {
             return res.status(404).json({ message: 'User to invite not found.' });
         }
         const invitee_id = invitee[0].user_id;
-        
+
         try {
             await pool.query('INSERT INTO group_invites (group_id, inviter_id, invitee_id) VALUES (?, ?, ?)', [groupId, inviter_id, invitee_id]);
             res.status(201).json({ message: 'Invitation sent successfully!' });
@@ -237,7 +228,7 @@ module.exports = (pool, upload) => {
         await pool.query("INSERT INTO group_members (group_id, user_id, role) VALUES (?, ?, 'admin')", [groupId, created_by]);
         res.status(201).json({ message: 'Group created successfully!', groupId });
     }));
-    
+
     router.post('/admin/creation-requests/:requestId', isAdmin, asyncHandler(async (req, res) => {
         const { requestId } = req.params;
         const { action } = req.body;
@@ -260,7 +251,7 @@ module.exports = (pool, upload) => {
             res.status(200).json({ message: 'Group creation request rejected.' });
         }
     }));
-    
+
     router.get('/:id/join-requests', verifyToken, asyncHandler(async (req, res) => {
         const group_id = req.params.id;
         if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, group_id))) {
@@ -273,7 +264,7 @@ module.exports = (pool, upload) => {
     router.post('/:groupId/join-requests/:requestId', verifyToken, asyncHandler(async (req, res) => {
         const { groupId, requestId } = req.params;
         const { action } = req.body;
-        
+
         if (req.user.role !== 'admin' && !(await isGroupAdmin(req.user.userId, groupId))) {
             return res.status(403).json({ message: 'Forbidden' });
         }
