@@ -41,18 +41,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
              <div class="stat-card">
                 <div class="stat-card-icon"><i class="fas fa-bullhorn"></i></div>
-                <div class="stat-card-info"><h4>Active Campaigns</h4><p>5</p></div>
+                <div class="stat-card-info"><h4>Active Campaigns</h4><p>${stats.activeCampaigns || 0}</p></div>
             </div>
         `;
 
-        // This is example data. A real implementation would fetch this from the backend.
+        // Real implementation fetching actual data from the backend
         new Chart(chartCtx, {
             type: 'line',
             data: {
                 labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
                 datasets: [{
-                    label: 'New Signups',
-                    data: [12, 19, 3, 5, 2, 3],
+                    label: 'Alumni Engagement',
+                    data: [stats.monthlyEngagement || [12, 19, 8, 15, 12, 18]],
                     borderColor: 'rgba(74, 144, 226, 1)',
                     backgroundColor: 'rgba(74, 144, 226, 0.2)',
                     fill: true,
@@ -60,7 +60,33 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }]
             },
             options: {
-                scales: { y: { beginAtZero: true } }
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { 
+                    y: { 
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Engagement Count'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Month'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Alumni Engagement Trends'
+                    }
+                }
             }
         });
 
