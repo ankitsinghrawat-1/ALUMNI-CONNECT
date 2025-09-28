@@ -1,0 +1,457 @@
+--These are the required tables in the database you can directly copy and paste it to the mysql
+
+
+-- Create the database if it doesn't exist
+
+
+CREATE DATABASE IF NOT EXISTS alumni_db;
+USE alumni_db;
+
+
+-- 1. Users Table: The central table for all user roles
+
+
+CREATE TABLE `users` (
+  `user_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `full_name` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL UNIQUE,
+  `password_hash` VARCHAR(255) NOT NULL,
+  `role` ENUM('admin', 'alumni', 'student', 'institute', 'faculty', 'employer') DEFAULT 'alumni' NOT NULL,
+  `profile_pic_url` VARCHAR(255) NULL,
+  `verification_status` ENUM('unverified', 'pending', 'verified') DEFAULT 'unverified',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `onboarding_complete` BOOLEAN DEFAULT FALSE,
+  `dob` DATE NULL,
+  `address` VARCHAR(255) NULL,
+  `city` VARCHAR(100) NULL,
+  `country` VARCHAR(100) NULL,
+  `phone_number` VARCHAR(20) NULL,
+  `linkedin_profile` VARCHAR(255) NULL,
+  `graduation_year` INT NULL,
+  `major` VARCHAR(255) NULL,
+  `job_title` VARCHAR(255) NULL,
+  `company` VARCHAR(255) NULL,
+  `department` VARCHAR(255) NULL,
+  `institute_name` VARCHAR(255) NULL,
+  `industry` VARCHAR(255) NULL,
+  `website` VARCHAR(255) NULL,
+  `bio` TEXT NULL,
+  `skills` VARCHAR(255) NULL,
+  `reset_token` VARCHAR(255) NULL,
+  `reset_token_expiry` TIMESTAMP NULL,
+  `is_profile_public` BOOLEAN DEFAULT TRUE,
+  `is_email_visible` BOOLEAN DEFAULT TRUE,
+  `is_company_visible` BOOLEAN DEFAULT TRUE,
+  `is_location_visible` BOOLEAN DEFAULT TRUE
+);
+
+
+-- 2. Blogs Table
+
+
+CREATE TABLE `blogs` (
+  `blog_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `author_id` INT,
+  `title` VARCHAR(255) NOT NULL,
+  `image_url` VARCHAR(255) NULL DEFAULT NULL AFTER `content`,
+`status` ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'approved',
+  `content` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`author_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 3. Events Table
+
+
+CREATE TABLE `events` (
+  `event_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `date` DATETIME NOT NULL,
+  `location` VARCHAR(255) NOT NULL,
+  `organizer` VARCHAR(255),
+  `status` ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 4. Event RSVPs Table (Many-to-Many relationship between users and events)
+
+
+CREATE TABLE `event_rsvps` (
+  `event_id` INT,
+  `user_id` INT,
+  `rsvp_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`event_id`, `user_id`),
+  FOREIGN KEY (`event_id`) REFERENCES `events`(`event_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 5. Jobs Table
+
+
+CREATE TABLE `jobs` (
+  `job_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `company` VARCHAR(255) NOT NULL,
+  `location` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `contact_email` VARCHAR(255),
+  `status` ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 6. Job Applications Table
+
+
+CREATE TABLE `job_applications` (
+  `application_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `job_id` INT,
+  `user_email` VARCHAR(255) NOT NULL,
+  `full_name` VARCHAR(255) NOT NULL,
+  `resume_path` VARCHAR(255) NOT NULL,
+  `cover_letter` TEXT,
+  `application_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `status` ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+  `admin_notes` TEXT,
+  FOREIGN KEY (`job_id`) REFERENCES `jobs`(`job_id`) ON DELETE CASCADE
+);
+
+
+-- 7. Mentors Table
+
+
+CREATE TABLE `mentors` (
+  `mentor_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL UNIQUE,
+  `expertise_areas` TEXT,
+  `is_available` BOOLEAN DEFAULT TRUE,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 8. Mentor Requests Table
+
+
+CREATE TABLE `mentor_requests` (
+  `request_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `mentor_user_id` INT,
+  `mentee_user_id` INT,
+  `request_message` TEXT,
+  `status` ENUM('pending', 'accepted', 'declined') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_request` (`mentor_user_id`, `mentee_user_id`),
+  FOREIGN KEY (`mentor_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`mentee_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 9. Campaigns Table
+
+
+CREATE TABLE `campaigns` (
+  `campaign_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `goal_amount` DECIMAL(10, 2) NOT NULL,
+  `current_amount` DECIMAL(10, 2) DEFAULT 0.00,
+  `start_date` DATE,
+  `end_date` DATE,
+  `image_url` VARCHAR(255),
+  `status` ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  `created_by` INT,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
+);
+
+
+-- 10. Notifications Table
+
+
+CREATE TABLE `notifications` (
+  `notification_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT,
+  `message` TEXT NOT NULL,
+  `is_read` BOOLEAN DEFAULT FALSE,
+  `link` VARCHAR(255),
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 11. Conversations Table (for Messaging)
+
+
+CREATE TABLE `conversations` (
+  `conversation_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+-- 12. Conversation Participants Table (Many-to-Many for conversations)
+
+
+CREATE TABLE `conversation_participants` (
+  `conversation_id` INT,
+  `user_id` INT,
+  PRIMARY KEY (`conversation_id`, `user_id`),
+  FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`conversation_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 13. Messages Table
+
+
+CREATE TABLE `messages` (
+  `message_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `conversation_id` INT,
+  `sender_id` INT,
+  `content` TEXT NOT NULL,
+  `message_type` ENUM('text', 'image') DEFAULT 'text',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`conversation_id`) REFERENCES `conversations`(`conversation_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`sender_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 14. Groups Table
+
+
+CREATE TABLE `groups` (
+  `group_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(255) NOT NULL,
+  `description` TEXT NOT NULL,
+  `status` ENUM('pending', 'active', 'rejected') NOT NULL DEFAULT 'active',
+  `image_url` VARCHAR(255),
+  `background_image_url` VARCHAR(255) NULL DEFAULT NULL AFTER `image_url`,
+  `created_by` INT,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
+);
+
+
+-- 15. Group Members Table (Many-to-Many for groups)
+
+
+CREATE TABLE `group_members` (
+  `group_id` INT,
+  `user_id` INT,
+  `role` ENUM('admin', 'member') NOT NULL DEFAULT 'member' AFTER `user_id`,
+  `status` ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'approved',
+  `joined_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`group_id`, `user_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `groups`(`group_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 16. Group Creation Requests Table
+
+
+CREATE TABLE `group_creation_requests` (
+  `request_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user_id` INT NOT NULL,
+  `group_name` VARCHAR(255) NOT NULL,
+  `image_url` VARCHAR(255) NULL DEFAULT NULL AFTER `group_description`,
+  `background_image_url` VARCHAR(255) NULL DEFAULT NULL AFTER `image_url`,
+  `group_description` TEXT NOT NULL,
+  `status` ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  `requested_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 17. Group Join Requests Table
+
+
+CREATE TABLE `group_join_requests` (
+  `request_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `group_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `status` ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
+  `requested_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY `unique_join_request` (`group_id`, `user_id`),
+  FOREIGN KEY (`group_id`) REFERENCES `groups`(`group_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+-- 18. Announcements Table
+CREATE TABLE `announcements` (
+  `announcement_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `title` VARCHAR(255) NOT NULL,
+  `content` TEXT NOT NULL,
+  `author_id` INT,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`author_id`) REFERENCES `users`(`user_id`) ON DELETE SET NULL
+);
+
+
+-- 19. Group Posts Table
+
+
+CREATE TABLE `group_posts` (
+    `post_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `group_id` INT NOT NULL,
+    `user_id` INT NOT NULL,
+    `content` TEXT NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`group_id`) REFERENCES `groups`(`group_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 20. Group Post Comments Table
+
+
+CREATE TABLE `group_post_comments` (
+    `comment_id` INT AUTO_INCREMENT PRIMARY KEY,
+    `post_id` INT NOT NULL,
+    `user_id` INT NOT NULL,
+    `content` TEXT NOT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`post_id`) REFERENCES `group_posts`(`post_id`) ON DELETE CASCADE,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+--21. Donations to track donations
+
+
+CREATE TABLE `donations` (
+  `donation_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `campaign_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `amount` DECIMAL(10, 2) NOT NULL,
+  `donation_date` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`campaign_id`) REFERENCES `campaigns`(`campaign_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+--21. Blog_comments
+
+
+CREATE TABLE `blog_comments` (
+  `comment_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `blog_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `content` TEXT NOT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`blog_id`) REFERENCES `blogs`(`blog_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
+
+
+-- 22. Create a new table to track invitations to groups
+
+
+CREATE TABLE `group_invites` (
+  `invite_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `group_id` INT NOT NULL,
+  `inviter_id` INT NOT NULL,
+  `invitee_id` INT NOT NULL,
+  `status` ENUM('pending', 'accepted', 'declined') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`group_id`) REFERENCES `groups`(`group_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`inviter_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`invitee_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_invite` (`group_id`, `invitee_id`)
+);
+
+
+-- 23. create a new table to track verifications reuests 
+
+
+CREATE TABLE `verification_requests` (
+  `request_id` INT NOT NULL AUTO_INCREMENT,
+  `user_id` INT NOT NULL,
+  `status` ENUM('pending', 'approved', 'rejected') NOT NULL DEFAULT 'pending',
+  `document_url` VARCHAR(255) NOT NULL,
+  `document_path` VARCHAR(255) NULL AFTER `user_id`,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `reviewed_by` INT NULL,
+  PRIMARY KEY (`request_id`),
+  INDEX `user_id_fk_idx` (`user_id` ASC),
+  INDEX `reviewed_by_fk_idx` (`reviewed_by` ASC),
+  CONSTRAINT `fk_verification_user_id`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `users` (`user_id`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_verification_reviewed_by`
+    FOREIGN KEY (`reviewed_by`)
+    REFERENCES `users` (`user_id`)
+    ON DELETE SET NULL
+    ON UPDATE CASCADE
+);
+
+
+--24. Main threads table
+
+
+CREATE TABLE IF NOT EXISTS threads (
+    thread_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT,
+    media_url VARCHAR(255) DEFAULT NULL,
+    media_type ENUM('image', 'video') DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_user_id (user_id),
+    INDEX idx_created_at (created_at)
+);
+
+
+--25. Thread likes table
+
+
+CREATE TABLE IF NOT EXISTS thread_likes (
+    like_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_like (thread_id, user_id),
+    INDEX idx_thread_id (thread_id),
+    INDEX idx_user_id (user_id)
+);
+
+
+--26. Thread comments table
+
+
+CREATE TABLE IF NOT EXISTS thread_comments (
+    comment_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_thread_id (thread_id),
+    INDEX idx_user_id (user_id),
+    INDEX idx_created_at (created_at)
+);
+
+
+--27. Thread shares table
+
+
+CREATE TABLE IF NOT EXISTS thread_shares (
+    share_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_share (thread_id, user_id),
+    INDEX idx_thread_id (thread_id),
+    INDEX idx_user_id (user_id)
+);
