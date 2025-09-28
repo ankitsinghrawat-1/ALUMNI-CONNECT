@@ -12,6 +12,15 @@ document.addEventListener('DOMContentLoaded', async () => {
     const passwordForm = document.getElementById('password-form');
     const verificationSection = document.getElementById('verification-status-section');
 
+    // Role-specific field configurations that match user needs
+    const roleFieldsConfig = {
+        alumni: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
+        student: ['full_name', 'bio', 'city', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
+        faculty: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'department'],
+        employer: ['full_name', 'bio', 'city', 'industry', 'website'],
+        institute: ['full_name', 'bio', 'city', 'website']
+    };
+
     const displayMessage = (message, type = 'error', containerId = 'message') => {
         const messageContainer = document.getElementById(containerId);
         if (messageContainer) {
@@ -105,6 +114,175 @@ document.addEventListener('DOMContentLoaded', async () => {
         } else {
             nameLabel.innerHTML = '<i class="fas fa-user"></i> Full Name';
         }
+
+        // Show profile completion status for role-specific fields only
+        updateProfileCompletionDisplay(role);
+    };
+
+    const updateProfileCompletionDisplay = (role) => {
+        // Get role-specific fields
+        const requiredFields = roleFieldsConfig[role] || roleFieldsConfig.alumni;
+        const completionContainer = document.getElementById('profile-completion-status');
+        
+        if (!completionContainer) {
+            // Create completion status container if it doesn't exist
+            const statusContainer = document.createElement('div');
+            statusContainer.id = 'profile-completion-status';
+            statusContainer.className = 'profile-completion-status';
+            
+            // Insert after verification section
+            const profileForm = document.getElementById('profile-form');
+            if (profileForm && verificationSection) {
+                verificationSection.parentNode.insertBefore(statusContainer, profileForm);
+            }
+        }
+        
+        // This will be updated after profile data is loaded
+        showProfileCompletion();
+    };
+
+    const showProfileCompletion = async () => {
+        try {
+            const stats = await window.api.get('/users/dashboard-stats');
+            const completionContainer = document.getElementById('profile-completion-status');
+            if (completionContainer) {
+                const completion = stats.profileCompletion;
+                const statusClass = completion >= 80 ? 'complete' : completion >= 50 ? 'partial' : 'incomplete';
+                
+                completionContainer.innerHTML = `
+                    <div class="completion-widget">
+                        <div class="completion-header">
+                            <h4><i class="fas fa-chart-pie"></i> Profile Completion</h4>
+                            <span class="completion-percentage ${statusClass}">${completion}%</span>
+                        </div>
+                        <div class="completion-bar">
+                            <div class="completion-fill" style="width: ${completion}%"></div>
+                        </div>
+                        <p class="completion-text">
+                            ${completion >= 80 ? 'Great! Your profile is well-completed.' : 
+                              completion >= 50 ? 'Good progress! Add more details to improve visibility.' : 
+                              'Complete your profile to increase visibility and opportunities.'}
+                        </p>
+                    </div>
+                `;
+            }
+        } catch (error) {
+            console.error('Error fetching profile completion:', error);
+        }
+    };
+
+    const openEditModal = (field, currentValue, fieldType = 'text') => {
+        const modal = document.getElementById('edit-field-modal');
+        if (!modal) {
+            createEditModal();
+            return openEditModal(field, currentValue, fieldType);
+        }
+        
+        const modalTitle = modal.querySelector('.modal-title');
+        const modalInput = modal.querySelector('.modal-input');
+        const saveBtn = modal.querySelector('.save-field-btn');
+        
+        // Set modal content based on field
+        const fieldLabels = {
+            'full_name': 'Full Name',
+            'bio': 'Bio',
+            'company': 'Company/Institution',
+            'job_title': 'Job Title',
+            'city': 'City',
+            'linkedin_profile': 'LinkedIn Profile',
+            'institute_name': 'Institute Name',
+            'major': 'Major',
+            'graduation_year': 'Graduation Year',
+            'department': 'Department',
+            'industry': 'Industry',
+            'skills': 'Skills',
+            'website': 'Website'
+        };
+        
+        modalTitle.textContent = `Edit ${fieldLabels[field] || field}`;
+        
+        if (fieldType === 'textarea') {
+            modalInput.outerHTML = '<textarea class="modal-input" rows="4"></textarea>';
+        } else {
+            modalInput.outerHTML = `<input type="${fieldType}" class="modal-input">`;
+        }
+        
+        const newInput = modal.querySelector('.modal-input');
+        newInput.value = currentValue || '';
+        newInput.focus();
+        
+        // Clear previous event listeners and add new one
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+        
+        newSaveBtn.addEventListener('click', () => {
+            saveFieldValue(field, newInput.value);
+            modal.style.display = 'none';
+        });
+        
+        modal.style.display = 'flex';
+    };
+
+    const createEditModal = () => {
+        const modal = document.createElement('div');
+        modal.id = 'edit-field-modal';
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">Edit Field</h3>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input type="text" class="modal-input">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary close-modal">Cancel</button>
+                    <button type="button" class="btn btn-primary save-field-btn">Save</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Add event listeners
+        modal.querySelector('.modal-close').addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    };
+
+    const saveFieldValue = async (field, value) => {
+        try {
+            const formData = new FormData();
+            formData.append(field, value);
+            
+            const result = await window.api.putForm('/users/profile', formData);
+            
+            // Update the display
+            const displayElement = document.querySelector(`.display-field[data-field="${field}"]`);
+            if (displayElement) {
+                displayElement.textContent = value || 'Not set';
+            }
+            
+            // Update profile completion
+            showProfileCompletion();
+            
+            showToast('Profile updated successfully!', 'success');
+        } catch (error) {
+            showToast('Error updating profile: ' + error.message, 'error');
+        }
     };
 
 
@@ -130,6 +308,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Update the view based on the user's role
         updateProfileViewForRole(userRole);
+        
+        // Show profile completion after data is loaded
+        setTimeout(() => showProfileCompletion(), 100);
     };
 
     const fetchUserProfile = async () => {
@@ -157,19 +338,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         icon.addEventListener('click', (e) => {
             const parent = e.target.closest('.profile-field');
             const displayField = parent.querySelector('.display-field');
-            const editField = parent.querySelector('.edit-field');
+            const fieldName = displayField.getAttribute('data-field');
+            const currentValue = displayField.textContent === 'Not set' ? '' : displayField.textContent;
             
-            if (editField.style.display === 'none') {
-                displayField.style.display = 'none';
-                editField.style.display = 'block';
-                editField.focus();
-                e.target.classList.replace('fa-edit', 'fa-save');
-            } else {
-                editField.style.display = 'none';
-                displayField.textContent = editField.value || 'Not set';
-                displayField.style.display = 'block';
-                e.target.classList.replace('fa-save', 'fa-edit');
+            // Determine field type based on field name
+            let fieldType = 'text';
+            if (fieldName === 'bio' || fieldName === 'skills') {
+                fieldType = 'textarea';
+            } else if (fieldName === 'linkedin_profile' || fieldName === 'website') {
+                fieldType = 'url';
+            } else if (fieldName === 'graduation_year') {
+                fieldType = 'number';
             }
+            
+            openEditModal(fieldName, currentValue, fieldType);
         });
     });
 

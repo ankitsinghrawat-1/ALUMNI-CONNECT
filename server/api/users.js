@@ -316,10 +316,20 @@ module.exports = (pool, upload) => {
             return res.status(404).json({ message: 'User not found' });
         }
         const user = userRows[0];
-        const profileFields = ['full_name', 'bio', 'company', 'job_title', 'city', 'linkedin_profile', 'institute_name', 'major', 'graduation_year', 'department', 'skills'];
+        
+        // Role-specific profile fields configuration
+        const roleFieldsConfig = {
+            alumni: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
+            student: ['full_name', 'bio', 'city', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
+            faculty: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'department'],
+            employer: ['full_name', 'bio', 'city', 'industry', 'website'],
+            institute: ['full_name', 'bio', 'city', 'website']
+        };
+        
+        const profileFields = roleFieldsConfig[user.role] || roleFieldsConfig.alumni;
         let completedFields = 0;
         profileFields.forEach(field => {
-            if (user[field]) {
+            if (user[field] && user[field].toString().trim() !== '') {
                 completedFields++;
             }
         });
