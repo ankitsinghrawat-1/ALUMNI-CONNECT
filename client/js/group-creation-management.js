@@ -23,15 +23,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         requests.forEach(req => {
+            // FIX: Add user_id to the data-request-id for easier removal
+            const rowId = `request-${req.group_id}-${req.created_by}`;
             const row = `
-                <tr data-request-id="${req.group_id}">
+                <tr id="${rowId}">
                     <td>${req.name}</td>
                     <td title="${req.description}">${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}</td>
                     <td>${req.creator_name}</td>
                     <td>${new Date(req.created_at).toLocaleString()}</td>
                     <td class="action-buttons">
-                        <button class="btn btn-sm btn-success approve-btn" data-id="${req.group_id}">Approve</button>
-                        <button class="btn btn-sm btn-danger reject-btn" data-id="${req.group_id}">Reject</button>
+                        <button class="btn btn-sm btn-success approve-btn" data-group-id="${req.group_id}" data-user-id="${req.created_by}">Approve</button>
+                        <button class="btn btn-sm btn-danger reject-btn" data-group-id="${req.group_id}" data-user-id="${req.created_by}">Reject</button>
                     </td>
                 </tr>
             `;
@@ -39,16 +41,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    const handleUpdateRequest = async (groupId, status) => {
+    const handleUpdateRequest = async (groupId, userId, status) => {
         try {
             // Note: For approval, the status is 'active'
             const apiStatus = status === 'approved' ? 'active' : 'rejected';
-            const response = await window.api.put(`/admin/group-creation-requests/${groupId}`, { status: apiStatus });
+            // FIX: The API endpoint needs both groupId and userId
+            const response = await window.api.put(`/admin/group-creation-requests/${groupId}/${userId}`, { status: apiStatus });
             
             showToast(response.message, 'success');
             
             // Remove the processed row from the table
-            const rowToRemove = document.querySelector(`tr[data-request-id="${groupId}"]`);
+            const rowId = `request-${groupId}-${userId}`;
+            const rowToRemove = document.getElementById(rowId);
             if (rowToRemove) {
                 rowToRemove.remove();
             }
@@ -68,12 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Event Listeners ---
     tableBody.addEventListener('click', (e) => {
         const target = e.target;
+        // FIX: Get both groupId and userId from the button's data attributes
+        const groupId = target.dataset.groupId;
+        const userId = target.dataset.userId;
+
+        if (!groupId || !userId) return; // Ignore clicks on non-button areas
+
         if (target.classList.contains('approve-btn')) {
-            const groupId = target.dataset.id;
-            handleUpdateRequest(groupId, 'approved');
+            handleUpdateRequest(groupId, userId, 'approved');
         } else if (target.classList.contains('reject-btn')) {
-            const groupId = target.dataset.id;
-            handleUpdateRequest(groupId, 'rejected');
+            handleUpdateRequest(groupId, userId, 'rejected');
         }
     });
     
