@@ -77,6 +77,12 @@
                                     <label><i class="fas fa-envelope"></i> Email Address</label>
                                     <span class="display-field" id="email"></span>
                                 </div>
+                                <div class="profile-field" data-role="alumni student faculty employer institute">
+                                    <label><i class="fas fa-phone"></i> Phone Number</label>
+                                    <span class="display-field" data-field="phone_number"></span>
+                                    <input type="tel" id="phone_number_input" name="phone_number" class="edit-field" style="display:none;">
+                                    <i class="fas fa-edit edit-icon"></i>
+                                </div>
                                  <div class="profile-field" data-role="alumni student faculty employer institute">
                                     <label><i class="fas fa-info-circle"></i> Bio</label>
                                     <span class="display-field" data-field="bio"></span>
@@ -224,6 +230,36 @@
             </div>
         </div>
     </main>
+    
+    <!-- Account Status Modal -->
+    <div id="account-status-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-check"></i> Account Verification Status</h3>
+                <span class="close" onclick="closeAccountStatusModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="account-status-content">
+                    <!-- Content will be dynamically populated -->
+                </div>
+                
+                <div id="verification-upload-section" style="display: none;">
+                    <h4>Upload Verification Document</h4>
+                    <p>Please upload a document that verifies your identity and affiliation (such as an ID card, diploma, or employment letter):</p>
+                    <form id="verification-upload-form">
+                        <div class="input-group">
+                            <label for="verification-document">Verification Document</label>
+                            <input type="file" id="verification-document" name="verification_document" accept=".pdf,.jpg,.jpeg,.png" required>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Submit for Review</button>
+                            <button type="button" class="btn btn-secondary" onclick="hideVerificationUpload()">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     
     <footer class="main-footer">
         <div class="container">

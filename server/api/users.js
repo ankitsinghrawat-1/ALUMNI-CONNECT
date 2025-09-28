@@ -247,19 +247,30 @@ module.exports = (pool, upload) => {
 
     router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
         const userId = req.user.userId;
-        const { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills } = req.body;
+        const { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills, phone_number } = req.body;
         let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
 
         const [userRows] = await pool.query('SELECT profile_pic_url FROM users WHERE user_id = ?', [userId]);
         if (userRows.length === 0) { return res.status(404).json({ message: 'User not found' }); }
         const user = userRows[0];
         
-        const updateFields = { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills };
+        const updateFields = { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills, phone_number };
         
+        // Handle empty values - don't set full_name to null as it's required
         for (const key in updateFields) {
             if (updateFields[key] === '') {
-                updateFields[key] = null;
+                if (key === 'full_name') {
+                    // Don't update full_name if it's empty - keep the existing value
+                    delete updateFields[key];
+                } else {
+                    updateFields[key] = null;
+                }
             }
+        }
+        
+        // Ensure full_name is not null or empty
+        if (updateFields.full_name && updateFields.full_name.trim() === '') {
+            delete updateFields.full_name;
         }
         
         if (profile_pic_url) {
