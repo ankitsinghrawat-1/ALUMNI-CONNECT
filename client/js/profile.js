@@ -84,6 +84,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             'London', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds', 'Sheffield', 'Bristol',
             'Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa', 'Edmonton', 'Winnipeg'
         ],
+        country: [
+            'United States', 'Canada', 'United Kingdom', 'Australia', 'Germany', 'France', 'Italy', 'Spain',
+            'Netherlands', 'Switzerland', 'Sweden', 'Norway', 'Denmark', 'Finland', 'Ireland', 'Belgium',
+            'Austria', 'Portugal', 'Poland', 'Czech Republic', 'Hungary', 'Slovakia', 'Slovenia', 'Croatia',
+            'India', 'China', 'Japan', 'South Korea', 'Singapore', 'Malaysia', 'Thailand', 'Indonesia',
+            'Philippines', 'Vietnam', 'Taiwan', 'Hong Kong', 'United Arab Emirates', 'Saudi Arabia', 'Israel',
+            'Brazil', 'Mexico', 'Argentina', 'Colombia', 'Chile', 'Peru', 'Venezuela', 'Ecuador',
+            'South Africa', 'Nigeria', 'Kenya', 'Ghana', 'Morocco', 'Egypt', 'Tunisia', 'Ethiopia',
+            'Russia', 'Ukraine', 'Turkey', 'Greece', 'Romania', 'Bulgaria', 'Serbia', 'Bosnia and Herzegovina',
+            'New Zealand', 'Pakistan', 'Bangladesh', 'Sri Lanka', 'Nepal', 'Myanmar', 'Cambodia', 'Laos'
+        ],
         graduation_year: (() => {
             const years = [];
             const currentYear = new Date().getFullYear();
@@ -319,6 +330,185 @@ document.addEventListener('DOMContentLoaded', async () => {
         const container = document.createElement('div');
         container.className = 'dropdown-container';
         
+        // Check if this is a multi-value field (skills, languages, etc.)
+        const isMultiValue = ['skills', 'languages', 'certifications', 'achievements'].includes(field);
+        
+        let inputContainer;
+        
+        if (isMultiValue) {
+            // For multi-value fields, create a tag-like input system
+            inputContainer = createMultiValueInput(field, currentValue, options);
+        } else {
+            // For single-value fields, use the existing dropdown
+            inputContainer = createSingleValueInput(field, currentValue, options);
+        }
+        
+        container.appendChild(inputContainer.element);
+        
+        return { container, input: inputContainer.input };
+    };
+
+    const createMultiValueInput = (field, currentValue, options) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'multi-value-wrapper';
+        
+        const tagsContainer = document.createElement('div');
+        tagsContainer.className = 'tags-container';
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'dropdown-input multi-value-input';
+        input.placeholder = `Add ${field.replace('_', ' ')}...`;
+        
+        const dropdown = document.createElement('div');
+        dropdown.className = 'dropdown-list';
+        
+        // Parse current values (comma-separated)
+        let currentValues = [];
+        if (currentValue) {
+            currentValues = currentValue.split(',').map(v => v.trim()).filter(v => v);
+        }
+        
+        // Render existing tags
+        const renderTags = () => {
+            tagsContainer.innerHTML = '';
+            currentValues.forEach((value, index) => {
+                const tag = document.createElement('span');
+                tag.className = 'value-tag';
+                tag.innerHTML = `${value} <i class="fas fa-times remove-tag" data-index="${index}"></i>`;
+                tagsContainer.appendChild(tag);
+            });
+        };
+        
+        // Update the hidden input value
+        const updateInputValue = () => {
+            input.value = currentValues.join(', ');
+        };
+        
+        // Add a new value
+        const addValue = (value) => {
+            if (value && !currentValues.includes(value)) {
+                currentValues.push(value);
+                renderTags();
+                updateInputValue();
+            }
+        };
+        
+        // Remove a value
+        const removeValue = (index) => {
+            currentValues.splice(index, 1);
+            renderTags();
+            updateInputValue();
+        };
+        
+        // Initialize
+        renderTags();
+        updateInputValue();
+        
+        // Create the add input
+        const addInput = document.createElement('input');
+        addInput.type = 'text';
+        addInput.className = 'add-value-input';
+        addInput.placeholder = `Type to add ${field.replace('_', ' ')}...`;
+        
+        const filterOptions = (query) => {
+            const filtered = options.filter(option => 
+                option.toLowerCase().includes(query.toLowerCase()) && !currentValues.includes(option)
+            );
+            
+            dropdown.innerHTML = '';
+            
+            // Show matching options
+            filtered.slice(0, 10).forEach(option => {
+                const item = document.createElement('div');
+                item.className = 'dropdown-item';
+                item.textContent = option;
+                item.addEventListener('click', () => {
+                    addValue(option);
+                    addInput.value = '';
+                    dropdown.classList.remove('show');
+                });
+                dropdown.appendChild(item);
+            });
+            
+            // Add "Add New" option for fields that support it
+            const allowCustomItems = ['skills', 'languages', 'certifications'].includes(field);
+            if (allowCustomItems && query.trim().length > 0) {
+                const exactMatch = options.find(option => 
+                    option.toLowerCase() === query.toLowerCase()
+                );
+                
+                if (!exactMatch && !currentValues.includes(query.trim()) && filtered.length < 10) {
+                    const addNewItem = document.createElement('div');
+                    addNewItem.className = 'dropdown-item add-new-item';
+                    addNewItem.innerHTML = `<i class="fas fa-plus"></i> Add "${query.trim()}"`;
+                    addNewItem.addEventListener('click', () => {
+                        const newValue = query.trim();
+                        if (!options.includes(newValue)) {
+                            options.push(newValue);
+                        }
+                        addValue(newValue);
+                        addInput.value = '';
+                        dropdown.classList.remove('show');
+                        showToast(`Added "${newValue}" as a new ${field.replace('_', ' ')}`, 'success');
+                    });
+                    dropdown.appendChild(addNewItem);
+                }
+            }
+            
+            if (filtered.length === 0 && (!allowCustomItems || query.trim().length === 0)) {
+                const noResults = document.createElement('div');
+                noResults.className = 'dropdown-item no-results';
+                noResults.textContent = 'No matching options found';
+                dropdown.appendChild(noResults);
+            }
+        };
+        
+        // Event listeners for add input
+        addInput.addEventListener('input', (e) => {
+            const query = e.target.value;
+            if (query.length > 0) {
+                filterOptions(query);
+                dropdown.classList.add('show');
+            } else {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        addInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                const value = e.target.value.trim();
+                if (value) {
+                    addValue(value);
+                    e.target.value = '';
+                    dropdown.classList.remove('show');
+                }
+            }
+        });
+        
+        addInput.addEventListener('blur', () => {
+            setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 150);
+        });
+        
+        // Event delegation for remove buttons
+        tagsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-tag')) {
+                const index = parseInt(e.target.dataset.index);
+                removeValue(index);
+            }
+        });
+        
+        wrapper.appendChild(tagsContainer);
+        wrapper.appendChild(addInput);
+        wrapper.appendChild(dropdown);
+        
+        return { element: wrapper, input };
+    };
+
+    const createSingleValueInput = (field, currentValue, options) => {
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'dropdown-input';
@@ -328,8 +518,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const dropdown = document.createElement('div');
         dropdown.className = 'dropdown-list';
         
-        // Check if field supports adding new items (currently skills, but can be expanded)
-        const allowCustomItems = ['skills', 'specialization', 'languages'].includes(field);
+        // Check if field supports adding new items
+        const allowCustomItems = ['skills', 'specialization', 'languages', 'country'].includes(field);
         
         const filterOptions = (query) => {
             const filtered = options.filter(option => 
@@ -352,7 +542,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Add "Add New" option for fields that support it
             if (allowCustomItems && query.trim().length > 0) {
-                // Check if the query is not already in the options
                 const exactMatch = options.find(option => 
                     option.toLowerCase() === query.toLowerCase()
                 );
@@ -363,21 +552,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                     addNewItem.innerHTML = `<i class="fas fa-plus"></i> Add "${query.trim()}"`;
                     addNewItem.addEventListener('click', () => {
                         const newValue = query.trim();
-                        // Add to the options array for future use
                         if (!options.includes(newValue)) {
                             options.push(newValue);
                         }
                         input.value = newValue;
                         dropdown.classList.remove('show');
-                        
-                        // Show success message
                         showToast(`Added "${newValue}" as a new ${field.replace('_', ' ')}`, 'success');
                     });
                     dropdown.appendChild(addNewItem);
                 }
             }
             
-            // Show "no results" message only if no options and no add-new option
             if (filtered.length === 0 && (!allowCustomItems || query.trim().length === 0)) {
                 const noResults = document.createElement('div');
                 noResults.className = 'dropdown-item no-results';
@@ -402,16 +587,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
         
         input.addEventListener('blur', (e) => {
-            // Delay hiding to allow click events on dropdown items
             setTimeout(() => {
                 dropdown.classList.remove('show');
             }, 150);
         });
         
-        container.appendChild(input);
-        container.appendChild(dropdown);
+        const wrapper = document.createElement('div');
+        wrapper.appendChild(input);
+        wrapper.appendChild(dropdown);
         
-        return { container, input };
+        return { element: wrapper, input };
     };
 
     const openEditModal = (field, currentValue, fieldType = 'text') => {
@@ -539,8 +724,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                 saveBtn.disabled = true;
             }
             
+            // Create form data with ALL current profile data to prevent data loss
             const formData = new FormData();
-            formData.append(field, value);
+            
+            // Add all display field values to preserve existing data
+            document.querySelectorAll('.display-field[data-field]').forEach(element => {
+                const fieldName = element.getAttribute('data-field');
+                const fieldValue = element.textContent === 'Not set' ? '' : element.textContent;
+                if (fieldName) {
+                    formData.append(fieldName, fieldValue);
+                }
+            });
+            
+            // Add all input field values to preserve form data
+            document.querySelectorAll('input[name], textarea[name], select[name]').forEach(input => {
+                if (input.name && input.name !== 'profile_picture') {
+                    if (input.type === 'checkbox') {
+                        formData.set(input.name, input.checked ? '1' : '0');
+                    } else {
+                        formData.set(input.name, input.value || '');
+                    }
+                }
+            });
+            
+            // Override with the new value being saved
+            formData.set(field, value);
             
             const result = await window.api.putForm('/users/profile', formData);
             
@@ -556,7 +764,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inputElement.value = value;
             }
             
-            // Update profile completion
+            // Update profile completion without causing data loss
             setTimeout(() => showProfileCompletion(), 100);
             
             showToast('Profile updated successfully!', 'success');
@@ -568,14 +776,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     const populateProfileData = (data) => {
-        // Enhanced fields list to cover all profile fields
+        // Enhanced fields list to cover all profile fields including new ones
         const fields = [
-            'full_name', 'bio', 'company', 'job_title', 'city', 'linkedin_profile', 
-            'institute_name', 'major', 'graduation_year', 'department', 'industry', 
-            'skills', 'website', 'phone_number', 'specialization', 'experience_years',
-            'certifications', 'achievements', 'languages', 'research_interests',
-            'current_position', 'company_size', 'founded_year', 'student_count',
-            'expected_graduation', 'current_year', 'gpa'
+            'full_name', 'bio', 'company', 'job_title', 'city', 'address', 'country', 
+            'phone_number', 'linkedin_profile', 'twitter_profile', 'github_profile', 
+            'availability_status', 'institute_name', 'major', 'graduation_year', 
+            'department', 'industry', 'skills', 'website', 'specialization', 
+            'experience_years', 'certifications', 'achievements', 'languages', 
+            'research_interests', 'current_position', 'company_size', 'founded_year', 
+            'student_count', 'expected_graduation', 'current_year', 'gpa'
         ];
         
         fields.forEach(field => {

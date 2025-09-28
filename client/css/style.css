@@ -4651,6 +4651,63 @@ html.dark-mode .verified-badge-sm {
     font-size: 0.9rem;
 }
 
+/* Multi-value input styling */
+.multi-value-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    min-height: 24px;
+}
+
+.value-tag {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.value-tag .remove-tag {
+    cursor: pointer;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.value-tag .remove-tag:hover {
+    opacity: 1;
+}
+
+.add-value-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.add-value-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.multi-value-input {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
+}
+
 .close-btn {
     color: var(--subtle-text-color);
     float: right;
@@ -4756,15 +4813,15 @@ html.dark-mode .modal-content {
     align-items: center;
     gap: 1rem;
     background: var(--background-light);
-    padding: 1rem;
+    padding: 1.25rem;
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
 
 .stat-card i {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: var(--primary-color);
-    width: 24px;
+    width: 28px;
     text-align: center;
 }
 
@@ -4774,17 +4831,43 @@ html.dark-mode .modal-content {
 }
 
 .stat-number {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: var(--text-color);
     line-height: 1;
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: var(--text-color-light);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+}
+
+/* Fix modal content overflow */
+.group-details-modal-content {
+    max-width: 700px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.group-modal-description p {
+    margin: 0;
+    color: var(--text-color);
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.group-modal-info h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-size: 1.4rem;
+    font-weight: 600;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .group-modal-actions {
@@ -10360,6 +10443,7 @@ fieldset.form-section legend {
 }
 
 /* List View for Groups */
+/* Enhanced horizontal/list view for group cards */
 .groups-grid.list-view {
     display: flex;
     flex-direction: column;
@@ -10369,21 +10453,27 @@ fieldset.form-section legend {
 .groups-grid.list-view .enhanced-group-card {
     display: flex;
     align-items: stretch;
-    min-height: 200px;
+    min-height: 160px;
+    max-height: 200px;
+    width: 100%;
 }
 
 .groups-grid.list-view .group-card-header {
-    flex: 0 0 250px;
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
 }
 
 .groups-grid.list-view .group-card-header .group-image-container {
     height: 100%;
     position: relative;
+    overflow: hidden;
 }
 
 .groups-grid.list-view .group-card-header .group-image {
     height: 100%;
     width: 100%;
+    object-fit: cover;
     border-radius: 8px 0 0 8px;
 }
 
@@ -10393,6 +10483,29 @@ fieldset.form-section legend {
     flex-direction: column;
     justify-content: space-between;
     padding: 1.5rem;
+    overflow: hidden;
+}
+
+.groups-grid.list-view .group-card-body .group-category {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.groups-grid.list-view .group-card-body h3 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+}
+
+.groups-grid.list-view .group-card-body .group-description {
+    flex: 1;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .groups-grid.list-view .group-card-footer {
@@ -10400,10 +10513,37 @@ fieldset.form-section legend {
     border-top: none;
     border-left: 1px solid var(--border-color);
     padding: 1.5rem;
-    min-width: 200px;
+    min-width: 180px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.groups-grid.list-view .group-stats {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.groups-grid.list-view .group-stats .stat-item {
+    font-size: 0.85rem;
+}
+
+.groups-grid.list-view .group-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.groups-grid.list-view .group-actions .btn {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
 }
 
 /* Ensure modal styling works for both views */
