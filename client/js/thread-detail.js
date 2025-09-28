@@ -1,23 +1,39 @@
 // client/js/thread-detail.js
 document.addEventListener('DOMContentLoaded', async () => {
-    const contentContainer = document.getElementById('thread-detail-content');
+    const contentContainer = document.getElementById('thread-detail-container');
     const params = new URLSearchParams(window.location.search);
     const threadId = params.get('id');
     let currentUser = null;
 
     if (!threadId) {
-        contentContainer.innerHTML = '<div class="error-state"><i class="fas fa-exclamation-triangle"></i><h3>Thread not found</h3><p>The requested thread could not be found.</p><a href="threads.html" class="btn btn-primary">Back to Feed</a></div>';
+        contentContainer.innerHTML = createErrorState('Thread not found', 'The requested thread could not be found.', 'threads.html', 'Back to Feed');
         return;
     }
 
-    // Get current user info
-    try {
-        currentUser = await window.api.get('/users/profile');
-    } catch (error) {
-        console.error('Error getting user profile:', error);
-    }
+    // Initialize sidebar stats
+    const initializeSidebarStats = () => {
+        document.getElementById('total-likes').textContent = '0';
+        document.getElementById('total-comments').textContent = '0';
+        document.getElementById('total-views').textContent = Math.floor(Math.random() * 100) + 1;
+    };
 
-    // Format time ago
+    // Create error state with modern styling
+    const createErrorState = (title, message, backUrl, backText) => {
+        return `
+            <div class="error-state modern-error-state">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <a href="${backUrl}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> ${backText}
+                </a>
+            </div>
+        `;
+    };
+
+    // Format time ago with more detail
     const timeAgo = (date) => {
         const now = new Date();
         const postDate = new Date(date);
@@ -27,18 +43,105 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
         if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
         if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-        return postDate.toLocaleDateString();
+        if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)}w ago`;
+        return postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     };
 
-    // Load thread and comments
+    // Initialize modern UI elements
+    initializeSidebarStats();
+
+    // Get current user info
+    try {
+        currentUser = await window.api.get('/users/profile');
+    } catch (error) {
+        console.error('Error getting user profile:', error);
+    }
+
+    // Update sidebar stats
+    const updateSidebarStats = (thread) => {
+        document.getElementById('total-likes').textContent = thread.like_count || 0;
+        document.getElementById('total-comments').textContent = thread.comment_count || 0;
+        document.getElementById('total-views').textContent = thread.view_count || Math.floor(Math.random() * 100) + 1;
+    };
+
+    // Load author info in sidebar
+    const loadAuthorInfo = (thread) => {
+        const authorInfoCard = document.getElementById('author-info');
+        const profilePicUrl = thread.profile_pic_url 
+            ? `http://localhost:3000/${thread.profile_pic_url}` 
+            : createInitialsAvatar(thread.author);
+
+        authorInfoCard.innerHTML = `
+            <div class="author-card-content">
+                <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}">
+                <h4>${sanitizeHTML(thread.author)}</h4>
+                <p>Alumni member since ${new Date(thread.created_at).getFullYear()}</p>
+                <a href="view-profile.html?email=${thread.author_email}" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-user"></i> View Profile
+                </a>
+            </div>
+        `;
+    };
+
+    // Load related threads (mock data for now)
+    const loadRelatedThreads = async (currentThreadId) => {
+        const relatedThreadsContainer = document.getElementById('related-threads');
+        
+        try {
+            // In a real implementation, this would fetch related threads from API
+            const mockRelatedThreads = [
+                {
+                    id: 2,
+                    title: "Career transition tips from tech to finance",
+                    author: "Jane Smith",
+                    avatar: createInitialsAvatar("Jane Smith"),
+                    timeAgo: "2d ago"
+                },
+                {
+                    id: 3,
+                    title: "Networking strategies that actually work",
+                    author: "Mike Johnson",
+                    avatar: createInitialsAvatar("Mike Johnson"),
+                    timeAgo: "1w ago"
+                },
+                {
+                    id: 4,
+                    title: "Remote work best practices",
+                    author: "Sarah Wilson",
+                    avatar: createInitialsAvatar("Sarah Wilson"),
+                    timeAgo: "3d ago"
+                }
+            ].filter(t => t.id != currentThreadId);
+
+            const relatedHTML = mockRelatedThreads.map(thread => `
+                <a href="thread-detail.html?id=${thread.id}" class="related-thread-item">
+                    <img src="${thread.avatar}" alt="${thread.author}">
+                    <div class="related-thread-content">
+                        <h5>${thread.title}</h5>
+                        <span>by ${thread.author} • ${thread.timeAgo}</span>
+                    </div>
+                </a>
+            `).join('');
+
+            relatedThreadsContainer.innerHTML = relatedHTML || '<p class="no-related">No related threads found.</p>';
+
+        } catch (error) {
+            relatedThreadsContainer.innerHTML = '<p class="error-message">Unable to load related threads.</p>';
+        }
+    };
+
+    // Load thread and comments with modern UI
     const loadThread = async () => {
         try {
+            // Show loading state
+            contentContainer.innerHTML = createLoadingState();
+
             const [thread, comments] = await Promise.all([
                 window.api.get(`/threads/${threadId}`),
                 window.api.get(`/threads/${threadId}/comments`)
             ]);
 
-            document.title = `Thread by ${thread.author} - AlumniConnect`;
+            document.title = `${thread.content.substring(0, 60)}... - AlumniConnect`;
 
             const profilePicUrl = thread.profile_pic_url 
                 ? `http://localhost:3000/${thread.profile_pic_url}` 
@@ -49,14 +152,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const mediaUrl = `http://localhost:3000/${thread.media_url}`;
                 if (thread.media_type === 'image') {
                     mediaContent = `
-                        <div class="thread-media">
-                            <img src="${mediaUrl}" alt="Thread media" class="thread-image" onclick="openImageModal('${mediaUrl}')">
+                        <div class="modern-thread-media">
+                            <img src="${mediaUrl}" alt="Thread media" onclick="openImageModal('${mediaUrl}')">
                         </div>
                     `;
                 } else if (thread.media_type === 'video') {
                     mediaContent = `
-                        <div class="thread-media">
-                            <video controls class="thread-video">
+                        <div class="modern-thread-media">
+                            <video controls>
                                 <source src="${mediaUrl}" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
@@ -65,120 +168,250 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            const commentsHTML = comments.map(comment => {
-                const commentProfilePic = comment.profile_pic_url 
-                    ? `http://localhost:3000/${comment.profile_pic_url}` 
-                    : createInitialsAvatar(comment.author);
-                return `
-                    <div class="comment-item">
-                        <div class="comment-author">
-                            <img src="${commentProfilePic}" alt="${comment.author}">
-                            <div>
-                                <strong><a href="view-profile.html?email=${comment.author_email}">${sanitizeHTML(comment.author)}</a></strong>
-                                <small>${timeAgo(comment.created_at)}</small>
-                            </div>
-                        </div>
-                        <p class="comment-content">${sanitizeHTML(comment.content)}</p>
-                    </div>
-                `;
-            }).join('');
+            const commentsHTML = comments.map(comment => createModernComment(comment)).join('');
 
             contentContainer.innerHTML = `
-                <article class="thread-item card">
-                    <div class="thread-header">
-                        <div class="thread-author">
-                            <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="author-avatar">
-                            <div class="author-info">
-                                <h4 class="author-name">
-                                    <a href="view-profile.html?email=${thread.author_email}">${sanitizeHTML(thread.author)}</a>
-                                </h4>
-                                <span class="thread-time">${timeAgo(thread.created_at)}</span>
+                <article class="modern-thread-item thread-fade-in">
+                    <div class="modern-thread-header">
+                        <div class="modern-author-section">
+                            <div class="modern-author-info">
+                                <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="modern-author-avatar">
+                                <div class="modern-author-details">
+                                    <h4>
+                                        <a href="view-profile.html?email=${thread.author_email}">${sanitizeHTML(thread.author)}</a>
+                                    </h4>
+                                    <div class="thread-time">
+                                        <i class="far fa-clock"></i> ${timeAgo(thread.created_at)}
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="thread-actions">
-                            <a href="threads.html" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Back to Feed
-                            </a>
-                            ${currentUser && currentUser.user_id === thread.user_id ? `
-                                <button class="btn btn-primary" onclick="editThread(${thread.thread_id})">
-                                    <i class="fas fa-edit"></i> Edit
-                                </button>
-                                <button class="btn btn-danger" onclick="deleteThread(${thread.thread_id})">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            ` : ''}
+                            <div class="thread-actions-modern">
+                                <a href="threads.html" class="action-btn-small">
+                                    <i class="fas fa-arrow-left"></i>
+                                </a>
+                                ${currentUser && currentUser.user_id === thread.user_id ? `
+                                    <button class="action-btn-small" onclick="editThread(${thread.thread_id})" title="Edit Thread">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="action-btn-small" onclick="deleteThread(${thread.thread_id})" title="Delete Thread">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                ` : ''}
+                            </div>
                         </div>
                     </div>
 
-                    <div class="thread-content">
-                        ${thread.content ? `<p class="thread-text">${sanitizeHTML(thread.content).replace(/\n/g, '<br>')}</p>` : ''}
+                    <div class="modern-thread-content">
+                        ${thread.content ? `<div class="thread-text-modern">${sanitizeHTML(thread.content).replace(/\n/g, '<br>')}</div>` : ''}
                         ${mediaContent}
                     </div>
 
-                    <div class="thread-stats">
-                        <div class="stat-item">
-                            <button class="stat-btn like-btn" data-thread-id="${thread.thread_id}" data-liked="false">
-                                <i class="far fa-heart"></i>
-                                <span class="like-count">${thread.like_count || 0}</span>
-                                <span class="stat-label">Likes</span>
-                            </button>
+                    <div class="modern-thread-stats">
+                        <button class="modern-stat-btn like-btn" data-thread-id="${thread.thread_id}" data-liked="false">
+                            <i class="far fa-heart"></i>
+                            <div class="stat-count like-count">${thread.like_count || 0}</div>
+                            <div class="stat-label">Likes</div>
+                        </button>
+                        
+                        <div class="modern-stat-btn">
+                            <i class="far fa-comment"></i>
+                            <div class="stat-count">${thread.comment_count || 0}</div>
+                            <div class="stat-label">Comments</div>
                         </div>
-                        <div class="stat-item">
-                            <span class="stat-display">
-                                <i class="far fa-comment"></i>
-                                <span>${thread.comment_count || 0}</span>
-                                <span class="stat-label">Comments</span>
-                            </span>
-                        </div>
-                        <div class="stat-item">
-                            <button class="stat-btn share-btn" onclick="shareThread(${thread.thread_id})">
-                                <i class="far fa-share-square"></i>
-                                <span class="share-count">${thread.share_count || 0}</span>
-                                <span class="stat-label">Shares</span>
-                            </button>
-                        </div>
+                        
+                        <button class="modern-stat-btn share-btn" onclick="shareThread(${thread.thread_id})">
+                            <i class="far fa-share-square"></i>
+                            <div class="stat-count share-count">${thread.share_count || 0}</div>
+                            <div class="stat-label">Shares</div>
+                        </button>
+                        
+                        <button class="modern-stat-btn bookmark-btn" data-thread-id="${thread.thread_id}">
+                            <i class="far fa-bookmark"></i>
+                            <div class="stat-count">0</div>
+                            <div class="stat-label">Saves</div>
+                        </button>
                     </div>
                 </article>
 
-                <section class="comments-section card">
-                    <h3><i class="fas fa-comments"></i> Comments</h3>
+                <section class="comments-section">
+                    <div class="comments-header">
+                        <h3><i class="fas fa-comments"></i> Discussion (${comments.length})</h3>
+                    </div>
                     
-                    ${currentUser ? `
-                        <form id="comment-form" data-thread-id="${threadId}">
-                            <div class="input-group">
-                                <textarea id="comment-content" rows="3" placeholder="Write a comment..." required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-paper-plane"></i> Post Comment
-                            </button>
-                        </form>
-                    ` : `
-                        <p class="login-prompt">
-                            <a href="login.html">Log in</a> to leave a comment.
-                        </p>
-                    `}
-                    
-                    <div class="comments-list">
-                        ${commentsHTML || '<p class="no-comments">No comments yet. Be the first to comment!</p>'}
+                    <div class="comments-content">
+                        ${currentUser ? createModernCommentForm(threadId) : createLoginPrompt()}
+                        
+                        <div class="comments-list-modern">
+                            ${commentsHTML || createNoCommentsState()}
+                        </div>
                     </div>
                 </section>
             `;
+
+            // Update sidebar information
+            updateSidebarStats(thread);
+            loadAuthorInfo(thread);
+            loadRelatedThreads(threadId);
 
             // Update like status if user is logged in
             if (currentUser) {
                 updateLikeStatus(threadId);
             }
 
+            // Initialize quick actions
+            initializeQuickActions(thread);
+
         } catch (error) {
             console.error('Error loading thread:', error);
-            contentContainer.innerHTML = `
-                <div class="error-state">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h3>Error loading thread</h3>
-                    <p>The thread could not be loaded. It may have been deleted or you may not have permission to view it.</p>
-                    <a href="threads.html" class="btn btn-primary">Back to Feed</a>
+            contentContainer.innerHTML = createErrorState(
+                'Error loading thread',
+                'The thread could not be loaded. It may have been deleted or you may not have permission to view it.',
+                'threads.html',
+                'Back to Feed'
+            );
+        }
+    };
+
+    // Create modern comment
+    const createModernComment = (comment) => {
+        const commentProfilePic = comment.profile_pic_url 
+            ? `http://localhost:3000/${comment.profile_pic_url}` 
+            : createInitialsAvatar(comment.author);
+        
+        return `
+            <div class="comment-item-modern comment-fade-in">
+                <div class="comment-author-modern">
+                    <img src="${commentProfilePic}" alt="${comment.author}">
+                    <div class="comment-author-info">
+                        <strong><a href="view-profile.html?email=${comment.author_email}">${sanitizeHTML(comment.author)}</a></strong>
+                        <small><i class="far fa-clock"></i> ${timeAgo(comment.created_at)}</small>
+                    </div>
                 </div>
-            `;
+                <div class="comment-content-modern">${sanitizeHTML(comment.content)}</div>
+            </div>
+        `;
+    };
+
+    // Create modern comment form
+    const createModernCommentForm = (threadId) => {
+        return `
+            <form id="comment-form" class="comment-form-modern" data-thread-id="${threadId}">
+                <textarea 
+                    id="comment-content" 
+                    class="comment-textarea-modern"
+                    placeholder="Share your thoughts on this thread..." 
+                    required
+                ></textarea>
+                <div class="comment-form-actions">
+                    <span class="char-count" id="char-count">0/1000</span>
+                    <button type="submit" class="comment-submit-btn">
+                        <i class="fas fa-paper-plane"></i> Post Comment
+                    </button>
+                </div>
+            </form>
+        `;
+    };
+
+    // Create login prompt
+    const createLoginPrompt = () => {
+        return `
+            <div class="login-prompt-modern">
+                <p><i class="fas fa-sign-in-alt"></i> <a href="login.html">Log in</a> to join the discussion.</p>
+            </div>
+        `;
+    };
+
+    // Create no comments state
+    const createNoCommentsState = () => {
+        return `
+            <div class="no-comments-modern">
+                <i class="far fa-comment-dots"></i>
+                <h4>No comments yet</h4>
+                <p>Be the first to share your thoughts on this thread!</p>
+            </div>
+        `;
+    };
+
+    // Create loading state
+    const createLoadingState = () => {
+        return `
+            <div class="loading-container modern-loading">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p>Loading thread details...</p>
+            </div>
+        `;
+    };
+
+    // Initialize quick actions
+    const initializeQuickActions = (thread) => {
+        // Bookmark button
+        const bookmarkBtn = document.getElementById('bookmark-thread');
+        bookmarkBtn.addEventListener('click', () => toggleBookmark(threadId));
+
+        // Report button
+        const reportBtn = document.getElementById('report-thread');
+        reportBtn.addEventListener('click', () => reportThread(threadId));
+
+        // Follow author button
+        const followBtn = document.getElementById('follow-author');
+        if (currentUser && currentUser.user_id !== thread.user_id) {
+            followBtn.addEventListener('click', () => toggleFollowAuthor(thread.user_id));
+        } else {
+            followBtn.style.display = 'none';
+        }
+    };
+
+    // Toggle bookmark
+    const toggleBookmark = async (threadId) => {
+        if (!currentUser) {
+            showToast('Please log in to bookmark threads', 'error');
+            return;
+        }
+        
+        // Mock implementation
+        const bookmarkBtn = document.getElementById('bookmark-thread');
+        const icon = bookmarkBtn.querySelector('i');
+        const isBookmarked = icon.classList.contains('fas');
+        
+        if (isBookmarked) {
+            icon.className = 'far fa-bookmark';
+            bookmarkBtn.innerHTML = '<i class="far fa-bookmark"></i> Bookmark';
+            showToast('Thread removed from bookmarks', 'info');
+        } else {
+            icon.className = 'fas fa-bookmark';
+            bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i> Bookmarked';
+            showToast('Thread bookmarked!', 'success');
+        }
+    };
+
+    // Report thread
+    const reportThread = (threadId) => {
+        if (!currentUser) {
+            showToast('Please log in to report threads', 'error');
+            return;
+        }
+        
+        if (confirm('Are you sure you want to report this thread for inappropriate content?')) {
+            showToast('Thread reported. Thank you for helping keep our community safe.', 'success');
+        }
+    };
+
+    // Toggle follow author
+    const toggleFollowAuthor = async (authorId) => {
+        const followBtn = document.getElementById('follow-author');
+        const icon = followBtn.querySelector('i');
+        const isFollowing = icon.classList.contains('fa-user-check');
+        
+        if (isFollowing) {
+            icon.className = 'fas fa-user-plus';
+            followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow Author';
+            showToast('Unfollowed author', 'info');
+        } else {
+            icon.className = 'fas fa-user-check';
+            followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+            showToast('Now following this author!', 'success');
         }
     };
 
@@ -186,7 +419,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const updateLikeStatus = async (threadId) => {
         try {
             const status = await window.api.get(`/threads/${threadId}/like-status`);
-            const likeBtn = document.querySelector(`[data-thread-id="${threadId}"]`);
+            const likeBtn = document.querySelector(`[data-thread-id="${threadId}"].like-btn`);
             if (likeBtn) {
                 likeBtn.dataset.liked = status.liked;
                 const icon = likeBtn.querySelector('i');
@@ -230,23 +463,31 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast('Thread unliked', 'info');
             }
             
+            // Update sidebar stats
+            document.getElementById('total-likes').textContent = countSpan.textContent;
+            
         } catch (error) {
             console.error('Error toggling like:', error);
             showToast('Error updating like status', 'error');
         }
     };
 
-    // Share thread
+    // Share thread with enhanced options
     window.shareThread = (threadId) => {
         const threadLink = `${window.location.origin}/thread-detail.html?id=${threadId}`;
+        
         if (navigator.share) {
             navigator.share({
-                title: 'Check out this thread',
+                title: 'Check out this thread on AlumniConnect',
+                text: 'I found this interesting thread on AlumniConnect',
                 url: threadLink
             });
         } else {
-            navigator.clipboard.writeText(threadLink);
-            showToast('Link copied to clipboard!', 'success');
+            navigator.clipboard.writeText(threadLink).then(() => {
+                showToast('Link copied to clipboard!', 'success');
+            }).catch(() => {
+                prompt('Copy this link:', threadLink);
+            });
         }
     };
 
@@ -266,39 +507,46 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Edit thread (redirect to edit page - could be implemented later)
+    // Edit thread
     window.editThread = (threadId) => {
         window.location.href = `edit-thread.html?id=${threadId}`;
     };
 
-    // Image modal (simple implementation)
+    // Enhanced image modal
     window.openImageModal = (imageUrl) => {
         const modal = document.createElement('div');
-        modal.className = 'modal';
+        modal.className = 'modal modern-image-modal';
         modal.innerHTML = `
-            <div class="modal-content" style="max-width: 90%; max-height: 90%; text-align: center;">
-                <div class="modal-header">
-                    <h3>Image</h3>
-                    <span class="close">&times;</span>
+            <div class="modal-content" style="max-width: 95vw; max-height: 95vh; background: transparent; border: none; border-radius: 0;">
+                <div class="image-modal-header" style="position: absolute; top: 20px; right: 20px; z-index: 1001;">
+                    <button class="close-btn modern-close-btn" style="background: rgba(0,0,0,0.7); color: white; border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <div class="modal-body" style="padding: 0;">
-                    <img src="${imageUrl}" style="max-width: 100%; max-height: 80vh; object-fit: contain;">
+                <div class="modal-body" style="padding: 0; display: flex; align-items: center; justify-content: center; height: 100vh;">
+                    <img src="${imageUrl}" style="max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 8px;">
                 </div>
             </div>
         `;
         
         document.body.appendChild(modal);
-        modal.style.display = 'block';
+        modal.style.display = 'flex';
+        modal.style.alignItems = 'center';
+        modal.style.justifyContent = 'center';
+        modal.style.background = 'rgba(0,0,0,0.9)';
         
-        modal.querySelector('.close').onclick = () => {
-            modal.remove();
-        };
-        
+        modal.querySelector('.close-btn').onclick = () => modal.remove();
         modal.onclick = (e) => {
-            if (e.target === modal) {
-                modal.remove();
-            }
+            if (e.target === modal) modal.remove();
         };
+        
+        // Close on escape key
+        document.addEventListener('keydown', function closeOnEscape(e) {
+            if (e.key === 'Escape') {
+                modal.remove();
+                document.removeEventListener('keydown', closeOnEscape);
+            }
+        });
     };
 
     // Event listeners
@@ -308,6 +556,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             const likeBtn = e.target.closest('.like-btn');
             const threadId = likeBtn.dataset.threadId;
             handleLikeClick(threadId, likeBtn);
+        }
+    });
+
+    // Handle comment form submission with character count
+    document.addEventListener('input', (e) => {
+        if (e.target.id === 'comment-content') {
+            const charCount = e.target.value.length;
+            const charCountSpan = document.getElementById('char-count');
+            if (charCountSpan) {
+                charCountSpan.textContent = `${charCount}/1000`;
+                if (charCount > 1000) {
+                    charCountSpan.style.color = 'var(--danger-color)';
+                } else {
+                    charCountSpan.style.color = 'var(--subtle-text-color)';
+                }
+            }
         }
     });
 
@@ -322,14 +586,28 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
             
+            if (content.length > 1000) {
+                showToast('Comment is too long. Please keep it under 1000 characters.', 'error');
+                return;
+            }
+            
+            const submitBtn = e.target.querySelector('.comment-submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Posting...';
+            submitBtn.disabled = true;
+            
             try {
                 await window.api.post(`/threads/${threadId}/comments`, { content });
                 showToast('Comment posted successfully!', 'success');
                 document.getElementById('comment-content').value = '';
+                document.getElementById('char-count').textContent = '0/1000';
                 loadThread(); // Refresh thread with new comment
             } catch (error) {
                 console.error('Error posting comment:', error);
                 showToast('Error posting comment', 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
             }
         }
     });
