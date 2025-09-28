@@ -47,7 +47,7 @@
 
                     <form id="profile-form">
                         <div class="profile-pic-section">
-                            <img id="profile-pic" class="profile-pic" src="https://via.placeholder.com/150" alt="Profile Picture">
+                            <img id="profile-pic" class="profile-pic" src="" alt="Profile Picture" onerror="this.src=createInitialsAvatar('User')">
                             <div class="profile-pic-container">
                                 <label for="profile_picture" class="btn btn-secondary" id="upload-btn">Upload New Picture</label>
                                 <input type="file" id="profile_picture" name="profile_picture" accept="image/*" style="display:none;">

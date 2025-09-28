@@ -25,11 +25,45 @@
         </nav>
     </header>
 
-    <main class="campaigns-main">
+    <main class="campaigns-main enhanced-campaigns">
         <div class="campaigns-container">
-            <h2>Campaigns</h2>
-            <div id="campaigns-grid" class="campaigns-grid">
+            <div class="campaigns-header">
+                <h2>Alumni Campaigns & Causes</h2>
+                <p>Support meaningful initiatives that make a difference in our alumni community</p>
+            </div>
+            
+            <!-- Campaign Filter and View Options -->
+            <div class="campaigns-controls">
+                <div class="campaign-filters">
+                    <select id="category-filter">
+                        <option value="">All Categories</option>
+                        <option value="education">Education</option>
+                        <option value="scholarship">Scholarships</option>
+                        <option value="infrastructure">Infrastructure</option>
+                        <option value="community">Community</option>
+                        <option value="emergency">Emergency Relief</option>
+                    </select>
+                    <select id="status-filter">
+                        <option value="">All Campaigns</option>
+                        <option value="active">Active</option>
+                        <option value="completed">Completed</option>
+                        <option value="upcoming">Upcoming</option>
+                    </select>
                 </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="campaigns-grid" class="campaigns-grid grid-view">
+                <!-- Campaign cards will be loaded here -->
+            </div>
+            <div id="message" class="info-message"></div>
         </div>
     </main>
     
