@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${req.name}</td>
                     <td title="${req.description}">${req.description.substring(0, 50)}${req.description.length > 50 ? '...' : ''}</td>
                     <td>${req.creator_name}</td>
-                    <td>-</td>
+                    <td>${new Date(req.requested_at).toLocaleString()}</td>
                     <td class="action-buttons">
                         <button class="btn btn-sm btn-success approve-btn" data-id="${req.request_id}">Approve</button>
                         <button class="btn btn-sm btn-danger reject-btn" data-id="${req.request_id}">Reject</button>
