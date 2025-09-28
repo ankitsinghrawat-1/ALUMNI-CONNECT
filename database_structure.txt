@@ -1,7 +1,7 @@
 --These are the required tables in the database you can directly copy and paste it to the mysql
 
 
--- Create the database if it doesn't exist
+-- 0. Create the database if it doesn't exist
 
 
 CREATE DATABASE IF NOT EXISTS alumni_db;
