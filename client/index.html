@@ -3,15 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni Connect</title>
+    <title>Alumni Connect - The Ultimate Alumni Network</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Theme colors -->
+    <meta name="theme-color" content="#4A90E2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Alumni Connect">
+    
+    <!-- Favicon and Icons -->
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/icon-192x192.png">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Theme Detection Script -->
     <script>
         (function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark-mode') {
+            const theme = localStorage.getItem('theme') || 'auto';
+            if (theme === 'dark') {
                 document.documentElement.classList.add('dark-mode');
+            } else if (theme === 'light') {
+                document.documentElement.classList.add('light-mode');
             }
+            // 'auto' uses system preference detection via CSS
         })();
     </script>
 </head>
@@ -20,8 +40,22 @@
     <header class="main-header">
         <nav class="main-nav container">
             <a href="index.html" class="logo">AlumniConnect</a>
+            
+            <!-- Mobile Navigation Toggle -->
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
             <ul id="nav-links" class="nav-links">
-                </ul>
+                <!-- Navigation links will be populated by JavaScript -->
+            </ul>
+            
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle" id="theme-toggle" data-tooltip="Toggle Theme">
+                <i class="fas fa-sun"></i>
+            </button>
         </nav>
     </header>
 
@@ -304,5 +338,169 @@
     <script src="js/api.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/home.js"></script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register service worker for PWA functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', async () => {
+                try {
+                    const registration = await navigator.serviceWorker.register('/sw.js');
+                    console.log('ServiceWorker registered: ', registration);
+                    
+                    // Listen for updates
+                    registration.addEventListener('updatefound', () => {
+                        const newWorker = registration.installing;
+                        newWorker.addEventListener('statechange', () => {
+                            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                                // New content available, show update notification
+                                if (window.toastManager) {
+                                    window.toastManager.show('New version available! Refresh to update.', 'info');
+                                }
+                            }
+                        });
+                    });
+                } catch (error) {
+                    console.log('ServiceWorker registration failed: ', error);
+                }
+            });
+        }
+
+        // Install prompt for PWA
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install button or notification
+            if (window.toastManager) {
+                const installToast = window.toastManager.show(
+                    'Install Alumni Connect for the best experience!', 
+                    'info', 
+                    0 // Don't auto-hide
+                );
+                
+                // Add click handler to install
+                installToast.addEventListener('click', async () => {
+                    if (deferredPrompt) {
+                        deferredPrompt.prompt();
+                        const { outcome } = await deferredPrompt.userChoice;
+                        console.log(`User response to the install prompt: ${outcome}`);
+                        deferredPrompt = null;
+                        window.toastManager.hide(installToast);
+                    }
+                });
+            }
+        });
+
+        // Track installation
+        window.addEventListener('appinstalled', (evt) => {
+            console.log('Alumni Connect was installed');
+            if (window.toastManager) {
+                window.toastManager.show('Alumni Connect installed successfully!', 'success');
+            }
+        });
+
+        // Enhanced page loading with animations
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add loading animations to elements
+            const animateElements = document.querySelectorAll('.feature-card, .story-card, .stat-item');
+            
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-fadeInUp');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            animateElements.forEach((el) => {
+                observer.observe(el);
+            });
+
+            // Enhanced counter animations for stats
+            const animateCounters = () => {
+                const counters = document.querySelectorAll('.stat-number');
+                counters.forEach(counter => {
+                    if (counter.textContent !== 'Loading...') {
+                        const target = parseInt(counter.textContent.replace(/,/g, ''));
+                        if (!isNaN(target)) {
+                            let current = 0;
+                            const increment = target / 100;
+                            const timer = setInterval(() => {
+                                current += increment;
+                                if (current >= target) {
+                                    counter.textContent = target.toLocaleString();
+                                    clearInterval(timer);
+                                } else {
+                                    counter.textContent = Math.floor(current).toLocaleString();
+                                }
+                            }, 20);
+                        }
+                    }
+                });
+            };
+
+            // Animate counters when stats section is visible
+            const statsSection = document.querySelector('.stats-section');
+            if (statsSection) {
+                const statsObserver = new IntersectionObserver((entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            setTimeout(animateCounters, 500);
+                            statsObserver.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.5 });
+                
+                statsObserver.observe(statsSection);
+            }
+
+            // Theme toggle icon update
+            const updateThemeIcon = () => {
+                const themeToggle = document.getElementById('theme-toggle');
+                const icon = themeToggle?.querySelector('i');
+                if (!icon) return;
+
+                const theme = localStorage.getItem('theme') || 'auto';
+                const isDark = document.documentElement.classList.contains('dark-mode') ||
+                              (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                
+                icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+                themeToggle.setAttribute('data-tooltip', 
+                    theme === 'auto' ? `Auto (${isDark ? 'Dark' : 'Light'})` : 
+                    theme === 'dark' ? 'Dark Mode' : 'Light Mode'
+                );
+            };
+
+            // Update theme icon on load and theme changes
+            updateThemeIcon();
+            window.addEventListener('themeChanged', updateThemeIcon);
+            
+            // Watch for system theme changes
+            if (window.matchMedia) {
+                window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateThemeIcon);
+            }
+        });
+
+        // Error handling for offline scenarios
+        window.addEventListener('online', () => {
+            if (window.toastManager) {
+                window.toastManager.show('Connection restored!', 'success');
+            }
+        });
+
+        window.addEventListener('offline', () => {
+            if (window.toastManager) {
+                window.toastManager.show('You are offline. Some features may be limited.', 'warning');
+            }
+        });
+    </script>
 </body>
 </html>
