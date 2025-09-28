@@ -926,19 +926,20 @@ main {
 
 /* Button Enhancements */
 .btn-large {
-    padding: 1rem 2.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
     line-height: 1.4;
-    border-radius: 50px;
+    border-radius: var(--border-radius-medium);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     height: auto;
-    min-height: 54px;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
 }
 
 .btn-large::before {
@@ -958,8 +959,15 @@ main {
 
 .btn-outline {
     background: transparent;
-    border: 2px solid white;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
 .btn-outline:hover {
@@ -4457,7 +4465,7 @@ html.dark-mode .verified-badge-sm {
     background-color: #218838;
 }
 
-/* --- Modal Styles --- */
+/* --- Enhanced Modal Styles --- */
 .modal {
     display: none; 
     position: fixed; 
@@ -4467,19 +4475,237 @@ html.dark-mode .verified-badge-sm {
     width: 100%; 
     height: 100%; 
     overflow: auto; 
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
     background-color: var(--surface-color);
-    margin: 15% auto; 
-    padding: 2rem;
-    border: 1px solid var(--border-color);
+    margin: auto;
+    padding: 0;
+    border: none;
     border-radius: var(--border-radius-large);
-    width: 80%;
+    width: 90%;
     max-width: 500px;
     position: relative;
-    animation: fadeIn 0.3s;
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--subtle-text-color);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background-color: var(--background-light);
+    color: var(--error-color);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background-color: var(--background-light);
+    border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+}
+
+.modal-input, .modal-select, .modal-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.modal-input:focus, .modal-select:focus, .modal-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* --- Advanced Dropdown with Suggestions --- */
+.dropdown-container {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+    cursor: pointer;
+}
+
+.dropdown-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius-medium) var(--border-radius-medium);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.dropdown-list.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid var(--background-light);
+}
+
+.dropdown-item:hover, .dropdown-item.highlighted {
+    background-color: var(--background-light);
+    color: var(--primary-color);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item.no-results {
+    color: var(--subtle-text-color);
+    font-style: italic;
+    cursor: default;
+}
+
+.dropdown-item.no-results:hover {
+    background-color: transparent;
+    color: var(--subtle-text-color);
+}
+
+.dropdown-item.add-new-item {
+    color: var(--primary-color);
+    font-weight: 500;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--background-light);
+}
+
+.dropdown-item.add-new-item:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.dropdown-item.add-new-item i {
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* Multi-value input styling */
+.multi-value-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    min-height: 24px;
+}
+
+.value-tag {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--border-radius-small);
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.value-tag .remove-tag {
+    cursor: pointer;
+    font-size: 0.8rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.value-tag .remove-tag:hover {
+    opacity: 1;
+}
+
+.add-value-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.add-value-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.multi-value-input {
+    opacity: 0;
+    position: absolute;
+    pointer-events: none;
 }
 
 .close-btn {
@@ -4519,8 +4745,8 @@ html.dark-mode .modal-content {
 }
 
 .group-modal-logo {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     border-radius: 12px;
     object-fit: cover;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -4587,15 +4813,15 @@ html.dark-mode .modal-content {
     align-items: center;
     gap: 1rem;
     background: var(--background-light);
-    padding: 1rem;
+    padding: 1.25rem;
     border-radius: 8px;
     border: 1px solid var(--border-color);
 }
 
 .stat-card i {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     color: var(--primary-color);
-    width: 24px;
+    width: 28px;
     text-align: center;
 }
 
@@ -4605,17 +4831,43 @@ html.dark-mode .modal-content {
 }
 
 .stat-number {
-    font-size: 1.25rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     color: var(--text-color);
     line-height: 1;
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: var(--text-color-light);
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-top: 0.25rem;
+}
+
+/* Fix modal content overflow */
+.group-details-modal-content {
+    max-width: 700px;
+    width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.group-modal-description p {
+    margin: 0;
+    color: var(--text-color);
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.group-modal-info h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-color);
+    font-size: 1.4rem;
+    font-weight: 600;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .group-modal-actions {
@@ -5695,7 +5947,7 @@ body main {
 /* --- Group Listing Page Card Styles --- */
 .groups-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
@@ -5859,7 +6111,7 @@ body main {
 /* --- Group Listing Page Card Styles --- */
 .groups-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
@@ -9043,10 +9295,103 @@ fieldset.form-section legend {
     border-color: var(--primary-color);
 }
 
+/* Mentor Cards and Modal Styling */
+.alumnus-list-item {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-large);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow-subtle);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.alumnus-list-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-elevated);
+}
+
+.alumnus-pfp-round {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.alumnus-details {
+    flex: 1;
+}
+
+.alumnus-details h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.alumnus-details p {
+    margin: 0.25rem 0;
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+}
+
+.alumnus-details i {
+    width: 16px;
+    text-align: center;
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.alumnus-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.alumnus-actions .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Enhanced Mentors Grid */
 .mentors-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.mentors-grid .alumnus-list-item {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Mentor Modal Enhancements */
+.mentor-modal .modal-content {
+    max-width: 600px;
+}
+
+.mentor-modal .modal-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+}
+
+.mentor-modal .modal-title {
+    color: white;
+}
+
+.mentor-modal .modal-close {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.mentor-modal .modal-close:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive Design for Mentors Page */
@@ -10098,6 +10443,7 @@ fieldset.form-section legend {
 }
 
 /* List View for Groups */
+/* Enhanced horizontal/list view for group cards */
 .groups-grid.list-view {
     display: flex;
     flex-direction: column;
@@ -10107,15 +10453,28 @@ fieldset.form-section legend {
 .groups-grid.list-view .enhanced-group-card {
     display: flex;
     align-items: stretch;
+    min-height: 160px;
+    max-height: 200px;
+    width: 100%;
 }
 
 .groups-grid.list-view .group-card-header {
-    flex: 0 0 250px;
+    flex: 0 0 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.groups-grid.list-view .group-card-header .group-image-container {
+    height: 100%;
+    position: relative;
+    overflow: hidden;
 }
 
 .groups-grid.list-view .group-card-header .group-image {
     height: 100%;
     width: 100%;
+    object-fit: cover;
+    border-radius: 8px 0 0 8px;
 }
 
 .groups-grid.list-view .group-card-body {
@@ -10123,6 +10482,30 @@ fieldset.form-section legend {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.groups-grid.list-view .group-card-body .group-category {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+}
+
+.groups-grid.list-view .group-card-body h3 {
+    font-size: 1.25rem;
+    margin: 0 0 0.5rem 0;
+    line-height: 1.2;
+}
+
+.groups-grid.list-view .group-card-body .group-description {
+    flex: 1;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .groups-grid.list-view .group-card-footer {
@@ -10130,10 +10513,55 @@ fieldset.form-section legend {
     border-top: none;
     border-left: 1px solid var(--border-color);
     padding: 1.5rem;
-    min-width: 200px;
+    min-width: 180px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.groups-grid.list-view .group-stats {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.groups-grid.list-view .group-stats .stat-item {
+    font-size: 0.85rem;
+}
+
+.groups-grid.list-view .group-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    width: 100%;
+    margin-top: 1rem;
+}
+
+.groups-grid.list-view .group-actions .btn {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.5rem 0.75rem;
+}
+
+/* Ensure modal styling works for both views */
+.groups-grid.list-view .group-details-btn,
+.groups-grid.grid-view .group-details-btn {
+    z-index: 10;
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.groups-grid.list-view .group-details-btn:hover,
+.groups-grid.grid-view .group-details-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
 }
 
 /* Mobile Responsiveness for Groups */
