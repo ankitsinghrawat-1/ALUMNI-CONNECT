@@ -25,16 +25,36 @@ module.exports = (pool, upload) => {
     };
 
     router.get('/', asyncHandler(async (req, res) => {
-        const [rows] = await pool.query("SELECT * FROM `groups` WHERE status = 'active' ORDER BY name ASC");
+        const [rows] = await pool.query(`
+            SELECT 
+                g.*,
+                u.full_name as creator_name,
+                COUNT(DISTINCT gm.user_id) as member_count,
+                COUNT(DISTINCT gp.post_id) as discussion_count
+            FROM \`groups\` g 
+            LEFT JOIN users u ON g.created_by = u.user_id
+            LEFT JOIN group_members gm ON g.group_id = gm.group_id AND gm.status = 'approved'
+            LEFT JOIN group_posts gp ON g.group_id = gp.group_id
+            WHERE g.status = 'active' 
+            GROUP BY g.group_id
+            ORDER BY g.name ASC
+        `);
         res.json(rows);
     }));
 
     router.get('/:id', asyncHandler(async (req, res) => {
         const [rows] = await pool.query(`
-            SELECT g.*, u.full_name as creator_name 
+            SELECT 
+                g.*, 
+                u.full_name as creator_name,
+                COUNT(DISTINCT gm.user_id) as member_count,
+                COUNT(DISTINCT gp.post_id) as discussion_count
             FROM \`groups\` g 
             LEFT JOIN users u ON g.created_by = u.user_id 
-            WHERE g.group_id = ?`,
+            LEFT JOIN group_members gm ON g.group_id = gm.group_id AND gm.status = 'approved'
+            LEFT JOIN group_posts gp ON g.group_id = gp.group_id
+            WHERE g.group_id = ?
+            GROUP BY g.group_id`,
             [req.params.id]
         );
         if (rows.length === 0) return res.status(404).json({ message: 'Group not found' });

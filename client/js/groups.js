@@ -30,8 +30,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const groupItemRenderer = (group) => {
-        const imageUrl = group.image_url || createInitialsAvatar(group.name);
-        const memberCount = group.member_count || 0; // Use 0 instead of random fake data
+        const imageUrl = group.image_url ? `http://localhost:3000/${group.image_url}` : createInitialsAvatar(group.name);
+        const memberCount = group.member_count || 0; // Use real data from backend
         const discussionCount = group.discussion_count || 0; // Use real discussion count
         const isPrivate = group.privacy === 'private';
         
@@ -57,6 +57,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="stat-item">
                                 <i class="fas fa-comments"></i>
                                 <span>${discussionCount} discussion${discussionCount !== 1 ? 's' : ''}</span>
+                            </div>
+                            <div class="stat-item creator-info">
+                                <i class="fas fa-user-crown"></i>
+                                <span>Created by ${sanitizeHTML(group.creator_name || 'Unknown')}</span>
                             </div>
                         </div>
                     </div>
@@ -139,7 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const group = await window.api.get(`/groups/${groupId}`);
             const membership = await window.api.get(`/groups/${groupId}/membership-status`).catch(() => ({ status: 'none' }));
             
-            const imageUrl = group.image_url || createInitialsAvatar(group.name);
+            const imageUrl = group.image_url ? `http://localhost:3000/${group.image_url}` : createInitialsAvatar(group.name);
             const memberCount = group.member_count || 0;
             const discussionCount = group.discussion_count || 0;
             

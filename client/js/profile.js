@@ -14,11 +14,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Role-specific field configurations that match user needs
     const roleFieldsConfig = {
-        alumni: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
-        student: ['full_name', 'bio', 'city', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
-        faculty: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'department'],
-        employer: ['full_name', 'bio', 'city', 'industry', 'website'],
-        institute: ['full_name', 'bio', 'city', 'website']
+        alumni: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
+        student: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
+        faculty: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'department'],
+        employer: ['full_name', 'bio', 'city', 'phone_number', 'industry', 'website'],
+        institute: ['full_name', 'bio', 'city', 'phone_number', 'website']
     };
 
     // Profile section tab functionality
@@ -110,6 +110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="status-content">
                             <span class="status-label">Account Status</span>
                             <span class="status-value verified">Verified</span>
+                            <button class="btn btn-outline btn-sm" onclick="openAccountStatusModal()">View Details</button>
                         </div>
                     </div>`;
                 break;
@@ -122,6 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="status-content">
                             <span class="status-label">Account Status</span>
                             <span class="status-value pending">Verification Pending</span>
+                            <button class="btn btn-outline btn-sm" onclick="openAccountStatusModal()">View Status</button>
                         </div>
                     </div>`;
                 break;
@@ -134,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="status-content">
                             <span class="status-label">Account Status</span>
                             <span class="status-value unverified">Unverified</span>
-                            <button id="request-verification-btn" class="btn btn-outline btn-sm">Request Verification</button>
+                            <button id="account-status-btn" class="btn btn-outline btn-sm" onclick="openAccountStatusModal()">Manage Status</button>
                         </div>
                     </div>`;
                 break;
@@ -497,6 +499,139 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    // Account Status Modal Functions
+    window.openAccountStatusModal = async () => {
+        const modal = document.getElementById('account-status-modal');
+        const content = document.getElementById('account-status-content');
+        
+        try {
+            const data = await window.api.get(`/users/profile`);
+            let statusContent = '';
+            
+            switch(data.verification_status) {
+                case 'verified':
+                    statusContent = `
+                        <div class="status-info verified">
+                            <div class="status-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h4>Account Verified</h4>
+                            <p>Your account has been successfully verified by our administrators.</p>
+                            <div class="status-benefits">
+                                <h5>Benefits of verified status:</h5>
+                                <ul>
+                                    <li>Verified badge on your profile</li>
+                                    <li>Higher visibility in searches</li>
+                                    <li>Access to exclusive verified-only groups</li>
+                                    <li>Increased trust from other users</li>
+                                </ul>
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'pending':
+                    statusContent = `
+                        <div class="status-info pending">
+                            <div class="status-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <h4>Verification Pending</h4>
+                            <p>Your verification request is currently being reviewed by our administrators.</p>
+                            <div class="status-timeline">
+                                <div class="timeline-item completed">
+                                    <i class="fas fa-check"></i>
+                                    <span>Documents submitted</span>
+                                </div>
+                                <div class="timeline-item active">
+                                    <i class="fas fa-eye"></i>
+                                    <span>Under review</span>
+                                </div>
+                                <div class="timeline-item">
+                                    <i class="fas fa-trophy"></i>
+                                    <span>Verification complete</span>
+                                </div>
+                            </div>
+                            <p><small>Review typically takes 2-3 business days.</small></p>
+                        </div>
+                    `;
+                    break;
+                default:
+                    statusContent = `
+                        <div class="status-info unverified">
+                            <div class="status-icon">
+                                <i class="fas fa-exclamation-circle"></i>
+                            </div>
+                            <h4>Account Not Verified</h4>
+                            <p>Verify your account to gain additional privileges and increase your credibility in the alumni network.</p>
+                            <div class="verification-steps">
+                                <h5>To get verified:</h5>
+                                <ol>
+                                    <li>Upload a verification document (ID, diploma, etc.)</li>
+                                    <li>Wait for admin review (2-3 business days)</li>
+                                    <li>Receive verified status upon approval</li>
+                                </ol>
+                            </div>
+                            <button class="btn btn-primary" onclick="showVerificationUpload()">
+                                <i class="fas fa-upload"></i> Start Verification Process
+                            </button>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            content.innerHTML = statusContent;
+            modal.style.display = 'block';
+        } catch (error) {
+            console.error('Error loading account status:', error);
+            content.innerHTML = `
+                <div class="status-info error">
+                    <div class="status-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h4>Error Loading Status</h4>
+                    <p>Unable to load account status. Please try again later.</p>
+                </div>
+            `;
+            modal.style.display = 'block';
+        }
+    };
+
+    window.closeAccountStatusModal = () => {
+        document.getElementById('account-status-modal').style.display = 'none';
+        document.getElementById('verification-upload-section').style.display = 'none';
+    };
+
+    window.showVerificationUpload = () => {
+        document.getElementById('verification-upload-section').style.display = 'block';
+    };
+
+    window.hideVerificationUpload = () => {
+        document.getElementById('verification-upload-section').style.display = 'none';
+    };
+
+    // Handle verification upload form
+    document.getElementById('verification-upload-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData();
+        const fileInput = document.getElementById('verification-document');
+        
+        if (fileInput.files.length === 0) {
+            showToast('Please select a verification document', 'error');
+            return;
+        }
+        
+        formData.append('verification_document', fileInput.files[0]);
+        
+        try {
+            const result = await window.api.post('/users/request-verification', formData);
+            showToast(result.message, 'success');
+            closeAccountStatusModal();
+            renderVerificationStatus('pending');
+        } catch (error) {
+            showToast(error.message || 'Error uploading verification document', 'error');
+        }
+    });
 
     await fetchUserProfile();
     await fetchPrivacySettings();
