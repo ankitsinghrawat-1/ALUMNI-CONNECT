@@ -155,8 +155,12 @@ document.addEventListener('DOMContentLoaded', () => {
         contentTextarea.focus();
         
         // Check if user is logged in
-        if (!localStorage.getItem('token')) {
-            showToast('Please log in to create threads', 'error');
+        if (!localStorage.getItem('alumniConnectToken')) {
+            try {
+                showToast('Please log in to create threads', 'error');
+            } catch (error) {
+                console.log('Please log in to create threads');
+            }
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 2000);
