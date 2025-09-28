@@ -3,14 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - AlumniConnect</title>
+    <title>Login - Alumni Connect</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Theme colors -->
+    <meta name="theme-color" content="#4A90E2">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Alumni Connect">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Enhanced Theme Detection Script -->
     <script>
         (function() {
-            const theme = localStorage.getItem('theme');
-            if (theme === 'dark-mode') {
+            const theme = localStorage.getItem('theme') || 'auto';
+            if (theme === 'dark') {
                 document.documentElement.classList.add('dark-mode');
+            } else if (theme === 'light') {
+                document.documentElement.classList.add('light-mode');
             }
         })();
     </script>
@@ -20,30 +35,113 @@
     <header class="main-header">
         <nav class="main-nav container">
             <a href="index.html" class="logo">AlumniConnect</a>
+            
+            <!-- Mobile Navigation Toggle -->
+            <div class="nav-toggle" id="nav-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            
             <ul id="nav-links" class="nav-links">
-                </ul>
+                <!-- Navigation links will be populated by JavaScript -->
+            </ul>
+            
+            <!-- Theme Toggle Button -->
+            <button class="theme-toggle" id="theme-toggle" data-tooltip="Toggle Theme">
+                <i class="fas fa-sun"></i>
+            </button>
         </nav>
     </header>
 
     <main class="form-main">
         <section class="form-container">
-            <h2>Log In to Your Account</h2>
-            <form id="login-form">
+            <div class="form-header">
+                <h2>Welcome Back!</h2>
+                <p>Sign in to your Alumni Connect account</p>
+            </div>
+            
+            <form id="login-form" novalidate>
+                <!-- Email Input with Icon -->
                 <div class="input-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" required>
+                    <label for="email" class="required">Email Address</label>
+                    <div class="input-with-icon">
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            required 
+                            autocomplete="email"
+                            placeholder="Enter your email address"
+                            class="modal-input"
+                        >
+                        <i class="input-icon fas fa-envelope"></i>
+                    </div>
                 </div>
+                
+                <!-- Password Input with Icon and Toggle -->
                 <div class="input-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" required>
+                    <label for="password" class="required">Password</label>
+                    <div class="input-with-icon">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password"
+                            required 
+                            autocomplete="current-password"
+                            placeholder="Enter your password"
+                            class="modal-input"
+                        >
+                        <i class="input-icon fas fa-lock"></i>
+                        <button type="button" class="password-toggle" id="password-toggle">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
                 </div>
 
-                <div id="message" class="form-message"></div>
+                <!-- Remember Me and Forgot Password -->
+                <div class="form-options">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div>
+                    <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+                </div>
 
-                <button type="submit" class="btn btn-primary btn-full-width">Log In</button>
+                <!-- Form Message -->
+                <div id="message" class="form-message" style="display: none;"></div>
+
+                <!-- Submit Button with Loading State -->
+                <button type="submit" class="btn btn-primary btn-full-width" id="login-btn">
+                    <span class="btn-text">Sign In</span>
+                    <span class="btn-loader" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        Signing in...
+                    </span>
+                </button>
             </form>
-            <p>Don't have an account? <a href="signup.html">Sign Up</a></p>
-            <p><a href="forgot-password.html">Forgot Password?</a></p>
+            
+            <!-- Divider -->
+            <div class="form-divider">
+                <span>or</span>
+            </div>
+            
+            <!-- Social Login Options -->
+            <div class="social-login">
+                <button type="button" class="btn btn-outline social-btn google-btn">
+                    <i class="fab fa-google"></i>
+                    Continue with Google
+                </button>
+                <button type="button" class="btn btn-outline social-btn linkedin-btn">
+                    <i class="fab fa-linkedin"></i>
+                    Continue with LinkedIn
+                </button>
+            </div>
+            
+            <!-- Sign Up Link -->
+            <div class="form-footer">
+                <p>Don't have an account? <a href="signup.html" class="signup-link">Sign up for free</a></p>
+            </div>
         </section>
     </main>
 
