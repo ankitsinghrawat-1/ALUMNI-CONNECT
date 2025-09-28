@@ -25,12 +25,201 @@
         </nav>
     </header>
 
-    <main class="jobs-main">
+    <main class="jobs-main enhanced-jobs">
         <div class="jobs-container">
-            <h2>Job Board</h2>
-            <div id="jobs-grid" class="jobs-grid">
+            <div class="jobs-header">
+                <h2>Career Opportunities</h2>
+                <p>Discover exclusive job opportunities shared by alumni and partner companies</p>
+            </div>
+            
+            <!-- Enhanced Search & Filter Section -->
+            <div class="jobs-search-section">
+                <div class="search-filters-card card">
+                    <div class="search-input-group">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="job-search-input" placeholder="Search by job title, company, or keywords..." />
+                        <button id="job-search-button" class="btn btn-primary">
+                            <i class="fas fa-search"></i>
+                            Search Jobs
+                        </button>
+                    </div>
+                    
+                    <div class="filters-row">
+                        <div class="filter-group">
+                            <label for="location-filter"><i class="fas fa-map-marker-alt"></i> Location</label>
+                            <select id="location-filter">
+                                <option value="">All Locations</option>
+                                <option value="remote">Remote</option>
+                                <option value="san-francisco">San Francisco, CA</option>
+                                <option value="new-york">New York, NY</option>
+                                <option value="seattle">Seattle, WA</option>
+                                <option value="austin">Austin, TX</option>
+                                <option value="chicago">Chicago, IL</option>
+                                <option value="boston">Boston, MA</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="industry-filter"><i class="fas fa-industry"></i> Industry</label>
+                            <select id="industry-filter">
+                                <option value="">All Industries</option>
+                                <option value="technology">Technology</option>
+                                <option value="finance">Finance & Banking</option>
+                                <option value="healthcare">Healthcare</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="marketing">Marketing</option>
+                                <option value="education">Education</option>
+                                <option value="government">Government</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="experience-filter"><i class="fas fa-briefcase"></i> Experience</label>
+                            <select id="experience-filter">
+                                <option value="">All Levels</option>
+                                <option value="entry">Entry Level (0-2 years)</option>
+                                <option value="mid">Mid Level (3-5 years)</option>
+                                <option value="senior">Senior Level (6-10 years)</option>
+                                <option value="executive">Executive (10+ years)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label for="job-type-filter"><i class="fas fa-clock"></i> Job Type</label>
+                            <select id="job-type-filter">
+                                <option value="">All Types</option>
+                                <option value="full-time">Full-time</option>
+                                <option value="part-time">Part-time</option>
+                                <option value="contract">Contract</option>
+                                <option value="internship">Internship</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button id="clear-filters-btn" class="btn btn-outline">
+                            <i class="fas fa-times"></i>
+                            Clear Filters
+                        </button>
+                        <div class="salary-insights-toggle">
+                            <input type="checkbox" id="salary-insights" checked>
+                            <label for="salary-insights">Show Salary Insights</label>
+                        </div>
+                    </div>
                 </div>
-            <div id="message" class="info-message"></div>
+                
+                <!-- Quick Stats -->
+                <div class="jobs-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number" id="total-jobs">248</span>
+                            <span class="stat-label">Active Jobs</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number">89</span>
+                            <span class="stat-label">Alumni Recruiters</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number">156</span>
+                            <span class="stat-label">Successful Placements</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-content">
+                            <span class="stat-number">$95K</span>
+                            <span class="stat-label">Avg. Starting Salary</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="jobs-results-section">
+                <div class="results-header">
+                    <h3 id="results-title">Featured Opportunities</h3>
+                    <div class="results-actions">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="cards">
+                                <i class="fas fa-th-large"></i>
+                                Cards
+                            </button>
+                            <button class="view-btn" data-view="list">
+                                <i class="fas fa-list"></i>
+                                List
+                            </button>
+                        </div>
+                        <div class="sort-dropdown">
+                            <select id="sort-select">
+                                <option value="relevance">Most Relevant</option>
+                                <option value="recent">Recently Posted</option>
+                                <option value="salary">Highest Salary</option>
+                                <option value="company">Company A-Z</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="jobs-grid" class="jobs-grid cards-view">
+                    <!-- Job cards will be loaded here -->
+                </div>
+                
+                <div id="message" class="info-message"></div>
+            </div>
+            
+            <!-- Career Resources Section -->
+            <div class="career-resources-section">
+                <h3>Career Development Resources</h3>
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h4>Resume Reviews</h4>
+                        <p>Get your resume reviewed by alumni in your field</p>
+                        <button class="btn btn-outline">Book Review</button>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <h4>Mock Interviews</h4>
+                        <p>Practice interviews with experienced professionals</p>
+                        <button class="btn btn-outline">Schedule Interview</button>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4>Career Guidance</h4>
+                        <p>One-on-one career counseling sessions</p>
+                        <button class="btn btn-outline">Get Guidance</button>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">
+                            <i class="fas fa-network-wired"></i>
+                        </div>
+                        <h4>Networking Events</h4>
+                        <p>Join industry-specific networking events</p>
+                        <button class="btn btn-outline">View Events</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
     
