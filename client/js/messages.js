@@ -160,11 +160,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             messagesDisplay.innerHTML += loadingBubble;
             messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
 
-            const response = await window.api.postForm('/messages/upload-image', formData);
-            if (!response.ok) {
-                throw new Error('Image upload failed.');
-            }
-            const result = await response.json();
+            const result = await window.api.postForm('/messages/upload-image', formData);
             const imageUrl = result.imageUrl;
 
             const messageData = {
