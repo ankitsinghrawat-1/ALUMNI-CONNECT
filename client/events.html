@@ -25,11 +25,45 @@
         </nav>
     </header>
 
-    <main class="events-main">
+    <main class="events-main enhanced-events">
         <div class="events-container">
-            <h2>Upcoming Events</h2>
-            <div id="events-list" class="events-list">
+            <div class="events-header">
+                <h2>Alumni Events & Reunions</h2>
+                <p>Stay connected and celebrate achievements with fellow alumni at upcoming events</p>
+            </div>
+            
+            <!-- Event Controls -->
+            <div class="events-controls">
+                <div class="event-filters">
+                    <select id="type-filter">
+                        <option value="">All Types</option>
+                        <option value="reunion">Reunion</option>
+                        <option value="networking">Networking</option>
+                        <option value="workshop">Workshop</option>
+                        <option value="social">Social</option>
+                        <option value="career">Career</option>
+                    </select>
+                    <select id="location-filter">
+                        <option value="">All Locations</option>
+                        <option value="virtual">Virtual</option>
+                        <option value="on-campus">On Campus</option>
+                        <option value="local">Local Chapter</option>
+                        <option value="international">International</option>
+                    </select>
                 </div>
+                <div class="view-toggle">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-th-large"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div id="events-list" class="events-list grid-view">
+                <!-- Event cards will be loaded here -->
+            </div>
             <div id="message" class="info-message"></div>
         </div>
     </main>

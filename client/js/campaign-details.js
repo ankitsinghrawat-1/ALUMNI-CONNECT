@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.title = campaign.title;
 
             const progress = (campaign.current_amount / campaign.goal_amount) * 100;
-            const imageUrl = campaign.image_url || 'https://via.placeholder.com/800x200?text=Alumni+Cause';
+            const imageUrl = campaign.image_url || createInitialsAvatar(campaign.title);
             const endDate = new Date(campaign.end_date);
             const today = new Date();
             const daysLeft = Math.max(0, Math.ceil((endDate - today) / (1000 * 60 * 60 * 24)));

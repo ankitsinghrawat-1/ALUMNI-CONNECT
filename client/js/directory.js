@@ -101,9 +101,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         alumnusCard.innerHTML = `
             <div class="alumnus-card-header">
                 <div class="alumnus-avatar">
-                    <div class="avatar-placeholder">
-                        ${alumnus.full_name.split(' ').map(n => n[0]).join('')}
-                    </div>
+                    <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
+                         alt="${alumnus.full_name}" 
+                         class="avatar-image"
+                         onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
                     <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
                 </div>
                 <div class="alumnus-info">
@@ -169,21 +170,46 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Add event listeners
         const messageBtn = alumnusCard.querySelector('.message-btn');
-        messageBtn.addEventListener('click', () => {
-            alert(`Opening message conversation with ${alumnus.full_name}`);
+        messageBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Redirect to messages page with user parameter
+            window.location.href = `messages.html?user=${encodeURIComponent(alumnus.email)}&name=${encodeURIComponent(alumnus.full_name)}`;
+            showToast(`Opening message conversation with ${alumnus.full_name}`, 'info');
         });
 
         const viewProfileBtn = alumnusCard.querySelector('.view-profile-btn');
         if (viewProfileBtn) {
-            viewProfileBtn.addEventListener('click', () => {
-                window.location.href = `view-profile.html?email=${alumnus.email}`;
+            viewProfileBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = `view-profile.html?email=${encodeURIComponent(alumnus.email)}`;
             });
         }
 
         const connectBtn = alumnusCard.querySelector('.connect-btn');
         if (connectBtn) {
-            connectBtn.addEventListener('click', () => {
-                alert(`Sending connection request to ${alumnus.full_name}`);
+            connectBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                try {
+                    // Send actual connection request
+                    await window.api.post('/users/connect-request', { 
+                        to_email: alumnus.email 
+                    });
+                    
+                    // Update button state
+                    connectBtn.innerHTML = `<i class="fas fa-clock"></i> Request Sent`;
+                    connectBtn.disabled = true;
+                    connectBtn.className = 'btn btn-secondary btn-sm';
+                    
+                    showToast(`Connection request sent to ${alumnus.full_name}!`, 'success');
+                } catch (error) {
+                    console.error('Error sending connection request:', error);
+                    showToast('Failed to send connection request. Please try again.', 'error');
+                }
             });
         }
 

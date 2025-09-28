@@ -25,13 +25,49 @@
         </nav>
     </header>
 
-    <main class="groups-main">
+    <main class="groups-main enhanced-groups">
         <div class="groups-container">
-            <h2>Groups</h2>
-            <div id="group-action-area" class="admin-actions">
+            <div class="groups-header">
+                <h2>Alumni Groups & Communities</h2>
+                <p>Connect with fellow alumni through shared interests, industries, and experiences</p>
+            </div>
+            
+            <!-- Group Controls -->
+            <div class="groups-controls">
+                <div class="group-filters">
+                    <select id="category-filter">
+                        <option value="">All Categories</option>
+                        <option value="professional">Professional</option>
+                        <option value="regional">Regional</option>
+                        <option value="academic">Academic</option>
+                        <option value="hobby">Hobby & Interest</option>
+                        <option value="industry">Industry</option>
+                    </select>
+                    <select id="size-filter">
+                        <option value="">All Sizes</option>
+                        <option value="small">Small (1-50)</option>
+                        <option value="medium">Medium (51-200)</option>
+                        <option value="large">Large (200+)</option>
+                    </select>
                 </div>
-            <div id="groups-grid" class="groups-grid">
+                <div class="groups-actions">
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="grid">
+                            <i class="fas fa-th-large"></i>
+                        </button>
+                        <button class="view-btn" data-view="list">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                    <div id="group-action-area" class="group-action-buttons">
+                        <!-- Action buttons will be loaded here -->
+                    </div>
                 </div>
+            </div>
+            
+            <div id="groups-grid" class="groups-grid grid-view">
+                <!-- Group cards will be loaded here -->
+            </div>
             <div id="message" class="info-message"></div>
         </div>
     </main>
