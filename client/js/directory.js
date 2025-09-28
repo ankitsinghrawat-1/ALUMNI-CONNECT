@@ -26,90 +26,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Popular Search Tags
     const searchTags = document.querySelectorAll('.search-tag');
 
-    // Mock data for demonstration
-    const generateMockAlumni = () => {
-        return [
-            {
-                full_name: "Sarah Chen",
-                email: "sarah.chen@example.com",
-                current_position: "Senior Software Engineer",
-                current_company: "Google",
-                major: "Computer Science",
-                graduation_year: "2018",
-                city: "San Francisco, CA",
-                industry: "Technology",
-                skills: "Python, Machine Learning, Data Analysis",
-                bio: "Passionate about AI and machine learning. Currently working on large-scale distributed systems at Google.",
-                is_online: true
-            },
-            {
-                full_name: "Michael Rodriguez",
-                email: "michael.r@example.com",
-                current_position: "Product Manager",
-                current_company: "Microsoft",
-                major: "Business Administration",
-                graduation_year: "2017",
-                city: "Seattle, WA", 
-                industry: "Technology",
-                skills: "Product Strategy, Data Analytics, Leadership",
-                bio: "Leading product development for cloud services. Love mentoring students and new graduates.",
-                is_online: false
-            },
-            {
-                full_name: "Emily Johnson",
-                email: "emily.j@example.com",
-                current_position: "Marketing Director",
-                current_company: "Tesla",
-                major: "Marketing",
-                graduation_year: "2016",
-                city: "Austin, TX",
-                industry: "Automotive",
-                skills: "Digital Marketing, Brand Strategy, Analytics",
-                bio: "Driving brand awareness and customer engagement for Tesla's innovative products.",
-                is_online: true
-            },
-            {
-                full_name: "David Kim",
-                email: "david.kim@example.com",
-                current_position: "Investment Analyst",
-                current_company: "Goldman Sachs",
-                major: "Finance",
-                graduation_year: "2019",
-                city: "New York, NY",
-                industry: "Finance",
-                skills: "Financial Modeling, Risk Analysis, Investment Strategy",
-                bio: "Analyzing investment opportunities in tech and healthcare sectors.",
-                is_online: false
-            },
-            {
-                full_name: "Jennifer Liu",
-                email: "jennifer.liu@example.com", 
-                current_position: "UX Designer",
-                current_company: "Airbnb",
-                major: "Design",
-                graduation_year: "2020",
-                city: "San Francisco, CA",
-                industry: "Technology",
-                skills: "User Experience, Design Thinking, Prototyping",
-                bio: "Creating intuitive and delightful user experiences for millions of travelers worldwide.",
-                is_online: true
-            },
-            {
-                full_name: "Robert Thompson",
-                email: "robert.t@example.com",
-                current_position: "Management Consultant",
-                current_company: "McKinsey & Company",
-                major: "Economics",
-                graduation_year: "2015",
-                city: "Chicago, IL",
-                industry: "Consulting",
-                skills: "Strategy, Operations, Change Management",
-                bio: "Helping Fortune 500 companies transform their operations and strategy.",
-                is_online: false
-            }
-        ];
-    };
-
     // Helper functions
     const showLoading = () => {
         alumniListContainer.innerHTML = `
@@ -125,13 +41,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         alumniListContainer.innerHTML = `
             <div class="empty-state">
                 <div class="empty-icon">
-                    <i class="fas fa-search"></i>
+                    <i class="fas fa-database"></i>
                 </div>
-                <h3>No Alumni Found</h3>
-                <p>No alumni matched your search criteria. Try broadening your search or using different filters.</p>
+                <h3>No Alumni Data Available</h3>
+                <p>The alumni database is currently not configured. Please contact an administrator to set up the database connection.</p>
                 <div class="empty-actions">
-                    <button onclick="window.clearAllFilters()" class="btn btn-outline">Clear Filters</button>
-                    <button onclick="window.switchTab('smart')" class="btn btn-primary">Try AI Matching</button>
+                    <button onclick="window.location.reload()" class="btn btn-primary">Retry</button>
                 </div>
             </div>`;
     };
@@ -273,24 +188,79 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Core functionality
-    const fetchAndRenderAlumni = () => {
+    const fetchAndRenderAlumni = async () => {
         showLoading();
 
-        setTimeout(() => {
-            const mockAlumni = generateMockAlumni();
+        try {
+            // Get search parameters
+            const query = searchInput ? searchInput.value.trim() : '';
+            const major = majorFilter ? majorFilter.value : '';
+            const graduation_year = yearFromFilter ? yearFromFilter.value : '';
+            const city = cityFilter ? cityFilter.value : '';
+            const industry = industryFilter ? industryFilter.value : '';
+            const skills = skillsFilter ? skillsFilter.value : '';
+
+            // Build query parameters
+            const params = new URLSearchParams();
+            if (query) params.append('query', query);
+            if (major) params.append('major', major);
+            if (graduation_year) params.append('graduation_year', graduation_year);
+            if (city) params.append('city', city);
+            if (industry) params.append('industry', industry);
+            if (skills) params.append('skills', skills);
+
+            // Fetch real data from API
+            const alumni = await window.api.get(`/users/directory?${params.toString()}`);
+            
             alumniListContainer.innerHTML = '';
 
-            if (mockAlumni.length > 0) {
-                resultsTitle.textContent = `${mockAlumni.length} Alumni Found`;
+            if (alumni && alumni.length > 0) {
+                resultsTitle.textContent = `${alumni.length} Alumni Found`;
                 
-                mockAlumni.forEach(alumnus => {
-                    const alumnusCard = createEnhancedAlumnusCard(alumnus);
+                alumni.forEach(alumnus => {
+                    // Map API response to expected format
+                    const mappedAlumnus = {
+                        full_name: alumnus.full_name,
+                        email: alumnus.email,
+                        current_position: alumnus.job_title || 'Alumni Member',
+                        current_company: alumnus.current_company || '',
+                        major: alumnus.major,
+                        graduation_year: alumnus.graduation_year,
+                        city: '', // API doesn't return city in public profiles for privacy
+                        industry: '', // API doesn't return industry in public profiles 
+                        skills: '', // API doesn't return skills in public profiles
+                        bio: '', // API doesn't return bio in public profiles
+                        is_online: Math.random() > 0.5, // Random online status for demo
+                        profile_pic_url: alumnus.profile_pic_url,
+                        verification_status: alumnus.verification_status
+                    };
+                    
+                    const alumnusCard = createEnhancedAlumnusCard(mappedAlumnus);
                     alumniListContainer.appendChild(alumnusCard);
                 });
             } else {
                 showEmptyState();
             }
-        }, 500);
+        } catch (error) {
+            console.error('Error fetching alumni:', error);
+            
+            // Show appropriate error message based on the error type
+            if (error.message.includes('server')) {
+                alumniListContainer.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3>Database Not Connected</h3>
+                        <p>The alumni database is not configured. Real alumni data will be displayed once the database connection is established.</p>
+                        <div class="empty-actions">
+                            <button onclick="window.location.reload()" class="btn btn-primary">Retry Connection</button>
+                        </div>
+                    </div>`;
+            } else {
+                showEmptyState();
+            }
+        }
     };
 
     const switchTab = (tabType) => {
