@@ -10,28 +10,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         return;
     }
 
-    // Initialize modern UI elements
-    initializeSidebarStats();
-
-    // Get current user info
-    try {
-        currentUser = await window.api.get('/users/profile');
-    } catch (error) {
-        console.error('Error getting user profile:', error);
-    }
-
-    // Format time ago with more detail
-    const timeAgo = (date) => {
-        const now = new Date();
-        const postDate = new Date(date);
-        const diffInSeconds = Math.floor((now - postDate) / 1000);
-        
-        if (diffInSeconds < 60) return 'Just now';
-        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
-        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
-        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
-        if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)}w ago`;
-        return postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    // Initialize sidebar stats
+    const initializeSidebarStats = () => {
+        document.getElementById('total-likes').textContent = '0';
+        document.getElementById('total-comments').textContent = '0';
+        document.getElementById('total-views').textContent = Math.floor(Math.random() * 100) + 1;
     };
 
     // Create error state with modern styling
@@ -50,12 +33,29 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
     };
 
-    // Initialize sidebar stats
-    const initializeSidebarStats = () => {
-        document.getElementById('total-likes').textContent = '0';
-        document.getElementById('total-comments').textContent = '0';
-        document.getElementById('total-views').textContent = Math.floor(Math.random() * 100) + 1;
+    // Format time ago with more detail
+    const timeAgo = (date) => {
+        const now = new Date();
+        const postDate = new Date(date);
+        const diffInSeconds = Math.floor((now - postDate) / 1000);
+        
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        if (diffInSeconds < 2592000) return `${Math.floor(diffInSeconds / 604800)}w ago`;
+        return postDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     };
+
+    // Initialize modern UI elements
+    initializeSidebarStats();
+
+    // Get current user info
+    try {
+        currentUser = await window.api.get('/users/profile');
+    } catch (error) {
+        console.error('Error getting user profile:', error);
+    }
 
     // Update sidebar stats
     const updateSidebarStats = (thread) => {
