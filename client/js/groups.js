@@ -39,7 +39,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <a href="group-details.html?id=${group.group_id}" class="enhanced-group-card-link">
                 <div class="enhanced-group-card card">
                     <div class="group-card-header">
-                        <img src="${sanitizeHTML(imageUrl)}" alt="${sanitizeHTML(group.name)}" class="group-image" onerror="this.src='${createInitialsAvatar(group.name)}'">
+                        <div class="group-image-container">
+                            <img src="${sanitizeHTML(imageUrl)}" alt="${sanitizeHTML(group.name)}" class="group-image" onerror="this.src='${createInitialsAvatar(group.name)}'">
+                            <div class="activity-indicator">
+                                <i class="fas fa-circle ${group.is_active !== false ? 'active' : 'inactive'}"></i>
+                            </div>
+                        </div>
                         <div class="group-badge">
                             ${isPrivate ? '<span class="private-badge"><i class="fas fa-lock"></i> Private</span>' : '<span class="public-badge"><i class="fas fa-globe"></i> Public</span>'}
                         </div>
@@ -47,7 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="group-card-body">
                         <div class="group-category">${sanitizeHTML(group.category) || 'General'}</div>
                         <h3>${sanitizeHTML(group.name)}</h3>
-                        <p class="group-description">${sanitizeHTML((group.description || 'No description available').substring(0, 120))}${group.description && group.description.length > 120 ? '...' : ''}</p>
+                        <div class="group-creator">
+                            <i class="fas fa-user-crown"></i>
+                            <span>Created by ${sanitizeHTML(group.creator_name || 'Unknown')}</span>
+                        </div>
+                        <p class="group-description">${sanitizeHTML((group.description || 'No description available').substring(0, 80))}${group.description && group.description.length > 80 ? '...' : ''}</p>
                         
                         <div class="group-stats">
                             <div class="stat-item">
@@ -57,10 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             <div class="stat-item">
                                 <i class="fas fa-comments"></i>
                                 <span>${discussionCount} discussion${discussionCount !== 1 ? 's' : ''}</span>
-                            </div>
-                            <div class="stat-item creator-info">
-                                <i class="fas fa-user-crown"></i>
-                                <span>Created by ${sanitizeHTML(group.creator_name || 'Unknown')}</span>
                             </div>
                         </div>
                     </div>
@@ -73,10 +78,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <i class="fas fa-info-circle"></i>
                                 Quick View
                             </button>
-                            <div class="activity-indicator">
-                                <i class="fas fa-circle ${group.is_active !== false ? 'active' : 'inactive'}"></i>
-                                <span>${group.is_active !== false ? 'Active' : 'Inactive'}</span>
-                            </div>
                         </div>
                     </div>
                 </div>

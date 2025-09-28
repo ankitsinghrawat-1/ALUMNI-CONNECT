@@ -37,6 +37,24 @@ CREATE TABLE `users` (
   `website` VARCHAR(255) NULL,
   `bio` TEXT NULL,
   `skills` VARCHAR(255) NULL,
+  -- Additional fields for enhanced profiles (added by copilot for issue fix)
+  `experience_years` INT NULL, -- For alumni/faculty professional experience
+  `specialization` VARCHAR(255) NULL, -- For faculty/alumni specialization
+  `current_position` VARCHAR(255) NULL, -- For faculty current academic position
+  `research_interests` TEXT NULL, -- For faculty/student research areas
+  `achievements` TEXT NULL, -- For alumni/faculty achievements
+  `certifications` TEXT NULL, -- Professional certifications
+  `languages` VARCHAR(255) NULL, -- Languages spoken
+  `current_year` INT NULL, -- For students - current year of study
+  `gpa` DECIMAL(3,2) NULL, -- For students - GPA
+  `expected_graduation` INT NULL, -- For students - expected graduation year
+  `company_size` ENUM('startup', 'small', 'medium', 'large', 'enterprise') NULL, -- For employers
+  `founded_year` INT NULL, -- For employers/institutes
+  `student_count` INT NULL, -- For institutes
+  `location_coordinates` POINT NULL, -- For better location mapping
+  `social_media_links` JSON NULL, -- Additional social media links
+  `availability_status` ENUM('available', 'busy', 'unavailable') DEFAULT 'available', -- For mentoring/networking
+  --
   `reset_token` VARCHAR(255) NULL,
   `reset_token_expiry` TIMESTAMP NULL,
   `is_profile_public` BOOLEAN DEFAULT TRUE,

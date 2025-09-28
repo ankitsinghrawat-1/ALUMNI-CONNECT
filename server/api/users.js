@@ -247,18 +247,28 @@ module.exports = (pool, upload) => {
 
     router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
         const userId = req.user.userId;
-        const { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills, phone_number } = req.body;
+        const { 
+            full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, 
+            department, industry, skills, phone_number, website, experience_years, specialization, 
+            current_position, research_interests, achievements, certifications, languages, current_year, 
+            gpa, expected_graduation, company_size, founded_year, student_count
+        } = req.body;
         let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
 
         const [userRows] = await pool.query('SELECT profile_pic_url FROM users WHERE user_id = ?', [userId]);
         if (userRows.length === 0) { return res.status(404).json({ message: 'User not found' }); }
         const user = userRows[0];
         
-        const updateFields = { full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, department, industry, skills, phone_number };
+        const updateFields = { 
+            full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, 
+            department, industry, skills, phone_number, website, experience_years, specialization, 
+            current_position, research_interests, achievements, certifications, languages, current_year, 
+            gpa, expected_graduation, company_size, founded_year, student_count
+        };
         
         // Handle empty values - don't set full_name to null as it's required
         for (const key in updateFields) {
-            if (updateFields[key] === '') {
+            if (updateFields[key] === '' || updateFields[key] === null || updateFields[key] === undefined) {
                 if (key === 'full_name') {
                     // Don't update full_name if it's empty - keep the existing value
                     delete updateFields[key];
@@ -268,8 +278,8 @@ module.exports = (pool, upload) => {
             }
         }
         
-        // Ensure full_name is not null or empty
-        if (updateFields.full_name && updateFields.full_name.trim() === '') {
+        // Ensure full_name is never null, undefined, or empty string
+        if (updateFields.hasOwnProperty('full_name') && (!updateFields.full_name || updateFields.full_name.trim() === '')) {
             delete updateFields.full_name;
         }
         
@@ -330,11 +340,11 @@ module.exports = (pool, upload) => {
         
         // Role-specific profile fields configuration
         const roleFieldsConfig = {
-            alumni: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
-            student: ['full_name', 'bio', 'city', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department'],
-            faculty: ['full_name', 'bio', 'city', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'department'],
-            employer: ['full_name', 'bio', 'city', 'industry', 'website'],
-            institute: ['full_name', 'bio', 'city', 'website']
+            alumni: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department', 'experience_years', 'specialization', 'achievements', 'certifications', 'languages'],
+            student: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department', 'expected_graduation', 'current_year', 'gpa', 'research_interests', 'languages'],
+            faculty: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'department', 'experience_years', 'specialization', 'current_position', 'research_interests', 'achievements', 'certifications', 'languages'],
+            employer: ['full_name', 'bio', 'city', 'phone_number', 'industry', 'website', 'company_size', 'founded_year', 'languages'],
+            institute: ['full_name', 'bio', 'city', 'phone_number', 'website', 'founded_year', 'student_count', 'languages']
         };
         
         const profileFields = roleFieldsConfig[user.role] || roleFieldsConfig.alumni;
