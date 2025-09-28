@@ -122,7 +122,21 @@ document.addEventListener('DOMContentLoaded', () => {
             allThreads = threads;
             
             if (threads.length === 0) {
-                threadsFeed.innerHTML = '<div class="empty-state"><i class="fas fa-comments"></i><h3>No threads yet</h3><p>Be the first to share something with the community!</p><a href="add-thread.html" class="btn btn-primary">Create First Thread</a></div>';
+                threadsFeed.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>No Threads Yet</h3>
+                        <p>Be the first to start a conversation! Share your thoughts, experiences, or ask questions to connect with the alumni community.</p>
+                        <div class="empty-state-actions">
+                            <a href="add-thread.html" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Create First Thread
+                            </a>
+                            <a href="directory.html" class="btn btn-secondary">
+                                <i class="fas fa-users"></i> Browse Alumni
+                            </a>
+                        </div>
+                    </div>
+                `;
                 return;
             }
 
@@ -133,7 +147,26 @@ document.addEventListener('DOMContentLoaded', () => {
             
         } catch (error) {
             console.error('Error loading threads:', error);
-            threadsFeed.innerHTML = '<div class="error-state"><i class="fas fa-exclamation-triangle"></i><h3>Error loading threads</h3><p>Please try refreshing the page.</p></div>';
+            threadsFeed.innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Unable to Load Threads</h3>
+                    <p>We're having trouble connecting to the server. This might be because:</p>
+                    <ul class="error-reasons">
+                        <li>You're not logged in</li>
+                        <li>The server is temporarily unavailable</li>
+                        <li>Your internet connection is unstable</li>
+                    </ul>
+                    <div class="error-actions">
+                        <button class="btn btn-primary" onclick="location.reload()">
+                            <i class="fas fa-refresh"></i> Try Again
+                        </button>
+                        <a href="login.html" class="btn btn-secondary">
+                            <i class="fas fa-sign-in-alt"></i> Log In
+                        </a>
+                    </div>
+                </div>
+            `;
         }
     };
 
