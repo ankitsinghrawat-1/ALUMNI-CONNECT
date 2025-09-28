@@ -349,12 +349,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
     const populateProfileData = (data) => {
-        const fields = ['full_name', 'bio', 'company', 'job_title', 'city', 'linkedin_profile', 'institute_name', 'major', 'graduation_year', 'department', 'industry', 'skills', 'website'];
-        fields.forEach(id => {
-            const displayElement = document.querySelector(`.display-field[data-field="${id}"]`);
-            const inputElement = document.querySelector(`.edit-field[name="${id}"]`);
-            if (displayElement) displayElement.textContent = data[id] || 'Not set';
-            if (inputElement) inputElement.value = data[id] || '';
+        // Enhanced fields list to cover all profile fields
+        const fields = [
+            'full_name', 'bio', 'company', 'job_title', 'city', 'linkedin_profile', 
+            'institute_name', 'major', 'graduation_year', 'department', 'industry', 
+            'skills', 'website', 'phone_number', 'specialization', 'experience_years',
+            'certifications', 'achievements', 'languages', 'research_interests',
+            'current_position', 'company_size', 'founded_year', 'student_count',
+            'expected_graduation', 'current_year', 'gpa'
+        ];
+        
+        fields.forEach(field => {
+            const displayElement = document.querySelector(`.display-field[data-field="${field}"]`);
+            const inputElement = document.querySelector(`.edit-field[name="${field}"]`);
+            
+            if (displayElement) {
+                displayElement.textContent = data[field] || 'Not set';
+            }
+            if (inputElement) {
+                if (inputElement.type === 'checkbox') {
+                    inputElement.checked = !!data[field];
+                } else {
+                    inputElement.value = data[field] || '';
+                }
+            }
         });
 
         const badgeContainer = document.getElementById('profile-verified-badge');
@@ -363,10 +381,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         
         renderVerificationStatus(data.verification_status);
-        document.getElementById('email').textContent = data.email || 'Not set';
+        const emailElement = document.getElementById('email');
+        if (emailElement) {
+            emailElement.textContent = data.email || 'Not set';
+        }
 
-        profilePic.src = data.profile_pic_url ? `http://localhost:3000/${data.profile_pic_url}` : createInitialsAvatar(data.full_name);
-        profilePic.onerror = () => { profilePic.src = createInitialsAvatar(data.full_name); };
+        if (data.profile_pic_url) {
+            profilePic.src = `http://localhost:3000/${data.profile_pic_url}`;
+            profilePic.onerror = () => { 
+                profilePic.src = createInitialsAvatar(data.full_name || 'User'); 
+            };
+        } else {
+            profilePic.src = createInitialsAvatar(data.full_name || 'User');
+        }
         
         // Update the view based on the user's role
         updateProfileViewForRole(userRole);
@@ -511,5 +538,4 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     await fetchUserProfile();
     await fetchPrivacySettings();
-});
 });

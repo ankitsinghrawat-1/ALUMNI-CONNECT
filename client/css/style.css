@@ -4519,8 +4519,8 @@ html.dark-mode .modal-content {
 }
 
 .group-modal-logo {
-    width: 80px;
-    height: 80px;
+    width: 120px;
+    height: 120px;
     border-radius: 12px;
     object-fit: cover;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
@@ -5695,7 +5695,7 @@ body main {
 /* --- Group Listing Page Card Styles --- */
 .groups-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
@@ -5859,7 +5859,7 @@ body main {
 /* --- Group Listing Page Card Styles --- */
 .groups-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
 }
 
@@ -10107,15 +10107,22 @@ fieldset.form-section legend {
 .groups-grid.list-view .enhanced-group-card {
     display: flex;
     align-items: stretch;
+    min-height: 200px;
 }
 
 .groups-grid.list-view .group-card-header {
     flex: 0 0 250px;
 }
 
+.groups-grid.list-view .group-card-header .group-image-container {
+    height: 100%;
+    position: relative;
+}
+
 .groups-grid.list-view .group-card-header .group-image {
     height: 100%;
     width: 100%;
+    border-radius: 8px 0 0 8px;
 }
 
 .groups-grid.list-view .group-card-body {
@@ -10123,6 +10130,7 @@ fieldset.form-section legend {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    padding: 1.5rem;
 }
 
 .groups-grid.list-view .group-card-footer {
@@ -10134,6 +10142,24 @@ fieldset.form-section legend {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+/* Ensure modal styling works for both views */
+.groups-grid.list-view .group-details-btn,
+.groups-grid.grid-view .group-details-btn {
+    z-index: 10;
+    position: relative;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.groups-grid.list-view .group-details-btn:hover,
+.groups-grid.grid-view .group-details-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-1px);
 }
 
 /* Mobile Responsiveness for Groups */
