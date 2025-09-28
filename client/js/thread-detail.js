@@ -83,47 +83,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
     };
 
-    // Load related threads (mock data for now)
+    // Load related threads (fetch from API)
     const loadRelatedThreads = async (currentThreadId) => {
         const relatedThreadsContainer = document.getElementById('related-threads');
         
         try {
-            // In a real implementation, this would fetch related threads from API
-            const mockRelatedThreads = [
-                {
-                    id: 2,
-                    title: "Career transition tips from tech to finance",
-                    author: "Jane Smith",
-                    avatar: createInitialsAvatar("Jane Smith"),
-                    timeAgo: "2d ago"
-                },
-                {
-                    id: 3,
-                    title: "Networking strategies that actually work",
-                    author: "Mike Johnson",
-                    avatar: createInitialsAvatar("Mike Johnson"),
-                    timeAgo: "1w ago"
-                },
-                {
-                    id: 4,
-                    title: "Remote work best practices",
-                    author: "Sarah Wilson",
-                    avatar: createInitialsAvatar("Sarah Wilson"),
-                    timeAgo: "3d ago"
+            // Try to fetch related threads from API
+            try {
+                const relatedThreads = await window.api.get(`/threads/related/${currentThreadId}`);
+                
+                if (relatedThreads && relatedThreads.length > 0) {
+                    const relatedHTML = relatedThreads.slice(0, 5).map(thread => {
+                        const profilePicUrl = thread.profile_pic_url 
+                            ? `http://localhost:3000/${thread.profile_pic_url}` 
+                            : createInitialsAvatar(thread.author);
+                        
+                        return `
+                            <a href="thread-detail.html?id=${thread.thread_id}" class="related-thread-item">
+                                <img src="${profilePicUrl}" alt="${thread.author}">
+                                <div class="related-thread-content">
+                                    <h5>${sanitizeHTML(thread.content?.substring(0, 60) + '...' || 'Untitled Thread')}</h5>
+                                    <span>by ${sanitizeHTML(thread.author)} • ${timeAgo(thread.created_at)}</span>
+                                </div>
+                            </a>
+                        `;
+                    }).join('');
+                    
+                    relatedThreadsContainer.innerHTML = relatedHTML;
+                } else {
+                    relatedThreadsContainer.innerHTML = '<p class="no-related">No related threads found.</p>';
                 }
-            ].filter(t => t.id != currentThreadId);
-
-            const relatedHTML = mockRelatedThreads.map(thread => `
-                <a href="thread-detail.html?id=${thread.id}" class="related-thread-item">
-                    <img src="${thread.avatar}" alt="${thread.author}">
-                    <div class="related-thread-content">
-                        <h5>${thread.title}</h5>
-                        <span>by ${thread.author} • ${thread.timeAgo}</span>
+            } catch (apiError) {
+                // If API endpoint doesn't exist, show helpful message
+                relatedThreadsContainer.innerHTML = `
+                    <div class="related-threads-placeholder">
+                        <i class="fas fa-comments"></i>
+                        <p>Related threads will appear here once more content is available</p>
                     </div>
-                </a>
-            `).join('');
-
-            relatedThreadsContainer.innerHTML = relatedHTML || '<p class="no-related">No related threads found.</p>';
+                `;
+            }
 
         } catch (error) {
             relatedThreadsContainer.innerHTML = '<p class="error-message">Unable to load related threads.</p>';
