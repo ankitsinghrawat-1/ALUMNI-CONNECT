@@ -56,12 +56,33 @@
                     </form>
                 </div>
                 <div id="manage-members" class="profile-page">
-                    <h2>Manage Members</h2>
+                    <div class="manage-members-header">
+                        <h2>Manage Members</h2>
+                        <button id="add-member-btn" class="btn btn-primary">
+                            <i class="fas fa-user-plus"></i> Add Member
+                        </button>
+                    </div>
                     <div id="members-list" class="member-management-list"></div>
                 </div>
             </div>
         </div>
     </main>
+
+    <!-- Add Member Modal -->
+    <div id="add-member-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3>Add Member Directly</h3>
+            <p>Add members who have privacy settings that prevent others from inviting them to groups.</p>
+            <form id="add-member-form">
+                <div class="input-group">
+                    <label for="member-email-input">Member Email</label>
+                    <input type="email" id="member-email-input" required placeholder="member@example.com">
+                </div>
+                <button type="submit" class="btn btn-primary btn-full-width">Add Member</button>
+            </form>
+        </div>
+    </div>
 
     <footer class="main-footer">
         <div class="container">
