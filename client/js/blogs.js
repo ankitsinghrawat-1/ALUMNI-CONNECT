@@ -23,6 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     renderData('/blogs', blogListContainer, blogItemRenderer, {
-        emptyMessage: '<p class="info-message">No blog posts have been written yet.</p>'
+        emptyMessage: `
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-blog"></i>
+                </div>
+                <h3>No Stories Yet</h3>
+                <p>Be the first to share your alumni journey and inspire others!</p>
+                <div class="empty-actions">
+                    <a href="add-blog.html" class="btn btn-primary">Share Your Story</a>
+                </div>
+            </div>
+        `,
+        loadingMessage: `
+            <div class="loading-container">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p>Loading inspiring stories...</p>
+            </div>
+        `
     });
 });

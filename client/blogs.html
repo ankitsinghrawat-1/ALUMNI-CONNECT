@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blog</title>
+    <title>Alumni Stories & Insights - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -23,16 +23,160 @@
         </nav>
     </header>
 
-    <main class="list-page-main">
-        <div class="list-page-container">
-            <h2>Our Blog</h2>
-            <p>News, stories, and updates from our alumni community.</p>
-            <div class="admin-actions">
-                <a href="add-blog.html" class="btn btn-primary"><i class="fas fa-plus"></i> Add New Post</a>
-            </div>
-            <div id="blog-list" class="blog-list-container">
+    <main>
+        <!-- Blog Hero Section -->
+        <section class="blog-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>Alumni Stories & Insights</h1>
+                        <p class="hero-subtitle">Discover inspiring success stories, career advice, and industry insights from our vibrant alumni community. Learn from those who've walked the path before you.</p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-newspaper"></i>
+                                <div class="stat-info">
+                                    <span class="stat-number">500+</span>
+                                    <span class="stat-label">Stories Shared</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <div class="stat-info">
+                                    <span class="stat-number">50K+</span>
+                                    <span class="stat-label">Monthly Readers</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-graduation-cap"></i>
+                                <div class="stat-info">
+                                    <span class="stat-number">200+</span>
+                                    <span class="stat-label">Contributors</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-actions">
+                            <a href="#featured-posts" class="btn btn-primary btn-large">Read Stories</a>
+                            <a href="add-blog.html" class="btn btn-outline btn-large">Share Your Story</a>
+                        </div>
+                    </div>
+                    <div class="hero-visual">
+                        <div class="blog-illustration">
+                            <i class="fas fa-blog"></i>
+                        </div>
+                    </div>
                 </div>
-        </div>
+            </div>
+        </section>
+
+        <!-- Blog Categories -->
+        <section class="blog-categories">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Explore by Category</h2>
+                    <p>Find the stories that matter to you</p>
+                </div>
+                <div class="categories-grid">
+                    <div class="category-card" data-category="career">
+                        <i class="fas fa-briefcase"></i>
+                        <h3>Career Growth</h3>
+                        <p>Professional development tips and success stories</p>
+                        <span class="post-count">150+ posts</span>
+                    </div>
+                    <div class="category-card" data-category="entrepreneurship">
+                        <i class="fas fa-rocket"></i>
+                        <h3>Entrepreneurship</h3>
+                        <p>Startup journeys and business insights</p>
+                        <span class="post-count">90+ posts</span>
+                    </div>
+                    <div class="category-card" data-category="technology">
+                        <i class="fas fa-laptop-code"></i>
+                        <h3>Tech & Innovation</h3>
+                        <p>Latest trends in technology and innovation</p>
+                        <span class="post-count">120+ posts</span>
+                    </div>
+                    <div class="category-card" data-category="lifestyle">
+                        <i class="fas fa-heart"></i>
+                        <h3>Life & Balance</h3>
+                        <p>Work-life balance and personal growth</p>
+                        <span class="post-count">80+ posts</span>
+                    </div>
+                    <div class="category-card" data-category="industry">
+                        <i class="fas fa-industry"></i>
+                        <h3>Industry Insights</h3>
+                        <p>Deep dives into various industries</p>
+                        <span class="post-count">70+ posts</span>
+                    </div>
+                    <div class="category-card" data-category="networking">
+                        <i class="fas fa-users"></i>
+                        <h3>Networking</h3>
+                        <p>Building professional relationships</p>
+                        <span class="post-count">60+ posts</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Posts Section -->
+        <section id="featured-posts" class="blog-posts-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Latest Stories</h2>
+                    <div class="blog-controls">
+                        <div class="search-bar">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Search stories by title, author, or topic...">
+                        </div>
+                        <div class="filter-controls">
+                            <select class="category-filter">
+                                <option value="">All Categories</option>
+                                <option value="career">Career Growth</option>
+                                <option value="entrepreneurship">Entrepreneurship</option>
+                                <option value="technology">Tech & Innovation</option>
+                                <option value="lifestyle">Life & Balance</option>
+                                <option value="industry">Industry Insights</option>
+                                <option value="networking">Networking</option>
+                            </select>
+                            <select class="sort-filter">
+                                <option value="latest">Latest First</option>
+                                <option value="popular">Most Popular</option>
+                                <option value="oldest">Oldest First</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="blog-list" class="blog-grid">
+                    <!-- Blog posts will be loaded here by JavaScript -->
+                    <div class="loading-container">
+                        <div class="loading-spinner">
+                            <div class="spinner"></div>
+                        </div>
+                        <p>Loading inspiring stories...</p>
+                    </div>
+                </div>
+                <div class="load-more-container" style="display: none;">
+                    <button class="btn btn-secondary btn-large">Load More Stories</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Newsletter Section -->
+        <section class="newsletter-section">
+            <div class="container">
+                <div class="newsletter-content">
+                    <div class="newsletter-text">
+                        <h2>Stay Updated</h2>
+                        <p>Get the latest alumni stories and career insights delivered to your inbox weekly.</p>
+                    </div>
+                    <div class="newsletter-form">
+                        <div class="input-group">
+                            <input type="email" placeholder="Enter your email address">
+                            <button class="btn btn-primary">Subscribe</button>
+                        </div>
+                        <p class="newsletter-note">Join 5,000+ alumni who stay informed</p>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
     
     <footer class="main-footer">

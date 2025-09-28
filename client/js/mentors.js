@@ -1,6 +1,6 @@
 // client/js/mentors.js
 document.addEventListener('DOMContentLoaded', async () => {
-    const mentorsListContainer = document.getElementById('mentors-list');
+    const mentorsListContainer = document.getElementById('mentors-list-container');
     const mentorActionArea = document.getElementById('mentor-action-area');
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
     
@@ -27,7 +27,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const fetchAndRenderMentors = async () => {
-        mentorsListContainer.innerHTML = `<div class="loading-spinner"><div class="spinner"></div></div>`;
+        mentorsListContainer.innerHTML = `
+            <div class="loading-container">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p>Finding amazing mentors for you...</p>
+            </div>
+        `;
         try {
             const [mentors, sentRequests] = await Promise.all([
                 window.api.get('/mentors'),
