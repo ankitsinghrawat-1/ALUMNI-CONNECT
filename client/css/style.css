@@ -2773,6 +2773,57 @@ main {
     border: 4px solid var(--accent-color);
 }
 
+.verification-status-display {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius-medium);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.verification-status-display.verified {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.verification-status-display.pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.verification-status-display.unverified {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.verification-actions {
+    margin-top: 1rem;
+}
+
+html.dark-mode .verification-status-display.verified {
+    background-color: #1e3b29;
+    color: #5cb85c;
+    border-color: #4f7d57;
+}
+
+html.dark-mode .verification-status-display.pending {
+    background-color: #3d3319;
+    color: #f0ad4e;
+    border-color: #8a6d1a;
+}
+
+html.dark-mode .verification-status-display.unverified {
+    background-color: #3b1e20;
+    color: #d9534f;
+    border-color: #7a4243;
+}
+
 /* --- Directory, View Profile, Events, Jobs specific styling --- */
 
 .list-page-main {
@@ -9862,6 +9913,7 @@ fieldset.form-section legend {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     overflow: hidden;
     border: 1px solid var(--border-color);
+    max-width: 320px; /* Make cards smaller */
 }
 
 .enhanced-group-card:hover {
@@ -9884,9 +9936,14 @@ fieldset.form-section legend {
     position: relative;
 }
 
+.group-image-container {
+    position: relative;
+    display: inline-block;
+}
+
 .group-card-header .group-image {
-    width: 60px;
-    height: 60px;
+    width: 50px; /* Smaller image */
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
     transition: transform 0.3s ease;
@@ -9897,6 +9954,27 @@ fieldset.form-section legend {
     transform: scale(1.05);
 }
 
+.activity-indicator {
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    background: var(--surface-color);
+    border-radius: 50%;
+    padding: 2px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.activity-indicator i {
+    font-size: 0.6rem;
+    color: var(--success-color);
+    animation: pulse 2s infinite;
+}
+
+.activity-indicator i.inactive {
+    color: var(--subtle-text-color);
+    animation: none;
+}
+
 .group-badge {
     position: static;
 }
@@ -9904,9 +9982,9 @@ fieldset.form-section legend {
 .group-badge .private-badge {
     background: var(--error-color);
     color: white;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -9916,9 +9994,9 @@ fieldset.form-section legend {
 .group-badge .public-badge {
     background: var(--success-color);
     color: white;
-    padding: 0.4rem 0.8rem;
-    border-radius: 20px;
-    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 15px;
+    font-size: 0.75rem;
     font-weight: 600;
     display: flex;
     align-items: center;
@@ -9926,12 +10004,12 @@ fieldset.form-section legend {
 }
 
 .group-card-body {
-    padding: 1.5rem;
+    padding: 0 1rem 1rem; /* Reduced padding */
 }
 
 .group-category {
     color: var(--primary-color);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -9939,57 +10017,72 @@ fieldset.form-section legend {
 }
 
 .group-card-body h3 {
-    font-size: 1.4rem;
+    font-size: 1.2rem; /* Smaller title */
     font-weight: 700;
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     color: var(--text-color);
     line-height: 1.3;
 }
 
+.group-creator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--subtle-text-color);
+}
+
+.group-creator i {
+    color: var(--accent-color);
+    font-size: 0.75rem;
+}
+
 .group-description {
     color: var(--subtle-text-color);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+    font-size: 0.85rem; /* Smaller description */
+    line-height: 1.5;
+    margin-bottom: 1rem;
 }
 
 .group-stats {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around; /* More evenly distributed */
     margin-bottom: 1rem;
 }
 
 .group-stats .stat-item {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
     color: var(--subtle-text-color);
-    font-size: 0.9rem;
+    font-size: 0.8rem; /* Smaller stats */
 }
 
 .group-stats .stat-item i {
     color: var(--accent-color);
+    font-size: 0.75rem;
 }
 
 .group-card-footer {
-    padding: 0 1.5rem 1.5rem;
+    padding: 0.75rem 1rem; /* Reduced padding */
     border-top: 1px solid var(--border-color);
-    padding-top: 1rem;
 }
 
 .group-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 0.5rem;
 }
 
 .group-join-btn {
     background: var(--primary-color);
     color: white;
     border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.875rem;
+    padding: 0.4rem 0.8rem; /* Smaller buttons */
+    border-radius: 15px;
+    font-size: 0.8rem;
     font-weight: 600;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -9999,21 +10092,9 @@ fieldset.form-section legend {
     background: var(--primary-dark-color);
 }
 
-.activity-indicator {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--subtle-text-color);
-    font-size: 0.85rem;
-}
-
-.activity-indicator i {
-    color: var(--success-color);
-    animation: pulse 2s infinite;
-}
-
-.activity-indicator i.active {
-    color: var(--success-color);
+.group-details-btn {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.8rem;
 }
 
 /* List View for Groups */
