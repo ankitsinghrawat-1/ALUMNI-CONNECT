@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="admin-dashboard-main">
+        <div class="container">
+            <div class="admin-header">
+                <h1>Dashboard Overview</h1>
+                <p>A high-level view of your platform's key metrics.</p>
+            </div>
+
+            <div class="admin-grid-container">
+                <!-- Left Sidebar -->
+                <aside class="admin-left-sidebar">
+                    <div class="card">
+                        <h3>Quick Links</h3>
+                        <div class="quick-links">
+                            <a href="admin.html"><i class="fas fa-tools"></i> Full Admin Panel</a>
+                            <a href="user-management.html"><i class="fas fa-users-cog"></i> Manage Users</a>
+                            <a href="verification-requests.html"><i class="fas fa-user-check"></i> Verification Requests</a>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h3>Recent Activity</h3>
+                        <ul id="recent-activity-list" class="admin-activity-list">
+                           <li>No recent activity to show.</li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Right Main Content -->
+                <div class="admin-right-content">
+                    <!-- Stats Cards -->
+                    <div class="admin-stats-grid">
+                        <div class="stat-card">
+                            <i class="fas fa-users"></i>
+                            <div class="stat-info">
+                                <span id="total-users" class="stat-number">0</span>
+                                <span class="stat-label">Total Users</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-user-friends"></i>
+                            <div class="stat-info">
+                                <span id="total-groups" class="stat-number">0</span>
+                                <span class="stat-label">Total Groups</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-calendar-check"></i>
+                            <div class="stat-info">
+                                <span id="total-events" class="stat-number">0</span>
+                                <span class="stat-label">Total Events</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-briefcase"></i>
+                            <div class="stat-info">
+                                <span id="total-jobs" class="stat-number">0</span>
+                                <span class="stat-label">Total Jobs</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- This space is now free -->
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/admin-dashboard.js"></script>
+</body>
+</html>

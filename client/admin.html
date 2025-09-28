@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Admin Panel</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -23,7 +23,7 @@
                 <a href="index.html" class="logo">AlumniConnect</a>
             </div>
             <nav class="sidebar-nav">
-                <a href="admin.html" class="nav-item active"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="admin.html" class="nav-item active"><i class="fas fa-tachometer-alt"></i> Admin Panel</a>
                 <a href="user-management.html" class="nav-item"><i class="fas fa-users-cog"></i> User Management</a>
                 <a href="verification-requests.html" class="nav-item"><i class="fas fa-user-check"></i> Verification Requests</a>
                 <a href="approval-management.html" class="nav-item"><i class="fas fa-check-double"></i> Content Approvals</a>
@@ -34,7 +34,7 @@
                 <a href="campaign-management.html" class="nav-item"><i class="fas fa-bullhorn"></i> Campaigns</a>
                 <a href="blog-management.html" class="nav-item"><i class="fas fa-newspaper"></i> Blogs</a>
                 <a href="application-management.html" class="nav-item"><i class="fas fa-file-alt"></i> Applications</a>
-                </nav>
+            </nav>
             <div class="sidebar-footer">
                  <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> Your Profile</a>
                  <a href="#" id="admin-logout-btn" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -43,61 +43,87 @@
 
         <main class="admin-main-content">
             <header class="admin-content-header">
-                <h1>Dashboard Overview</h1>
+                <h1>Admin Panel</h1>
                 <div class="admin-actions">
                     <a href="add-event.html" class="btn btn-primary"><i class="fas fa-plus"></i> Add Event</a>
                     <a href="add-job.html" class="btn btn-secondary"><i class="fas fa-plus"></i> Add Job</a>
                 </div>
             </header>
 
-            <div class="stats-grid">
-                 <div class="stat-card">
-                    <div class="stat-card-icon"><i class="fas fa-users"></i></div>
-                    <div class="stat-card-info">
-                        <h4>Total Users</h4>
-                        <p id="total-users">0</p>
+            <div class="admin-stats-v2-grid">
+                <div class="admin-stat-card">
+                    <i class="fas fa-user-plus"></i>
+                    <div class="stat-content">
+                        <span id="new-users-stat" class="stat-number">0</span>
+                        <p class="stat-label">New Users (30 days)</p>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class="fas fa-calendar-check"></i></div>
-                    <div class="stat-card-info">
-                        <h4>Total Events</h4>
-                        <p id="total-events">0</p>
+                <div class="admin-stat-card">
+                    <i class="fas fa-file-signature"></i>
+                    <div class="stat-content">
+                        <span id="pending-verifications-stat" class="stat-number">0</span>
+                        <p class="stat-label">Pending Verifications</p>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class="fas fa-briefcase"></i></div>
-                    <div class="stat-card-info">
-                        <h4>Total Jobs</h4>
-                        <p id="total-jobs">0</p>
+                <div class="admin-stat-card">
+                    <i class="fas fa-users"></i>
+                    <div class="stat-content">
+                        <span id="active-groups-stat" class="stat-number">0</span>
+                        <p class="stat-label">Active Groups</p>
                     </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-card-icon"><i class="fas fa-file-alt"></i></div>
-                    <div class="stat-card-info">
-                        <h4>Applications</h4>
-                        <p id="total-applications">0</p>
+                <div class="admin-stat-card">
+                    <i class="fas fa-newspaper"></i>
+                    <div class="stat-content">
+                        <span id="new-blogs-stat" class="stat-number">0</span>
+                        <p class="stat-label">New Blog Posts (7 days)</p>
                     </div>
                 </div>
             </div>
 
             <div class="admin-grid-layout">
-                <section class="admin-section card">
-                    <h3>Platform Analytics</h3>
-                    <div class="charts-grid">
+                <div class="admin-main-column">
+                    <section class="admin-section card">
+                        <h3>Create Announcement</h3>
+                        <form id="announcement-form">
+                            <div class="input-group"><label for="announcement-title">Title</label><input type="text" id="announcement-title" required></div>
+                            <div class="input-group"><label for="announcement-content">Content</label><textarea id="announcement-content" rows="4" required></textarea></div>
+                            <button type="submit" class="btn btn-primary btn-full-width">Post Announcement</button>
+                        </form>
+                    </section>
+                </div>
+                <div class="admin-side-column">
+                    <section class="admin-section card">
+                        <h3>Pending Requests</h3>
+                        <div id="pending-requests-summary" class="pending-requests"></div>
+                    </section>
+                </div>
+            </div>
+
+            <!-- NEW: Upgraded Platform Analytics Section -->
+            <section class="admin-section card" id="platform-analytics">
+                <h3>Platform Analytics</h3>
+                <div class="analytics-grid">
+                    <div class="chart-wrapper">
+                        <h4>User Role Distribution</h4>
                         <div class="chart-container">
-                            <h4>User Signups Over Time</h4>
-                            <canvas id="userSignupsChart"></canvas>
+                            <canvas id="userRolesChart"></canvas>
                         </div>
                     </div>
-                </section>
-
-                <section class="admin-section card">
-                    <h3>Pending Requests</h3>
-                    <div id="pending-requests-summary" class="pending-requests">
+                    <div class="chart-wrapper">
+                        <h4>Content Creation (Last 30 Days)</h4>
+                        <div class="chart-container">
+                            <canvas id="contentTrendsChart"></canvas>
                         </div>
-                </section>
-            </div>
+                    </div>
+                </div>
+                <div class="chart-wrapper full-width-chart">
+                    <h4>New User Signups (Last 30 Days)</h4>
+                    <div class="chart-container tall-chart">
+                        <canvas id="userSignupsChart"></canvas>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 

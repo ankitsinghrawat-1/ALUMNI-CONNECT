@@ -1,4 +1,24 @@
 // client/js/auth.js
+
+// --- HELPER FUNCTION: Returns the correct dashboard URL based on role ---
+function getDashboardUrl(role) {
+    switch (role) {
+        case 'student':
+            return 'student-dashboard.html';
+        case 'faculty':
+            return 'faculty-dashboard.html';
+        case 'institute':
+            return 'institute-dashboard.html';
+        case 'employer':
+            return 'employer-dashboard.html';
+        case 'admin':
+            return 'admin-dashboard.html';
+        case 'alumni':
+        default:
+            return 'dashboard.html';
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const navLinks = document.getElementById('nav-links');
 
@@ -55,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <img src="" alt="Profile" id="nav-profile-pic-img" class="nav-profile-pic">
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+                    <li><a href="${getDashboardUrl(userRole)}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li><a href="profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
                     <li><a href="my-blogs.html"><i class="fas fa-feather-alt"></i> My Blogs</a></li>
                     <li><hr class="dropdown-divider"></li>
