@@ -104,12 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             <span class="share-count">${thread.share_count || 0}</span>
                         </button>
                     </div>
-                    <div class="stat-item">
-                        <button class="stat-btn view-btn" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'" title="View full thread">
-                            <i class="fas fa-eye"></i>
-                            <span>View</span>
-                        </button>
-                    </div>
                 </div>
             </article>
         `;
