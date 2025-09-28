@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Threads - Social Feed</title>
+    <title>Community Discussions - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -23,33 +23,235 @@
         </nav>
     </header>
 
-    <main class="threads-main">
-        <div class="threads-container">
-            <div class="threads-header">
-                <h1>Social Feed</h1>
-                <p>Share your thoughts, experiences and connect with the community</p>
-                <a href="add-thread.html" class="btn btn-primary thread-compose-btn">
-                    <i class="fas fa-plus"></i> New Thread
-                </a>
-            </div>
-
-            <!-- Thread Feed -->
-            <div id="threads-feed" class="threads-feed">
-                <div class="loading-container">
-                    <div class="loading-spinner">
-                        <div class="spinner"></div>
+    <main>
+        <!-- Threads Hero Section -->
+        <section class="threads-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <div class="hero-text">
+                        <h1>Community Discussions</h1>
+                        <p class="hero-subtitle">Join conversations, share experiences, and connect with fellow alumni. Discover insights, ask questions, and contribute to meaningful discussions.</p>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-comments"></i>
+                                <div class="stat-info">
+                                    <span class="stat-number">1,000+</span>
+                                    <span class="stat-label">Active Discussions</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <div class="stat-info">
+                                    <span class="stat-number">5,000+</span>
+                                    <span class="stat-label">Community Members</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-fire"></i>
+                                <div class="stat-info">
+                                    <span class="stat-number">Daily</span>
+                                    <span class="stat-label">New Conversations</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-actions">
+                            <a href="#threads-feed" class="btn btn-primary btn-large">Browse Discussions</a>
+                            <a href="add-thread.html" class="btn btn-outline btn-large">Start a Discussion</a>
+                        </div>
                     </div>
-                    <p>Loading threads...</p>
+                    <div class="hero-visual">
+                        <div class="discussion-illustration">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </section>
 
-            <!-- Load More Button -->
-            <div class="load-more-container" style="display: none;">
-                <button id="load-more-btn" class="btn btn-secondary">
-                    <i class="fas fa-chevron-down"></i> Load More
-                </button>
+        <!-- Discussion Categories -->
+        <section class="discussion-categories">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Popular Discussion Topics</h2>
+                    <p>Explore conversations by category</p>
+                </div>
+                <div class="categories-grid">
+                    <div class="category-card" data-category="career">
+                        <i class="fas fa-briefcase"></i>
+                        <h3>Career Advice</h3>
+                        <p>Share career tips and get professional guidance</p>
+                        <span class="discussion-count">300+ discussions</span>
+                    </div>
+                    <div class="category-card" data-category="networking">
+                        <i class="fas fa-handshake"></i>
+                        <h3>Networking</h3>
+                        <p>Connect with peers and expand your network</p>
+                        <span class="discussion-count">250+ discussions</span>
+                    </div>
+                    <div class="category-card" data-category="industry">
+                        <i class="fas fa-industry"></i>
+                        <h3>Industry Insights</h3>
+                        <p>Discuss trends and developments in various industries</p>
+                        <span class="discussion-count">200+ discussions</span>
+                    </div>
+                    <div class="category-card" data-category="entrepreneurship">
+                        <i class="fas fa-rocket"></i>
+                        <h3>Entrepreneurship</h3>
+                        <p>Share startup experiences and business ideas</p>
+                        <span class="discussion-count">180+ discussions</span>
+                    </div>
+                    <div class="category-card" data-category="lifestyle">
+                        <i class="fas fa-heart"></i>
+                        <h3>Life & Balance</h3>
+                        <p>Discuss work-life balance and personal growth</p>
+                        <span class="discussion-count">150+ discussions</span>
+                    </div>
+                    <div class="category-card" data-category="general">
+                        <i class="fas fa-globe"></i>
+                        <h3>General</h3>
+                        <p>Open discussions on various topics</p>
+                        <span class="discussion-count">100+ discussions</span>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Threads Feed Section -->
+        <section id="threads-feed" class="threads-feed-section">
+            <div class="container">
+                <div class="feed-layout">
+                    <!-- Main Feed -->
+                    <div class="main-feed">
+                        <div class="feed-header">
+                            <h2>Latest Discussions</h2>
+                            <div class="feed-controls">
+                                <div class="search-bar">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" placeholder="Search discussions...">
+                                </div>
+                                <div class="filter-controls">
+                                    <select class="category-filter">
+                                        <option value="">All Topics</option>
+                                        <option value="career">Career Advice</option>
+                                        <option value="networking">Networking</option>
+                                        <option value="industry">Industry Insights</option>
+                                        <option value="entrepreneurship">Entrepreneurship</option>
+                                        <option value="lifestyle">Life & Balance</option>
+                                        <option value="general">General</option>
+                                    </select>
+                                    <select class="sort-filter">
+                                        <option value="latest">Latest First</option>
+                                        <option value="popular">Most Popular</option>
+                                        <option value="trending">Trending</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div id="threads-feed-container" class="threads-feed-content">
+                            <!-- Threads will be loaded here by JavaScript -->
+                            <div class="loading-container">
+                                <div class="loading-spinner">
+                                    <div class="spinner"></div>
+                                </div>
+                                <p>Loading discussions...</p>
+                            </div>
+                        </div>
+
+                        <!-- Load More Button -->
+                        <div id="load-more-container" class="load-more-container" style="display: none;">
+                            <button id="load-more-btn" class="btn btn-secondary btn-large">
+                                <i class="fas fa-chevron-down"></i> Load More Discussions
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Sidebar -->
+                    <aside class="feed-sidebar">
+                        <div class="sidebar-card">
+                            <h3><i class="fas fa-fire"></i> Trending Now</h3>
+                            <div class="trending-topics">
+                                <div class="topic-item">
+                                    <span class="topic-tag">#career-change</span>
+                                    <span class="topic-count">45 discussions</span>
+                                </div>
+                                <div class="topic-item">
+                                    <span class="topic-tag">#remote-work</span>
+                                    <span class="topic-count">38 discussions</span>
+                                </div>
+                                <div class="topic-item">
+                                    <span class="topic-tag">#startup-life</span>
+                                    <span class="topic-count">32 discussions</span>
+                                </div>
+                                <div class="topic-item">
+                                    <span class="topic-tag">#networking-tips</span>
+                                    <span class="topic-count">28 discussions</span>
+                                </div>
+                                <div class="topic-item">
+                                    <span class="topic-tag">#work-life-balance</span>
+                                    <span class="topic-count">25 discussions</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3><i class="fas fa-users"></i> Active Contributors</h3>
+                            <div class="active-users">
+                                <div class="user-item">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="user-info">
+                                        <span class="user-name">Sarah Chen</span>
+                                        <span class="user-activity">15 posts this week</span>
+                                    </div>
+                                </div>
+                                <div class="user-item">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="user-info">
+                                        <span class="user-name">Michael Rodriguez</span>
+                                        <span class="user-activity">12 posts this week</span>
+                                    </div>
+                                </div>
+                                <div class="user-item">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user-circle"></i>
+                                    </div>
+                                    <div class="user-info">
+                                        <span class="user-name">Priya Patel</span>
+                                        <span class="user-activity">10 posts this week</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="sidebar-card">
+                            <h3><i class="fas fa-lightbulb"></i> Discussion Tips</h3>
+                            <div class="tips-list">
+                                <div class="tip-item">
+                                    <i class="fas fa-check"></i>
+                                    <span>Use clear, descriptive titles</span>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-check"></i>
+                                    <span>Add relevant tags to your posts</span>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-check"></i>
+                                    <span>Engage respectfully with others</span>
+                                </div>
+                                <div class="tip-item">
+                                    <i class="fas fa-check"></i>
+                                    <span>Share your experiences</span>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
     </main>
     
     <footer class="main-footer">

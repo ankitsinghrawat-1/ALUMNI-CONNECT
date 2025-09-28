@@ -1,6 +1,6 @@
 // client/js/threads.js
 document.addEventListener('DOMContentLoaded', () => {
-    const threadsFeed = document.getElementById('threads-feed');
+    const threadsFeed = document.getElementById('threads-feed-container');
     const threadModal = document.getElementById('thread-modal');
     const shareModal = document.getElementById('share-modal');
     let currentThreadForShare = null;
