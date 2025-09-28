@@ -494,6 +494,16 @@ main {
 
 .stat-item {
     padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.stat-item i {
+    font-size: 2.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 0.5rem;
 }
 
 .stat-number {
@@ -508,6 +518,7 @@ main {
     color: rgba(255, 255, 255, 0.9);
     text-transform: uppercase;
     letter-spacing: 1px;
+    text-align: center;
 }
 
 /*--------------------------------------------------
@@ -918,10 +929,16 @@ main {
     padding: 1rem 2.5rem;
     font-size: 1.1rem;
     font-weight: 600;
+    line-height: 1.4;
     border-radius: 50px;
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
+    height: auto;
+    min-height: 54px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .btn-large::before {
@@ -1306,6 +1323,16 @@ main {
     border-radius: 25px;
     padding: 0.75rem 1.5rem;
     font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.match-type .btn.active,
+.match-type .btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
 /* Results Section */

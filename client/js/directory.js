@@ -25,6 +25,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     // Popular Search Tags
     const searchTags = document.querySelectorAll('.search-tag');
+    
+    // AI Matching buttons
+    const aiMatchButtons = document.querySelectorAll('.match-type .btn');
 
     // Helper functions
     const showLoading = () => {
@@ -336,6 +339,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             const searchTerm = tag.dataset.search;
             searchInput.value = searchTerm;
             performSearch();
+        });
+    });
+
+    // AI Matching buttons functionality
+    aiMatchButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            // Remove active state from all buttons
+            aiMatchButtons.forEach(b => b.classList.remove('active'));
+            // Add active state to clicked button
+            btn.classList.add('active');
+            
+            // Get button text to determine search type
+            const buttonText = btn.textContent.trim();
+            let searchTerm = '';
+            
+            switch(buttonText) {
+                case 'Find Mentors':
+                    searchTerm = 'mentor senior experienced';
+                    resultsTitle.textContent = 'Mentors Found';
+                    break;
+                case 'Find Peers':
+                    searchTerm = 'peer colleague graduate';
+                    resultsTitle.textContent = 'Peer Connections Found';
+                    break;
+                case 'Explore Careers':
+                    searchTerm = 'career opportunity hiring recruiter';
+                    resultsTitle.textContent = 'Career Opportunities Found';
+                    break;
+                case 'Meet Experts':
+                    searchTerm = 'expert leader specialist industry';
+                    resultsTitle.textContent = 'Industry Experts Found';
+                    break;
+            }
+            
+            // Set search term and perform search
+            if (searchTerm) {
+                searchInput.value = searchTerm;
+                performSearch();
+            }
         });
     });
 
