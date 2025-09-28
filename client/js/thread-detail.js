@@ -547,6 +547,70 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
+    // Sidebar interactions
+    const setupSidebarInteractions = () => {
+        // Trending topics click handlers
+        document.querySelectorAll('.topic-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const tag = item.querySelector('.topic-tag').textContent;
+                // Navigate to threads page with search filter
+                window.location.href = `threads.html?search=${encodeURIComponent(tag)}`;
+            });
+        });
+
+        // Bookmark button functionality
+        const bookmarkBtn = document.getElementById('bookmark-thread');
+        if (bookmarkBtn) {
+            bookmarkBtn.addEventListener('click', () => {
+                const icon = bookmarkBtn.querySelector('i');
+                const isBookmarked = icon.classList.contains('fa-bookmark');
+                
+                if (isBookmarked) {
+                    icon.className = 'far fa-bookmark';
+                    bookmarkBtn.innerHTML = '<i class="far fa-bookmark"></i> Bookmark Thread';
+                    bookmarkBtn.classList.remove('bookmarked');
+                    showToast('Bookmark removed', 'info');
+                } else {
+                    icon.className = 'fas fa-bookmark';
+                    bookmarkBtn.innerHTML = '<i class="fas fa-bookmark"></i> Bookmarked';
+                    bookmarkBtn.classList.add('bookmarked');
+                    showToast('Thread bookmarked!', 'success');
+                }
+            });
+        }
+
+        // Follow author button
+        const followBtn = document.getElementById('follow-author');
+        if (followBtn) {
+            followBtn.addEventListener('click', () => {
+                const icon = followBtn.querySelector('i');
+                const isFollowing = icon.classList.contains('fa-user-check');
+                
+                if (isFollowing) {
+                    icon.className = 'fas fa-user-plus';
+                    followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow Author';
+                    showToast('Unfollowed author', 'info');
+                } else {
+                    icon.className = 'fas fa-user-check';
+                    followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+                    showToast('Now following this author!', 'success');
+                }
+            });
+        }
+
+        // Report thread button
+        const reportBtn = document.getElementById('report-thread');
+        if (reportBtn) {
+            reportBtn.addEventListener('click', () => {
+                if (confirm('Are you sure you want to report this thread? Our moderators will review it.')) {
+                    showToast('Thread reported. Thank you for keeping our community safe.', 'success');
+                    reportBtn.disabled = true;
+                    reportBtn.innerHTML = '<i class="fas fa-check"></i> Reported';
+                }
+            });
+        }
+    };
+
     // Event listeners
     document.addEventListener('click', (e) => {
         // Like button clicks
@@ -611,5 +675,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     // Load the thread
-    loadThread();
+    loadThread().then(() => {
+        // Setup sidebar interactions after thread is loaded
+        setupSidebarInteractions();
+    });
 });
