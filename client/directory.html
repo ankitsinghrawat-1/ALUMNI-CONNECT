@@ -25,20 +25,181 @@
         </nav>
     </header>
 
-    <main class="directory-main">
+    <main class="directory-main enhanced-directory">
         <div class="directory-container">
-            <h2>Alumni Directory</h2>
-            <div class="search-bar card">
-                <input type="text" id="directory-search-input" placeholder="Search by name, company...">
-                <input type="text" id="major-filter" placeholder="Major (e.g., Computer Science)">
-                <input type="number" id="year-filter" placeholder="Graduation Year">
-                <input type="text" id="city-filter" placeholder="City">
-                <input type="text" id="industry-filter" placeholder="Industry (e.g., Tech)">
-                <input type="text" id="skills-filter" placeholder="Skills (e.g., JavaScript)">
-                <button id="directory-search-button" class="btn btn-primary">Search</button>
+            <div class="directory-header">
+                <h2>Smart Alumni Discovery</h2>
+                <p>Find the right connections using our AI-powered search and advanced filters</p>
             </div>
-            <div id="directory-list" class="directory-list">
+            
+            <!-- Enhanced Search Section -->
+            <div class="search-section">
+                <div class="search-tabs">
+                    <button class="search-tab active" data-tab="quick">Quick Search</button>
+                    <button class="search-tab" data-tab="advanced">Advanced Filters</button>
+                    <button class="search-tab" data-tab="smart">AI Matching</button>
                 </div>
+                
+                <!-- Quick Search Tab -->
+                <div class="search-tab-content active" id="quick-search">
+                    <div class="search-bar-enhanced card">
+                        <div class="search-input-group">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="directory-search-input" placeholder="Search alumni by name, company, or skills..." />
+                            <button id="directory-search-button" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                                Search
+                            </button>
+                        </div>
+                        <div class="popular-searches">
+                            <span class="search-label">Popular:</span>
+                            <div class="search-tags">
+                                <button class="search-tag" data-search="Software Engineer">Software Engineer</button>
+                                <button class="search-tag" data-search="Marketing">Marketing</button>
+                                <button class="search-tag" data-search="Finance">Finance</button>
+                                <button class="search-tag" data-search="Startup">Startup</button>
+                                <button class="search-tag" data-search="Consultant">Consultant</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Advanced Filters Tab -->
+                <div class="search-tab-content" id="advanced-search">
+                    <div class="advanced-filters card">
+                        <div class="filter-grid">
+                            <div class="filter-group">
+                                <label for="major-filter"><i class="fas fa-graduation-cap"></i> Major/Field</label>
+                                <input type="text" id="major-filter" placeholder="e.g., Computer Science, Business">
+                            </div>
+                            <div class="filter-group">
+                                <label for="year-filter"><i class="fas fa-calendar"></i> Graduation Year</label>
+                                <div class="year-range">
+                                    <input type="number" id="year-from" placeholder="From" min="1950" max="2030">
+                                    <span class="range-separator">to</span>
+                                    <input type="number" id="year-to" placeholder="To" min="1950" max="2030">
+                                </div>
+                            </div>
+                            <div class="filter-group">
+                                <label for="city-filter"><i class="fas fa-map-marker-alt"></i> Location</label>
+                                <input type="text" id="city-filter" placeholder="City or Country">
+                            </div>
+                            <div class="filter-group">
+                                <label for="industry-filter"><i class="fas fa-industry"></i> Industry</label>
+                                <select id="industry-filter">
+                                    <option value="">Select Industry</option>
+                                    <option value="technology">Technology</option>
+                                    <option value="finance">Finance & Banking</option>
+                                    <option value="healthcare">Healthcare</option>
+                                    <option value="education">Education</option>
+                                    <option value="consulting">Consulting</option>
+                                    <option value="marketing">Marketing & Advertising</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="law">Legal</option>
+                                    <option value="nonprofit">Non-Profit</option>
+                                    <option value="government">Government</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="company-size-filter"><i class="fas fa-building"></i> Company Size</label>
+                                <select id="company-size-filter">
+                                    <option value="">Any Size</option>
+                                    <option value="startup">Startup (1-50)</option>
+                                    <option value="small">Small (51-200)</option>
+                                    <option value="medium">Medium (201-1000)</option>
+                                    <option value="large">Large (1001-5000)</option>
+                                    <option value="enterprise">Enterprise (5000+)</option>
+                                </select>
+                            </div>
+                            <div class="filter-group">
+                                <label for="skills-filter"><i class="fas fa-cogs"></i> Skills & Expertise</label>
+                                <input type="text" id="skills-filter" placeholder="e.g., Python, Project Management, Sales">
+                            </div>
+                        </div>
+                        <div class="filter-actions">
+                            <button id="apply-filters-btn" class="btn btn-primary">
+                                <i class="fas fa-filter"></i>
+                                Apply Filters
+                            </button>
+                            <button id="clear-filters-btn" class="btn btn-secondary">
+                                <i class="fas fa-times"></i>
+                                Clear All
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- AI Matching Tab -->
+                <div class="search-tab-content" id="smart-search">
+                    <div class="ai-matching card">
+                        <div class="ai-intro">
+                            <div class="ai-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3>AI-Powered Alumni Matching</h3>
+                            <p>Let our advanced algorithm find the most relevant alumni connections based on your profile, interests, and career goals.</p>
+                        </div>
+                        <div class="matching-options">
+                            <div class="match-type-grid">
+                                <div class="match-type">
+                                    <i class="fas fa-handshake"></i>
+                                    <h4>Find Mentors</h4>
+                                    <p>Connect with experienced alumni in your field</p>
+                                    <button class="btn btn-outline">Find Mentors</button>
+                                </div>
+                                <div class="match-type">
+                                    <i class="fas fa-users"></i>
+                                    <h4>Peer Connections</h4>
+                                    <p>Meet alumni with similar backgrounds and interests</p>
+                                    <button class="btn btn-outline">Find Peers</button>
+                                </div>
+                                <div class="match-type">
+                                    <i class="fas fa-rocket"></i>
+                                    <h4>Career Opportunities</h4>
+                                    <p>Discover alumni who can help with job opportunities</p>
+                                    <button class="btn btn-outline">Explore Careers</button>
+                                </div>
+                                <div class="match-type">
+                                    <i class="fas fa-lightbulb"></i>
+                                    <h4>Industry Experts</h4>
+                                    <p>Find thought leaders and experts in your industry</p>
+                                    <button class="btn btn-outline">Meet Experts</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Results Section -->
+            <div class="results-section">
+                <div class="results-header">
+                    <h3 id="results-title">Featured Alumni</h3>
+                    <div class="results-actions">
+                        <div class="view-toggle">
+                            <button class="view-btn active" data-view="grid">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="view-btn" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        <div class="sort-dropdown">
+                            <select id="sort-select">
+                                <option value="relevance">Most Relevant</option>
+                                <option value="recent">Recently Joined</option>
+                                <option value="name">Name (A-Z)</option>
+                                <option value="graduation">Graduation Year</option>
+                                <option value="location">Location</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div id="directory-list" class="directory-list grid-view">
+                    <!-- Alumni profiles will be loaded here -->
+                </div>
+                <div id="message" class="info-message"></div>
+            </div>
         </div>
     </main>
     
