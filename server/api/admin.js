@@ -100,7 +100,7 @@ module.exports = function (pool) {
                 connection.query("SELECT COUNT(*) as pendingEvents FROM events WHERE status = 'pending'"),
                 connection.query("SELECT COUNT(*) as pendingCampaigns FROM campaigns WHERE status = 'pending'"),
                 connection.query("SELECT COUNT(*) as groupCreations FROM `group_creation_requests` WHERE status = 'pending'"),
-                connection.query("SELECT COUNT(*) as groupJoins FROM group_members WHERE status = 'pending'")
+                connection.query("SELECT COUNT(*) as groupJoins FROM group_join_requests WHERE status = 'pending'")
             ]);
             connection.release();
             res.json({ verifications, pendingJobs, pendingEvents, pendingCampaigns, groupCreations, groupJoins });
@@ -395,16 +395,17 @@ module.exports = function (pool) {
         try {
             const [requests] = await pool.query(`
                 SELECT 
-                    gm.user_id,
-                    gm.group_id,
-                    gm.joined_at,
+                    gjr.request_id,
+                    gjr.user_id,
+                    gjr.group_id,
+                    gjr.created_at as joined_at,
                     u.full_name as user_name,
                     g.name as group_name
-                FROM group_members gm
-                JOIN users u ON gm.user_id = u.user_id
-                JOIN \`groups\` g ON gm.group_id = g.group_id
-                WHERE gm.status = 'pending'
-                ORDER BY gm.joined_at ASC
+                FROM group_join_requests gjr
+                JOIN users u ON gjr.user_id = u.user_id
+                JOIN \`groups\` g ON gjr.group_id = g.group_id
+                WHERE gjr.status = 'pending'
+                ORDER BY gjr.created_at ASC
             `);
             res.json(requests);
         } catch (error) {
@@ -423,13 +424,19 @@ module.exports = function (pool) {
             }
 
             if (status === 'approved') {
+                // First update the request status
                 await pool.query(
-                    "UPDATE group_members SET status = 'approved' WHERE group_id = ? AND user_id = ?",
+                    "UPDATE group_join_requests SET status = 'approved' WHERE group_id = ? AND user_id = ?",
+                    [groupId, userId]
+                );
+                // Then add the user as a member
+                await pool.query(
+                    "INSERT INTO group_members (group_id, user_id, role, status) VALUES (?, ?, 'member', 'approved')",
                     [groupId, userId]
                 );
             } else { // status is 'rejected'
                 await pool.query(
-                    'DELETE FROM group_members WHERE group_id = ? AND user_id = ?',
+                    "UPDATE group_join_requests SET status = 'rejected' WHERE group_id = ? AND user_id = ?",
                     [groupId, userId]
                 );
             }
