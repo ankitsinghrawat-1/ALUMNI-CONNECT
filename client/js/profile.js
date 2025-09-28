@@ -12,6 +12,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     const passwordForm = document.getElementById('password-form');
     const verificationSection = document.getElementById('verification-status-section');
 
+    // Comprehensive dropdown data with suggestions
+    const dropdownData = {
+        skills: [
+            'JavaScript', 'Python', 'Java', 'C++', 'React', 'Angular', 'Vue.js', 'Node.js', 
+            'Express.js', 'MongoDB', 'MySQL', 'PostgreSQL', 'Docker', 'Kubernetes', 'AWS', 
+            'Azure', 'Google Cloud', 'Machine Learning', 'Data Science', 'Artificial Intelligence',
+            'UI/UX Design', 'Figma', 'Adobe Photoshop', 'Digital Marketing', 'SEO', 'Content Writing',
+            'Project Management', 'Agile', 'Scrum', 'Leadership', 'Team Management', 'Communication'
+        ],
+        specialization: [
+            'Full Stack Development', 'Frontend Development', 'Backend Development', 'Mobile App Development',
+            'Data Science', 'Machine Learning', 'Artificial Intelligence', 'Cybersecurity', 'DevOps',
+            'Cloud Computing', 'Database Administration', 'UI/UX Design', 'Product Management',
+            'Digital Marketing', 'Content Strategy', 'Brand Management', 'Financial Analysis',
+            'Investment Banking', 'Management Consulting', 'Human Resources', 'Operations Management'
+        ],
+        industry: [
+            'Technology', 'Software', 'Information Technology', 'Consulting', 'Finance', 'Banking',
+            'Investment Banking', 'Healthcare', 'Pharmaceutical', 'Biotechnology', 'Education',
+            'Manufacturing', 'Retail', 'E-commerce', 'Real Estate', 'Construction', 'Energy',
+            'Telecommunications', 'Media', 'Entertainment', 'Non-profit', 'Government', 'Automotive',
+            'Aerospace', 'Food & Beverage', 'Fashion', 'Travel & Hospitality'
+        ],
+        languages: [
+            'English', 'Spanish', 'French', 'German', 'Chinese', 'Japanese', 'Korean', 'Russian',
+            'Portuguese', 'Italian', 'Dutch', 'Arabic', 'Hindi', 'Bengali', 'Tamil', 'Telugu',
+            'Marathi', 'Gujarati', 'Punjabi', 'Urdu', 'Persian', 'Turkish', 'Polish', 'Swedish'
+        ],
+        department: [
+            'Computer Science', 'Engineering', 'Electrical Engineering', 'Mechanical Engineering',
+            'Civil Engineering', 'Chemical Engineering', 'Business Administration', 'Marketing',
+            'Finance', 'Accounting', 'Economics', 'Mathematics', 'Physics', 'Chemistry', 'Biology',
+            'Psychology', 'Sociology', 'Political Science', 'International Relations', 'Literature',
+            'History', 'Philosophy', 'Art', 'Music', 'Theatre', 'Journalism', 'Communications'
+        ],
+        major: [
+            'Computer Science', 'Software Engineering', 'Information Technology', 'Data Science',
+            'Business Administration', 'Marketing', 'Finance', 'Economics', 'Mechanical Engineering',
+            'Electrical Engineering', 'Civil Engineering', 'Chemical Engineering', 'Biology',
+            'Chemistry', 'Physics', 'Mathematics', 'Psychology', 'Sociology', 'Political Science',
+            'International Relations', 'English Literature', 'History', 'Philosophy', 'Art',
+            'Music', 'Theatre', 'Journalism', 'Communications', 'Medicine', 'Nursing', 'Law'
+        ],
+        city: [
+            'New York', 'Los Angeles', 'Chicago', 'Houston', 'Phoenix', 'Philadelphia', 'San Antonio',
+            'San Diego', 'Dallas', 'San Jose', 'Austin', 'Jacksonville', 'San Francisco', 'Columbus',
+            'Charlotte', 'Fort Worth', 'Indianapolis', 'Seattle', 'Denver', 'Boston', 'Washington DC',
+            'Nashville', 'Mumbai', 'Delhi', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune',
+            'Ahmedabad', 'Jaipur', 'Surat', 'Lucknow', 'Kanpur', 'Nagpur', 'Visakhapatnam',
+            'London', 'Manchester', 'Birmingham', 'Liverpool', 'Leeds', 'Sheffield', 'Bristol',
+            'Toronto', 'Vancouver', 'Montreal', 'Calgary', 'Ottawa', 'Edmonton', 'Winnipeg'
+        ],
+        graduation_year: (() => {
+            const years = [];
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear + 5; year >= currentYear - 50; year--) {
+                years.push(year.toString());
+            }
+            return years;
+        })()
+    };
+
     // Role-specific field configurations that match user needs
     const roleFieldsConfig = {
         alumni: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department', 'experience_years', 'specialization', 'achievements', 'certifications', 'languages'],
@@ -233,16 +295,83 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    const createAdvancedDropdown = (field, currentValue, options) => {
+        const container = document.createElement('div');
+        container.className = 'dropdown-container';
+        
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'dropdown-input';
+        input.value = currentValue || '';
+        input.placeholder = `Type or select ${field.replace('_', ' ')}...`;
+        
+        const dropdown = document.createElement('div');
+        dropdown.className = 'dropdown-list';
+        
+        const filterOptions = (query) => {
+            const filtered = options.filter(option => 
+                option.toLowerCase().includes(query.toLowerCase())
+            );
+            
+            dropdown.innerHTML = '';
+            if (filtered.length === 0) {
+                const noResults = document.createElement('div');
+                noResults.className = 'dropdown-item no-results';
+                noResults.textContent = 'No matching options found';
+                dropdown.appendChild(noResults);
+            } else {
+                filtered.slice(0, 10).forEach(option => {
+                    const item = document.createElement('div');
+                    item.className = 'dropdown-item';
+                    item.textContent = option;
+                    item.addEventListener('click', () => {
+                        input.value = option;
+                        dropdown.classList.remove('show');
+                    });
+                    dropdown.appendChild(item);
+                });
+            }
+        };
+        
+        input.addEventListener('input', (e) => {
+            const query = e.target.value;
+            if (query.length > 0) {
+                filterOptions(query);
+                dropdown.classList.add('show');
+            } else {
+                dropdown.classList.remove('show');
+            }
+        });
+        
+        input.addEventListener('focus', () => {
+            filterOptions(input.value || '');
+            dropdown.classList.add('show');
+        });
+        
+        input.addEventListener('blur', (e) => {
+            // Delay hiding to allow click events on dropdown items
+            setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 150);
+        });
+        
+        container.appendChild(input);
+        container.appendChild(dropdown);
+        
+        return { container, input };
+    };
+
     const openEditModal = (field, currentValue, fieldType = 'text') => {
-        const modal = document.getElementById('edit-field-modal');
-        if (!modal) {
-            createEditModal();
-            return openEditModal(field, currentValue, fieldType);
+        // Remove any existing modal first
+        const existingModal = document.getElementById('edit-field-modal');
+        if (existingModal) {
+            existingModal.remove();
         }
         
-        const modalTitle = modal.querySelector('.modal-title');
-        const modalInput = modal.querySelector('.modal-input');
-        const saveBtn = modal.querySelector('.save-field-btn');
+        const modal = document.createElement('div');
+        modal.id = 'edit-field-modal';
+        modal.className = 'modal';
+        modal.style.display = 'flex';
         
         // Set modal content based on field
         const fieldLabels = {
@@ -258,91 +387,128 @@ document.addEventListener('DOMContentLoaded', async () => {
             'department': 'Department',
             'industry': 'Industry',
             'skills': 'Skills',
-            'website': 'Website'
+            'website': 'Website',
+            'specialization': 'Specialization',
+            'languages': 'Languages',
+            'phone_number': 'Phone Number'
         };
         
-        modalTitle.textContent = `Edit ${fieldLabels[field] || field}`;
+        const fieldLabel = fieldLabels[field] || field.replace('_', ' ');
+        let inputElement;
+        let inputContainer;
         
-        if (fieldType === 'textarea') {
-            modalInput.outerHTML = '<textarea class="modal-input" rows="4"></textarea>';
+        // Determine if field should use dropdown
+        const useDropdown = dropdownData.hasOwnProperty(field);
+        
+        if (useDropdown) {
+            const dropdown = createAdvancedDropdown(field, currentValue, dropdownData[field]);
+            inputContainer = dropdown.container;
+            inputElement = dropdown.input;
+        } else if (fieldType === 'textarea') {
+            inputContainer = document.createElement('div');
+            inputElement = document.createElement('textarea');
+            inputElement.className = 'modal-textarea';
+            inputElement.rows = 4;
+            inputElement.value = currentValue || '';
+            inputContainer.appendChild(inputElement);
         } else {
-            modalInput.outerHTML = `<input type="${fieldType}" class="modal-input">`;
+            inputContainer = document.createElement('div');
+            inputElement = document.createElement('input');
+            inputElement.type = fieldType;
+            inputElement.className = 'modal-input';
+            inputElement.value = currentValue || '';
+            inputContainer.appendChild(inputElement);
         }
         
-        const newInput = modal.querySelector('.modal-input');
-        newInput.value = currentValue || '';
-        newInput.focus();
-        
-        // Clear previous event listeners and add new one
-        const newSaveBtn = saveBtn.cloneNode(true);
-        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
-        
-        newSaveBtn.addEventListener('click', () => {
-            saveFieldValue(field, newInput.value);
-            modal.style.display = 'none';
-        });
-        
-        modal.style.display = 'flex';
-    };
-
-    const createEditModal = () => {
-        const modal = document.createElement('div');
-        modal.id = 'edit-field-modal';
-        modal.className = 'modal';
         modal.innerHTML = `
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title">Edit Field</h3>
+                    <h3 class="modal-title">Edit ${fieldLabel}</h3>
                     <button class="modal-close">&times;</button>
                 </div>
                 <div class="modal-body">
                     <div class="input-group">
-                        <input type="text" class="modal-input">
+                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; color: var(--text-color);">${fieldLabel}</label>
+                        <div id="input-container"></div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary close-modal">Cancel</button>
-                    <button type="button" class="btn btn-primary save-field-btn">Save</button>
+                    <button type="button" class="btn btn-primary save-field-btn">Save Changes</button>
                 </div>
             </div>
         `;
         
         document.body.appendChild(modal);
         
+        // Insert the input container
+        modal.querySelector('#input-container').appendChild(inputContainer);
+        
+        // Focus the input
+        setTimeout(() => inputElement.focus(), 100);
+        
         // Add event listeners
         modal.querySelector('.modal-close').addEventListener('click', () => {
-            modal.style.display = 'none';
+            modal.remove();
         });
         
         modal.querySelector('.close-modal').addEventListener('click', () => {
-            modal.style.display = 'none';
+            modal.remove();
         });
         
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
-                modal.style.display = 'none';
+                modal.remove();
+            }
+        });
+        
+        modal.querySelector('.save-field-btn').addEventListener('click', () => {
+            saveFieldValue(field, inputElement.value);
+            modal.remove();
+        });
+        
+        // Handle Enter key
+        inputElement.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                modal.querySelector('.save-field-btn').click();
             }
         });
     };
 
     const saveFieldValue = async (field, value) => {
         try {
+            // Show loading state
+            const saveBtn = document.querySelector('.save-field-btn');
+            if (saveBtn) {
+                const originalText = saveBtn.textContent;
+                saveBtn.textContent = 'Saving...';
+                saveBtn.disabled = true;
+            }
+            
             const formData = new FormData();
             formData.append(field, value);
             
             const result = await window.api.putForm('/users/profile', formData);
             
-            // Update the display
+            // Update the display element immediately
             const displayElement = document.querySelector(`.display-field[data-field="${field}"]`);
             if (displayElement) {
                 displayElement.textContent = value || 'Not set';
             }
             
+            // Also update the hidden input field if it exists
+            const inputElement = document.querySelector(`input[name="${field}"], textarea[name="${field}"], select[name="${field}"]`);
+            if (inputElement) {
+                inputElement.value = value;
+            }
+            
             // Update profile completion
-            showProfileCompletion();
+            setTimeout(() => showProfileCompletion(), 100);
             
             showToast('Profile updated successfully!', 'success');
         } catch (error) {
+            console.error('Error updating profile field:', error);
             showToast('Error updating profile: ' + error.message, 'error');
         }
     };
@@ -456,23 +622,48 @@ document.addEventListener('DOMContentLoaded', async () => {
     if(form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const formData = new FormData(form);
+            
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Saving Changes...';
+            submitBtn.disabled = true;
+            
             try {
+                const formData = new FormData(form);
+                
+                // Add additional data from display fields that may have been updated via modal
+                document.querySelectorAll('.display-field[data-field]').forEach(element => {
+                    const fieldName = element.getAttribute('data-field');
+                    const fieldValue = element.textContent === 'Not set' ? '' : element.textContent;
+                    if (fieldName && fieldValue && !formData.has(fieldName)) {
+                        formData.append(fieldName, fieldValue);
+                    }
+                });
+                
                 const result = await window.api.putForm(`/users/profile`, formData);
-                showToast(result.message, 'success');
+                showToast('All changes saved successfully!', 'success');
 
                 const updatedProfile = result.user;
                 
-                if (updatedProfile.profile_pic_url) {
+                if (updatedProfile && updatedProfile.profile_pic_url) {
                     localStorage.setItem('userPfpUrl', updatedProfile.profile_pic_url);
-                } else {
+                } else if (updatedProfile) {
                     localStorage.removeItem('userPfpUrl');
                 }
                 
-                setTimeout(() => window.location.reload(), 1500);
+                // Refresh profile data instead of reloading page
+                setTimeout(() => {
+                    fetchUserProfile();
+                }, 500);
                 
             } catch (error) {
+                console.error('Form submission error:', error);
                 displayMessage(`Error: ${error.message}`);
+            } finally {
+                // Reset button state
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         });
     }

@@ -926,19 +926,20 @@ main {
 
 /* Button Enhancements */
 .btn-large {
-    padding: 1rem 2.5rem;
-    font-size: 1.1rem;
-    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 500;
     line-height: 1.4;
-    border-radius: 50px;
+    border-radius: var(--border-radius-medium);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     height: auto;
-    min-height: 54px;
+    min-height: 44px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    text-decoration: none;
 }
 
 .btn-large::before {
@@ -958,8 +959,15 @@ main {
 
 .btn-outline {
     background: transparent;
-    border: 2px solid white;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline:hover {
+    background: var(--primary-color);
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
 }
 
 .btn-outline:hover {
@@ -4457,7 +4465,7 @@ html.dark-mode .verified-badge-sm {
     background-color: #218838;
 }
 
-/* --- Modal Styles --- */
+/* --- Enhanced Modal Styles --- */
 .modal {
     display: none; 
     position: fixed; 
@@ -4467,19 +4475,163 @@ html.dark-mode .verified-badge-sm {
     width: 100%; 
     height: 100%; 
     overflow: auto; 
-    background-color: rgba(0,0,0,0.6);
+    background-color: rgba(0,0,0,0.5);
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
     background-color: var(--surface-color);
-    margin: 15% auto; 
-    padding: 2rem;
-    border: 1px solid var(--border-color);
+    margin: auto;
+    padding: 0;
+    border: none;
     border-radius: var(--border-radius-large);
-    width: 80%;
+    width: 90%;
     max-width: 500px;
     position: relative;
-    animation: fadeIn 0.3s;
+    animation: slideIn 0.3s ease-out;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius-large) var(--border-radius-large) 0 0;
+}
+
+.modal-title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: var(--subtle-text-color);
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background-color: var(--background-light);
+    color: var(--error-color);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    background-color: var(--background-light);
+    border-radius: 0 0 var(--border-radius-large) var(--border-radius-large);
+}
+
+.modal-input, .modal-select, .modal-textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.modal-input:focus, .modal-select:focus, .modal-textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* --- Advanced Dropdown with Suggestions --- */
+.dropdown-container {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    font-size: 1rem;
+    transition: border-color 0.2s ease;
+    cursor: pointer;
+}
+
+.dropdown-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius-medium) var(--border-radius-medium);
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.dropdown-list.show {
+    display: block;
+}
+
+.dropdown-item {
+    padding: 0.75rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid var(--background-light);
+}
+
+.dropdown-item:hover, .dropdown-item.highlighted {
+    background-color: var(--background-light);
+    color: var(--primary-color);
+}
+
+.dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.dropdown-item.no-results {
+    color: var(--subtle-text-color);
+    font-style: italic;
+    cursor: default;
+}
+
+.dropdown-item.no-results:hover {
+    background-color: transparent;
+    color: var(--subtle-text-color);
 }
 
 .close-btn {
@@ -9043,10 +9195,103 @@ fieldset.form-section legend {
     border-color: var(--primary-color);
 }
 
+/* Mentor Cards and Modal Styling */
+.alumnus-list-item {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-large);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow-subtle);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.alumnus-list-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-elevated);
+}
+
+.alumnus-pfp-round {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-color);
+    margin-right: 1.5rem;
+    flex-shrink: 0;
+}
+
+.alumnus-details {
+    flex: 1;
+}
+
+.alumnus-details h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.alumnus-details p {
+    margin: 0.25rem 0;
+    color: var(--text-color-light);
+    font-size: 0.9rem;
+}
+
+.alumnus-details i {
+    width: 16px;
+    text-align: center;
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.alumnus-actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.alumnus-actions .btn {
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Enhanced Mentors Grid */
 .mentors-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.mentors-grid .alumnus-list-item {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* Mentor Modal Enhancements */
+.mentor-modal .modal-content {
+    max-width: 600px;
+}
+
+.mentor-modal .modal-header {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+}
+
+.mentor-modal .modal-title {
+    color: white;
+}
+
+.mentor-modal .modal-close {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.mentor-modal .modal-close:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 /* Responsive Design for Mentors Page */
