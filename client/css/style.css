@@ -3330,3 +3330,56 @@ body main {
     background-color: var(--accent-color);
     color: white;
 }
+/* === SIGNUP PAGE SPECIFIC STYLES === */
+.role-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    background-color: var(--background-color);
+    padding: 0.5rem;
+    border-radius: var(--border-radius-medium);
+    margin-bottom: 2.5rem;
+}
+
+.role-tab {
+    flex: 1;
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--subtle-text-color);
+    background-color: transparent;
+    border: 2px solid transparent;
+    border-radius: var(--border-radius-small);
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    text-align: center;
+}
+
+.role-tab:hover {
+    background-color: #e9eef2;
+    color: var(--primary-dark-color);
+}
+
+.role-tab.active {
+    background-color: var(--surface-color);
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+    box-shadow: var(--box-shadow-subtle);
+}
+
+.role-tab i {
+    margin-right: 0.5em;
+}
+
+fieldset.form-section {
+    border: 1px solid var(--border-color);
+    padding: 1.5rem 2rem 0.5rem;
+    border-radius: var(--border-radius-medium);
+    margin-bottom: 2rem;
+    background: none;
+}
+
+fieldset.form-section legend {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
