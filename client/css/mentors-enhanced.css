@@ -124,6 +124,12 @@
     border: 3px solid rgba(255, 255, 255, 0.9);
 }
 
+.stat-icon i {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 900;
+}
+
 .stat-number {
     display: block;
     font-size: 2.5rem;
@@ -135,11 +141,11 @@
 
 .stat-label {
     font-size: 0.875rem;
-    opacity: 0.95;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: rgba(255, 255, 255, 0.95);
-    font-weight: 500;
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Search and Filter Section */
