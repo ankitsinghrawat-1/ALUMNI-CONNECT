@@ -177,11 +177,11 @@ html.dark-mode .search-filter-section {
 
 .search-input-wrapper:focus-within {
     border-color: var(--mentor-primary);
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
 }
 
 .search-icon {
-    color: var(--mentor-gray-400);
+    color: var(--mentor-gray-600);
     margin-right: 0.75rem;
     font-size: 1.1rem;
 }
@@ -197,13 +197,13 @@ html.dark-mode .search-filter-section {
 }
 
 #mentor-search::placeholder {
-    color: var(--mentor-gray-400);
+    color: var(--mentor-gray-600);
 }
 
 .clear-search {
     background: none;
     border: none;
-    color: var(--mentor-gray-400);
+    color: var(--mentor-gray-600);
     cursor: pointer;
     padding: 0.5rem;
     margin-left: 0.5rem;
@@ -213,7 +213,7 @@ html.dark-mode .search-filter-section {
 
 .clear-search:hover {
     background: var(--mentor-gray-100);
-    color: var(--mentor-gray-600);
+    color: var(--mentor-gray-800);
 }
 
 .search-btn {
@@ -230,12 +230,13 @@ html.dark-mode .search-filter-section {
     gap: 0.5rem;
     min-width: 120px;
     justify-content: center;
+    box-shadow: var(--mentor-shadow);
 }
 
 .search-btn:hover {
     background: var(--mentor-primary-dark);
-    transform: translateY(-1px);
-    box-shadow: var(--mentor-shadow-md);
+    transform: translateY(-2px);
+    box-shadow: var(--mentor-shadow-lg);
 }
 
 /* Filter Controls */
@@ -298,9 +299,10 @@ html.dark-mode .search-filter-section {
     border: none;
     padding: 0.75rem 1rem;
     cursor: pointer;
-    color: var(--mentor-gray-500);
+    color: var(--mentor-gray-700);
     transition: var(--mentor-transition);
     border-right: 1px solid var(--border-color);
+    font-weight: 500;
 }
 
 .view-btn:last-child {
@@ -309,12 +311,13 @@ html.dark-mode .search-filter-section {
 
 .view-btn:hover {
     background: var(--mentor-gray-50);
-    color: var(--mentor-gray-700);
+    color: var(--mentor-gray-900);
 }
 
 .view-btn.active {
     background: var(--mentor-primary);
     color: white;
+    font-weight: 600;
 }
 
 .sort-controls select {
@@ -493,8 +496,9 @@ html.dark-mode .search-filter-section {
 }
 
 .results-count {
-    color: var(--mentor-gray-600);
+    color: var(--mentor-gray-700);
     font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .mentor-action-area {
@@ -636,10 +640,11 @@ html.dark-mode .mentor-header {
 }
 
 .mentor-title {
-    color: var(--mentor-gray-600);
+    color: var(--mentor-gray-700);
     font-size: 0.875rem;
     text-align: center;
     margin-bottom: 0.5rem;
+    font-weight: 500;
 }
 
 .mentor-company {
@@ -678,8 +683,9 @@ html.dark-mode .mentor-header {
 }
 
 .rating-count {
-    color: var(--mentor-gray-500);
+    color: var(--mentor-gray-600);
     font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .mentor-stats {
@@ -711,13 +717,14 @@ html.dark-mode .stat {
 
 .stat-label {
     font-size: 0.75rem;
-    color: var(--mentor-gray-600);
+    color: var(--mentor-gray-700);
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    font-weight: 600;
 }
 
 .mentor-bio {
-    color: var(--mentor-gray-700);
+    color: var(--mentor-gray-800);
     font-size: 0.875rem;
     line-height: 1.5;
     margin-bottom: 1.5rem;
@@ -784,7 +791,8 @@ html.dark-mode .mentor-pricing {
 
 .price-period {
     font-size: 0.75rem;
-    color: var(--mentor-gray-600);
+    color: var(--mentor-gray-700);
+    font-weight: 500;
 }
 
 .pricing-type {
@@ -838,7 +846,8 @@ html.dark-mode .mentor-footer {
 
 .mentor-btn.primary:hover {
     background: var(--mentor-primary-dark);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
+    box-shadow: var(--mentor-shadow-md);
 }
 
 .mentor-btn.secondary {
@@ -850,6 +859,8 @@ html.dark-mode .mentor-footer {
 .mentor-btn.secondary:hover {
     background: var(--mentor-primary);
     color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--mentor-shadow-md);
 }
 
 .mentor-btn.success {
@@ -931,7 +942,7 @@ html.dark-mode .mentor-footer {
     justify-content: center;
     margin-bottom: 2rem;
     font-size: 2rem;
-    color: var(--mentor-gray-400);
+    color: var(--mentor-gray-600);
 }
 
 .empty-state h3 {
@@ -942,9 +953,10 @@ html.dark-mode .mentor-footer {
 }
 
 .empty-state p {
-    color: var(--mentor-gray-600);
+    color: var(--mentor-gray-700);
     margin-bottom: 2rem;
     max-width: 400px;
+    font-weight: 500;
 }
 
 /* Pagination */
