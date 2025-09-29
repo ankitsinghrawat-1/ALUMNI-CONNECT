@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Become a Mentor - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mentors-enhanced.css">
+    <link rel="stylesheet" href="css/become-mentor.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="become-mentor-main">
+        <!-- Hero Section -->
+        <section class="become-mentor-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Become a Mentor</h1>
+                    <p class="hero-subtitle">Share your knowledge, experience, and insights with the next generation of professionals. Make a meaningful impact while building valuable connections.</p>
+                    
+                    <div class="mentor-benefits">
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <h3>Make an Impact</h3>
+                            <p>Guide careers and change lives through meaningful mentorship</p>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-network-wired"></i>
+                            </div>
+                            <h3>Expand Network</h3>
+                            <p>Connect with talented professionals across industries</p>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <h3>Stay Current</h3>
+                            <p>Learn from fresh perspectives and stay updated with trends</p>
+                        </div>
+                        <div class="benefit-item">
+                            <div class="benefit-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <h3>Earn Revenue</h3>
+                            <p>Monetize your expertise through paid mentoring sessions</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Application Form -->
+        <section class="mentor-application-section">
+            <div class="container">
+                <div class="application-container">
+                    <div class="application-header">
+                        <h2>Mentor Application</h2>
+                        <p>Tell us about yourself and your expertise to create your mentor profile</p>
+                        
+                        <div class="progress-bar">
+                            <div class="progress-step active" data-step="1">
+                                <div class="step-number">1</div>
+                                <span>Basic Info</span>
+                            </div>
+                            <div class="progress-step" data-step="2">
+                                <div class="step-number">2</div>
+                                <span>Expertise</span>
+                            </div>
+                            <div class="progress-step" data-step="3">
+                                <div class="step-number">3</div>
+                                <span>Availability</span>
+                            </div>
+                            <div class="progress-step" data-step="4">
+                                <div class="step-number">4</div>
+                                <span>Pricing & Preferences</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form id="become-mentor-form" class="mentor-application-form">
+                        <!-- Step 1: Basic Information -->
+                        <div class="form-step active" data-step="1">
+                            <div class="step-header">
+                                <h3>Basic Information</h3>
+                                <p>Tell us about your professional background</p>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="bio">
+                                        <i class="fas fa-user"></i>
+                                        Professional Bio *
+                                    </label>
+                                    <textarea id="bio" name="bio" rows="4" required 
+                                              placeholder="Describe your professional journey, key achievements, and what makes you a great mentor..."></textarea>
+                                    <div class="char-counter">
+                                        <span id="bio-count">0</span>/500 characters
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="industry">
+                                        <i class="fas fa-industry"></i>
+                                        Industry *
+                                    </label>
+                                    <select id="industry" name="industry" required>
+                                        <option value="">Select your industry</option>
+                                        <option value="Technology">Technology</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Healthcare">Healthcare</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Marketing">Marketing</option>
+                                        <option value="Consulting">Consulting</option>
+                                        <option value="Manufacturing">Manufacturing</option>
+                                        <option value="Retail">Retail</option>
+                                        <option value="Media">Media & Entertainment</option>
+                                        <option value="Non-profit">Non-profit</option>
+                                        <option value="Government">Government</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="experience_years">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        Years of Experience *
+                                    </label>
+                                    <select id="experience_years" name="experience_years" required>
+                                        <option value="">Select experience</option>
+                                        <option value="1">1-2 years</option>
+                                        <option value="3">3-5 years</option>
+                                        <option value="6">6-10 years</option>
+                                        <option value="11">11-15 years</option>
+                                        <option value="16">16-20 years</option>
+                                        <option value="21">20+ years</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="timezone">
+                                        <i class="fas fa-globe"></i>
+                                        Timezone
+                                    </label>
+                                    <select id="timezone" name="timezone">
+                                        <option value="UTC">UTC (Universal)</option>
+                                        <option value="America/New_York">Eastern Time (ET)</option>
+                                        <option value="America/Chicago">Central Time (CT)</option>
+                                        <option value="America/Denver">Mountain Time (MT)</option>
+                                        <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                        <option value="Europe/London">London (GMT)</option>
+                                        <option value="Europe/Paris">Central European Time</option>
+                                        <option value="Asia/Tokyo">Tokyo Time</option>
+                                        <option value="Asia/Shanghai">China Time</option>
+                                        <option value="Asia/Kolkata">India Time</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="languages">
+                                        <i class="fas fa-language"></i>
+                                        Languages Spoken
+                                    </label>
+                                    <input type="text" id="languages" name="languages" 
+                                           placeholder="e.g., English, Spanish, French" 
+                                           value="English">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="mentoring_style">
+                                        <i class="fas fa-users"></i>
+                                        Preferred Mentoring Style *
+                                    </label>
+                                    <select id="mentoring_style" name="mentoring_style" required>
+                                        <option value="one_on_one">One-on-One Sessions</option>
+                                        <option value="group">Group Mentoring</option>
+                                        <option value="workshop">Workshops</option>
+                                        <option value="mixed">Mixed Approach</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>
+                                        <i class="fas fa-comments"></i>
+                                        Preferred Communication Methods
+                                    </label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="communication_methods" value="video_call">
+                                            <span class="checkmark"></span>
+                                            Video Calls
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="communication_methods" value="phone_call">
+                                            <span class="checkmark"></span>
+                                            Phone Calls
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="communication_methods" value="chat">
+                                            <span class="checkmark"></span>
+                                            Text Chat
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="communication_methods" value="email">
+                                            <span class="checkmark"></span>
+                                            Email
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="communication_methods" value="in_person">
+                                            <span class="checkmark"></span>
+                                            In-Person (Local)
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="linkedin_url">
+                                        <i class="fab fa-linkedin"></i>
+                                        LinkedIn Profile
+                                    </label>
+                                    <input type="url" id="linkedin_url" name="linkedin_url" 
+                                           placeholder="https://linkedin.com/in/yourprofile">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="github_url">
+                                        <i class="fab fa-github"></i>
+                                        GitHub Profile
+                                    </label>
+                                    <input type="url" id="github_url" name="github_url" 
+                                           placeholder="https://github.com/yourusername">
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="portfolio_url">
+                                        <i class="fas fa-briefcase"></i>
+                                        Portfolio/Website
+                                    </label>
+                                    <input type="url" id="portfolio_url" name="portfolio_url" 
+                                           placeholder="https://yourportfolio.com">
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-primary next-step">
+                                    Continue
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Expertise & Skills -->
+                        <div class="form-step" data-step="2">
+                            <div class="step-header">
+                                <h3>Expertise & Skills</h3>
+                                <p>Define your areas of expertise and the skills you can teach</p>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group full-width">
+                                    <label for="expertise_areas">
+                                        <i class="fas fa-lightbulb"></i>
+                                        Areas of Expertise *
+                                    </label>
+                                    <textarea id="expertise_areas" name="expertise_areas" rows="3" required 
+                                              placeholder="e.g., Software Engineering, Product Management, Digital Marketing, Career Development"></textarea>
+                                    <small class="help-text">List the main areas where you can provide valuable guidance</small>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label for="skills">
+                                        <i class="fas fa-tools"></i>
+                                        Technical & Soft Skills
+                                    </label>
+                                    <div class="skills-input-container">
+                                        <input type="text" id="skills-input" placeholder="Type a skill and press Enter">
+                                        <div class="skills-tags" id="skills-tags"></div>
+                                    </div>
+                                    <input type="hidden" id="skills" name="skills">
+                                    <small class="help-text">Add specific skills you can help others develop</small>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>
+                                        <i class="fas fa-star"></i>
+                                        Specializations
+                                    </label>
+                                    <div id="specializations-container">
+                                        <div class="specialization-item">
+                                            <div class="spec-inputs">
+                                                <input type="text" placeholder="Specialization (e.g., Machine Learning)" 
+                                                       name="specialization[]" class="spec-name">
+                                                <select name="proficiency[]" class="spec-level">
+                                                    <option value="intermediate">Intermediate</option>
+                                                    <option value="advanced">Advanced</option>
+                                                    <option value="expert">Expert</option>
+                                                </select>
+                                                <input type="number" placeholder="Years" name="spec_years[]" 
+                                                       class="spec-years" min="0" max="50">
+                                                <button type="button" class="remove-spec" title="Remove">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-secondary" id="add-specialization">
+                                        <i class="fas fa-plus"></i>
+                                        Add Another Specialization
+                                    </button>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>
+                                        <i class="fas fa-question-circle"></i>
+                                        What type of guidance do you provide?
+                                    </label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="career_advice">
+                                            <span class="checkmark"></span>
+                                            Career Advice & Planning
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="technical_skills">
+                                            <span class="checkmark"></span>
+                                            Technical Skills Development
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="leadership">
+                                            <span class="checkmark"></span>
+                                            Leadership & Management
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="entrepreneurship">
+                                            <span class="checkmark"></span>
+                                            Entrepreneurship & Startups
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="interview_prep">
+                                            <span class="checkmark"></span>
+                                            Interview Preparation
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="code_review">
+                                            <span class="checkmark"></span>
+                                            Code Review & Architecture
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="project_guidance">
+                                            <span class="checkmark"></span>
+                                            Project Guidance
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="guidance_types" value="industry_insights">
+                                            <span class="checkmark"></span>
+                                            Industry Insights & Trends
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-secondary prev-step">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back
+                                </button>
+                                <button type="button" class="btn btn-primary next-step">
+                                    Continue
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Availability -->
+                        <div class="form-step" data-step="3">
+                            <div class="step-header">
+                                <h3>Availability & Schedule</h3>
+                                <p>Set your availability to help mentees book sessions at convenient times</p>
+                            </div>
+
+                            <div class="availability-section">
+                                <div class="availability-header">
+                                    <h4>Weekly Availability</h4>
+                                    <p>Select the days and times when you're available for mentoring sessions</p>
+                                </div>
+
+                                <div class="availability-grid">
+                                    <div class="day-column">
+                                        <div class="day-header">
+                                            <label class="day-checkbox">
+                                                <input type="checkbox" name="available_days" value="monday" id="monday">
+                                                <span class="day-name">Monday</span>
+                                            </label>
+                                        </div>
+                                        <div class="time-slots" data-day="monday">
+                                            <div class="time-slot">
+                                                <input type="time" name="monday_start[]" class="time-input">
+                                                <span>to</span>
+                                                <input type="time" name="monday_end[]" class="time-input">
+                                                <button type="button" class="remove-time-slot">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-time-slot" data-day="monday">
+                                            <i class="fas fa-plus"></i> Add Time
+                                        </button>
+                                    </div>
+
+                                    <div class="day-column">
+                                        <div class="day-header">
+                                            <label class="day-checkbox">
+                                                <input type="checkbox" name="available_days" value="tuesday" id="tuesday">
+                                                <span class="day-name">Tuesday</span>
+                                            </label>
+                                        </div>
+                                        <div class="time-slots" data-day="tuesday">
+                                            <div class="time-slot">
+                                                <input type="time" name="tuesday_start[]" class="time-input">
+                                                <span>to</span>
+                                                <input type="time" name="tuesday_end[]" class="time-input">
+                                                <button type="button" class="remove-time-slot">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-time-slot" data-day="tuesday">
+                                            <i class="fas fa-plus"></i> Add Time
+                                        </button>
+                                    </div>
+
+                                    <div class="day-column">
+                                        <div class="day-header">
+                                            <label class="day-checkbox">
+                                                <input type="checkbox" name="available_days" value="wednesday" id="wednesday">
+                                                <span class="day-name">Wednesday</span>
+                                            </label>
+                                        </div>
+                                        <div class="time-slots" data-day="wednesday">
+                                            <div class="time-slot">
+                                                <input type="time" name="wednesday_start[]" class="time-input">
+                                                <span>to</span>
+                                                <input type="time" name="wednesday_end[]" class="time-input">
+                                                <button type="button" class="remove-time-slot">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-time-slot" data-day="wednesday">
+                                            <i class="fas fa-plus"></i> Add Time
+                                        </button>
+                                    </div>
+
+                                    <div class="day-column">
+                                        <div class="day-header">
+                                            <label class="day-checkbox">
+                                                <input type="checkbox" name="available_days" value="thursday" id="thursday">
+                                                <span class="day-name">Thursday</span>
+                                            </label>
+                                        </div>
+                                        <div class="time-slots" data-day="thursday">
+                                            <div class="time-slot">
+                                                <input type="time" name="thursday_start[]" class="time-input">
+                                                <span>to</span>
+                                                <input type="time" name="thursday_end[]" class="time-input">
+                                                <button type="button" class="remove-time-slot">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-time-slot" data-day="thursday">
+                                            <i class="fas fa-plus"></i> Add Time
+                                        </button>
+                                    </div>
+
+                                    <div class="day-column">
+                                        <div class="day-header">
+                                            <label class="day-checkbox">
+                                                <input type="checkbox" name="available_days" value="friday" id="friday">
+                                                <span class="day-name">Friday</span>
+                                            </label>
+                                        </div>
+                                        <div class="time-slots" data-day="friday">
+                                            <div class="time-slot">
+                                                <input type="time" name="friday_start[]" class="time-input">
+                                                <span>to</span>
+                                                <input type="time" name="friday_end[]" class="time-input">
+                                                <button type="button" class="remove-time-slot">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-time-slot" data-day="friday">
+                                            <i class="fas fa-plus"></i> Add Time
+                                        </button>
+                                    </div>
+
+                                    <div class="day-column">
+                                        <div class="day-header">
+                                            <label class="day-checkbox">
+                                                <input type="checkbox" name="available_days" value="saturday" id="saturday">
+                                                <span class="day-name">Saturday</span>
+                                            </label>
+                                        </div>
+                                        <div class="time-slots" data-day="saturday">
+                                            <div class="time-slot">
+                                                <input type="time" name="saturday_start[]" class="time-input">
+                                                <span>to</span>
+                                                <input type="time" name="saturday_end[]" class="time-input">
+                                                <button type="button" class="remove-time-slot">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-time-slot" data-day="saturday">
+                                            <i class="fas fa-plus"></i> Add Time
+                                        </button>
+                                    </div>
+
+                                    <div class="day-column">
+                                        <div class="day-header">
+                                            <label class="day-checkbox">
+                                                <input type="checkbox" name="available_days" value="sunday" id="sunday">
+                                                <span class="day-name">Sunday</span>
+                                            </label>
+                                        </div>
+                                        <div class="time-slots" data-day="sunday">
+                                            <div class="time-slot">
+                                                <input type="time" name="sunday_start[]" class="time-input">
+                                                <span>to</span>
+                                                <input type="time" name="sunday_end[]" class="time-input">
+                                                <button type="button" class="remove-time-slot">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-time-slot" data-day="sunday">
+                                            <i class="fas fa-plus"></i> Add Time
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-secondary prev-step">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back
+                                </button>
+                                <button type="button" class="btn btn-primary next-step">
+                                    Continue
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Pricing & Preferences -->
+                        <div class="form-step" data-step="4">
+                            <div class="step-header">
+                                <h3>Pricing & Preferences</h3>
+                                <p>Set your rates and mentoring preferences</p>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="hourly_rate">
+                                        <i class="fas fa-dollar-sign"></i>
+                                        Hourly Rate (USD)
+                                    </label>
+                                    <div class="price-input-container">
+                                        <span class="currency-symbol">$</span>
+                                        <input type="number" id="hourly_rate" name="hourly_rate" 
+                                               min="0" max="1000" step="5" placeholder="0">
+                                        <span class="price-suffix">/ hour</span>
+                                    </div>
+                                    <small class="help-text">Set to $0 for free mentoring. You can change this later.</small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="response_time">
+                                        <i class="fas fa-clock"></i>
+                                        Expected Response Time
+                                    </label>
+                                    <select id="response_time" name="response_time_hours">
+                                        <option value="1">Within 1 hour</option>
+                                        <option value="4">Within 4 hours</option>
+                                        <option value="12">Within 12 hours</option>
+                                        <option value="24" selected>Within 24 hours</option>
+                                        <option value="48">Within 2 days</option>
+                                        <option value="72">Within 3 days</option>
+                                        <option value="168">Within 1 week</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>
+                                        <i class="fas fa-cog"></i>
+                                        Mentoring Preferences
+                                    </label>
+                                    <div class="preferences-grid">
+                                        <div class="preference-item">
+                                            <label for="max_mentees">Maximum Active Mentees</label>
+                                            <input type="number" id="max_mentees" name="max_mentees_active" 
+                                                   min="1" max="50" value="10">
+                                        </div>
+                                        <div class="preference-item">
+                                            <label for="session_length">Preferred Session Length (minutes)</label>
+                                            <select id="session_length" name="preferred_session_length">
+                                                <option value="30">30 minutes</option>
+                                                <option value="45">45 minutes</option>
+                                                <option value="60" selected>60 minutes</option>
+                                                <option value="90">90 minutes</option>
+                                                <option value="120">2 hours</option>
+                                            </select>
+                                        </div>
+                                        <div class="preference-item">
+                                            <label for="advance_booking">Advance Booking (days)</label>
+                                            <input type="number" id="advance_booking" name="advance_booking_days" 
+                                                   min="1" max="30" value="7">
+                                        </div>
+                                        <div class="preference-item">
+                                            <label for="buffer_time">Buffer Time Between Sessions (minutes)</label>
+                                            <input type="number" id="buffer_time" name="buffer_time_minutes" 
+                                                   min="0" max="60" value="15" step="5">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <label>
+                                        <i class="fas fa-bell"></i>
+                                        Notification Preferences
+                                    </label>
+                                    <div class="checkbox-group">
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="notification_email" checked>
+                                            <span class="checkmark"></span>
+                                            Email notifications for new requests
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="notification_sms">
+                                            <span class="checkmark"></span>
+                                            SMS notifications (if phone number provided)
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="auto_accept_requests">
+                                            <span class="checkmark"></span>
+                                            Auto-accept requests from verified users
+                                        </label>
+                                        <label class="checkbox-item">
+                                            <input type="checkbox" name="weekend_availability">
+                                            <span class="checkmark"></span>
+                                            Available for weekend sessions
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group full-width">
+                                    <div class="agreement-section">
+                                        <label class="checkbox-item agreement-item">
+                                            <input type="checkbox" id="terms_agreement" required>
+                                            <span class="checkmark"></span>
+                                            <span class="agreement-text">
+                                                I agree to the <a href="#" target="_blank">Mentor Terms of Service</a> 
+                                                and <a href="#" target="_blank">Community Guidelines</a>
+                                            </span>
+                                        </label>
+                                        <label class="checkbox-item agreement-item">
+                                            <input type="checkbox" id="quality_commitment" required>
+                                            <span class="checkmark"></span>
+                                            <span class="agreement-text">
+                                                I commit to providing high-quality mentorship and maintaining professional standards
+                                            </span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="step-actions">
+                                <button type="button" class="btn btn-secondary prev-step">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back
+                                </button>
+                                <button type="submit" class="btn btn-primary submit-application">
+                                    <i class="fas fa-check-circle"></i>
+                                    Submit Application
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="message" class="form-message"></div>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <!-- <script src="js/become-mentor-enhanced.js"></script> -->
+</body>
+</html>
