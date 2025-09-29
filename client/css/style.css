@@ -12638,6 +12638,35 @@ html.dark-mode .contributor-item:hover {
     opacity: 1;
 }
 
+.mention-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+}
+
+.mention-tag {
+    background: var(--accent-color);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 500;
+}
+
+.mention-tag .remove-tag {
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease;
+}
+
+.mention-tag .remove-tag:hover {
+    opacity: 1;
+}
+
 .hashtag-suggestions,
 .mention-suggestions {
     position: absolute;

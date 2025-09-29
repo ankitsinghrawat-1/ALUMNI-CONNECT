@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const hashtagSuggestions = document.getElementById('hashtag-suggestions');
     const hashtagTags = document.getElementById('hashtag-tags');
     const mentionSuggestions = document.getElementById('mention-suggestions');
+    const mentionTags = document.getElementById('mention-tags');
     
     let selectedFile = null;
     let selectedHashtags = [];
@@ -257,10 +258,24 @@ document.addEventListener('DOMContentLoaded', () => {
     window.selectMention = function(email, name) {
         if (!selectedMentions.find(m => m.email === email)) {
             selectedMentions.push({ email, name });
+            updateMentionDisplay();
         }
         mentionsInput.value = '';
         mentionSuggestions.style.display = 'none';
-        showToast(`Mentioned ${name}`, 'success');
+    };
+
+    function updateMentionDisplay() {
+        mentionTags.innerHTML = selectedMentions.map(mention => 
+            `<span class="mention-tag">
+                @${mention.name}
+                <i class="fas fa-times remove-tag" onclick="removeMention('${mention.email}')"></i>
+            </span>`
+        ).join('');
+    }
+
+    window.removeMention = function(email) {
+        selectedMentions = selectedMentions.filter(m => m.email !== email);
+        updateMentionDisplay();
     };
 
     // Click outside to close suggestions
