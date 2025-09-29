@@ -770,13 +770,3 @@ CREATE TABLE IF NOT EXISTS story_highlight_items (
     INDEX idx_highlight_items_highlight_id (highlight_id),
     INDEX idx_highlight_items_story_id (story_id)
 );
-
-
--- Insert default story templates
-INSERT INTO story_templates (template_name, template_type, background_color, text_color, text_effect) VALUES
-('Graduation Blue', 'graduation', '#4facfe', '#ffffff', 'glow'),
-('Achievement Gold', 'achievement', '#fa709a', '#ffffff', 'shadow'),
-('Networking Green', 'networking', '#a8edea', '#333333', 'outline'),
-('Career Purple', 'career', '#ff9a9e', '#ffffff', 'none'),
-('Announcement Orange', 'announcement', '#ffc3a0', '#333333', 'shadow'),
-('Celebration Pink', 'celebration', '#fd746c', '#ffffff', 'glow');
