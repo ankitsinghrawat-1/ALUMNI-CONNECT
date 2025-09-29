@@ -753,14 +753,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            openStoryViewer(userStories, userName);
+            // Get user data for profile picture
+            const storyFeed = await window.api.get('/stories/feed');
+            const userData = storyFeed.find(user => user.user_id === userId);
+            
+            openStoryViewer(userStories, userName, userData);
         } catch (error) {
             console.error('Error loading user stories:', error);
             showToast('Error loading stories', 'error');
         }
     };
 
-    const openStoryViewer = (stories, userName) => {
+    const openStoryViewer = (stories, userName, userData = null) => {
         let currentStoryIndex = 0;
         const storyModal = document.createElement('div');
         storyModal.className = 'story-modal';
@@ -780,12 +784,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const textContent = story.content ? `<div class="story-text" style="color: ${story.text_color || '#ffffff'}">${story.content}</div>` : '';
             const backgroundColor = story.background_color || '#4a90e2';
+            
+            // Create avatar content with proper circular styling
+            let avatarContent = userName.charAt(0).toUpperCase();
+            if (userData && userData.profile_pic_url) {
+                avatarContent = `<img src="http://localhost:3000/${userData.profile_pic_url}" alt="${userName}">`;
+            }
 
             storyModal.innerHTML = `
                 <div class="story-overlay" style="background: ${backgroundColor}">
                     <div class="story-header">
                         <div class="story-user-info">
-                            <div class="story-user-avatar">${userName.charAt(0)}</div>
+                            <div class="story-user-avatar">${avatarContent}</div>
                             <span class="story-user-name">${userName}</span>
                             <span class="story-time">${timeAgo(story.created_at)}</span>
                         </div>
@@ -895,6 +905,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     color: white;
                     font-weight: 600;
                     font-size: 0.875rem;
+                    overflow: hidden;
+                }
+
+                .story-user-avatar img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 50%;
                 }
 
                 .story-user-name {

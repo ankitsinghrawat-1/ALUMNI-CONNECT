@@ -14,440 +14,6 @@
             }
         })();
     </script>
-    <style>
-        /* Enhanced Thread Composer Styles */
-        .thread-composer-container {
-            max-width: 700px;
-            margin: 2rem auto;
-            background: var(--surface-color);
-            border-radius: var(--border-radius-large);
-            box-shadow: var(--box-shadow-elevated);
-            overflow: hidden;
-        }
-
-        .composer-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            padding: 1.5rem 2rem;
-            text-align: center;
-        }
-
-        .composer-header h2 {
-            color: white;
-            margin: 0;
-            font-size: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .composer-body {
-            padding: 2rem;
-        }
-
-        .compose-section {
-            margin-bottom: 1.5rem;
-        }
-
-        .compose-section label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        .enhanced-textarea {
-            width: 100%;
-            min-height: 120px;
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-medium);
-            font-family: inherit;
-            font-size: 1rem;
-            line-height: 1.6;
-            resize: vertical;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            background: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .enhanced-textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-
-        .char-counter {
-            text-align: right;
-            font-size: 0.875rem;
-            color: var(--subtle-text-color);
-            margin-top: 0.25rem;
-        }
-
-        .input-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .enhanced-input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: var(--border-radius-medium);
-            font-size: 1rem;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            background: var(--background-color);
-            color: var(--text-color);
-        }
-
-        .enhanced-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-
-        /* Hashtag Input with Suggestions */
-        .hashtag-container {
-            position: relative;
-        }
-
-        .hashtag-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-top: none;
-            border-radius: 0 0 var(--border-radius-medium) var(--border-radius-medium);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-        }
-
-        .hashtag-suggestion {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-
-        .hashtag-suggestion:hover {
-            background: var(--background-color);
-        }
-
-        .hashtag-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-top: 0.5rem;
-        }
-
-        .hashtag-tag {
-            background: var(--primary-color);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: var(--border-radius-small);
-            font-size: 0.875rem;
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
-        }
-
-        .hashtag-tag .remove-tag {
-            cursor: pointer;
-            opacity: 0.8;
-        }
-
-        .hashtag-tag .remove-tag:hover {
-            opacity: 1;
-        }
-
-        /* Mention Input with Suggestions */
-        .mention-container {
-            position: relative;
-        }
-
-        .mention-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: var(--surface-color);
-            border: 1px solid var(--border-color);
-            border-top: none;
-            border-radius: 0 0 var(--border-radius-medium) var(--border-radius-medium);
-            max-height: 200px;
-            overflow-y: auto;
-            z-index: 100;
-            display: none;
-        }
-
-        .mention-suggestion {
-            padding: 0.75rem 1rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .mention-suggestion:hover {
-            background: var(--background-color);
-        }
-
-        .mention-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 600;
-        }
-
-        /* Enhanced Media Upload */
-        .media-upload-area {
-            border: 2px dashed var(--border-color);
-            border-radius: var(--border-radius-medium);
-            padding: 2rem;
-            text-align: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            background: var(--background-color);
-        }
-
-        .media-upload-area:hover {
-            border-color: var(--primary-color);
-            background: rgba(74, 144, 226, 0.05);
-        }
-
-        .media-upload-area.dragover {
-            border-color: var(--accent-color);
-            background: rgba(245, 166, 35, 0.1);
-            transform: scale(1.02);
-        }
-
-        .upload-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1rem;
-        }
-
-        .upload-text {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-hint {
-            font-size: 0.875rem;
-            color: var(--subtle-text-color);
-        }
-
-        .media-preview-card {
-            background: var(--background-color);
-            border-radius: var(--border-radius-medium);
-            padding: 1rem;
-            margin-top: 1rem;
-            position: relative;
-        }
-
-        .media-preview-header {
-            display: flex;
-            justify-content: between;
-            align-items: center;
-            margin-bottom: 1rem;
-        }
-
-        .remove-media {
-            position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: rgba(231, 76, 60, 0.9);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .remove-media:hover {
-            background: #e74c3c;
-            transform: scale(1.1);
-        }
-
-        .media-caption-input {
-            width: 100%;
-            padding: 0.75rem;
-            border: 1px solid var(--border-color);
-            border-radius: var(--border-radius-small);
-            margin-top: 0.5rem;
-            font-size: 0.875rem;
-            background: var(--surface-color);
-            color: var(--text-color);
-        }
-
-        /* Action Buttons */
-        .composer-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: space-between;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .btn-secondary-modern {
-            background: var(--background-color);
-            color: var(--text-color);
-            border: 2px solid var(--border-color);
-            padding: 0.75rem 1.5rem;
-            border-radius: var(--border-radius-medium);
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-secondary-modern:hover {
-            background: var(--border-color);
-            color: var(--text-color);
-            transform: translateY(-2px);
-            box-shadow: var(--box-shadow-subtle);
-        }
-
-        .btn-primary-modern {
-            background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
-            color: white;
-            border: none;
-            padding: 0.75rem 2rem;
-            border-radius: var(--border-radius-medium);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .btn-primary-modern:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
-        }
-
-        .btn-primary-modern:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        /* Story Preview */
-        .story-preview-container {
-            background: var(--background-color);
-            border-radius: var(--border-radius-medium);
-            padding: 1rem;
-            margin-top: 1rem;
-            border: 1px solid var(--border-color);
-        }
-
-        .story-toggle {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .toggle-switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
-
-        .toggle-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .toggle-slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .toggle-slider:before {
-            position: absolute;
-            content: "";
-            height: 26px;
-            width: 26px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .toggle-slider {
-            background-color: var(--primary-color);
-        }
-
-        input:checked + .toggle-slider:before {
-            transform: translateX(26px);
-        }
-
-        .story-options {
-            display: none;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .story-options.active {
-            display: flex;
-        }
-
-        @media (max-width: 768px) {
-            .thread-composer-container {
-                margin: 1rem;
-            }
-
-            .composer-body {
-                padding: 1.5rem;
-            }
-
-            .input-row {
-                grid-template-columns: 1fr;
-            }
-
-            .composer-actions {
-                flex-direction: column;
-            }
-
-            .story-options {
-                flex-direction: column;
-            }
-        }
-    </style>
 </head>
 <body>
     
@@ -458,122 +24,183 @@
         </nav>
     </header>
 
-    <main class="form-main">
-        <div class="thread-composer-container">
-            <div class="composer-header">
-                <h2><i class="fas fa-pen-fancy"></i> Create New Discussion</h2>
-                <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Share your thoughts, experiences, and connect with the community</p>
+    <main class="create-thread-main">
+        <div class="create-thread-container">
+            <!-- Header Section -->
+            <div class="create-header">
+                <div class="create-header-content">
+                    <a href="threads.html" class="back-link">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="create-title">
+                        <h1>Create Discussion</h1>
+                        <p>Share your thoughts with the alumni community</p>
+                    </div>
+                    <div class="create-actions">
+                        <button type="button" class="draft-btn" disabled>
+                            <i class="fas fa-save"></i>
+                            Draft
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <div class="composer-body">
-                <form id="add-thread-form" enctype="multipart/form-data">
-                    <!-- Main Content -->
-                    <div class="compose-section">
-                        <label for="content">What's on your mind?</label>
-                        <textarea 
-                            id="content" 
-                            class="enhanced-textarea"
-                            placeholder="Share your thoughts, ask a question, start a discussion, or tell us about an achievement..."
-                            maxlength="500"
-                        ></textarea>
-                        <div class="char-counter">
-                            <span id="char-count">0</span>/500 characters
+            <!-- Main Content -->
+            <div class="create-content">
+                <form id="add-thread-form" class="thread-form" enctype="multipart/form-data">
+                    <!-- User Info -->
+                    <div class="author-section">
+                        <div class="author-avatar" id="current-user-avatar">
+                            <i class="fas fa-user"></i>
                         </div>
-                    </div>
-
-                    <!-- Location and Hashtags Row -->
-                    <div class="input-row">
-                        <div class="compose-section">
-                            <label for="location">Location (Optional)</label>
-                            <input 
-                                type="text" 
-                                id="location" 
-                                class="enhanced-input"
-                                placeholder="Where are you posting from?"
-                            >
-                        </div>
-                        
-                        <div class="compose-section hashtag-container">
-                            <label for="hashtags">Add Tags</label>
-                            <input 
-                                type="text" 
-                                id="hashtags" 
-                                class="enhanced-input"
-                                placeholder="Type hashtags (e.g., #career #alumni)"
-                            >
-                            <div class="hashtag-suggestions" id="hashtag-suggestions"></div>
-                            <div class="hashtag-tags" id="hashtag-tags"></div>
-                        </div>
-                    </div>
-
-                    <!-- Mentions -->
-                    <div class="compose-section mention-container">
-                        <label for="mentions">Mention People (Optional)</label>
-                        <input 
-                            type="text" 
-                            id="mentions" 
-                            class="enhanced-input"
-                            placeholder="@mention someone (start typing a name)"
-                        >
-                        <div class="mention-suggestions" id="mention-suggestions"></div>
-                    </div>
-
-                    <!-- Media Upload -->
-                    <div class="compose-section">
-                        <label>Attach Media</label>
-                        <div class="media-upload-area" id="media-upload-area">
-                            <input type="file" id="thread_media" name="thread_media" accept="image/*,video/*" style="display: none;">
-                            <div class="upload-icon">
-                                <i class="fas fa-cloud-upload-alt"></i>
+                        <div class="author-info">
+                            <div class="author-name" id="current-user-name">You</div>
+                            <div class="visibility-select">
+                                <select id="visibility" name="visibility">
+                                    <option value="public">Public</option>
+                                    <option value="alumni">Alumni Only</option>
+                                </select>
                             </div>
-                            <div class="upload-text">Drop your files here or click to browse</div>
-                            <div class="upload-hint">Support for images and videos up to 10MB</div>
-                        </div>
-                        
-                        <div id="media-preview" class="media-preview-card" style="display: none;">
-                            <button type="button" id="remove-media" class="remove-media">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            <div id="media-preview-content"></div>
-                            <input 
-                                type="text" 
-                                id="media-caption" 
-                                class="media-caption-input"
-                                placeholder="Add a caption to your media..."
-                                maxlength="200"
-                            >
                         </div>
                     </div>
 
-                    <!-- Story Toggle -->
-                    <div class="compose-section">
-                        <div class="story-preview-container">
-                            <div class="story-toggle">
-                                <label class="toggle-switch">
+                    <!-- Main Content Area -->
+                    <div class="content-section">
+                        <div class="compose-area">
+                            <textarea 
+                                id="content" 
+                                class="main-textarea"
+                                placeholder="What's on your mind? Share your thoughts, experiences, or ask a question..."
+                                maxlength="2000"
+                                rows="6"
+                            ></textarea>
+                            <div class="content-footer">
+                                <div class="char-counter">
+                                    <span id="char-count">0</span>/<span id="char-limit">2000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Media Preview -->
+                        <div id="media-preview" class="media-preview-container" style="display: none;">
+                            <div class="media-preview-header">
+                                <span class="media-label">Media</span>
+                                <button type="button" id="remove-media" class="remove-btn">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div id="media-preview-content" class="media-content"></div>
+                            <div class="media-caption-section">
+                                <input 
+                                    type="text" 
+                                    id="media-caption" 
+                                    class="caption-input"
+                                    placeholder="Add a caption to your media..."
+                                    maxlength="200"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Options -->
+                    <div class="options-section">
+                        <div class="options-grid">
+                            <!-- Location -->
+                            <div class="option-item">
+                                <div class="option-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Location</span>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    id="location" 
+                                    class="option-input"
+                                    placeholder="Where are you posting from?"
+                                >
+                            </div>
+
+                            <!-- Hashtags -->
+                            <div class="option-item hashtag-option">
+                                <div class="option-header">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span>Tags</span>
+                                </div>
+                                <div class="hashtag-container">
+                                    <input 
+                                        type="text" 
+                                        id="hashtags" 
+                                        class="option-input"
+                                        placeholder="Add hashtags (e.g., #career #alumni)"
+                                    >
+                                    <div class="hashtag-suggestions" id="hashtag-suggestions"></div>
+                                    <div class="hashtag-tags" id="hashtag-tags"></div>
+                                </div>
+                            </div>
+
+                            <!-- Mentions -->
+                            <div class="option-item mention-option">
+                                <div class="option-header">
+                                    <i class="fas fa-at"></i>
+                                    <span>Mentions</span>
+                                </div>
+                                <div class="mention-container">
+                                    <input 
+                                        type="text" 
+                                        id="mentions" 
+                                        class="option-input"
+                                        placeholder="@mention someone"
+                                    >
+                                    <div class="mention-suggestions" id="mention-suggestions"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="action-bar">
+                        <div class="media-actions">
+                            <button type="button" class="media-btn" id="photo-btn">
+                                <i class="fas fa-image"></i>
+                                <span>Photo</span>
+                            </button>
+                            <button type="button" class="media-btn" id="video-btn">
+                                <i class="fas fa-video"></i>
+                                <span>Video</span>
+                            </button>
+                            <div class="story-toggle-container">
+                                <label class="story-toggle">
                                     <input type="checkbox" id="story-toggle">
                                     <span class="toggle-slider"></span>
-                                </label>
-                                <label for="story-toggle" style="cursor: pointer; margin: 0; font-weight: 600;">
-                                    <i class="fas fa-history"></i> Also add to stories (expires in 24h)
+                                    <span class="toggle-label">Add to Stories</span>
                                 </label>
                             </div>
-                            <div class="story-options" id="story-options">
-                                <input type="color" id="story-bg-color" value="#4a90e2" title="Story background color">
-                                <input type="color" id="story-text-color" value="#ffffff" title="Story text color">
-                            </div>
+                        </div>
+
+                        <div class="submit-actions">
+                            <button type="button" class="cancel-btn" onclick="window.location.href='threads.html'">
+                                Cancel
+                            </button>
+                            <button type="submit" class="submit-btn" id="submit-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hidden file input -->
+                    <input type="file" id="thread_media" name="thread_media" accept="image/*,video/*" style="display: none;">
+
+                    <!-- Story options (hidden by default) -->
+                    <div class="story-options" id="story-options" style="display: none;">
+                        <div class="story-colors">
+                            <label>Background:</label>
+                            <input type="color" id="story-bg-color" value="#4a90e2">
+                            <label>Text:</label>
+                            <input type="color" id="story-text-color" value="#ffffff">
                         </div>
                     </div>
 
                     <div id="message" class="form-message"></div>
-
-                    <div class="composer-actions">
-                        <a href="threads.html" class="btn-secondary-modern">
-                            <i class="fas fa-arrow-left"></i> Cancel
-                        </a>
-                        <button type="submit" class="btn-primary-modern" id="submit-btn">
-                            <i class="fas fa-paper-plane"></i> Share Discussion
-                        </button>
-                    </div>
                 </form>
             </div>
         </div>

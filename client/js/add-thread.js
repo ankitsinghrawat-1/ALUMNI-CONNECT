@@ -6,7 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const hashtagsInput = document.getElementById('hashtags');
     const mentionsInput = document.getElementById('mentions');
     const mediaInput = document.getElementById('thread_media');
-    const mediaUploadArea = document.getElementById('media-upload-area');
+    const photoBtn = document.getElementById('photo-btn');
+    const videoBtn = document.getElementById('video-btn');
     const mediaPreview = document.getElementById('media-preview');
     const mediaPreviewContent = document.getElementById('media-preview-content');
     const mediaCaptionInput = document.getElementById('media-caption');
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageDiv = document.getElementById('message');
     const submitBtn = document.getElementById('submit-btn');
     const charCountSpan = document.getElementById('char-count');
+    const charLimitSpan = document.getElementById('char-limit');
     const storyToggle = document.getElementById('story-toggle');
     const storyOptions = document.getElementById('story-options');
     const hashtagSuggestions = document.getElementById('hashtag-suggestions');
@@ -26,14 +28,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let hashtagSuggestionTimeout = null;
     let mentionSuggestionTimeout = null;
 
-    // Character count update
+    // Character count update with higher limit
     contentTextarea.addEventListener('input', () => {
         const charCount = contentTextarea.value.length;
+        const maxLength = 2000;
         charCountSpan.textContent = charCount;
         
-        if (charCount > 450) {
+        if (charCount > maxLength * 0.9) {
             charCountSpan.style.color = 'var(--warning-color, #f39c12)';
-        } else if (charCount > 480) {
+        } else if (charCount > maxLength * 0.95) {
             charCountSpan.style.color = 'var(--error-color, #e74c3c)';
         } else {
             charCountSpan.style.color = 'var(--subtle-text-color)';
@@ -41,58 +44,26 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Auto-resize textarea
         contentTextarea.style.height = 'auto';
-        contentTextarea.style.height = (contentTextarea.scrollHeight) + 'px';
+        contentTextarea.style.height = Math.max(140, contentTextarea.scrollHeight) + 'px';
     });
 
     // Story toggle functionality
     storyToggle.addEventListener('change', () => {
         if (storyToggle.checked) {
-            storyOptions.classList.add('active');
+            storyOptions.style.display = 'block';
         } else {
-            storyOptions.classList.remove('active');
+            storyOptions.style.display = 'none';
         }
     });
 
-    // Enhanced drag and drop functionality
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        mediaUploadArea.addEventListener(eventName, preventDefaults, false);
-        document.body.addEventListener(eventName, preventDefaults, false);
+    // Media button handlers
+    photoBtn.addEventListener('click', () => {
+        mediaInput.accept = 'image/*';
+        mediaInput.click();
     });
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-        mediaUploadArea.addEventListener(eventName, highlight, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-        mediaUploadArea.addEventListener(eventName, unhighlight, false);
-    });
-
-    mediaUploadArea.addEventListener('drop', handleDrop, false);
-
-    function preventDefaults(e) {
-        e.preventDefault();
-        e.stopPropagation();
-    }
-
-    function highlight() {
-        mediaUploadArea.classList.add('dragover');
-    }
-
-    function unhighlight() {
-        mediaUploadArea.classList.remove('dragover');
-    }
-
-    function handleDrop(e) {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        
-        if (files.length > 0) {
-            handleFileSelection(files[0]);
-        }
-    }
-
-    // Click to upload
-    mediaUploadArea.addEventListener('click', () => {
+    videoBtn.addEventListener('click', () => {
+        mediaInput.accept = 'video/*';
         mediaInput.click();
     });
 
@@ -131,18 +102,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (file.type.startsWith('image/')) {
                 mediaPreviewContent.innerHTML = `
-                    <div class="image-preview">
-                        <img src="${fileUrl}" alt="Preview" style="max-width: 100%; max-height: 300px; border-radius: 8px; display: block;">
-                    </div>
+                    <img src="${fileUrl}" alt="Preview" style="width: 100%; max-height: 300px; object-fit: cover; border-radius: 12px;">
                 `;
             } else if (file.type.startsWith('video/')) {
                 mediaPreviewContent.innerHTML = `
-                    <div class="video-preview">
-                        <video controls style="max-width: 100%; max-height: 300px; border-radius: 8px;">
-                            <source src="${fileUrl}" type="${file.type}">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
+                    <video controls style="width: 100%; max-height: 300px; border-radius: 12px;">
+                        <source src="${fileUrl}" type="${file.type}">
+                        Your browser does not support the video tag.
+                    </video>
                 `;
             }
             
@@ -320,8 +287,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        if (content.length > 500) {
-            showToast('Content must be 500 characters or less', 'error');
+        if (content.length > 2000) {
+            showToast('Content must be 2000 characters or less', 'error');
             return;
         }
 
@@ -386,9 +353,30 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Re-enable form
             submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Share Discussion';
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Share';
         }
     });
+
+    // Load current user info
+    const loadCurrentUser = async () => {
+        try {
+            const user = await window.api.get('/users/profile');
+            const userNameElement = document.getElementById('current-user-name');
+            const userAvatarElement = document.getElementById('current-user-avatar');
+            
+            if (user) {
+                userNameElement.textContent = user.full_name || 'You';
+                
+                if (user.profile_pic_url) {
+                    userAvatarElement.innerHTML = `<img src="http://localhost:3000/${user.profile_pic_url}" alt="${user.full_name}">`;
+                } else {
+                    userAvatarElement.innerHTML = user.full_name ? user.full_name.charAt(0).toUpperCase() : '<i class="fas fa-user"></i>';
+                }
+            }
+        } catch (error) {
+            console.error('Error loading user profile:', error);
+        }
+    };
 
     // Initialize
     const init = () => {
@@ -405,6 +393,8 @@ document.addEventListener('DOMContentLoaded', () => {
             setTimeout(() => {
                 window.location.href = 'login.html';
             }, 2000);
+        } else {
+            loadCurrentUser();
         }
     };
 
