@@ -188,7 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Add "Add Story" button for current user if logged in
+            // Add "Add Story" button for current user if logged in - positioned prominently at the start
             if (currentUser) {
                 storiesHTML += `
                     <div class="story-item add-story" onclick="openAddStoryModal()">
