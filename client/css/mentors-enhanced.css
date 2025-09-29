@@ -152,7 +152,7 @@
 .search-filter-section {
     background: var(--surface-color);
     border-bottom: 1px solid var(--border-color);
-    padding: 1rem 0;
+    padding: 0.75rem 0;
     position: sticky;
     top: 80px;
     z-index: 100;
@@ -199,10 +199,16 @@ html.dark-mode .search-filter-section {
 }
 
 .search-icon {
-    color: var(--mentor-gray-700);
-    margin-right: 0.75rem;
+    color: var(--mentor-primary);
+    margin-right: 1rem;
     font-size: 1.1rem;
     min-width: 18px;
+    flex-shrink: 0;
+    opacity: 0.8;
+}
+
+.search-input-wrapper:focus-within .search-icon {
+    opacity: 1;
 }
 
 #mentor-search {
@@ -213,6 +219,7 @@ html.dark-mode .search-filter-section {
     font-size: 0.95rem;
     background: transparent;
     color: var(--text-color);
+    margin-left: 0;
 }
 
 #mentor-search::placeholder {
