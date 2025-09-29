@@ -1,62 +1,5 @@
 @import url("https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css");
 
-/* === CORE THEME & COLOR VARIABLES === */
-:root {
-    --primary-color: #4A90E2;
-    --success-color: #50E3C2;
-    --danger-color: #D0021B;
-    --warning-color: #F5A623;
-    
-    --text-color: #333;
-    --text-color-light: #777;
-    --link-color: #4A90E2;
-    
-    --background-color: #F4F7FC;
-    --background-light: #E9EDF5;
-    --card-bg: #FFFFFF;
-    --border-color: #E0E6F1;
-    --sidebar-bg: #2C3E50;
-    --sidebar-text: #ECF0F1;
-    --sidebar-active: #34495E;
-    --sidebar-hover: #34495E;
-}
-
-html.dark-mode {
-    --text-color: #EAEAEA;
-    --text-color-light: #999;
-    --link-color: #58A6FF;
-
-    --background-color: #0D1117;
-    --background-light: #161B22;
-    --card-bg: #1A222C;
-    --border-color: #30363D;
-    --sidebar-bg: #161B22;
-    --sidebar-text: #EAEAEA;
-    --sidebar-active: #0D1117;
-    --sidebar-hover: #0D1117;
-}
-
-/* === GENERAL BODY & LAYOUT === */
-body {
-    background-color: var(--background-color);
-    color: var(--text-color);
-    font-family: 'Poppins', sans-serif;
-    margin: 0;
-    line-height: 1.6;
-}
-
-.card {
-    background-color: var(--card-bg);
-    border-radius: 8px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    margin-bottom: 1.5rem;
-}
-html.dark-mode .card {
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-
 /*Global & Variables*/
 :root {
     --primary-color: #4a90e2;      /* A more vibrant blue */
@@ -83,7 +26,7 @@ html.dark-mode .card {
     --box-shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 /* Dark Mode Variables */
-.dark-mode {
+html.dark-mode {
     --primary-color: #5da9f0;
     --primary-dark-color: #4a90e2;
     --accent-color: #f7b731;
@@ -4305,20 +4248,6 @@ body main {
     box-shadow: 0 0 10px rgba(245, 166, 35, 0.5);
 }
 
-html.dark-mode {
-    --primary-color: #f5a623;
-    --primary-dark-color: #d18d1f;
-    --accent-color: #3498db;
-    --accent-dark-color: #2980b9;
-    --background-color: #1a1a1a;
-    --surface-color: #2c2c2c;
-    --text-color: #f0f0f0;
-    --subtle-text-color: #a0a0a0;
-    --border-color: #3d3d3d;
-    --box-shadow-subtle: 0 2px 10px rgba(0, 0, 0, 0.4);
-    --box-shadow-elevated: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
 html.dark-mode .main-header,
 html.dark-mode .main-footer {
     background-color: var(--surface-color);
@@ -6890,86 +6819,86 @@ fieldset.form-section legend {
 /* === DARK MODE PROFILE PAGE === */
 
 /* General Profile Layout in Dark Mode */
-.dark-mode .profile-container {
+html.dark-mode .profile-container {
     background-color: var(--background-color); /* Use main dark background */
 }
 
-.dark-mode .profile-sidebar {
+html.dark-mode .profile-sidebar {
     background-color: var(--background-color); /* Match main background */
     border-right-color: var(--border-color);
 }
 
-.dark-mode .profile-content {
+html.dark-mode .profile-content {
     background-color: var(--surface-color); /* Use lighter card color */
 }
 
 /* Sidebar Navigation Links */
-.dark-mode .profile-sidebar h3 {
+html.dark-mode .profile-sidebar h3 {
     color: var(--accent-color);
     font-weight: 600;
 }
 
-.dark-mode .profile-nav a {
+html.dark-mode .profile-nav a {
     color: var(--subtle-text-color);
     font-weight: 500;
     transition: background-color 0.2s, color 0.2s;
 }
 
-.dark-mode .profile-nav a:hover {
+html.dark-mode .profile-nav a:hover {
     background-color: var(--surface-color);
     color: var(--accent-color);
 }
 
-.dark-mode .profile-nav a.active {
+html.dark-mode .profile-nav a.active {
     background-color: var(--accent-color);
     color: #1a252f; /* Dark text on the bright accent color */
     font-weight: 600;
 }
 
 /* Content Area Fields */
-.dark-mode .profile-page h2 {
+html.dark-mode .profile-page h2 {
     color: var(--text-color);
 }
 
-.dark-mode .form-section {
+html.dark-mode .form-section {
     background-color: transparent; /* Remove the inner background */
     border-color: var(--border-color);
 }
 
-.dark-mode .form-section h3 {
+html.dark-mode .form-section h3 {
     color: var(--accent-color);
 }
 
-.dark-mode .profile-field {
+html.dark-mode .profile-field {
     border-bottom-color: var(--border-color);
 }
 
-.dark-mode .profile-field label {
+html.dark-mode .profile-field label {
     color: var(--subtle-text-color);
 }
 
-.dark-mode .display-field {
+html.dark-mode .display-field {
     color: var(--text-color);
 }
 
-.dark-mode .edit-icon {
+html.dark-mode .edit-icon {
     color: var(--subtle-text-color);
     background-color: var(--border-color);
 }
 
-.dark-mode .edit-icon:hover {
+html.dark-mode .edit-icon:hover {
     color: var(--accent-color);
 }
 
-.dark-mode .privacy-option {
+html.dark-mode .privacy-option {
     border-color: var(--border-color);
 }
 
-.dark-mode .privacy-label-group label {
+html.dark-mode .privacy-label-group label {
     color: var(--text-color);
 }
 
-.dark-mode .privacy-label-group small {
+html.dark-mode .privacy-label-group small {
     color: var(--subtle-text-color);
 }
 
@@ -6980,7 +6909,7 @@ fieldset.form-section legend {
     background-color: #f7f9fc;
 }
 
-.dark-mode .admin-dashboard-main {
+html.dark-mode .admin-dashboard-main {
     background-color: var(--dark-background-color);
 }
 
@@ -7067,12 +6996,12 @@ fieldset.form-section legend {
 }
 
 /* Dark Mode Adjustments */
-.dark-mode .admin-dashboard-main .card {
+html.dark-mode .admin-dashboard-main .card {
     border-color: var(--dark-border-color);
     background-color: var(--dark-surface-color);
 }
-.dark-mode .stat-card i { color: var(--dark-accent-color); }
-.dark-mode .admin-dashboard-main .card h3 { border-bottom-color: var(--dark-border-color); }
+html.dark-mode .stat-card i { color: var(--dark-accent-color); }
+html.dark-mode .admin-dashboard-main .card h3 { border-bottom-color: var(--dark-border-color); }
 
 /* Activity List */
 .admin-activity-list {
@@ -7088,7 +7017,7 @@ fieldset.form-section legend {
 .admin-activity-list i { font-size: 1.1rem; color: var(--subtle-text-color); margin-top: 4px; }
 .admin-activity-list p { margin: 0; font-weight: 500; line-height: 1.4; }
 .admin-activity-list small { color: var(--subtle-text-color); font-size: 0.85rem; }
-.dark-mode .admin-activity-list li { border-bottom-color: var(--dark-border-color); }
+html.dark-mode .admin-activity-list li { border-bottom-color: var(--dark-border-color); }
 
 /* === ADMIN PANEL - REDESIGNED STATS V2 === */
 
@@ -7109,7 +7038,7 @@ fieldset.form-section legend {
     border: 1px solid var(--border-color);
 }
 
-.dark-mode .admin-stat-card {
+html.dark-mode .admin-stat-card {
     background-color: var(--dark-surface-color);
     border-color: var(--dark-border-color);
 }
@@ -7119,7 +7048,7 @@ fieldset.form-section legend {
     color: var(--primary-color);
 }
 
-.dark-mode .admin-stat-card i {
+html.dark-mode .admin-stat-card i {
     color: var(--dark-accent-color);
 }
 
@@ -9213,34 +9142,34 @@ fieldset.form-section legend {
 }
 
 /* Dark Mode Adjustments */
-.dark-mode .threads-main {
+html.dark-mode .threads-main {
     background-color: var(--background-color);
 }
 
-.dark-mode .thread-item {
+html.dark-mode .thread-item {
     background-color: var(--surface-color);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.dark-mode .media-upload-container {
+html.dark-mode .media-upload-container {
     border-color: var(--border-color);
 }
 
-.dark-mode .media-upload-container:hover {
+html.dark-mode .media-upload-container:hover {
     border-color: var(--primary-color);
     background-color: var(--background-light);
 }
 
-.dark-mode .media-preview {
+html.dark-mode .media-preview {
     border-color: var(--border-color);
 }
 
-.dark-mode .media-preview-header {
+html.dark-mode .media-preview-header {
     background-color: var(--background-light);
     border-bottom-color: var(--border-color);
 }
 
-.dark-mode .comment-item {
+html.dark-mode .comment-item {
     background-color: var(--background-light);
 }
 
@@ -11326,20 +11255,20 @@ fieldset.form-section legend {
 }
 
 /* Dark mode adjustments */
-.dark-mode .profile-completion-status {
+html.dark-mode .profile-completion-status {
     background: var(--card-bg);
     border-color: var(--border-color);
 }
 
-.dark-mode .completion-bar {
+html.dark-mode .completion-bar {
     background: var(--background-light);
 }
 
-.dark-mode .profile-field {
+html.dark-mode .profile-field {
     background: var(--background-light);
     border-color: var(--border-color);
 }
 
-.dark-mode .profile-field:hover {
+html.dark-mode .profile-field:hover {
     background: rgba(74, 144, 226, 0.05);
 }
