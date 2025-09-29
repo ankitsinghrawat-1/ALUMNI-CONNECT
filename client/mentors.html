@@ -153,6 +153,173 @@
             </div>
         </section>
 
+        <!-- Enhanced Search & Filter Section -->
+        <section class="advanced-search-section">
+            <div class="container">
+                <div class="search-header">
+                    <h2>Find Your Perfect Mentor</h2>
+                    <p>Use our advanced filters to discover mentors that match your specific needs</p>
+                </div>
+                
+                <div class="search-controls">
+                    <div class="primary-search">
+                        <div class="search-input-group">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="mentor-search" placeholder="Search mentors by name, company, skills, or expertise..." />
+                            <button class="search-btn" id="search-btn">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-toggles">
+                        <button class="filter-toggle-btn" id="filters-toggle">
+                            <i class="fas fa-sliders-h"></i>
+                            Advanced Filters
+                            <span class="filter-count" id="filter-count">0</span>
+                        </button>
+                        <button class="view-toggle-btn" id="view-toggle">
+                            <i class="fas fa-th"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="advanced-filters" id="advanced-filters">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label>Industry</label>
+                            <select id="industry-filter">
+                                <option value="">All Industries</option>
+                                <option value="technology">Technology</option>
+                                <option value="finance">Finance & Banking</option>
+                                <option value="healthcare">Healthcare & Medicine</option>
+                                <option value="education">Education & Training</option>
+                                <option value="marketing">Marketing & Advertising</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="retail">Retail & E-commerce</option>
+                                <option value="real_estate">Real Estate</option>
+                                <option value="legal">Legal Services</option>
+                                <option value="media">Media & Entertainment</option>
+                                <option value="nonprofit">Non-profit</option>
+                                <option value="government">Government</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Experience Level</label>
+                            <select id="experience-filter">
+                                <option value="">Any Experience</option>
+                                <option value="1-3">1-3 years</option>
+                                <option value="4-7">4-7 years</option>
+                                <option value="8-15">8-15 years</option>
+                                <option value="16+">16+ years</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Mentoring Style</label>
+                            <select id="style-filter">
+                                <option value="">Any Style</option>
+                                <option value="one_on_one">One-on-One</option>
+                                <option value="group">Group Mentoring</option>
+                                <option value="workshop">Workshops</option>
+                                <option value="mixed">Mixed Approach</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Price Range</label>
+                            <select id="price-filter">
+                                <option value="">Any Price</option>
+                                <option value="free">Free</option>
+                                <option value="1-50">$1-50/hour</option>
+                                <option value="51-100">$51-100/hour</option>
+                                <option value="101-200">$101-200/hour</option>
+                                <option value="201+">$201+/hour</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Rating</label>
+                            <select id="rating-filter">
+                                <option value="">Any Rating</option>
+                                <option value="4+">4+ Stars</option>
+                                <option value="3+">3+ Stars</option>
+                                <option value="2+">2+ Stars</option>
+                                <option value="unrated">Unrated</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Availability</label>
+                            <select id="availability-filter">
+                                <option value="">Any Availability</option>
+                                <option value="immediate">Available Now</option>
+                                <option value="this-week">This Week</option>
+                                <option value="flexible">Flexible Schedule</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Response Time</label>
+                            <select id="response-filter">
+                                <option value="">Any Response Time</option>
+                                <option value="1">Within 1 hour</option>
+                                <option value="4">Within 4 hours</option>
+                                <option value="24">Within 24 hours</option>
+                                <option value="48+">48+ hours</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Language</label>
+                            <select id="language-filter">
+                                <option value="">Any Language</option>
+                                <option value="English">English</option>
+                                <option value="Spanish">Spanish</option>
+                                <option value="French">French</option>
+                                <option value="German">German</option>
+                                <option value="Chinese">Chinese</option>
+                                <option value="Japanese">Japanese</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="filter-actions">
+                        <button class="clear-filters-btn" id="clear-filters">
+                            <i class="fas fa-times"></i>
+                            Clear All Filters
+                        </button>
+                        <button class="apply-filters-btn" id="apply-filters">
+                            <i class="fas fa-check"></i>
+                            Apply Filters
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="search-results-header" id="results-header">
+                    <div class="results-count">
+                        <span id="results-count">0 mentors found</span>
+                    </div>
+                    <div class="sort-options">
+                        <label>Sort by:</label>
+                        <select id="sort-select">
+                            <option value="relevance">Best Match</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="experience">Most Experienced</option>
+                            <option value="price-low">Price: Low to High</option>
+                            <option value="price-high">Price: High to Low</option>
+                            <option value="response-time">Fastest Response</option>
+                            <option value="newest">Newest Mentors</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- Mentors List Section -->
         <section id="mentors-list" class="mentors-list-section">
             <div class="container">
