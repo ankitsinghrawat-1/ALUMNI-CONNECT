@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find a Mentor - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mentors-enhanced.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         (function() {
@@ -56,7 +57,7 @@
                             </div>
                         </div>
                         <div class="hero-actions">
-                            <a href="#mentors-list" class="btn btn-primary btn-large">Browse Mentors</a>
+                            <a href="browse-mentors.html" class="btn btn-primary btn-large">Browse Mentors</a>
                             <a href="become-mentor.html" class="btn btn-outline btn-large">Become a Mentor</a>
                         </div>
                     </div>
@@ -153,43 +154,105 @@
             </div>
         </section>
 
-        <!-- Mentors List Section -->
+        <!-- Featured Mentors Preview -->
         <section id="mentors-list" class="mentors-list-section">
             <div class="container">
                 <div class="section-header">
                     <h2>Featured Mentors</h2>
                     <div class="list-actions">
-                        <div class="search-bar">
-                            <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Search mentors by name, company, or expertise...">
-                        </div>
-                        <div class="filter-dropdown">
-                            <select>
-                                <option value="">All Industries</option>
-                                <option value="technology">Technology</option>
-                                <option value="business">Business</option>
-                                <option value="finance">Finance</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="consulting">Consulting</option>
-                            </select>
+                        <div id="mentor-action-area" class="mentor-action-area">
+                            <!-- Action buttons will be loaded here -->
                         </div>
                     </div>
                 </div>
-                <div id="mentors-list-container" class="mentors-grid">
-                    <!-- Mentors will be loaded here by JavaScript -->
+                
+                <!-- Quick preview of top mentors -->
+                <div id="featured-mentors-preview" class="mentors-grid">
+                    <!-- Featured mentors will be loaded here -->
                     <div class="loading-container">
                         <div class="loading-spinner">
                             <div class="spinner"></div>
                         </div>
-                        <p>Finding amazing mentors for you...</p>
+                        <p>Loading featured mentors...</p>
+                    </div>
+                </div>
+
+                <!-- Call to action -->
+                <div class="mentors-cta">
+                    <div class="cta-content">
+                        <h3>Ready to find your mentor?</h3>
+                        <p>Explore our complete directory of mentors with advanced search and filtering options</p>
+                        <a href="browse-mentors.html" class="btn btn-primary btn-large">
+                            <i class="fas fa-search"></i>
+                            Browse All Mentors
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Success Stories Section -->
+        <section class="success-stories-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Success Stories</h2>
+                    <p>See how our mentorship program has helped professionals achieve their goals</p>
+                </div>
+                
+                <div class="stories-grid">
+                    <div class="story-card">
+                        <div class="story-quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"My mentor helped me navigate a career transition from marketing to product management. The guidance and industry insights were invaluable."</p>
+                        </div>
+                        <div class="story-author">
+                            <div class="author-avatar">
+                                <img src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#4ECDC4"/><text x="50" y="58" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">SA</text></svg>')}" alt="Sarah A.">
+                            </div>
+                            <div class="author-info">
+                                <h4>Sarah A.</h4>
+                                <p>Product Manager at TechCorp</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"The mentorship program connected me with a senior engineer who helped me improve my coding skills and land my dream job at a FAANG company."</p>
+                        </div>
+                        <div class="story-author">
+                            <div class="author-avatar">
+                                <img src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#FF6B6B"/><text x="50" y="58" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">MJ</text></svg>')}" alt="Michael J.">
+                            </div>
+                            <div class="author-info">
+                                <h4>Michael J.</h4>
+                                <p>Software Engineer at Google</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-card">
+                        <div class="story-quote">
+                            <i class="fas fa-quote-left"></i>
+                            <p>"As a recent graduate, having a mentor in finance helped me understand the industry better and gave me confidence during interviews."</p>
+                        </div>
+                        <div class="story-author">
+                            <div class="author-avatar">
+                                <img src="data:image/svg+xml,${encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="50" fill="#96CEB4"/><text x="50" y="58" font-family="Arial" font-size="24" font-weight="bold" fill="white" text-anchor="middle">EP</text></svg>')}" alt="Emily P.">
+                            </div>
+                            <div class="author-info">
+                                <h4>Emily P.</h4>
+                                <p>Financial Analyst at JPMorgan</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Modals -->
+    <!-- Request Modal -->
     <div id="request-modal" class="modal">
         <div class="modal-content">
             <span class="close-btn">&times;</span>
@@ -205,21 +268,6 @@
         </div>
     </div>
     
-    <div id="edit-request-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3 id="edit-modal-title">Edit Mentorship Request</h3>
-            <form id="edit-request-form">
-                <input type="hidden" id="edit-mentor-id-input">
-                <div class="input-group">
-                    <label for="edit-request-message">Your Message</label>
-                    <textarea id="edit-request-message" rows="4" required></textarea>
-                </div>
-                <button type="submit" id="edit-modal-submit-btn" class="btn btn-primary btn-full-width">Save Changes</button>
-            </form>
-        </div>
-    </div>
-    
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
@@ -230,6 +278,6 @@
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/mentors.js"></script>
+    <script src="js/mentors-enhanced.js"></script>
 </body>
 </html>

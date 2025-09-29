@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browse Mentors - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mentors-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="browse-mentors-main">
+        <!-- Hero Section -->
+        <section class="browse-hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h1>Find Your Perfect Mentor</h1>
+                    <p class="hero-subtitle">Connect with experienced professionals who can guide your career journey</p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="quick-stats" id="mentor-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number" data-stat="total_mentors">500+</span>
+                                <span class="stat-label">Active Mentors</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number" data-stat="avg_rating">4.8</span>
+                                <span class="stat-label">Average Rating</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number">24hrs</span>
+                                <span class="stat-label">Avg Response</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number" data-stat="total_sessions">10K+</span>
+                                <span class="stat-label">Sessions Completed</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search and Filter Section -->
+        <section class="search-filter-section">
+            <div class="container">
+                <div class="search-filter-container">
+                    <!-- Advanced Search Bar -->
+                    <div class="search-bar-enhanced">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="mentor-search" placeholder="Search by name, company, skills, or expertise..." />
+                            <button class="clear-search" id="clear-search" style="display: none;">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <button class="search-btn" id="search-btn">
+                            <i class="fas fa-search"></i>
+                            <span>Search</span>
+                        </button>
+                    </div>
+
+                    <!-- Filter Controls -->
+                    <div class="filter-controls">
+                        <button class="filter-toggle" id="filter-toggle">
+                            <i class="fas fa-filter"></i>
+                            <span>Filters</span>
+                            <span class="filter-count" id="filter-count" style="display: none;">0</span>
+                        </button>
+                        <div class="view-controls">
+                            <button class="view-btn active" data-view="grid" title="Grid View">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" data-view="list" title="List View">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                        <div class="sort-controls">
+                            <select id="sort-select">
+                                <option value="rating_desc">Highest Rated</option>
+                                <option value="reviews_desc">Most Reviews</option>
+                                <option value="experience_desc">Most Experience</option>
+                                <option value="response_time_asc">Fastest Response</option>
+                                <option value="hourly_rate_asc">Lowest Rate</option>
+                                <option value="created_at_desc">Newest</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Advanced Filters Panel -->
+                    <div class="filters-panel" id="filters-panel">
+                        <div class="filters-grid">
+                            <!-- Industry Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-industry"></i>
+                                    Industry
+                                </label>
+                                <select id="industry-filter" class="filter-select">
+                                    <option value="">All Industries</option>
+                                </select>
+                            </div>
+
+                            <!-- Experience Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-calendar-alt"></i>
+                                    Experience
+                                </label>
+                                <div class="range-filter">
+                                    <input type="number" id="experience-min" placeholder="Min years" min="0" max="50">
+                                    <span class="range-separator">-</span>
+                                    <input type="number" id="experience-max" placeholder="Max years" min="0" max="50">
+                                </div>
+                            </div>
+
+                            <!-- Rating Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-star"></i>
+                                    Minimum Rating
+                                </label>
+                                <div class="rating-filter">
+                                    <div class="star-rating" id="rating-filter">
+                                        <span class="star" data-rating="1"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="2"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="3"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="4"><i class="far fa-star"></i></span>
+                                        <span class="star" data-rating="5"><i class="far fa-star"></i></span>
+                                    </div>
+                                    <span class="rating-text" id="rating-text">Any Rating</span>
+                                </div>
+                            </div>
+
+                            <!-- Price Range Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-dollar-sign"></i>
+                                    Max Hourly Rate
+                                </label>
+                                <div class="price-filter">
+                                    <input type="range" id="price-range" min="0" max="500" value="500" step="25">
+                                    <div class="price-display">
+                                        <span>$0</span>
+                                        <span id="price-value">$500+</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Mentoring Style Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-users"></i>
+                                    Mentoring Style
+                                </label>
+                                <select id="mentoring-style-filter" class="filter-select">
+                                    <option value="">Any Style</option>
+                                    <option value="one_on_one">One-on-One</option>
+                                    <option value="group">Group Sessions</option>
+                                    <option value="workshop">Workshops</option>
+                                    <option value="mixed">Mixed Approach</option>
+                                </select>
+                            </div>
+
+                            <!-- Languages Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-language"></i>
+                                    Languages
+                                </label>
+                                <select id="languages-filter" class="filter-select">
+                                    <option value="">Any Language</option>
+                                    <option value="English">English</option>
+                                    <option value="Spanish">Spanish</option>
+                                    <option value="French">French</option>
+                                    <option value="German">German</option>
+                                    <option value="Chinese">Chinese</option>
+                                    <option value="Japanese">Japanese</option>
+                                    <option value="Hindi">Hindi</option>
+                                </select>
+                            </div>
+
+                            <!-- Specialization Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-rocket"></i>
+                                    Specialization
+                                </label>
+                                <select id="specialization-filter" class="filter-select">
+                                    <option value="">All Specializations</option>
+                                </select>
+                            </div>
+
+                            <!-- Verification Level Filter -->
+                            <div class="filter-group">
+                                <label class="filter-label">
+                                    <i class="fas fa-shield-alt"></i>
+                                    Verification
+                                </label>
+                                <select id="verification-filter" class="filter-select">
+                                    <option value="">Any Level</option>
+                                    <option value="basic">Basic</option>
+                                    <option value="verified">Verified</option>
+                                    <option value="premium">Premium</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="filter-actions">
+                            <button class="btn btn-secondary" id="clear-filters">
+                                <i class="fas fa-times"></i>
+                                Clear Filters
+                            </button>
+                            <button class="btn btn-primary" id="apply-filters">
+                                <i class="fas fa-check"></i>
+                                Apply Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section class="results-section">
+            <div class="container">
+                <div class="results-header">
+                    <div class="results-info">
+                        <h2 id="results-title">Featured Mentors</h2>
+                        <p class="results-count" id="results-count">Loading mentors...</p>
+                    </div>
+                    <div id="mentor-action-area" class="mentor-action-area">
+                        <!-- Action buttons will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Mentors Grid -->
+                <div class="mentors-container" id="mentors-container">
+                    <div id="mentors-grid" class="mentors-grid grid-view">
+                        <!-- Loading state -->
+                        <div class="loading-container" id="loading-state">
+                            <div class="loading-spinner">
+                                <div class="spinner"></div>
+                            </div>
+                            <p>Finding the perfect mentors for you...</p>
+                        </div>
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination-container" id="pagination-container" style="display: none;">
+                        <div class="pagination">
+                            <button class="pagination-btn" id="prev-page" disabled>
+                                <i class="fas fa-chevron-left"></i>
+                                Previous
+                            </button>
+                            <div class="pagination-info">
+                                <span id="page-info">Page 1 of 1</span>
+                            </div>
+                            <button class="pagination-btn" id="next-page" disabled>
+                                Next
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="empty-state" id="empty-state" style="display: none;">
+                        <div class="empty-icon">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        <h3>No mentors found</h3>
+                        <p>Try adjusting your search criteria or filters to find more mentors.</p>
+                        <button class="btn btn-primary" id="reset-search">
+                            <i class="fas fa-refresh"></i>
+                            Reset Search
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mentor Profile Modal -->
+    <div id="mentor-profile-modal" class="modal mentor-modal">
+        <div class="modal-content mentor-modal-content">
+            <span class="close-btn">&times;</span>
+            <div id="mentor-profile-content">
+                <!-- Mentor profile content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Request Modal -->
+    <div id="request-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <h3 id="modal-title">Send Mentorship Request</h3>
+            <form id="request-form">
+                <input type="hidden" id="mentor-id-input">
+                <div class="input-group">
+                    <label for="request-message">Message (Optional)</label>
+                    <textarea id="request-message" rows="4" placeholder="Introduce yourself and what you're looking for in a mentor..."></textarea>
+                </div>
+                <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-full-width">Send Request</button>
+            </form>
+        </div>
+    </div>
+    
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/browse-mentors.js"></script>
+</body>
+</html>
