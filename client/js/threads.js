@@ -168,6 +168,84 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Load and display stories
+    const loadStories = async () => {
+        try {
+            const storyFeed = await window.api.get('/stories/feed');
+            const storiesScroll = document.querySelector('.stories-scroll');
+            
+            if (!storiesScroll) return;
+
+            // Keep the "All" filter story item
+            const allStoryItem = storiesScroll.querySelector('.story-item[data-category=""]');
+            
+            // Create user story items
+            const userStoryItems = storyFeed.map(user => {
+                const profilePicUrl = user.profile_pic_url 
+                    ? `http://localhost:3000/${user.profile_pic_url}` 
+                    : null;
+                
+                const avatarContent = profilePicUrl 
+                    ? `<img src="${profilePicUrl}" alt="${user.full_name}">`
+                    : user.full_name.charAt(0).toUpperCase();
+
+                return `
+                    <div class="story-item user-story" data-user-id="${user.user_id}" onclick="openUserStories(${user.user_id}, '${user.full_name.replace("'", "\\'")}')">
+                        <div class="story-ring ${user.story_count > 0 ? 'has-stories' : ''}">
+                            <div class="story-avatar user-avatar">
+                                ${avatarContent}
+                            </div>
+                        </div>
+                        <span>${user.full_name.split(' ')[0]}</span>
+                    </div>
+                `;
+            }).join('');
+
+            // Add "Add Story" button for current user if logged in
+            let addStoryButton = '';
+            if (currentUser) {
+                addStoryButton = `
+                    <div class="story-item add-story" onclick="openAddStoryModal()">
+                        <div class="story-ring add-story-ring">
+                            <div class="story-avatar add-story-avatar">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                        </div>
+                        <span>Add Story</span>
+                    </div>
+                `;
+            }
+
+            // Rebuild the stories scroll with all items, keeping the filter items but adding user stories
+            const existingFilterItems = storiesScroll.innerHTML;
+            const dividerIndex = existingFilterItems.indexOf('</div>');
+            const beforeDivider = existingFilterItems.substring(0, dividerIndex + 6);
+            
+            // Replace everything after the "All" category with user stories
+            storiesScroll.innerHTML = beforeDivider + addStoryButton + userStoryItems + `
+                <div class="story-item" data-category="career">
+                    <div class="story-ring">
+                        <div class="story-avatar career">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                    </div>
+                    <span>Career</span>
+                </div>
+                <div class="story-item" data-category="networking">
+                    <div class="story-ring">
+                        <div class="story-avatar networking">
+                            <i class="fas fa-handshake"></i>
+                        </div>
+                    </div>
+                    <span>Network</span>
+                </div>
+            `;
+            
+        } catch (error) {
+            console.error('Error loading stories:', error);
+        }
+    };
+
     // Update like statuses for current user
     const updateLikeStatuses = async () => {
         if (!currentUser) return;
@@ -394,6 +472,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const init = async () => {
         await initializeUser();
         await loadThreads();
+        await loadStories();
         initializeModernFeatures();
     };
 
@@ -591,6 +670,309 @@ document.addEventListener('DOMContentLoaded', () => {
             modal.remove();
             document.body.style.overflow = '';
         }
+    };
+
+    // Story viewing functionality
+    window.openUserStories = async (userId, userName) => {
+        if (!currentUser) {
+            showToast('Please log in to view stories', 'error');
+            return;
+        }
+
+        try {
+            const userStories = await window.api.get(`/stories/user/${userId}`);
+            if (userStories.length === 0) {
+                showToast('No active stories from this user', 'info');
+                return;
+            }
+
+            openStoryViewer(userStories, userName);
+        } catch (error) {
+            console.error('Error loading user stories:', error);
+            showToast('Error loading stories', 'error');
+        }
+    };
+
+    const openStoryViewer = (stories, userName) => {
+        let currentStoryIndex = 0;
+        const storyModal = document.createElement('div');
+        storyModal.className = 'story-modal';
+        
+        const updateStoryContent = () => {
+            const story = stories[currentStoryIndex];
+            let mediaContent = '';
+            
+            if (story.media_url) {
+                const mediaUrl = `http://localhost:3000/${story.media_url}`;
+                if (story.media_type === 'image') {
+                    mediaContent = `<img src="${mediaUrl}" alt="Story media" class="story-media-img">`;
+                } else if (story.media_type === 'video') {
+                    mediaContent = `<video autoplay muted class="story-media-video"><source src="${mediaUrl}" type="video/mp4"></video>`;
+                }
+            }
+
+            const textContent = story.content ? `<div class="story-text" style="color: ${story.text_color || '#ffffff'}">${story.content}</div>` : '';
+            const backgroundColor = story.background_color || '#4a90e2';
+
+            storyModal.innerHTML = `
+                <div class="story-overlay" style="background: ${backgroundColor}">
+                    <div class="story-header">
+                        <div class="story-user-info">
+                            <div class="story-user-avatar">${userName.charAt(0)}</div>
+                            <span class="story-user-name">${userName}</span>
+                            <span class="story-time">${timeAgo(story.created_at)}</span>
+                        </div>
+                        <button class="story-close" onclick="closeStoryViewer()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="story-progress">
+                        ${stories.map((_, index) => `
+                            <div class="story-progress-bar ${index <= currentStoryIndex ? 'active' : ''}"></div>
+                        `).join('')}
+                    </div>
+                    <div class="story-content" onclick="nextStory()">
+                        ${mediaContent}
+                        ${textContent}
+                    </div>
+                    <div class="story-navigation">
+                        <div class="story-nav-left" onclick="prevStory()"></div>
+                        <div class="story-nav-right" onclick="nextStory()"></div>
+                    </div>
+                </div>
+            `;
+
+            // Mark story as viewed
+            if (currentUser.userId !== story.user_id) {
+                window.api.post(`/stories/${story.story_id}/view`).catch(console.error);
+            }
+        };
+
+        window.nextStory = () => {
+            if (currentStoryIndex < stories.length - 1) {
+                currentStoryIndex++;
+                updateStoryContent();
+            } else {
+                closeStoryViewer();
+            }
+        };
+
+        window.prevStory = () => {
+            if (currentStoryIndex > 0) {
+                currentStoryIndex--;
+                updateStoryContent();
+            }
+        };
+
+        window.closeStoryViewer = () => {
+            storyModal.remove();
+            document.body.style.overflow = '';
+        };
+
+        // Add story modal styles
+        if (!document.querySelector('#story-modal-styles')) {
+            const storyStyles = document.createElement('style');
+            storyStyles.id = 'story-modal-styles';
+            storyStyles.textContent = `
+                .story-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    z-index: 10000;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: rgba(0, 0, 0, 0.9);
+                }
+
+                .story-overlay {
+                    position: relative;
+                    width: 400px;
+                    height: 600px;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    display: flex;
+                    flex-direction: column;
+                }
+
+                .story-header {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    z-index: 10;
+                    padding: 1rem;
+                    background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+                    display: flex;
+                    justify-content: between;
+                    align-items: center;
+                }
+
+                .story-user-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                    flex: 1;
+                }
+
+                .story-user-avatar {
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    background: var(--primary-color);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: white;
+                    font-weight: 600;
+                    font-size: 0.875rem;
+                }
+
+                .story-user-name {
+                    color: white;
+                    font-weight: 600;
+                    font-size: 0.875rem;
+                }
+
+                .story-time {
+                    color: rgba(255, 255, 255, 0.8);
+                    font-size: 0.75rem;
+                }
+
+                .story-close {
+                    background: transparent;
+                    border: none;
+                    color: white;
+                    font-size: 1.2rem;
+                    cursor: pointer;
+                    padding: 0.25rem;
+                    width: 32px;
+                    height: 32px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .story-progress {
+                    position: absolute;
+                    top: 60px;
+                    left: 1rem;
+                    right: 1rem;
+                    z-index: 10;
+                    display: flex;
+                    gap: 0.25rem;
+                }
+
+                .story-progress-bar {
+                    flex: 1;
+                    height: 2px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 1px;
+                }
+
+                .story-progress-bar.active {
+                    background: white;
+                }
+
+                .story-content {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 4rem 2rem 2rem;
+                    cursor: pointer;
+                }
+
+                .story-media-img, .story-media-video {
+                    max-width: 100%;
+                    max-height: 100%;
+                    border-radius: 8px;
+                }
+
+                .story-text {
+                    text-align: center;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                    line-height: 1.4;
+                    margin-top: 1rem;
+                }
+
+                .story-navigation {
+                    position: absolute;
+                    top: 0;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    display: flex;
+                }
+
+                .story-nav-left, .story-nav-right {
+                    flex: 1;
+                    cursor: pointer;
+                }
+
+                /* Story items enhanced styles */
+                .user-story .story-ring.has-stories {
+                    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+                    padding: 3px;
+                    border-radius: 50%;
+                }
+
+                .user-avatar img {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .add-story-ring {
+                    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+                    padding: 3px;
+                }
+
+                .add-story-avatar {
+                    background: var(--surface-color) !important;
+                    color: var(--primary-color) !important;
+                }
+
+                @media (max-width: 500px) {
+                    .story-overlay {
+                        width: 100vw;
+                        height: 100vh;
+                        border-radius: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(storyStyles);
+        }
+
+        updateStoryContent();
+        document.body.appendChild(storyModal);
+        document.body.style.overflow = 'hidden';
+
+        // Auto-advance story after 5 seconds (for text-only stories)
+        const currentStory = stories[currentStoryIndex];
+        if (!currentStory.media_url) {
+            setTimeout(() => {
+                if (document.body.contains(storyModal)) {
+                    nextStory();
+                }
+            }, 5000);
+        }
+    };
+
+    // Add story modal
+    window.openAddStoryModal = () => {
+        if (!currentUser) {
+            showToast('Please log in to add stories', 'error');
+            return;
+        }
+
+        // Redirect to add-thread page with story flag
+        window.location.href = 'add-thread.html';
     };
 
     init();
