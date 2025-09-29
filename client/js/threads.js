@@ -40,70 +40,74 @@ document.addEventListener('DOMContentLoaded', () => {
             const mediaUrl = `http://localhost:3000/${thread.media_url}`;
             if (thread.media_type === 'image') {
                 mediaContent = `
-                    <div class="thread-media">
-                        <img src="${mediaUrl}" alt="Thread media" class="thread-image" onclick="openImageModal('${mediaUrl}')">
-                    </div>
+                    <img src="${mediaUrl}" alt="Thread media" class="modern-thread-image" onclick="openImageModal('${mediaUrl}')">
                 `;
             } else if (thread.media_type === 'video') {
                 mediaContent = `
-                    <div class="thread-media">
-                        <video controls class="thread-video">
-                            <source src="${mediaUrl}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
+                    <video controls class="modern-thread-video">
+                        <source src="${mediaUrl}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 `;
             }
         }
 
         return `
-            <article class="thread-item card" data-thread-id="${thread.thread_id}">
-                <div class="thread-header">
-                    <div class="thread-author">
-                        <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="author-avatar">
-                        <div class="author-info">
-                            <h4 class="author-name">
+            <article class="modern-thread-card" data-thread-id="${thread.thread_id}">
+                <div class="modern-thread-header">
+                    <div class="modern-thread-author">
+                        <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="modern-author-avatar">
+                        <div class="modern-author-details">
+                            <h4>
                                 <a href="view-profile.html?email=${thread.author_email}">${sanitizeHTML(thread.author)}</a>
                             </h4>
-                            <span class="thread-time">${timeAgo(thread.created_at)}</span>
+                            <span class="modern-thread-time">${timeAgo(thread.created_at)}</span>
                         </div>
                     </div>
                     ${currentUser && currentUser.user_id === thread.user_id ? `
-                        <div class="thread-actions">
-                            <button class="btn-icon" onclick="editThread(${thread.thread_id})">
+                        <div class="modern-thread-actions">
+                            <button class="modern-action-btn" onclick="editThread(${thread.thread_id})" title="Edit thread">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn-icon" onclick="deleteThread(${thread.thread_id})">
+                            <button class="modern-action-btn" onclick="deleteThread(${thread.thread_id})" title="Delete thread">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
-                    ` : ''}
+                    ` : `
+                        <div class="modern-thread-actions">
+                            <button class="modern-action-btn" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'" title="View details">
+                                <i class="fas fa-external-link-alt"></i>
+                            </button>
+                        </div>
+                    `}
                 </div>
 
-                <div class="thread-content" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'" style="cursor: pointer;">
-                    ${thread.content ? `<p class="thread-text">${sanitizeHTML(thread.content).replace(/\n/g, '<br>')}</p>` : ''}
-                    ${mediaContent}
+                <div class="modern-thread-content" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'" style="cursor: pointer;">
+                    ${thread.content ? `<p class="modern-thread-text">${sanitizeHTML(thread.content).replace(/\n/g, '<br>')}</p>` : ''}
+                    ${mediaContent ? `<div class="modern-thread-media">${mediaContent}</div>` : ''}
                 </div>
 
-                <div class="thread-stats">
-                    <div class="stat-item">
-                        <button class="stat-btn like-btn" data-thread-id="${thread.thread_id}" data-liked="false">
-                            <i class="far fa-heart"></i>
-                            <span class="like-count">${thread.like_count || 0}</span>
-                        </button>
-                    </div>
-                    <div class="stat-item">
-                        <button class="stat-btn comment-btn" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'">
-                            <i class="far fa-comment"></i>
-                            <span>${thread.comment_count || 0}</span>
-                        </button>
-                    </div>
-                    <div class="stat-item">
-                        <button class="stat-btn share-btn" onclick="openShareModal(${thread.thread_id})">
-                            <i class="far fa-share-square"></i>
-                            <span class="share-count">${thread.share_count || 0}</span>
-                        </button>
-                    </div>
+                <div class="modern-thread-stats">
+                    <button class="modern-stat-btn like-btn" data-thread-id="${thread.thread_id}" data-liked="false">
+                        <i class="far fa-heart"></i>
+                        <span class="stat-count like-count">${thread.like_count || 0}</span>
+                        <span class="stat-label">Likes</span>
+                    </button>
+                    <button class="modern-stat-btn comment-btn" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'">
+                        <i class="far fa-comment"></i>
+                        <span class="stat-count">${thread.comment_count || 0}</span>
+                        <span class="stat-label">Comments</span>
+                    </button>
+                    <button class="modern-stat-btn share-btn" onclick="openShareModal(${thread.thread_id})">
+                        <i class="far fa-share-square"></i>
+                        <span class="stat-count share-count">${thread.share_count || 0}</span>
+                        <span class="stat-label">Shares</span>
+                    </button>
+                    <button class="modern-stat-btn bookmark-btn" onclick="bookmarkThread(${thread.thread_id})" title="Save for later">
+                        <i class="far fa-bookmark"></i>
+                        <span class="stat-count">0</span>
+                        <span class="stat-label">Save</span>
+                    </button>
                 </div>
             </article>
         `;
@@ -390,6 +394,203 @@ document.addEventListener('DOMContentLoaded', () => {
     const init = async () => {
         await initializeUser();
         await loadThreads();
+        initializeModernFeatures();
+    };
+
+    // Initialize modern features
+    const initializeModernFeatures = () => {
+        // Filter toggle functionality
+        const filterToggle = document.getElementById('filter-toggle');
+        const filterPanel = document.getElementById('filter-panel');
+        
+        if (filterToggle && filterPanel) {
+            filterToggle.addEventListener('click', () => {
+                filterPanel.classList.toggle('active');
+                filterToggle.classList.toggle('active');
+            });
+        }
+
+        // Story items filtering
+        const storyItems = document.querySelectorAll('.story-item');
+        storyItems.forEach(item => {
+            item.addEventListener('click', () => {
+                // Remove active class from all items
+                storyItems.forEach(story => story.classList.remove('active'));
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Filter threads based on category
+                const category = item.dataset.category;
+                filterThreadsByCategory(category);
+            });
+        });
+
+        // Initialize smooth scrolling for stories
+        const storiesScroll = document.querySelector('.stories-scroll');
+        if (storiesScroll) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            storiesScroll.addEventListener('mousedown', (e) => {
+                isDown = true;
+                startX = e.pageX - storiesScroll.offsetLeft;
+                scrollLeft = storiesScroll.scrollLeft;
+            });
+
+            storiesScroll.addEventListener('mouseleave', () => {
+                isDown = false;
+            });
+
+            storiesScroll.addEventListener('mouseup', () => {
+                isDown = false;
+            });
+
+            storiesScroll.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - storiesScroll.offsetLeft;
+                const walk = (x - startX) * 2;
+                storiesScroll.scrollLeft = scrollLeft - walk;
+            });
+        }
+    };
+
+    // Filter threads by category
+    const filterThreadsByCategory = (category) => {
+        const threadCards = document.querySelectorAll('.modern-thread-card');
+        threadCards.forEach(card => {
+            if (!category) {
+                // Show all threads
+                card.style.display = 'block';
+            } else {
+                // Filter by category - this would need thread category data
+                // For now, just show all since we don't have category data in threads
+                card.style.display = 'block';
+            }
+        });
+    };
+
+    // Bookmark functionality
+    window.bookmarkThread = async (threadId) => {
+        try {
+            const result = await window.api.post(`/threads/${threadId}/bookmark`);
+            showToast(result.bookmarked ? 'Thread bookmarked!' : 'Bookmark removed', 'success');
+            
+            // Update bookmark button
+            const bookmarkBtn = document.querySelector(`[data-thread-id="${threadId}"] .bookmark-btn`);
+            if (bookmarkBtn) {
+                const icon = bookmarkBtn.querySelector('i');
+                if (result.bookmarked) {
+                    icon.className = 'fas fa-bookmark';
+                    bookmarkBtn.classList.add('bookmarked');
+                } else {
+                    icon.className = 'far fa-bookmark';
+                    bookmarkBtn.classList.remove('bookmarked');
+                }
+            }
+        } catch (error) {
+            console.error('Error bookmarking thread:', error);
+            showToast('Error bookmarking thread', 'error');
+        }
+    };
+
+    // Image modal functionality
+    window.openImageModal = (imageUrl) => {
+        const modal = document.createElement('div');
+        modal.className = 'image-modal';
+        modal.innerHTML = `
+            <div class="image-modal-overlay" onclick="closeImageModal()">
+                <div class="image-modal-content" onclick="event.stopPropagation()">
+                    <img src="${imageUrl}" alt="Thread image" />
+                    <button class="image-modal-close" onclick="closeImageModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Add modal styles if not already present
+        if (!document.querySelector('#image-modal-styles')) {
+            const styles = document.createElement('style');
+            styles.id = 'image-modal-styles';
+            styles.textContent = `
+                .image-modal {
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: rgba(0, 0, 0, 0.9);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    z-index: 10000;
+                    animation: fadeIn 0.3s ease;
+                }
+                
+                .image-modal-overlay {
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 2rem;
+                }
+                
+                .image-modal-content {
+                    position: relative;
+                    max-width: 90vw;
+                    max-height: 90vh;
+                }
+                
+                .image-modal-content img {
+                    max-width: 100%;
+                    max-height: 100%;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+                }
+                
+                .image-modal-close {
+                    position: absolute;
+                    top: -40px;
+                    right: 0;
+                    background: rgba(255, 255, 255, 0.2);
+                    border: none;
+                    color: white;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.3s ease;
+                }
+                
+                .image-modal-close:hover {
+                    background: rgba(255, 255, 255, 0.3);
+                    transform: scale(1.1);
+                }
+                
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+            `;
+            document.head.appendChild(styles);
+        }
+        
+        document.body.appendChild(modal);
+        document.body.style.overflow = 'hidden';
+    };
+
+    window.closeImageModal = () => {
+        const modal = document.querySelector('.image-modal');
+        if (modal) {
+            modal.remove();
+            document.body.style.overflow = '';
+        }
     };
 
     init();
