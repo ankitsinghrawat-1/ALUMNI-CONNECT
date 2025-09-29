@@ -25,11 +25,6 @@
 
     <main class="thread-detail-main">
         <div class="thread-detail-layout">
-            <!-- Main Content Area -->
-            <div class="thread-detail-content">
-                <div id="thread-detail-container" class="modern-thread-container">
-            </div>
-            
             <!-- Sidebar -->
             <aside class="thread-detail-sidebar">
                 <div class="sidebar-section engagement-panel">
@@ -60,41 +55,9 @@
                     </div>
                 </div>
                 
-                <div class="sidebar-section related-threads-panel">
-                    <h3><i class="fas fa-layer-group"></i> Related Threads</h3>
-                    <div id="related-threads" class="related-threads-list">
-                        <div class="related-threads-placeholder">
-                            <i class="fas fa-comments"></i>
-                            <p>Related threads will appear here once more content is available</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="sidebar-section trending-topics-panel">
-                    <h3><i class="fas fa-fire"></i> Trending Topics</h3>
-                    <div class="trending-topics">
-                        <div class="topic-item">
-                            <span class="topic-tag">#career-advice</span>
-                            <span class="topic-count">45</span>
-                        </div>
-                        <div class="topic-item">
-                            <span class="topic-tag">#networking</span>
-                            <span class="topic-count">38</span>
-                        </div>
-                        <div class="topic-item">
-                            <span class="topic-tag">#remote-work</span>
-                            <span class="topic-count">32</span>
-                        </div>
-                        <div class="topic-item">
-                            <span class="topic-tag">#startup-life</span>
-                            <span class="topic-count">28</span>
-                        </div>
-                    </div>
-                </div>
-                
                 <div class="sidebar-section recent-activity-panel">
                     <h3><i class="fas fa-clock"></i> Recent Activity</h3>
-                    <div class="recent-activity">
+                    <div id="recent-activity" class="recent-activity">
                         <div class="activity-item">
                             <i class="fas fa-heart text-danger"></i>
                             <div class="activity-content">
@@ -136,7 +99,44 @@
                         </a>
                     </div>
                 </div>
+                
+                <div class="sidebar-section related-threads-panel">
+                    <h3><i class="fas fa-layer-group"></i> Related Threads</h3>
+                    <div id="related-threads" class="related-threads-list">
+                        <div class="related-threads-placeholder">
+                            <i class="fas fa-comments"></i>
+                            <p>Related threads will appear here once more content is available</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section trending-topics-panel">
+                    <h3><i class="fas fa-fire"></i> Trending Topics</h3>
+                    <div class="trending-topics">
+                        <div class="topic-item">
+                            <span class="topic-tag">#career-advice</span>
+                            <span class="topic-count">45</span>
+                        </div>
+                        <div class="topic-item">
+                            <span class="topic-tag">#networking</span>
+                            <span class="topic-count">38</span>
+                        </div>
+                        <div class="topic-item">
+                            <span class="topic-tag">#remote-work</span>
+                            <span class="topic-count">32</span>
+                        </div>
+                        <div class="topic-item">
+                            <span class="topic-tag">#startup-life</span>
+                            <span class="topic-count">28</span>
+                        </div>
+                    </div>
+                </div>
             </aside>
+            
+            <!-- Main Content Area -->
+            <div class="thread-detail-content">
+                <div id="thread-detail-container" class="modern-thread-container">
+            </div>
         </div>
     </main>
     
