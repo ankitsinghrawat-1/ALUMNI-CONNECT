@@ -11506,8 +11506,17 @@ html.dark-mode .modern-top-bar {
     transform: scale(1.05);
 }
 
-/* Add Thread Button */
-.add-thread-btn {
+/* Action Buttons Container */
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* Enhanced Action Buttons */
+.add-story-btn,
+.add-thread-btn,
+.view-stories-btn {
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
     border: none;
@@ -11520,18 +11529,81 @@ html.dark-mode .modern-top-bar {
     font-weight: 600;
     font-size: 0.9rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+    position: relative;
+    overflow: hidden;
 }
 
-.add-thread-btn:hover {
+.add-story-btn {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    box-shadow: 0 2px 8px rgba(240, 147, 251, 0.2);
+}
+
+.view-stories-btn {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    box-shadow: 0 2px 8px rgba(79, 172, 254, 0.2);
+}
+
+.add-story-btn::before,
+.add-thread-btn::before,
+.view-stories-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.add-story-btn:hover,
+.add-thread-btn:hover,
+.view-stories-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
     color: white;
 }
 
-.add-thread-btn i {
+.add-story-btn:hover {
+    box-shadow: 0 4px 16px rgba(240, 147, 251, 0.3);
+}
+
+.view-stories-btn:hover {
+    box-shadow: 0 4px 16px rgba(79, 172, 254, 0.3);
+}
+
+.add-story-btn:hover::before,
+.add-thread-btn:hover::before,
+.view-stories-btn:hover::before {
+    left: 100%;
+}
+
+.add-story-btn i,
+.add-thread-btn i,
+.view-stories-btn i {
     font-size: 0.9rem;
+}
+
+/* Responsive Action Buttons */
+@media (max-width: 768px) {
+    .action-buttons {
+        gap: 0.5rem;
+    }
+    
+    .add-story-btn,
+    .add-thread-btn,
+    .view-stories-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .add-story-btn span,
+    .add-thread-btn span,
+    .view-stories-btn span {
+        display: none;
+    }
 }
 
 /* Stories-like Trending Topics */

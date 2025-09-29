@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Story - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/add-story.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="add-story-main">
+        <div class="story-creation-container">
+            <!-- Header Section -->
+            <div class="story-header">
+                <div class="story-header-content">
+                    <a href="threads.html" class="back-link">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="story-title">
+                        <h1><i class="fas fa-plus-circle"></i>Create Your Story</h1>
+                        <p>Share moments that matter with your alumni community</p>
+                    </div>
+                    <div class="story-actions">
+                        <button type="button" class="draft-btn" id="save-draft-btn">
+                            <i class="fas fa-save"></i>
+                            Save Draft
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="story-content">
+                <div class="story-creation-grid">
+                    <!-- Left Panel - Story Types & Preview -->
+                    <div class="story-left-panel">
+                        <!-- Story Type Selection -->
+                        <div class="story-type-section">
+                            <h3><i class="fas fa-palette"></i>Story Type</h3>
+                            <div class="story-type-grid">
+                                <button class="story-type-card active" data-type="text" onclick="selectStoryType('text')">
+                                    <div class="type-icon">
+                                        <i class="fas fa-font"></i>
+                                    </div>
+                                    <span>Text Story</span>
+                                    <small>Share your thoughts</small>
+                                </button>
+                                <button class="story-type-card" data-type="photo" onclick="selectStoryType('photo')">
+                                    <div class="type-icon">
+                                        <i class="fas fa-image"></i>
+                                    </div>
+                                    <span>Photo Story</span>
+                                    <small>Upload an image</small>
+                                </button>
+                                <button class="story-type-card" data-type="video" onclick="selectStoryType('video')">
+                                    <div class="type-icon">
+                                        <i class="fas fa-video"></i>
+                                    </div>
+                                    <span>Video Story</span>
+                                    <small>Share a video</small>
+                                </button>
+                                <button class="story-type-card" data-type="poll" onclick="selectStoryType('poll')">
+                                    <div class="type-icon">
+                                        <i class="fas fa-poll"></i>
+                                    </div>
+                                    <span>Poll Story</span>
+                                    <small>Ask a question</small>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Story Preview -->
+                        <div class="story-preview-section">
+                            <h3><i class="fas fa-eye"></i>Preview</h3>
+                            <div class="story-preview-container">
+                                <div class="story-preview-frame">
+                                    <div class="story-preview-content" id="story-preview">
+                                        <div class="story-preview-text" id="preview-text">
+                                            ✨ Your story will appear here...
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Story Templates -->
+                        <div class="story-templates-section">
+                            <h3><i class="fas fa-magic"></i>Templates</h3>
+                            <div class="template-grid">
+                                <div class="template-card" data-template="graduation">
+                                    <div class="template-preview graduation-template"></div>
+                                    <span>Graduation</span>
+                                </div>
+                                <div class="template-card" data-template="achievement">
+                                    <div class="template-preview achievement-template"></div>
+                                    <span>Achievement</span>
+                                </div>
+                                <div class="template-card" data-template="networking">
+                                    <div class="template-preview networking-template"></div>
+                                    <span>Networking</span>
+                                </div>
+                                <div class="template-card" data-template="career">
+                                    <div class="template-preview career-template"></div>
+                                    <span>Career</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Panel - Content Creation -->
+                    <div class="story-right-panel">
+                        <form id="story-form" class="story-form">
+                            <!-- Content Area -->
+                            <div class="content-section" id="content-section">
+                                <!-- Text Content -->
+                                <div class="text-content active" id="text-content">
+                                    <div class="input-group">
+                                        <label><i class="fas fa-edit"></i>Story Text</label>
+                                        <div class="textarea-container">
+                                            <textarea 
+                                                id="story-text" 
+                                                placeholder="What's your story? Share something inspiring, memorable, or just what's on your mind..."
+                                                maxlength="500"
+                                                rows="6"
+                                            ></textarea>
+                                            <div class="char-counter">
+                                                <span id="text-char-count">0</span>/<span>500</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text Styling -->
+                                    <div class="styling-controls">
+                                        <div class="control-group">
+                                            <label>Background</label>
+                                            <div class="color-picker-container">
+                                                <input type="color" id="bg-color" value="#667eea">
+                                                <div class="color-presets">
+                                                    <div class="color-preset" data-color="#667eea"></div>
+                                                    <div class="color-preset" data-color="#764ba2"></div>
+                                                    <div class="color-preset" data-color="#f093fb"></div>
+                                                    <div class="color-preset" data-color="#f5576c"></div>
+                                                    <div class="color-preset" data-color="#4facfe"></div>
+                                                    <div class="color-preset" data-color="#00f2fe"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label>Text Color</label>
+                                            <div class="color-picker-container">
+                                                <input type="color" id="text-color" value="#ffffff">
+                                                <div class="color-presets">
+                                                    <div class="color-preset" data-color="#ffffff"></div>
+                                                    <div class="color-preset" data-color="#000000"></div>
+                                                    <div class="color-preset" data-color="#333333"></div>
+                                                    <div class="color-preset" data-color="#666666"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Text Effects -->
+                                    <div class="text-effects">
+                                        <h4><i class="fas fa-magic"></i>Text Effects</h4>
+                                        <div class="effects-grid">
+                                            <button type="button" class="effect-btn" data-effect="none">
+                                                <i class="fas fa-font"></i>Normal
+                                            </button>
+                                            <button type="button" class="effect-btn" data-effect="shadow">
+                                                <i class="fas fa-clone"></i>Shadow
+                                            </button>
+                                            <button type="button" class="effect-btn" data-effect="outline">
+                                                <i class="far fa-font"></i>Outline
+                                            </button>
+                                            <button type="button" class="effect-btn" data-effect="glow">
+                                                <i class="fas fa-sun"></i>Glow
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Media Content -->
+                                <div class="media-content" id="media-content">
+                                    <div class="media-upload-area" id="media-upload-area">
+                                        <div class="upload-placeholder">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <h3>Upload Your Media</h3>
+                                            <p>Drag & drop or click to browse</p>
+                                            <small>Images: JPG, PNG up to 10MB | Videos: MP4 up to 50MB</small>
+                                        </div>
+                                        <input type="file" id="media-file" accept="image/*,video/*" style="display: none;">
+                                    </div>
+
+                                    <div class="media-preview" id="media-preview" style="display: none;">
+                                        <div class="media-preview-content" id="media-preview-content"></div>
+                                        <div class="media-controls">
+                                            <button type="button" class="media-control-btn" id="remove-media">
+                                                <i class="fas fa-times"></i>Remove
+                                            </button>
+                                            <button type="button" class="media-control-btn" id="edit-media">
+                                                <i class="fas fa-edit"></i>Edit
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="media-caption-section">
+                                        <div class="input-group">
+                                            <label><i class="fas fa-comment"></i>Caption</label>
+                                            <textarea 
+                                                id="media-caption" 
+                                                placeholder="Add a caption to your story..."
+                                                maxlength="200"
+                                                rows="3"
+                                            ></textarea>
+                                            <div class="char-counter">
+                                                <span id="caption-char-count">0</span>/<span>200</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Poll Content -->
+                                <div class="poll-content" id="poll-content">
+                                    <div class="input-group">
+                                        <label><i class="fas fa-question"></i>Poll Question</label>
+                                        <input type="text" id="poll-question" placeholder="Ask your community a question..." maxlength="150">
+                                    </div>
+
+                                    <div class="poll-options">
+                                        <label><i class="fas fa-list"></i>Poll Options</label>
+                                        <div class="poll-option-container">
+                                            <div class="poll-option-input">
+                                                <input type="text" placeholder="Option 1" maxlength="50">
+                                                <button type="button" class="remove-option-btn">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                            <div class="poll-option-input">
+                                                <input type="text" placeholder="Option 2" maxlength="50">
+                                                <button type="button" class="remove-option-btn">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="add-option-btn" id="add-poll-option">
+                                            <i class="fas fa-plus"></i>Add Option
+                                        </button>
+                                    </div>
+
+                                    <div class="poll-settings">
+                                        <div class="setting-item">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="allow-multiple-votes">
+                                                <span class="checkmark"></span>
+                                                Allow multiple selections
+                                            </label>
+                                        </div>
+                                        <div class="setting-item">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="show-results-immediately">
+                                                <span class="checkmark"></span>
+                                                Show results immediately
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Advanced Features -->
+                            <div class="advanced-features">
+                                <h3><i class="fas fa-cogs"></i>Advanced Features</h3>
+                                
+                                <!-- Mentions -->
+                                <div class="feature-section">
+                                    <div class="feature-header">
+                                        <i class="fas fa-at"></i>
+                                        <span>Tag People</span>
+                                    </div>
+                                    <div class="mention-container">
+                                        <input 
+                                            type="text" 
+                                            id="mention-input" 
+                                            placeholder="Type @ to mention someone..."
+                                            class="mention-input"
+                                        >
+                                        <div class="mention-suggestions" id="mention-suggestions"></div>
+                                        <div class="mentioned-users" id="mentioned-users"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Location -->
+                                <div class="feature-section">
+                                    <div class="feature-header">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        <span>Add Location</span>
+                                    </div>
+                                    <div class="location-container">
+                                        <input type="text" id="location-input" placeholder="Where are you?" class="location-input">
+                                        <div class="location-suggestions" id="location-suggestions"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Privacy Settings -->
+                                <div class="feature-section">
+                                    <div class="feature-header">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <span>Privacy</span>
+                                    </div>
+                                    <div class="privacy-controls">
+                                        <select id="story-privacy" class="privacy-select">
+                                            <option value="public">🌍 Everyone can see</option>
+                                            <option value="alumni">🎓 Alumni only</option>
+                                            <option value="close-friends">👥 Close friends</option>
+                                            <option value="private">🔒 Only me</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Story Duration -->
+                                <div class="feature-section">
+                                    <div class="feature-header">
+                                        <i class="fas fa-clock"></i>
+                                        <span>Story Duration</span>
+                                    </div>
+                                    <div class="duration-controls">
+                                        <select id="story-duration" class="duration-select">
+                                            <option value="24">24 hours (default)</option>
+                                            <option value="12">12 hours</option>
+                                            <option value="6">6 hours</option>
+                                            <option value="1">1 hour</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Story Features -->
+                                <div class="feature-section">
+                                    <div class="feature-header">
+                                        <i class="fas fa-star"></i>
+                                        <span>Story Features</span>
+                                    </div>
+                                    <div class="story-features">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="allow-reactions">
+                                            <span class="checkmark"></span>
+                                            Allow reactions
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="allow-replies" checked>
+                                            <span class="checkmark"></span>
+                                            Allow replies
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="show-view-count" checked>
+                                            <span class="checkmark"></span>
+                                            Show view count
+                                        </label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="allow-screenshot">
+                                            <span class="checkmark"></span>
+                                            Allow screenshots
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="story-actions-bottom">
+                                <button type="button" class="btn-secondary" onclick="window.location.href='threads.html'">
+                                    <i class="fas fa-times"></i>Cancel
+                                </button>
+                                <button type="button" class="btn-draft" id="save-draft-bottom">
+                                    <i class="fas fa-save"></i>Save Draft
+                                </button>
+                                <button type="submit" class="btn-primary" id="publish-story">
+                                    <i class="fas fa-paper-plane"></i>Share Story
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="success-modal" style="display: none;">
+        <div class="success-modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h3>Story Published!</h3>
+            <p>Your story has been shared with the alumni community.</p>
+            <div class="success-actions">
+                <button class="btn-primary" onclick="window.location.href='threads.html'">View Stories</button>
+                <button class="btn-secondary" onclick="createAnotherStory()">Create Another</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/add-story.js"></script>
+</body>
+</html>
