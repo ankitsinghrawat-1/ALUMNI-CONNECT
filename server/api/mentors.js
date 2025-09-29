@@ -556,29 +556,276 @@ module.exports = (pool) => {
         res.json({ isMentor: mentor.length > 0 });
     }));
 
-    router.get('/profile', asyncHandler(async (req, res) => {
+    // Update mentor profile
+    router.put('/profile', asyncHandler(async (req, res) => {
+        const {
+            expertise_areas,
+            industry,
+            experience_years,
+            hourly_rate,
+            bio,
+            skills,
+            languages,
+            timezone,
+            mentoring_style,
+            communication_methods,
+            linkedin_url,
+            github_url,
+            portfolio_url,
+            response_time_hours,
+            specializations,
+            availability
+        } = req.body;
+        
         const user_id = req.user.userId;
-        const [mentor] = await pool.query('SELECT expertise_areas FROM mentors WHERE user_id = ?', [user_id]);
+        
+        // Get mentor_id
+        const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
         if (mentor.length === 0) {
             return res.status(404).json({ message: 'Mentor profile not found' });
         }
-        res.json(mentor[0]);
-    }));
+        
+        const mentorId = mentor[0].mentor_id;
+        const connection = await pool.getConnection();
+        
+        try {
+            await connection.beginTransaction();
 
-    router.put('/profile', asyncHandler(async (req, res) => {
-        const { expertise_areas } = req.body;
-        const user_id = req.user.userId;
-        const [result] = await pool.query('UPDATE mentors SET expertise_areas = ? WHERE user_id = ?', [expertise_areas, user_id]);
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Mentor profile not found to update.' });
+            // Update mentor profile
+            await connection.query(`
+                UPDATE mentors SET 
+                    expertise_areas = ?, industry = ?, experience_years = ?, 
+                    hourly_rate = ?, bio = ?, skills = ?, languages = ?, 
+                    timezone = ?, mentoring_style = ?, communication_methods = ?,
+                    linkedin_url = ?, github_url = ?, portfolio_url = ?,
+                    response_time_hours = ?, updated_at = CURRENT_TIMESTAMP
+                WHERE mentor_id = ?
+            `, [
+                expertise_areas, industry, experience_years, hourly_rate,
+                bio, skills, languages, timezone, mentoring_style,
+                JSON.stringify(communication_methods), linkedin_url,
+                github_url, portfolio_url, response_time_hours, mentorId
+            ]);
+
+            // Update specializations if provided
+            if (specializations && Array.isArray(specializations)) {
+                // Remove existing specializations
+                await connection.query('DELETE FROM mentor_specializations WHERE mentor_id = ?', [mentorId]);
+                
+                // Add new specializations
+                for (const spec of specializations) {
+                    await connection.query(`
+                        INSERT INTO mentor_specializations (mentor_id, specialization, proficiency_level, years_experience)
+                        VALUES (?, ?, ?, ?)
+                    `, [mentorId, spec.specialization, spec.proficiency_level || 'intermediate', spec.years_experience || 0]);
+                }
+            }
+
+            // Update availability if provided
+            if (availability && Array.isArray(availability)) {
+                // Remove existing availability
+                await connection.query('DELETE FROM mentor_availability WHERE mentor_id = ?', [mentorId]);
+                
+                // Add new availability
+                for (const avail of availability) {
+                    await connection.query(`
+                        INSERT INTO mentor_availability (mentor_id, day_of_week, start_time, end_time)
+                        VALUES (?, ?, ?, ?)
+                    `, [mentorId, avail.day_of_week, avail.start_time, avail.end_time]);
+                }
+            }
+
+            await connection.commit();
+            res.status(200).json({ message: 'Mentor profile updated successfully!' });
+            
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
         }
-        res.status(200).json({ message: 'Mentor profile updated successfully!' });
     }));
 
+    // Get current mentor's profile for editing
+    router.get('/profile', asyncHandler(async (req, res) => {
+        const user_id = req.user.userId;
+        
+        // Get mentor profile
+        const [mentors] = await pool.query(`
+            SELECT * FROM mentors WHERE user_id = ?
+        `, [user_id]);
+        
+        if (mentors.length === 0) {
+            return res.status(404).json({ message: 'Mentor profile not found' });
+        }
+        
+        const mentor = mentors[0];
+        const mentorId = mentor.mentor_id;
+
+        // Get specializations
+        const [specializations] = await pool.query(`
+            SELECT specialization, proficiency_level, years_experience
+            FROM mentor_specializations 
+            WHERE mentor_id = ?
+        `, [mentorId]);
+
+        // Get availability
+        const [availability] = await pool.query(`
+            SELECT day_of_week, start_time, end_time
+            FROM mentor_availability 
+            WHERE mentor_id = ?
+        `, [mentorId]);
+
+        res.json({
+            ...mentor,
+            communication_methods: mentor.communication_methods ? JSON.parse(mentor.communication_methods) : [],
+            specializations,
+            availability
+        });
+    }));
+
+    // Add achievement
+    router.post('/achievements', asyncHandler(async (req, res) => {
+        const { 
+            achievement_type, 
+            title, 
+            description, 
+            issuer_organization, 
+            achievement_date, 
+            verification_url, 
+            image_url, 
+            is_featured 
+        } = req.body;
+        
+        const user_id = req.user.userId;
+        
+        // Get mentor_id
+        const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
+        if (mentor.length === 0) {
+            return res.status(404).json({ message: 'Mentor profile not found' });
+        }
+        
+        const mentorId = mentor[0].mentor_id;
+        
+        await pool.query(`
+            INSERT INTO mentor_achievements 
+            (mentor_id, achievement_type, title, description, issuer_organization, 
+             achievement_date, verification_url, image_url, is_featured)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [mentorId, achievement_type, title, description, issuer_organization, 
+            achievement_date, verification_url, image_url, is_featured || false]);
+        
+        res.status(201).json({ message: 'Achievement added successfully!' });
+    }));
+
+    // Add portfolio item
+    router.post('/portfolio', asyncHandler(async (req, res) => {
+        const {
+            project_title,
+            project_description,
+            project_url,
+            image_url,
+            technologies_used,
+            project_type,
+            completion_date,
+            is_featured,
+            display_order
+        } = req.body;
+        
+        const user_id = req.user.userId;
+        
+        // Get mentor_id
+        const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
+        if (mentor.length === 0) {
+            return res.status(404).json({ message: 'Mentor profile not found' });
+        }
+        
+        const mentorId = mentor[0].mentor_id;
+        
+        await pool.query(`
+            INSERT INTO mentor_portfolio 
+            (mentor_id, project_title, project_description, project_url, image_url,
+             technologies_used, project_type, completion_date, is_featured, display_order)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [mentorId, project_title, project_description, project_url, image_url,
+            technologies_used, project_type, completion_date, is_featured || false, display_order || 0]);
+        
+        res.status(201).json({ message: 'Portfolio item added successfully!' });
+    }));
+
+    // Submit mentor review
+    router.post('/:mentorId/reviews', asyncHandler(async (req, res) => {
+        const { mentorId } = req.params;
+        const {
+            rating,
+            review_text,
+            session_quality,
+            communication_rating,
+            helpfulness_rating,
+            would_recommend
+        } = req.body;
+        
+        const reviewer_user_id = req.user.userId;
+        
+        // Check if user has already reviewed this mentor
+        const [existingReview] = await pool.query(
+            'SELECT review_id FROM mentor_reviews WHERE mentor_id = ? AND reviewer_user_id = ?',
+            [mentorId, reviewer_user_id]
+        );
+        
+        if (existingReview.length > 0) {
+            return res.status(409).json({ message: 'You have already reviewed this mentor' });
+        }
+        
+        const connection = await pool.getConnection();
+        
+        try {
+            await connection.beginTransaction();
+            
+            // Add review
+            await connection.query(`
+                INSERT INTO mentor_reviews 
+                (mentor_id, reviewer_user_id, rating, review_text, session_quality,
+                 communication_rating, helpfulness_rating, would_recommend)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `, [mentorId, reviewer_user_id, rating, review_text, session_quality,
+                communication_rating, helpfulness_rating, would_recommend]);
+            
+            // Update mentor's average rating and review count
+            await connection.query(`
+                UPDATE mentors SET 
+                    average_rating = (
+                        SELECT AVG(rating) FROM mentor_reviews WHERE mentor_id = ?
+                    ),
+                    total_reviews = (
+                        SELECT COUNT(*) FROM mentor_reviews WHERE mentor_id = ?
+                    )
+                WHERE mentor_id = ?
+            `, [mentorId, mentorId, mentorId]);
+            
+            await connection.commit();
+            res.status(201).json({ message: 'Review submitted successfully!' });
+            
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
+    }));
+
+    // Delete mentor profile
     router.delete('/profile', asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
-        await pool.query('DELETE FROM mentors WHERE user_id = ?', [user_id]);
-        res.status(200).json({ message: 'You have been unlisted as a mentor.' });
+        
+        // This will cascade delete all related mentor data due to foreign key constraints
+        const [result] = await pool.query('DELETE FROM mentors WHERE user_id = ?', [user_id]);
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Mentor profile not found' });
+        }
+        
+        res.status(200).json({ message: 'Mentor profile deleted successfully' });
     }));
 
     return router;
