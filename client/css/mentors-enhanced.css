@@ -93,30 +93,34 @@
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: var(--mentor-border-radius);
     padding: 2rem 1.5rem;
     text-align: center;
     transition: var(--mentor-transition);
+    box-shadow: var(--mentor-shadow);
 }
 
 .stat-card:hover {
     transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: var(--mentor-shadow-lg);
 }
 
 .stat-icon {
     width: 60px;
     height: 60px;
-    background: rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.25);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 0 auto 1rem;
     font-size: 1.5rem;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .stat-number {
@@ -124,13 +128,17 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 0.5rem;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .stat-label {
     font-size: 0.875rem;
-    opacity: 0.9;
+    opacity: 0.95;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 500;
 }
 
 /* Search and Filter Section */
@@ -173,6 +181,7 @@ html.dark-mode .search-filter-section {
     border-radius: var(--mentor-border-radius);
     padding: 0 1rem;
     transition: var(--mentor-transition);
+    max-width: 600px;
 }
 
 .search-input-wrapper:focus-within {
@@ -181,9 +190,10 @@ html.dark-mode .search-filter-section {
 }
 
 .search-icon {
-    color: var(--mentor-gray-600);
+    color: var(--mentor-gray-700);
     margin-right: 0.75rem;
     font-size: 1.1rem;
+    min-width: 18px;
 }
 
 #mentor-search {
