@@ -14764,3 +14764,127 @@ html.dark-mode .terms-section {
     border-color: var(--border-color);
 }
 }
+
+/*--------------------------------------------------
+  Browse Mentors Page Specific Styles
+--------------------------------------------------*/
+
+.browse-mentors-hero {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 4rem 0;
+    text-align: center;
+}
+
+.browse-mentors-hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.browse-mentors-hero .hero-subtitle {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.mentor-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+    margin-top: 2rem;
+}
+
+.mentor-stats .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.mentor-stats .stat-item i {
+    font-size: 2rem;
+    opacity: 0.8;
+}
+
+.mentor-stats .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.mentor-stats .stat-label {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.mentors-grid-section {
+    padding: 3rem 0;
+    background: var(--background-color);
+}
+
+.mentor-action-section {
+    padding: 4rem 0;
+    background: var(--surface-color);
+}
+
+.action-card {
+    display: flex;
+    align-items: center;
+    gap: 3rem;
+    padding: 3rem;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.1), rgba(90, 103, 216, 0.1));
+    border-radius: 20px;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.action-content {
+    flex: 1;
+}
+
+.action-content h3 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.action-content p {
+    font-size: 1.1rem;
+    color: var(--subtle-text-color);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.action-visual {
+    font-size: 4rem;
+    color: var(--primary-color);
+    opacity: 0.6;
+}
+
+@media (max-width: 768px) {
+    .browse-mentors-hero h1 {
+        font-size: 2.2rem;
+    }
+    
+    .mentor-stats {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    
+    .action-card {
+        flex-direction: column;
+        text-align: center;
+        gap: 2rem;
+    }
+    
+    .action-visual {
+        font-size: 3rem;
+    }
+}
+
+/*--------------------------------------------------
+  End Browse Mentors Page Specific Styles
+--------------------------------------------------*/

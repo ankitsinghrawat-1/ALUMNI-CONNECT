@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find a Mentor - AlumniConnect</title>
+    <title>Browse Mentors - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -25,129 +25,30 @@
     </header>
 
     <main>
-        <!-- Hero Section -->
-        <section class="mentors-hero">
+        <!-- Hero Section for Browse Mentors -->
+        <section class="browse-mentors-hero">
             <div class="container">
                 <div class="hero-content">
-                    <div class="hero-text">
-                        <h1>Find Your Perfect Mentor</h1>
-                        <p class="hero-subtitle">Connect with experienced alumni who can guide your career journey. Get personalized advice, industry insights, and professional growth opportunities.</p>
-                        <div class="hero-stats">
-                            <div class="stat-item">
-                                <i class="fas fa-users"></i>
-                                <div class="stat-info">
-                                    <span class="stat-number">500+</span>
-                                    <span class="stat-label">Active Mentors</span>
-                                </div>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-handshake"></i>
-                                <div class="stat-info">
-                                    <span class="stat-number">95%</span>
-                                    <span class="stat-label">Success Rate</span>
-                                </div>
-                            </div>
-                            <div class="stat-item">
-                                <i class="fas fa-clock"></i>
-                                <div class="stat-info">
-                                    <span class="stat-number">24hrs</span>
-                                    <span class="stat-label">Avg Response</span>
-                                </div>
-                            </div>
+                    <h1>Browse Mentors</h1>
+                    <p class="hero-subtitle">Discover experienced professionals ready to guide your career journey. Use advanced filters to find the perfect mentor match.</p>
+                    
+                    <!-- Quick Stats -->
+                    <div class="mentor-stats">
+                        <div class="stat-item">
+                            <i class="fas fa-users"></i>
+                            <span class="stat-number">500+</span>
+                            <span class="stat-label">Active Mentors</span>
                         </div>
-                        <div class="hero-actions">
-                            <a href="browse-mentors.html" class="btn btn-primary btn-large">Browse Mentors</a>
-                            <a href="become-mentor.html" class="btn btn-outline btn-large">Become a Mentor</a>
+                        <div class="stat-item">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span class="stat-number">14</span>
+                            <span class="stat-label">Industries</span>
                         </div>
-                    </div>
-                    <div class="hero-visual">
-                        <div class="mentor-illustration">
-                            <i class="fas fa-chalkboard-teacher"></i>
+                        <div class="stat-item">
+                            <i class="fas fa-star"></i>
+                            <span class="stat-number">4.8</span>
+                            <span class="stat-label">Avg Rating</span>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works Section -->
-        <section class="how-it-works-section">
-            <div class="container">
-                <div class="section-header">
-                    <h2>How Mentorship Works</h2>
-                    <p>Simple steps to connect with the right mentor for your goals</p>
-                </div>
-                <div class="steps-container">
-                    <div class="step-card">
-                        <div class="step-number">1</div>
-                        <div class="step-icon">
-                            <i class="fas fa-search"></i>
-                        </div>
-                        <h3>Browse & Search</h3>
-                        <p>Explore our diverse community of mentors by industry, expertise, or interests</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">2</div>
-                        <div class="step-icon">
-                            <i class="fas fa-paper-plane"></i>
-                        </div>
-                        <h3>Send Request</h3>
-                        <p>Reach out with a personalized message about your goals and what you're looking for</p>
-                    </div>
-                    <div class="step-card">
-                        <div class="step-number">3</div>
-                        <div class="step-icon">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <h3>Start Learning</h3>
-                        <p>Begin your mentorship journey with regular conversations and guidance</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Mentor Categories -->
-        <section class="mentor-categories">
-            <div class="container">
-                <div class="section-header">
-                    <h2>Find Mentors by Expertise</h2>
-                    <p>Browse mentors across different industries and specializations</p>
-                </div>
-                <div class="categories-grid">
-                    <div class="category-card" data-category="technology">
-                        <i class="fas fa-laptop-code"></i>
-                        <h3>Technology</h3>
-                        <p>Software, AI, Data Science</p>
-                        <span class="mentor-count">150+ mentors</span>
-                    </div>
-                    <div class="category-card" data-category="business">
-                        <i class="fas fa-briefcase"></i>
-                        <h3>Business</h3>
-                        <p>Strategy, Operations, Leadership</p>
-                        <span class="mentor-count">120+ mentors</span>
-                    </div>
-                    <div class="category-card" data-category="finance">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>Finance</h3>
-                        <p>Banking, Investment, FinTech</p>
-                        <span class="mentor-count">80+ mentors</span>
-                    </div>
-                    <div class="category-card" data-category="marketing">
-                        <i class="fas fa-bullhorn"></i>
-                        <h3>Marketing</h3>
-                        <p>Digital, Brand, Growth</p>
-                        <span class="mentor-count">90+ mentors</span>
-                    </div>
-                    <div class="category-card" data-category="healthcare">
-                        <i class="fas fa-heartbeat"></i>
-                        <h3>Healthcare</h3>
-                        <p>Medicine, Research, Biotech</p>
-                        <span class="mentor-count">60+ mentors</span>
-                    </div>
-                    <div class="category-card" data-category="consulting">
-                        <i class="fas fa-users-cog"></i>
-                        <h3>Consulting</h3>
-                        <p>Management, Strategy, Operations</p>
-                        <span class="mentor-count">70+ mentors</span>
                     </div>
                 </div>
             </div>
@@ -253,16 +154,6 @@
                         </div>
                         
                         <div class="filter-group">
-                            <label>Availability</label>
-                            <select id="availability-filter">
-                                <option value="">Any Availability</option>
-                                <option value="immediate">Available Now</option>
-                                <option value="this-week">This Week</option>
-                                <option value="flexible">Flexible Schedule</option>
-                            </select>
-                        </div>
-                        
-                        <div class="filter-group">
                             <label>Response Time</label>
                             <select id="response-filter">
                                 <option value="">Any Response Time</option>
@@ -284,6 +175,16 @@
                                 <option value="Chinese">Chinese</option>
                                 <option value="Japanese">Japanese</option>
                                 <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Availability</label>
+                            <select id="availability-filter">
+                                <option value="">Any Availability</option>
+                                <option value="immediate">Available Now</option>
+                                <option value="this-week">This Week</option>
+                                <option value="flexible">Flexible Schedule</option>
                             </select>
                         </div>
                     </div>
@@ -320,30 +221,10 @@
             </div>
         </section>
 
-        <!-- Mentors List Section -->
-        <section id="mentors-list" class="mentors-list-section">
+        <!-- Mentors Grid Section -->
+        <section class="mentors-grid-section">
             <div class="container">
-                <div class="section-header">
-                    <h2>Featured Mentors</h2>
-                    <div class="list-actions">
-                        <div class="search-bar">
-                            <i class="fas fa-search"></i>
-                            <input type="text" placeholder="Search mentors by name, company, or expertise...">
-                        </div>
-                        <div class="filter-dropdown">
-                            <select>
-                                <option value="">All Industries</option>
-                                <option value="technology">Technology</option>
-                                <option value="business">Business</option>
-                                <option value="finance">Finance</option>
-                                <option value="marketing">Marketing</option>
-                                <option value="healthcare">Healthcare</option>
-                                <option value="consulting">Consulting</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div id="mentors-list-container" class="mentors-grid">
+                <div id="mentors-list-container" class="enhanced-mentors-grid">
                     <!-- Mentors will be loaded here by JavaScript -->
                     <div class="loading-container">
                         <div class="loading-spinner">
@@ -354,32 +235,56 @@
                 </div>
             </div>
         </section>
+        
+        <!-- Mentor Action Area -->
+        <section class="mentor-action-section">
+            <div class="container">
+                <div class="action-card">
+                    <div class="action-content">
+                        <h3>Ready to Share Your Knowledge?</h3>
+                        <p>Join our community of mentors and help guide the next generation of professionals.</p>
+                        <div id="mentor-action-area">
+                            <a href="become-mentor.html" class="btn btn-primary">
+                                <i class="fas fa-user-plus"></i> Become a Mentor
+                            </a>
+                        </div>
+                    </div>
+                    <div class="action-visual">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Modals -->
     <div id="request-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3 id="modal-title">Send Mentorship Request</h3>
+            <div class="modal-header">
+                <h3 id="modal-title">Send Mentorship Request</h3>
+                <span class="close-btn">&times;</span>
+            </div>
             <form id="request-form">
-                <input type="hidden" id="mentor-id-input">
+                <input type="hidden" id="mentor-id-input" />
                 <div class="input-group">
-                    <label for="request-message">Message (Optional)</label>
-                    <textarea id="request-message" rows="4" placeholder="Introduce yourself and what you're looking for in a mentor..."></textarea>
+                    <label for="request-message">Why do you want this mentor to guide you? *</label>
+                    <textarea id="request-message" rows="4" placeholder="Hi! I'm interested in your mentorship because..." required></textarea>
                 </div>
-                <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-full-width">Send Request</button>
+                <button type="submit" class="btn btn-primary btn-full-width">Send Request</button>
             </form>
         </div>
     </div>
-    
+
     <div id="edit-request-modal" class="modal">
         <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h3 id="edit-modal-title">Edit Mentorship Request</h3>
+            <div class="modal-header">
+                <h3 id="edit-modal-title">Edit Mentorship Request</h3>
+                <span class="close-btn">&times;</span>
+            </div>
             <form id="edit-request-form">
-                <input type="hidden" id="edit-mentor-id-input">
+                <input type="hidden" id="edit-mentor-id-input" />
                 <div class="input-group">
-                    <label for="edit-request-message">Your Message</label>
+                    <label for="edit-request-message">Update your message *</label>
                     <textarea id="edit-request-message" rows="4" required></textarea>
                 </div>
                 <button type="submit" id="edit-modal-submit-btn" class="btn btn-primary btn-full-width">Save Changes</button>

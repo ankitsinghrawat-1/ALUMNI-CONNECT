@@ -12,10 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Check authentication
     if (!localStorage.getItem('alumniConnectToken')) {
-        // Temporarily bypass auth for testing
-        localStorage.setItem('alumniConnectToken', 'demo-token');
-        localStorage.setItem('loggedInUserEmail', 'demo@example.com');
-        localStorage.setItem('userEmail', 'demo@example.com');
+        window.location.href = 'login.html';
+        return;
     }
 
     // Load saved form data if exists
@@ -40,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Save current step data
     function saveCurrentStepData() {
         const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`);
+        if (!currentStepElement) return;
+        
         const inputs = currentStepElement.querySelectorAll('input, select, textarea');
         
         inputs.forEach(input => {
@@ -98,8 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentStepElement = document.querySelector(`[data-step="${step}"]`);
         if (currentStepElement) {
             currentStepElement.classList.add('active');
-            
-            // Scroll to top of form
             currentStepElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         
@@ -111,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         currentStep = step;
         
-        // Clear any previous messages
+        // Clear messages
         if (messageDiv) {
             messageDiv.textContent = '';
             messageDiv.className = 'form-message';
@@ -141,36 +139,123 @@ document.addEventListener('DOMContentLoaded', () => {
         if (submitBtn) {
             submitBtn.style.display = step === totalSteps ? 'block' : 'none';
         }
-    function updateProgressIndicator(step) {
+    }
+    
+    // Form Navigation
+    function setupFormNavigation() {
+        if (nextBtn) {
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if (validateStep(currentStep)) {
+                    saveCurrentStepData();
+                    if (currentStep < totalSteps) {
+                        showStep(currentStep + 1);
+                        showMessage(`Step ${currentStep - 1} completed! Continue with step ${currentStep}.`, 'success');
+                    }
+                }
+            });
+        }
+        
+        if (prevBtn) {
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                saveCurrentStepData();
+                if (currentStep > 1) {
+                    showStep(currentStep - 1);
+                }
+            });
+        }
+        
+        // Allow clicking on progress steps to navigate
         document.querySelectorAll('.step').forEach((stepEl, index) => {
-            const stepNumber = index + 1;
-            stepEl.classList.remove('active', 'completed');
-            
-            if (stepNumber < step) {
-                stepEl.classList.add('completed');
-            } else if (stepNumber === step) {
-                stepEl.classList.add('active');
-            }
+            stepEl.addEventListener('click', () => {
+                const targetStep = index + 1;
+                if (targetStep <= currentStep || targetStep === currentStep + 1) {
+                    if (targetStep > currentStep) {
+                        if (validateStep(currentStep)) {
+                            saveCurrentStepData();
+                            showStep(targetStep);
+                        }
+                    } else {
+                        saveCurrentStepData();
+                        showStep(targetStep);
+                    }
+                }
+            });
+            stepEl.style.cursor = 'pointer';
         });
     }
-    
-    function updateNavigationButtons(step) {
-        if (prevBtn) {
-            prevBtn.style.display = step === 1 ? 'none' : 'inline-block';
-        }
-        if (nextBtn) {
-            nextBtn.style.display = step === totalSteps ? 'none' : 'inline-block';
-        }
-        if (submitBtn) {
-            submitBtn.style.display = step === totalSteps ? 'block' : 'none';
-        }
+
+    // Step Validation
+    function validateStep(step) {
+        const currentStepElement = document.querySelector(`[data-step="${step}"]`);
+        if (!currentStepElement) return true;
+        
+        const requiredFields = currentStepElement.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (field.type === 'radio') {
+                const radioGroup = currentStepElement.querySelectorAll(`[name="${field.name}"]`);
+                const isChecked = Array.from(radioGroup).some(radio => radio.checked);
+                if (!isChecked) {
+                    isValid = false;
+                    showFieldError(field, 'Please select an option');
+                } else {
+                    clearFieldError(field);
+                }
+            } else if (field.type === 'checkbox' && field.name === 'communication_methods') {
+                const checkboxes = currentStepElement.querySelectorAll('[name="communication_methods"]');
+                const isChecked = Array.from(checkboxes).some(cb => cb.checked);
+                if (!isChecked) {
+                    isValid = false;
+                    showFieldError(field, 'Please select at least one communication method');
+                } else {
+                    clearFieldError(field);
+                }
+            } else if (!field.value.trim()) {
+                isValid = false;
+                showFieldError(field, 'This field is required');
+            } else {
+                clearFieldError(field);
+            }
+        });
+        
+        return isValid;
     }
     
+    function showFieldError(field, message) {
+        clearFieldError(field);
+        
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'field-error';
+        errorDiv.style.color = 'var(--error-color)';
+        errorDiv.style.fontSize = '0.875rem';
+        errorDiv.style.marginTop = '0.5rem';
+        errorDiv.textContent = message;
+        
+        const inputGroup = field.closest('.input-group');
+        if (inputGroup) {
+            inputGroup.appendChild(errorDiv);
+        }
+        field.style.borderColor = 'var(--error-color)';
+    }
+    
+    function clearFieldError(field) {
+        const inputGroup = field.closest('.input-group');
+        if (inputGroup) {
+            const errorDiv = inputGroup.querySelector('.field-error');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        }
+        field.style.borderColor = 'var(--border-color)';
+    }
+
     // Skills Input Management
     function setupSkillsInput() {
         const skillsInput = document.getElementById('skills-input');
         const skillsTagsContainer = document.getElementById('skills-tags');
-        const hiddenSkillsInput = document.getElementById('skills');
         const suggestions = document.querySelectorAll('.skill-suggestion');
         
         if (!skillsInput || !skillsTagsContainer) return;
@@ -201,19 +286,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
             skillsArray.push(skill);
             updateSkillsDisplay();
-            updateHiddenSkillsInput();
         }
         
         function removeSkill(skill) {
             skillsArray = skillsArray.filter(s => s !== skill);
             updateSkillsDisplay();
-            updateHiddenSkillsInput();
-        }
-        
-        function updateHiddenSkillsInput() {
-            if (hiddenSkillsInput) {
-                hiddenSkillsInput.value = skillsArray.join(', ');
-            }
         }
         
         // Make removeSkillTag global
@@ -231,7 +308,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `).join('');
         }
     }
-    
+
     // Character Counters
     function setupCharacterCounters() {
         const textareas = [
@@ -241,7 +318,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         textareas.forEach(({ id, max }) => {
             const textarea = document.getElementById(id);
-            const counter = textarea.closest('.input-group').querySelector('.char-counter');
+            const counter = textarea?.closest('.input-group')?.querySelector('.char-counter');
             
             if (textarea && counter) {
                 textarea.addEventListener('input', () => {
@@ -295,126 +372,14 @@ document.addEventListener('DOMContentLoaded', () => {
         mentorTypeRadios.forEach(radio => {
             radio.addEventListener('change', () => {
                 if (radio.value === 'paid' && radio.checked) {
-                    pricingDetails.style.display = 'block';
+                    if (pricingDetails) pricingDetails.style.display = 'block';
                 } else {
-                    pricingDetails.style.display = 'none';
+                    if (pricingDetails) pricingDetails.style.display = 'none';
                 }
             });
         });
     }
-    
-    // Form Navigation
-    function setupFormNavigation() {
-        if (nextBtn) {
-            nextBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                if (validateStep(currentStep)) {
-                    saveCurrentStepData();
-                    if (currentStep < totalSteps) {
-                        showStep(currentStep + 1);
-                        showMessage(`Step ${currentStep - 1} completed! Continue with step ${currentStep}.`, 'success');
-                    }
-                }
-            });
-        }
-        
-        if (prevBtn) {
-            prevBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                saveCurrentStepData();
-                if (currentStep > 1) {
-                    showStep(currentStep - 1);
-                }
-            });
-        }
-        
-        // Allow clicking on progress steps to navigate
-        document.querySelectorAll('.step').forEach((stepEl, index) => {
-            stepEl.addEventListener('click', () => {
-                const targetStep = index + 1;
-                if (targetStep <= currentStep || targetStep === currentStep + 1) {
-                    if (targetStep > currentStep) {
-                        if (validateStep(currentStep)) {
-                            saveCurrentStepData();
-                            showStep(targetStep);
-                        }
-                    } else {
-                        saveCurrentStepData();
-                        showStep(targetStep);
-                    }
-                }
-            });
-            stepEl.style.cursor = 'pointer';
-        });
-    }
-    
-    // Step Validation
-    function validateStep(step) {
-        const currentStepElement = document.querySelector(`[data-step="${step}"]`);
-        const requiredFields = currentStepElement.querySelectorAll('[required]');
-        let isValid = true;
-        
-        requiredFields.forEach(field => {
-            if (field.type === 'radio') {
-                const radioGroup = currentStepElement.querySelectorAll(`[name="${field.name}"]`);
-                const isChecked = Array.from(radioGroup).some(radio => radio.checked);
-                if (!isChecked) {
-                    isValid = false;
-                    showFieldError(field, 'Please select an option');
-                } else {
-                    clearFieldError(field);
-                }
-            } else if (field.type === 'checkbox' && field.name === 'communication_methods') {
-                const checkboxes = currentStepElement.querySelectorAll('[name="communication_methods"]');
-                const isChecked = Array.from(checkboxes).some(cb => cb.checked);
-                if (!isChecked) {
-                    isValid = false;
-                    showFieldError(field, 'Please select at least one communication method');
-                } else {
-                    clearFieldError(field);
-                }
-            } else if (!field.value.trim()) {
-                isValid = false;
-                showFieldError(field, 'This field is required');
-            } else {
-                clearFieldError(field);
-            }
-        });
-        
-        // Special validation for step 4 (availability)
-        if (step === 4) {
-            const availabilityChecked = document.querySelectorAll('[id$="-available"]:checked').length > 0;
-            if (!availabilityChecked) {
-                isValid = false;
-                showMessage('Please select at least one day of availability', 'error');
-            }
-        }
-        
-        return isValid;
-    }
-    
-    function showFieldError(field, message) {
-        clearFieldError(field);
-        
-        const errorDiv = document.createElement('div');
-        errorDiv.className = 'field-error';
-        errorDiv.style.color = 'var(--error-color)';
-        errorDiv.style.fontSize = '0.875rem';
-        errorDiv.style.marginTop = '0.5rem';
-        errorDiv.textContent = message;
-        
-        field.closest('.input-group').appendChild(errorDiv);
-        field.style.borderColor = 'var(--error-color)';
-    }
-    
-    function clearFieldError(field) {
-        const errorDiv = field.closest('.input-group').querySelector('.field-error');
-        if (errorDiv) {
-            errorDiv.remove();
-        }
-        field.style.borderColor = 'var(--border-color)';
-    }
-    
+
     function showMessage(message, type) {
         if (messageDiv) {
             messageDiv.textContent = message;
@@ -439,9 +404,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         
-        // Save final step data
         saveCurrentStepData();
-        
         const finalFormData = collectFormData();
         
         try {
@@ -471,35 +434,35 @@ document.addEventListener('DOMContentLoaded', () => {
     function collectFormData() {
         const data = {
             // Step 1: Basic Info
-            industry: document.getElementById('industry').value,
-            experience_years: parseInt(document.getElementById('experience_years').value),
-            bio: document.getElementById('bio').value,
-            timezone: document.getElementById('timezone').value,
+            industry: document.getElementById('industry')?.value || '',
+            experience_years: parseInt(document.getElementById('experience_years')?.value) || 0,
+            bio: document.getElementById('bio')?.value || '',
+            timezone: document.getElementById('timezone')?.value || '',
             
             // Step 2: Expertise
-            expertise_areas: document.getElementById('expertise_areas').value,
+            expertise_areas: document.getElementById('expertise_areas')?.value || '',
             skills: skillsArray.join(', '),
-            languages: Array.from(document.getElementById('languages').selectedOptions).map(opt => opt.value).join(', '),
+            languages: Array.from(document.getElementById('languages')?.selectedOptions || []).map(opt => opt.value).join(', '),
             
             // Step 3: Experience
-            linkedin_url: document.getElementById('linkedin_url').value,
-            github_url: document.getElementById('github_url').value,
-            portfolio_url: document.getElementById('portfolio_url').value,
-            mentoring_style: document.querySelector('input[name="mentoring_style"]:checked').value,
+            linkedin_url: document.getElementById('linkedin_url')?.value || '',
+            github_url: document.getElementById('github_url')?.value || '',
+            portfolio_url: document.getElementById('portfolio_url')?.value || '',
+            mentoring_style: document.querySelector('input[name="mentoring_style"]:checked')?.value || 'one_on_one',
             communication_methods: Array.from(document.querySelectorAll('input[name="communication_methods"]:checked')).map(cb => cb.value),
             
             // Step 4: Availability
             availability: collectAvailability(),
-            response_time_hours: parseInt(document.getElementById('response_time').value),
-            max_mentees: parseInt(document.getElementById('max_mentees').value),
+            response_time_hours: parseInt(document.getElementById('response_time')?.value) || 24,
+            max_mentees: parseInt(document.getElementById('max_mentees')?.value) || 5,
             
             // Step 5: Final Details
-            video_intro_url: document.getElementById('video_intro_url').value,
-            is_premium: document.querySelector('input[name="mentor_type"]:checked').value === 'paid',
-            hourly_rate: document.querySelector('input[name="mentor_type"]:checked').value === 'paid' 
-                ? parseFloat(document.getElementById('hourly_rate').value) || 0 : 0,
-            notification_email: document.querySelector('input[name="notification_email"]').checked,
-            auto_accept_requests: document.querySelector('input[name="auto_accept"]').checked
+            video_intro_url: document.getElementById('video_intro_url')?.value || '',
+            is_premium: document.querySelector('input[name="mentor_type"]:checked')?.value === 'paid',
+            hourly_rate: document.querySelector('input[name="mentor_type"]:checked')?.value === 'paid' 
+                ? parseFloat(document.getElementById('hourly_rate')?.value) || 0 : 0,
+            notification_email: document.querySelector('input[name="notification_email"]')?.checked || false,
+            auto_accept_requests: document.querySelector('input[name="auto_accept"]')?.checked || false
         };
         
         return data;
@@ -512,8 +475,8 @@ document.addEventListener('DOMContentLoaded', () => {
         days.forEach(day => {
             const checkbox = document.getElementById(`${day}-available`);
             if (checkbox && checkbox.checked) {
-                const startTime = document.getElementById(`${day}-start`).value;
-                const endTime = document.getElementById(`${day}-end`).value;
+                const startTime = document.getElementById(`${day}-start`)?.value;
+                const endTime = document.getElementById(`${day}-end`)?.value;
                 
                 if (startTime && endTime) {
                     availability.push({
