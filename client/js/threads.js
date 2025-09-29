@@ -188,20 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Add "Add Story" button for current user if logged in - positioned prominently at the start
-            if (currentUser) {
-                storiesHTML += `
-                    <div class="story-item add-story" onclick="openAddStoryModal()">
-                        <div class="story-ring add-story-ring">
-                            <div class="story-avatar add-story-avatar">
-                                <i class="fas fa-plus"></i>
-                            </div>
-                        </div>
-                        <span>Add Story</span>
-                    </div>
-                `;
-            }
-
             // Create user story items
             const userStoryItems = storyFeed.map(user => {
                 const profilePicUrl = user.profile_pic_url 
@@ -1074,6 +1060,14 @@ document.addEventListener('DOMContentLoaded', () => {
             existingModal.remove();
         }
 
+        // Load the story modal CSS if not already loaded
+        if (!document.querySelector('link[href*="story-modal.css"]')) {
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = 'css/story-modal.css';
+            document.head.appendChild(link);
+        }
+
         const modal = document.createElement('div');
         modal.className = 'add-story-modal';
         
@@ -1081,7 +1075,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="story-modal-overlay" onclick="closeAddStoryModal()">
                 <div class="story-modal-content" onclick="event.stopPropagation()">
                     <div class="story-modal-header">
-                        <h3>Create Story</h3>
+                        <h3><i class="fas fa-plus-circle"></i>Create Your Story</h3>
                         <button class="modal-close-btn" onclick="closeAddStoryModal()">
                             <i class="fas fa-times"></i>
                         </button>
@@ -1109,22 +1103,25 @@ document.addEventListener('DOMContentLoaded', () => {
                             <!-- Text Story Content -->
                             <div class="story-text-content active" id="text-content">
                                 <div class="story-preview" id="story-preview">
-                                    <div class="story-preview-text" id="preview-text">Your text will appear here...</div>
+                                    <div class="story-preview-text" id="preview-text">✨ Your story text will appear here...</div>
                                 </div>
                                 <div class="story-controls">
-                                    <textarea 
-                                        id="story-text-input" 
-                                        placeholder="What's on your mind?"
-                                        maxlength="200"
-                                        rows="3"
-                                    ></textarea>
+                                    <div style="position: relative;">
+                                        <textarea 
+                                            id="story-text-input" 
+                                            placeholder="Share what's on your mind... 💭"
+                                            maxlength="200"
+                                            rows="3"
+                                        ></textarea>
+                                        <div class="char-count" id="text-char-count">0/200</div>
+                                    </div>
                                     <div class="story-styling-controls">
                                         <div class="color-control">
-                                            <label>Background:</label>
-                                            <input type="color" id="story-bg-color" value="#4a90e2" onchange="updateStoryPreview()">
+                                            <label>Background</label>
+                                            <input type="color" id="story-bg-color" value="#667eea" onchange="updateStoryPreview()">
                                         </div>
                                         <div class="color-control">
-                                            <label>Text:</label>
+                                            <label>Text</label>
                                             <input type="color" id="story-text-color" value="#ffffff" onchange="updateStoryPreview()">
                                         </div>
                                     </div>
@@ -1136,8 +1133,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <div class="media-upload-area" onclick="document.getElementById('story-media-input').click()">
                                     <div class="upload-placeholder">
                                         <i class="fas fa-cloud-upload-alt"></i>
-                                        <p>Click to upload media</p>
-                                        <small>Images and videos up to 10MB</small>
+                                        <p>Drag & drop or click to upload</p>
+                                        <small>Images and videos up to 10MB • JPG, PNG, MP4</small>
                                     </div>
                                 </div>
                                 <input type="file" id="story-media-input" accept="image/*,video/*" style="display: none;" onchange="handleStoryMediaUpload(event)">
@@ -1148,19 +1145,25 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </button>
                                 </div>
                                 <div class="media-caption-area">
-                                    <textarea 
-                                        id="story-caption-input" 
-                                        placeholder="Add a caption..."
-                                        maxlength="150"
-                                        rows="2"
-                                    ></textarea>
+                                    <div style="position: relative;">
+                                        <textarea 
+                                            id="story-caption-input" 
+                                            placeholder="Write a caption... 📝"
+                                            maxlength="150"
+                                            rows="2"
+                                        ></textarea>
+                                        <div class="char-count" id="caption-char-count">0/150</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="story-modal-footer">
-                        <button class="btn-secondary" onclick="closeAddStoryModal()">Cancel</button>
+                        <button class="btn-secondary" onclick="closeAddStoryModal()">
+                            <i class="fas fa-times"></i>
+                            Cancel
+                        </button>
                         <button class="btn-primary" id="publish-story-btn" onclick="publishStory()">
                             <i class="fas fa-paper-plane"></i>
                             Share Story

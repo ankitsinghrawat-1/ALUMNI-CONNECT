@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stories - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/story-viewer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <!-- Stories Viewer -->
+    <div class="story-viewer" id="story-viewer" style="display: none;">
+        <div class="story-viewer-container">
+            <!-- Story Header -->
+            <div class="story-header">
+                <div class="story-user-info">
+                    <div class="story-avatar" id="story-avatar">
+                        <img id="story-user-image" src="" alt="User">
+                    </div>
+                    <div class="story-user-details">
+                        <div class="story-username" id="story-username"></div>
+                        <div class="story-timestamp" id="story-timestamp"></div>
+                    </div>
+                </div>
+                <div class="story-actions">
+                    <button class="story-action-btn" id="story-menu-btn">
+                        <i class="fas fa-ellipsis-h"></i>
+                    </button>
+                    <button class="story-action-btn" id="close-story-btn">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Story Progress Bar -->
+            <div class="story-progress-container">
+                <div class="story-progress-bar" id="story-progress-bar"></div>
+            </div>
+
+            <!-- Story Content -->
+            <div class="story-content-container" id="story-content-container">
+                <!-- Story content will be dynamically loaded here -->
+            </div>
+
+            <!-- Story Bottom Actions -->
+            <div class="story-bottom-actions">
+                <div class="story-interaction">
+                    <div class="story-left-actions">
+                        <button class="story-reaction-btn" id="like-story-btn">
+                            <i class="far fa-heart"></i>
+                        </button>
+                        <button class="story-reaction-btn" id="reply-story-btn">
+                            <i class="far fa-paper-plane"></i>
+                        </button>
+                        <button class="story-reaction-btn" id="share-story-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                    </div>
+                    <div class="story-right-actions">
+                        <button class="story-view-count" id="story-view-count">
+                            <i class="fas fa-eye"></i>
+                            <span>0</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Reply Input (hidden by default) -->
+                <div class="story-reply-input" id="story-reply-input" style="display: none;">
+                    <input type="text" placeholder="Reply to story..." id="reply-text-input">
+                    <button id="send-reply-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Navigation arrows -->
+            <button class="story-nav-btn story-nav-prev" id="prev-story-btn">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="story-nav-btn story-nav-next" id="next-story-btn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Story Likes Modal -->
+    <div class="story-likes-modal" id="story-likes-modal" style="display: none;">
+        <div class="likes-modal-content">
+            <div class="likes-modal-header">
+                <h3>Likes</h3>
+                <button class="close-likes-btn" onclick="closeLikesModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="likes-list" id="likes-list">
+                <!-- Likes will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Story Viewers Modal (for story owner) -->
+    <div class="story-viewers-modal" id="story-viewers-modal" style="display: none;">
+        <div class="viewers-modal-content">
+            <div class="viewers-modal-header">
+                <h3>Story Views</h3>
+                <button class="close-viewers-btn" onclick="closeViewersModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="viewers-list" id="viewers-list">
+                <!-- Viewers will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Stories Grid View -->
+    <main class="stories-main">
+        <div class="stories-container">
+            <div class="stories-header">
+                <h1><i class="fas fa-images"></i>Alumni Stories</h1>
+                <p>Share and discover moments from your alumni community</p>
+                <div class="stories-actions">
+                    <a href="add-story.html" class="create-story-btn">
+                        <i class="fas fa-plus-circle"></i>
+                        Create Story
+                    </a>
+                    <button class="filter-stories-btn" id="filter-btn">
+                        <i class="fas fa-filter"></i>
+                        Filter
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stories Filter -->
+            <div class="stories-filter" id="stories-filter" style="display: none;">
+                <div class="filter-options">
+                    <button class="filter-option active" data-filter="all">All Stories</button>
+                    <button class="filter-option" data-filter="text">Text</button>
+                    <button class="filter-option" data-filter="photo">Photos</button>
+                    <button class="filter-option" data-filter="video">Videos</button>
+                    <button class="filter-option" data-filter="poll">Polls</button>
+                </div>
+            </div>
+
+            <!-- Stories Feed -->
+            <div class="stories-feed" id="stories-feed">
+                <div class="stories-grid" id="stories-grid">
+                    <!-- Stories will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Loading State -->
+            <div class="loading-stories" id="loading-stories">
+                <div class="loading-spinner"></div>
+                <p>Loading stories...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-stories" id="empty-stories" style="display: none;">
+                <div class="empty-icon">
+                    <i class="fas fa-images"></i>
+                </div>
+                <h3>No Stories Yet</h3>
+                <p>Be the first to share a story with the alumni community!</p>
+                <a href="add-story.html" class="btn-primary">
+                    <i class="fas fa-plus-circle"></i>
+                    Create Your First Story
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Context Menu for Stories -->
+    <div class="story-context-menu" id="story-context-menu" style="display: none;">
+        <div class="context-menu-item" onclick="shareStory()">
+            <i class="fas fa-share"></i>
+            <span>Share</span>
+        </div>
+        <div class="context-menu-item" onclick="reportStory()">
+            <i class="fas fa-flag"></i>
+            <span>Report</span>
+        </div>
+        <div class="context-menu-item danger" onclick="deleteStory()" id="delete-story-option" style="display: none;">
+            <i class="fas fa-trash"></i>
+            <span>Delete</span>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/story-viewer.js"></script>
+</body>
+</html>
