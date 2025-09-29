@@ -11390,9 +11390,609 @@ html.dark-mode .profile-field {
     border-color: var(--border-color);
 }
 
-html.dark-mode .profile-field:hover {
-    background: rgba(74, 144, 226, 0.05);
+/*--------------------------------------------------
+  9. Enhanced Mentor Cards Design
+--------------------------------------------------*/
+
+/* Enhanced Mentors Grid */
+.enhanced-mentors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2rem;
+    padding: 2rem 0;
 }
+
+/* Enhanced Mentor Card */
+.enhanced-mentor-card {
+    background: var(--surface-color);
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    height: auto;
+}
+
+.enhanced-mentor-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(74, 144, 226, 0.15);
+    border-color: rgba(74, 144, 226, 0.3);
+}
+
+/* Mentor Card Header */
+.mentor-card-header {
+    position: relative;
+    padding: 2rem 2rem 1rem;
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.05), rgba(245, 166, 35, 0.05));
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.mentor-avatar {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.mentor-avatar img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid white;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.enhanced-mentor-card:hover .mentor-avatar img {
+    transform: scale(1.05);
+    box-shadow: 0 6px 24px rgba(74, 144, 226, 0.2);
+}
+
+.online-indicator {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    width: 20px;
+    height: 20px;
+    background: var(--success-color);
+    border: 3px solid white;
+    border-radius: 50%;
+    animation: pulse-online 2s infinite;
+}
+
+@keyframes pulse-online {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.1);
+    }
+}
+
+.mentor-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-end;
+}
+
+.premium-badge {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    box-shadow: 0 2px 8px rgba(243, 156, 18, 0.3);
+}
+
+.verified-badge {
+    background: rgba(46, 204, 113, 0.1);
+    color: var(--success-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+/* Mentor Card Body */
+.mentor-card-body {
+    padding: 0 2rem 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.mentor-info {
+    text-align: left;
+}
+
+.mentor-name {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    line-height: 1.2;
+}
+
+.mentor-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.mentor-company {
+    font-size: 0.9rem;
+    color: var(--subtle-text-color);
+    font-style: italic;
+}
+
+/* Mentor Meta Information */
+.mentor-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+}
+
+.industry-badge {
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.experience-badge {
+    background: rgba(74, 144, 226, 0.1);
+    color: var(--primary-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.response-time {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.85rem;
+    color: var(--subtle-text-color);
+    font-weight: 500;
+}
+
+.response-time i {
+    color: var(--accent-color);
+}
+
+/* Rating System */
+.mentor-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stars {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+}
+
+.star-filled {
+    color: #ffc107;
+    font-size: 0.9rem;
+}
+
+.star-empty {
+    color: #e0e0e0;
+    font-size: 0.9rem;
+}
+
+.rating-info {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-left: 0.5rem;
+}
+
+.rating-value {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.review-count {
+    font-size: 0.8rem;
+    color: var(--subtle-text-color);
+}
+
+.no-rating {
+    font-size: 0.85rem;
+    color: var(--subtle-text-color);
+    font-style: italic;
+}
+
+/* Expertise Section */
+.mentor-expertise {
+    background: rgba(74, 144, 226, 0.05);
+    padding: 1rem;
+    border-radius: 12px;
+    border: 1px solid rgba(74, 144, 226, 0.1);
+}
+
+.expertise-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.expertise-label i {
+    font-size: 0.85rem;
+}
+
+.expertise-text {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Skills Section */
+.mentor-skills {
+    flex: 1;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.skill-badge {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.3rem 0.6rem;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.skill-badge:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+}
+
+.more-skills {
+    color: var(--subtle-text-color);
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.no-skills {
+    color: var(--subtle-text-color);
+    font-size: 0.8rem;
+    font-style: italic;
+}
+
+/* Bio Section */
+.mentor-bio {
+    background: var(--background-color);
+    padding: 1rem;
+    border-radius: 12px;
+    border-left: 4px solid var(--accent-color);
+}
+
+.mentor-bio p {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    line-height: 1.5;
+    margin: 0;
+    font-style: italic;
+}
+
+/* Mentor Card Footer */
+.mentor-card-footer {
+    padding: 1.5rem 2rem 2rem;
+    border-top: 1px solid var(--border-color);
+    background: rgba(74, 144, 226, 0.02);
+    margin-top: auto;
+}
+
+.mentor-stats {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    text-align: center;
+}
+
+.stat-item i {
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.stat-item span {
+    font-size: 0.8rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.free-badge {
+    color: var(--success-color);
+}
+
+.free-badge i {
+    color: var(--success-color);
+}
+
+/* Mentor Actions */
+.mentor-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mentor-actions .btn {
+    flex: 1;
+    min-width: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.mentor-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-sm {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    border-radius: 8px;
+}
+
+/* Button Enhancements */
+.btn-warning {
+    background: #f39c12;
+    color: white;
+    border: 1px solid #f39c12;
+}
+
+.btn-warning:hover {
+    background: #e67e22;
+    border-color: #e67e22;
+}
+
+.btn-danger {
+    background: var(--error-color);
+    color: white;
+    border: 1px solid var(--error-color);
+}
+
+.btn-danger:hover {
+    background: #c0392b;
+    border-color: #c0392b;
+}
+
+.btn-success {
+    background: var(--success-color);
+    color: white;
+    border: 1px solid var(--success-color);
+}
+
+.btn-success:hover {
+    background: #27ae60;
+    border-color: #27ae60;
+}
+
+/* Loading States */
+.loading-container {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.loading-spinner {
+    margin-bottom: 2rem;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(74, 144, 226, 0.1);
+    border-top: 4px solid var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--surface-color);
+    border-radius: 20px;
+    border: 2px dashed var(--border-color);
+}
+
+.empty-state i {
+    font-size: 4rem;
+    color: var(--subtle-text-color);
+    margin-bottom: 2rem;
+    opacity: 0.5;
+}
+
+.empty-state h3 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    color: var(--subtle-text-color);
+    font-size: 1.1rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .enhanced-mentors-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        padding: 1rem 0;
+    }
+    
+    .enhanced-mentor-card {
+        margin: 0 1rem;
+    }
+    
+    .mentor-card-header {
+        padding: 1.5rem 1.5rem 1rem;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1rem;
+    }
+    
+    .mentor-badges {
+        flex-direction: row;
+        align-items: center;
+    }
+    
+    .mentor-card-body {
+        padding: 0 1.5rem 1rem;
+        text-align: center;
+    }
+    
+    .mentor-meta {
+        justify-content: center;
+    }
+    
+    .mentor-rating {
+        justify-content: center;
+    }
+    
+    .mentor-stats {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: center;
+    }
+    
+    .stat-item {
+        flex-direction: row;
+        gap: 0.5rem;
+    }
+    
+    .mentor-actions {
+        flex-direction: column;
+    }
+    
+    .mentor-actions .btn {
+        flex: none;
+        min-width: none;
+    }
+    
+    .mentor-card-footer {
+        padding: 1.5rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .mentor-avatar img {
+        width: 60px;
+        height: 60px;
+    }
+    
+    .online-indicator {
+        width: 16px;
+        height: 16px;
+        bottom: 4px;
+        right: 4px;
+    }
+    
+    .mentor-name {
+        font-size: 1.2rem;
+    }
+    
+    .enhanced-mentor-card {
+        margin: 0 0.5rem;
+    }
+}
+
+/* Dark Mode Adjustments */
+html.dark-mode .enhanced-mentor-card {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .mentor-card-header {
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.08), rgba(245, 166, 35, 0.08));
+}
+
+html.dark-mode .mentor-expertise {
+    background: rgba(74, 144, 226, 0.08);
+    border-color: rgba(74, 144, 226, 0.2);
+}
+
+html.dark-mode .mentor-bio {
+    background: var(--background-color);
+}
+
+html.dark-mode .mentor-card-footer {
+    background: rgba(74, 144, 226, 0.05);
+    border-top-color: var(--border-color);
+}
+
+html.dark-mode .empty-state {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+/*--------------------------------------------------
+  End Enhanced Mentor Cards Design
+--------------------------------------------------*/
 
 /*--------------------------------------------------
   7. Modern Instagram-Inspired Threads Design
