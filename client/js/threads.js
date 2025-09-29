@@ -188,20 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Add "Add Story" button for current user if logged in - positioned prominently at the start
-            if (currentUser) {
-                storiesHTML += `
-                    <div class="story-item add-story" onclick="openAddStoryModal()">
-                        <div class="story-ring add-story-ring">
-                            <div class="story-avatar add-story-avatar">
-                                <i class="fas fa-plus"></i>
-                            </div>
-                        </div>
-                        <span>Add Story</span>
-                    </div>
-                `;
-            }
-
             // Create user story items
             const userStoryItems = storyFeed.map(user => {
                 const profilePicUrl = user.profile_pic_url 

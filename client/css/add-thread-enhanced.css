@@ -1,22 +1,39 @@
-/* Enhanced Add Thread Styles */
+/* Enhanced Add Thread Styles - Consistent with Story System */
 .create-thread-main {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 20%, #f093fb 60%, #f5576c 100%);
     min-height: calc(100vh - 80px);
     padding: 2rem 0;
+    position: relative;
+    overflow-x: hidden;
+}
+
+.create-thread-main::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .create-thread-container {
-    max-width: 680px;
+    max-width: 800px;
     margin: 0 auto;
     padding: 0 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .create-header {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
-    border-radius: 20px 20px 0 0;
+    border-radius: 24px 24px 0 0;
     padding: 2rem;
-    border-bottom: 1px solid rgba(74, 144, 226, 0.1);
+    border-bottom: 1px solid rgba(102, 126, 234, 0.1);
     position: relative;
     overflow: hidden;
 }
@@ -38,7 +55,7 @@
 }
 
 .back-link {
-    background: rgba(74, 144, 226, 0.1);
+    background: rgba(102, 126, 234, 0.1);
     padding: 1rem;
     border-radius: 50%;
     color: var(--primary-color);
@@ -55,7 +72,7 @@
     background: var(--primary-color);
     color: white;
     transform: translateX(-2px);
-    box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
 }
 
 .create-title h1 {
@@ -78,9 +95,11 @@
 .create-content {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
-    border-radius: 0 0 20px 20px;
+    border-radius: 0 0 24px 24px;
     padding: 2rem;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 10px 40px rgba(102, 126, 234, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: none;
 }
 
 /* Enhanced Author Section */
@@ -134,7 +153,7 @@
 
 .visibility-select select {
     background: rgba(255, 255, 255, 0.8);
-    border: 2px solid rgba(74, 144, 226, 0.2);
+    border: 2px solid rgba(102, 126, 234, 0.2);
     border-radius: 12px;
     padding: 0.5rem 1rem;
     font-weight: 600;
@@ -145,7 +164,7 @@
 
 .visibility-select select:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     outline: none;
 }
 
@@ -581,7 +600,7 @@
 
 .cancel-btn {
     background: transparent;
-    border: 2px solid rgba(74, 144, 226, 0.2);
+    border: 2px solid rgba(102, 126, 234, 0.2);
     color: var(--text-color);
     padding: 1rem 2rem;
     border-radius: 12px;
