@@ -23,16 +23,418 @@
     </header>
 
     <main class="form-main">
-        <section class="form-container">
-            <h2>Become a Mentor</h2>
-            <p>Share your knowledge and experience with the next generation.</p>
-            <form id="become-mentor-form">
-                <div class="input-group">
-                    <label for="expertise_areas">Areas of Expertise</label>
-                    <textarea id="expertise_areas" rows="4" placeholder="e.g., Software Engineering, Marketing, Career Advice" required></textarea>
+        <section class="form-container mentor-registration-container">
+            <div class="registration-header">
+                <h2>Become a Mentor</h2>
+                <p>Share your knowledge and experience with the next generation. Complete your profile to help mentees find the perfect match.</p>
+                <div class="progress-indicator">
+                    <div class="step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Basic Info</div>
+                    </div>
+                    <div class="step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Expertise</div>
+                    </div>
+                    <div class="step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Experience</div>
+                    </div>
+                    <div class="step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Availability</div>
+                    </div>
+                    <div class="step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">Final Details</div>
+                    </div>
                 </div>
+            </div>
+
+            <form id="become-mentor-form" class="multi-step-form">
+                
+                <!-- Step 1: Basic Information -->
+                <div class="form-step active" data-step="1">
+                    <h3>Basic Information</h3>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="industry">Industry <span class="required">*</span></label>
+                            <select id="industry" required>
+                                <option value="">Select your primary industry</option>
+                                <option value="technology">Technology</option>
+                                <option value="finance">Finance & Banking</option>
+                                <option value="healthcare">Healthcare & Medicine</option>
+                                <option value="education">Education & Training</option>
+                                <option value="marketing">Marketing & Advertising</option>
+                                <option value="consulting">Consulting</option>
+                                <option value="manufacturing">Manufacturing</option>
+                                <option value="retail">Retail & E-commerce</option>
+                                <option value="real_estate">Real Estate</option>
+                                <option value="legal">Legal Services</option>
+                                <option value="media">Media & Entertainment</option>
+                                <option value="nonprofit">Non-profit</option>
+                                <option value="government">Government</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="experience_years">Years of Experience <span class="required">*</span></label>
+                            <select id="experience_years" required>
+                                <option value="">Select experience level</option>
+                                <option value="1">1-2 years</option>
+                                <option value="3">3-5 years</option>
+                                <option value="6">6-10 years</option>
+                                <option value="11">11-15 years</option>
+                                <option value="16">16-20 years</option>
+                                <option value="21">20+ years</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="bio">Professional Bio <span class="required">*</span></label>
+                        <textarea id="bio" rows="4" placeholder="Tell us about your professional journey, achievements, and what you're passionate about mentoring..." required maxlength="1000"></textarea>
+                        <div class="char-counter">0/1000 characters</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="timezone">Time Zone <span class="required">*</span></label>
+                        <select id="timezone" required>
+                            <option value="">Select your timezone</option>
+                            <option value="UTC-12:00">UTC-12:00 (Baker Island)</option>
+                            <option value="UTC-11:00">UTC-11:00 (Hawaii-Aleutian)</option>
+                            <option value="UTC-10:00">UTC-10:00 (Hawaii)</option>
+                            <option value="UTC-09:00">UTC-09:00 (Alaska)</option>
+                            <option value="UTC-08:00">UTC-08:00 (Pacific)</option>
+                            <option value="UTC-07:00">UTC-07:00 (Mountain)</option>
+                            <option value="UTC-06:00">UTC-06:00 (Central)</option>
+                            <option value="UTC-05:00">UTC-05:00 (Eastern)</option>
+                            <option value="UTC-04:00">UTC-04:00 (Atlantic)</option>
+                            <option value="UTC-03:00">UTC-03:00 (Brasília)</option>
+                            <option value="UTC-02:00">UTC-02:00 (South Georgia)</option>
+                            <option value="UTC-01:00">UTC-01:00 (Azores)</option>
+                            <option value="UTC+00:00" selected>UTC+00:00 (GMT)</option>
+                            <option value="UTC+01:00">UTC+01:00 (Central European)</option>
+                            <option value="UTC+02:00">UTC+02:00 (Eastern European)</option>
+                            <option value="UTC+03:00">UTC+03:00 (Moscow)</option>
+                            <option value="UTC+04:00">UTC+04:00 (Gulf)</option>
+                            <option value="UTC+05:00">UTC+05:00 (Pakistan)</option>
+                            <option value="UTC+05:30">UTC+05:30 (India)</option>
+                            <option value="UTC+06:00">UTC+06:00 (Bangladesh)</option>
+                            <option value="UTC+07:00">UTC+07:00 (Indochina)</option>
+                            <option value="UTC+08:00">UTC+08:00 (China)</option>
+                            <option value="UTC+09:00">UTC+09:00 (Japan)</option>
+                            <option value="UTC+10:00">UTC+10:00 (Eastern Australia)</option>
+                            <option value="UTC+11:00">UTC+11:00 (Solomon Islands)</option>
+                            <option value="UTC+12:00">UTC+12:00 (Fiji)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Step 2: Areas of Expertise -->
+                <div class="form-step" data-step="2">
+                    <h3>Areas of Expertise</h3>
+                    <div class="input-group">
+                        <label for="expertise_areas">Primary Expertise Areas <span class="required">*</span></label>
+                        <textarea id="expertise_areas" rows="4" placeholder="e.g., Software Engineering, React.js, Team Leadership, Product Management" required maxlength="500"></textarea>
+                        <div class="char-counter">0/500 characters</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="skills">Technical & Soft Skills</label>
+                        <div class="skills-input-container">
+                            <input type="text" id="skills-input" placeholder="Type a skill and press Enter or comma to add">
+                            <div class="skills-tags" id="skills-tags"></div>
+                        </div>
+                        <div class="skill-suggestions">
+                            <span class="suggestion-label">Popular skills:</span>
+                            <span class="skill-suggestion" data-skill="JavaScript">JavaScript</span>
+                            <span class="skill-suggestion" data-skill="Python">Python</span>
+                            <span class="skill-suggestion" data-skill="Leadership">Leadership</span>
+                            <span class="skill-suggestion" data-skill="Project Management">Project Management</span>
+                            <span class="skill-suggestion" data-skill="Data Analysis">Data Analysis</span>
+                            <span class="skill-suggestion" data-skill="Public Speaking">Public Speaking</span>
+                        </div>
+                        <input type="hidden" id="skills" name="skills">
+                    </div>
+                    <div class="input-group">
+                        <label for="languages">Languages Spoken</label>
+                        <select id="languages" multiple>
+                            <option value="English" selected>English</option>
+                            <option value="Spanish">Spanish</option>
+                            <option value="French">French</option>
+                            <option value="German">German</option>
+                            <option value="Chinese">Chinese (Mandarin)</option>
+                            <option value="Japanese">Japanese</option>
+                            <option value="Korean">Korean</option>
+                            <option value="Arabic">Arabic</option>
+                            <option value="Hindi">Hindi</option>
+                            <option value="Portuguese">Portuguese</option>
+                            <option value="Italian">Italian</option>
+                            <option value="Russian">Russian</option>
+                        </select>
+                        <small>Hold Ctrl (Cmd on Mac) to select multiple languages</small>
+                    </div>
+                </div>
+
+                <!-- Step 3: Experience & Background -->
+                <div class="form-step" data-step="3">
+                    <h3>Professional Experience & Background</h3>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="linkedin_url">LinkedIn Profile</label>
+                            <input type="url" id="linkedin_url" placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+                        <div class="input-group">
+                            <label for="github_url">GitHub Profile</label>
+                            <input type="url" id="github_url" placeholder="https://github.com/yourusername">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="portfolio_url">Portfolio/Website</label>
+                        <input type="url" id="portfolio_url" placeholder="https://yourportfolio.com">
+                    </div>
+                    <div class="input-group">
+                        <label for="mentoring_style">Preferred Mentoring Style <span class="required">*</span></label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="mentoring_style" value="one_on_one" checked>
+                                <div class="radio-content">
+                                    <span class="radio-title">One-on-One</span>
+                                    <span class="radio-desc">Individual mentoring sessions</span>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="mentoring_style" value="group">
+                                <div class="radio-content">
+                                    <span class="radio-title">Group Mentoring</span>
+                                    <span class="radio-desc">Mentor multiple mentees together</span>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="mentoring_style" value="workshop">
+                                <div class="radio-content">
+                                    <span class="radio-title">Workshops</span>
+                                    <span class="radio-desc">Structured learning sessions</span>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="mentoring_style" value="mixed">
+                                <div class="radio-content">
+                                    <span class="radio-title">Mixed Approach</span>
+                                    <span class="radio-desc">Combination of different styles</span>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label>Communication Methods <span class="required">*</span></label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="communication_methods" value="video_call" checked>
+                                <span class="checkmark"></span>
+                                <span>Video Calls (Zoom, Meet, etc.)</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="communication_methods" value="phone_call">
+                                <span class="checkmark"></span>
+                                <span>Phone Calls</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="communication_methods" value="chat">
+                                <span class="checkmark"></span>
+                                <span>Text/Chat Messages</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="communication_methods" value="email">
+                                <span class="checkmark"></span>
+                                <span>Email Communication</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="communication_methods" value="in_person">
+                                <span class="checkmark"></span>
+                                <span>In-Person Meetings</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 4: Availability -->
+                <div class="form-step" data-step="4">
+                    <h3>Availability & Scheduling</h3>
+                    <div class="availability-section">
+                        <label class="section-label">Weekly Availability</label>
+                        <div class="availability-grid">
+                            <div class="day-availability" data-day="monday">
+                                <div class="day-header">
+                                    <input type="checkbox" id="monday-available" checked>
+                                    <label for="monday-available">Monday</label>
+                                </div>
+                                <div class="time-inputs">
+                                    <input type="time" id="monday-start" value="09:00">
+                                    <span>to</span>
+                                    <input type="time" id="monday-end" value="17:00">
+                                </div>
+                            </div>
+                            <div class="day-availability" data-day="tuesday">
+                                <div class="day-header">
+                                    <input type="checkbox" id="tuesday-available" checked>
+                                    <label for="tuesday-available">Tuesday</label>
+                                </div>
+                                <div class="time-inputs">
+                                    <input type="time" id="tuesday-start" value="09:00">
+                                    <span>to</span>
+                                    <input type="time" id="tuesday-end" value="17:00">
+                                </div>
+                            </div>
+                            <div class="day-availability" data-day="wednesday">
+                                <div class="day-header">
+                                    <input type="checkbox" id="wednesday-available" checked>
+                                    <label for="wednesday-available">Wednesday</label>
+                                </div>
+                                <div class="time-inputs">
+                                    <input type="time" id="wednesday-start" value="09:00">
+                                    <span>to</span>
+                                    <input type="time" id="wednesday-end" value="17:00">
+                                </div>
+                            </div>
+                            <div class="day-availability" data-day="thursday">
+                                <div class="day-header">
+                                    <input type="checkbox" id="thursday-available" checked>
+                                    <label for="thursday-available">Thursday</label>
+                                </div>
+                                <div class="time-inputs">
+                                    <input type="time" id="thursday-start" value="09:00">
+                                    <span>to</span>
+                                    <input type="time" id="thursday-end" value="17:00">
+                                </div>
+                            </div>
+                            <div class="day-availability" data-day="friday">
+                                <div class="day-header">
+                                    <input type="checkbox" id="friday-available" checked>
+                                    <label for="friday-available">Friday</label>
+                                </div>
+                                <div class="time-inputs">
+                                    <input type="time" id="friday-start" value="09:00">
+                                    <span>to</span>
+                                    <input type="time" id="friday-end" value="17:00">
+                                </div>
+                            </div>
+                            <div class="day-availability" data-day="saturday">
+                                <div class="day-header">
+                                    <input type="checkbox" id="saturday-available">
+                                    <label for="saturday-available">Saturday</label>
+                                </div>
+                                <div class="time-inputs">
+                                    <input type="time" id="saturday-start" value="10:00">
+                                    <span>to</span>
+                                    <input type="time" id="saturday-end" value="16:00">
+                                </div>
+                            </div>
+                            <div class="day-availability" data-day="sunday">
+                                <div class="day-header">
+                                    <input type="checkbox" id="sunday-available">
+                                    <label for="sunday-available">Sunday</label>
+                                </div>
+                                <div class="time-inputs">
+                                    <input type="time" id="sunday-start" value="10:00">
+                                    <span>to</span>
+                                    <input type="time" id="sunday-end" value="16:00">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="response_time">Expected Response Time</label>
+                            <select id="response_time">
+                                <option value="1">Within 1 hour</option>
+                                <option value="4">Within 4 hours</option>
+                                <option value="12">Within 12 hours</option>
+                                <option value="24" selected>Within 24 hours</option>
+                                <option value="48">Within 48 hours</option>
+                                <option value="72">Within 3 days</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="max_mentees">Maximum Active Mentees</label>
+                            <select id="max_mentees">
+                                <option value="1">1 mentee</option>
+                                <option value="3">3 mentees</option>
+                                <option value="5" selected>5 mentees</option>
+                                <option value="10">10 mentees</option>
+                                <option value="15">15 mentees</option>
+                                <option value="20">20+ mentees</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Final Details -->
+                <div class="form-step" data-step="5">
+                    <h3>Final Details & Preferences</h3>
+                    <div class="input-group">
+                        <label for="video_intro_url">Video Introduction (Optional)</label>
+                        <input type="url" id="video_intro_url" placeholder="Upload or link a 1-2 minute video introduction">
+                        <small>A video introduction helps mentees get to know you better and increases connection rates by 60%</small>
+                    </div>
+                    <div class="pricing-section">
+                        <label class="section-label">Mentoring Type</label>
+                        <div class="radio-group">
+                            <label class="radio-option">
+                                <input type="radio" name="mentor_type" value="free" checked>
+                                <div class="radio-content">
+                                    <span class="radio-title">Free Mentoring</span>
+                                    <span class="radio-desc">Volunteer mentoring to give back to the community</span>
+                                </div>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="mentor_type" value="paid">
+                                <div class="radio-content">
+                                    <span class="radio-title">Paid Mentoring</span>
+                                    <span class="radio-desc">Offer premium mentoring services for a fee</span>
+                                </div>
+                            </label>
+                        </div>
+                        <div class="pricing-details" id="pricing-details" style="display: none;">
+                            <div class="input-group">
+                                <label for="hourly_rate">Hourly Rate (USD)</label>
+                                <div class="price-input">
+                                    <span class="currency">$</span>
+                                    <input type="number" id="hourly_rate" min="10" max="500" step="5" placeholder="50">
+                                    <span class="per-hour">/hour</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="preferences-section">
+                        <label class="section-label">Notification Preferences</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="notification_email" checked>
+                                <span class="checkmark"></span>
+                                <span>Email notifications for new requests</span>
+                            </label>
+                            <label class="checkbox-option">
+                                <input type="checkbox" name="auto_accept">
+                                <span class="checkmark"></span>
+                                <span>Automatically accept mentoring requests</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="terms-section">
+                        <label class="checkbox-option">
+                            <input type="checkbox" id="terms-agreement" required>
+                            <span class="checkmark"></span>
+                            <span>I agree to the <a href="#" target="_blank">Mentor Terms & Conditions</a> and <a href="#" target="_blank">Code of Conduct</a></span>
+                        </label>
+                    </div>
+                </div>
+
                 <div id="message" class="form-message"></div>
-                <button type="submit" class="btn btn-primary btn-full-width">Register as Mentor</button>
+                
+                <div class="form-navigation">
+                    <button type="button" id="prev-btn" class="btn btn-secondary" style="display: none;">Previous</button>
+                    <button type="button" id="next-btn" class="btn btn-primary">Next</button>
+                    <button type="submit" id="submit-btn" class="btn btn-primary btn-full-width" style="display: none;">Complete Registration</button>
+                </div>
             </form>
         </section>
     </main>
