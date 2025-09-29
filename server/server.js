@@ -61,6 +61,7 @@ const chatImagesDir = path.join(__dirname, '..', 'uploads', 'chat');
 const blogImagesDir = path.join(__dirname, '..', 'uploads', 'blogs');
 const groupImagesDir = path.join(__dirname, '..', 'uploads', 'groups');
 const threadsDir = path.join(__dirname, '..', 'uploads', 'threads');
+const storiesDir = path.join(__dirname, '..', 'uploads', 'stories');
 
 fs.mkdir(uploadDir, { recursive: true }).catch(console.error);
 fs.mkdir(resumeDir, { recursive: true }).catch(console.error);
@@ -68,6 +69,7 @@ fs.mkdir(chatImagesDir, { recursive: true }).catch(console.error);
 fs.mkdir(blogImagesDir, { recursive: true }).catch(console.error);
 fs.mkdir(groupImagesDir, { recursive: true }).catch(console.error);
 fs.mkdir(threadsDir, { recursive: true }).catch(console.error);
+fs.mkdir(storiesDir, { recursive: true }).catch(console.error);
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -77,7 +79,8 @@ const storage = multer.diskStorage({
             'blog_image': blogImagesDir,
             'group_logo': groupImagesDir,
             'group_background': groupImagesDir,
-            'thread_media': threadsDir
+            'thread_media': threadsDir,
+            'story_media': storiesDir
         };
         const dir = fieldToDir[file.fieldname] || uploadDir;
         cb(null, dir);
@@ -120,6 +123,7 @@ const notificationRoutes = require('./api/notifications')(pool);
 const userRoutes = require('./api/users')(pool, upload);
 const groupRoutes = require('./api/groups')(pool, upload);
 const threadRoutes = require('./api/threads')(pool, upload);
+const storyRoutes = require('./api/stories')(pool, upload);
 
 // Apply verifyToken middleware to all routes that require authentication
 app.use('/api/admin', verifyToken, adminRoutes);
@@ -133,6 +137,7 @@ app.use('/api/notifications', verifyToken, notificationRoutes);
 app.use('/api/users', userRoutes); // User creation and login don't need a token
 app.use('/api/groups', verifyToken, groupRoutes);
 app.use('/api/threads', threadRoutes); // Some thread endpoints are public (viewing)
+app.use('/api/stories', storyRoutes); // Some story endpoints are public (viewing)
 
 
 // --- CENTRAL ERROR HANDLING MIDDLEWARE ---
