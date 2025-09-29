@@ -295,7 +295,11 @@ CREATE TABLE `group_join_requests` (
   FOREIGN KEY (`group_id`) REFERENCES `groups`(`group_id`) ON DELETE CASCADE,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 );
+
+
 -- 18. Announcements Table
+
+
 CREATE TABLE `announcements` (
   `announcement_id` INT AUTO_INCREMENT PRIMARY KEY,
   `title` VARCHAR(255) NOT NULL,
@@ -348,7 +352,7 @@ CREATE TABLE `donations` (
 );
 
 
---21. Blog_comments
+--22. Blog_comments
 
 
 CREATE TABLE `blog_comments` (
@@ -362,7 +366,7 @@ CREATE TABLE `blog_comments` (
 );
 
 
--- 22. Create a new table to track invitations to groups
+-- 23. Create a new table to track invitations to groups
 
 
 CREATE TABLE `group_invites` (
@@ -379,7 +383,7 @@ CREATE TABLE `group_invites` (
 );
 
 
--- 23. create a new table to track verifications reuests 
+-- 24. create a new table to track verifications reuests 
 
 
 CREATE TABLE `verification_requests` (
@@ -407,7 +411,7 @@ CREATE TABLE `verification_requests` (
 );
 
 
---24. Main threads table
+--25. Main threads table
 
 
 CREATE TABLE IF NOT EXISTS threads (
@@ -427,7 +431,7 @@ CREATE TABLE IF NOT EXISTS threads (
 );
 
 
---25. Thread likes table
+--26. Thread likes table
 
 
 CREATE TABLE IF NOT EXISTS thread_likes (
@@ -443,7 +447,7 @@ CREATE TABLE IF NOT EXISTS thread_likes (
 );
 
 
---26. Thread comments table
+--27. Thread comments table
 
 
 CREATE TABLE IF NOT EXISTS thread_comments (
@@ -460,7 +464,7 @@ CREATE TABLE IF NOT EXISTS thread_comments (
 );
 
 
---27. Thread shares table
+--28. Thread shares table
 
 
 CREATE TABLE IF NOT EXISTS thread_shares (
@@ -476,7 +480,7 @@ CREATE TABLE IF NOT EXISTS thread_shares (
 );
 
 
---28. Hashtags table
+--29. Hashtags table
 
 
 CREATE TABLE IF NOT EXISTS hashtags (
@@ -487,7 +491,7 @@ CREATE TABLE IF NOT EXISTS hashtags (
 );
 
 
---29. Thread hashtags junction table
+--30. Thread hashtags junction table
 
 
 CREATE TABLE IF NOT EXISTS thread_hashtags (
@@ -502,7 +506,7 @@ CREATE TABLE IF NOT EXISTS thread_hashtags (
 );
 
 
---30. Thread mentions table
+--31. Thread mentions table
 
 
 CREATE TABLE IF NOT EXISTS thread_mentions (
@@ -518,7 +522,7 @@ CREATE TABLE IF NOT EXISTS thread_mentions (
 );
 
 
---31. Stories table
+--32. Stories table
 
 
 CREATE TABLE IF NOT EXISTS stories (
@@ -538,7 +542,7 @@ CREATE TABLE IF NOT EXISTS stories (
 );
 
 
---32. Story views table
+--33. Story views table
 
 
 CREATE TABLE IF NOT EXISTS story_views (
