@@ -368,6 +368,22 @@
     margin-top: 0.5rem;
 }
 
+.suggestion-header {
+    padding: 0.75rem 1rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    border-bottom: 1px solid rgba(74, 144, 226, 0.1);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.suggestion-header i {
+    color: #f39c12;
+}
+
 .hashtag-suggestion, .mention-suggestion {
     padding: 1rem 1.25rem;
     cursor: pointer;
@@ -378,6 +394,27 @@
     gap: 1rem;
     position: relative;
     overflow: hidden;
+}
+
+.smart-suggestion {
+    justify-content: space-between;
+}
+
+.smart-suggestion .add-btn {
+    background: rgba(102, 126, 234, 0.1);
+    color: var(--primary-color);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+}
+
+.smart-suggestion:hover .add-btn {
+    opacity: 1;
+    transform: translateX(0);
 }
 
 .hashtag-suggestion:last-child, .mention-suggestion:last-child {

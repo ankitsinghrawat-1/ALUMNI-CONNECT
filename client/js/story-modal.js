@@ -21,17 +21,7 @@ class StoryModal {
     }
 
     open() {
-        // Check if user is logged in
-        const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        if (!currentUser) {
-            if (typeof showToast === 'function') {
-                showToast('Please log in to add stories', 'error');
-            } else {
-                alert('Please log in to add stories');
-            }
-            return;
-        }
-
+        // Create modal without dependency on external functions
         this.create();
     }
 
@@ -239,11 +229,7 @@ class StoryModal {
 
         // Validate file size (10MB)
         if (file.size > 10 * 1024 * 1024) {
-            if (typeof showToast === 'function') {
-                showToast('File size must be less than 10MB', 'error');
-            } else {
-                alert('File size must be less than 10MB');
-            }
+            this.showNotification('File size must be less than 10MB', 'error');
             return;
         }
 
@@ -323,9 +309,7 @@ class StoryModal {
             // Post to stories API
             const response = await window.api.postForm('/stories', formData);
             
-            if (typeof showToast === 'function') {
-                showToast('Story published successfully!', 'success');
-            }
+            this.showNotification('Story published successfully!', 'success');
             
             this.close();
             
@@ -336,11 +320,7 @@ class StoryModal {
             
         } catch (error) {
             console.error('Error publishing story:', error);
-            if (typeof showToast === 'function') {
-                showToast(error.message || 'Failed to publish story', 'error');
-            } else {
-                alert(error.message || 'Failed to publish story');
-            }
+            this.showNotification(error.message || 'Failed to publish story', 'error');
         } finally {
             publishBtn.disabled = false;
             publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Share Story';
@@ -355,6 +335,72 @@ class StoryModal {
         }
         this.selectedFile = null;
         this.storyType = 'text';
+    }
+
+    showNotification(message, type = 'info') {
+        // Create a simple notification without external dependencies
+        const notification = document.createElement('div');
+        
+        const colors = {
+            success: '#10b981',
+            error: '#ef4444',
+            warning: '#f59e0b',
+            info: '#3b82f6'
+        };
+        
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${colors[type] || colors.info};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            z-index: 10001;
+            font-weight: 600;
+            max-width: 350px;
+            animation: slideInRight 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+        `;
+        
+        notification.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            </div>
+        `;
+        
+        document.body.appendChild(notification);
+        
+        // Add CSS animation if not exists
+        if (!document.querySelector('#notification-animations')) {
+            const style = document.createElement('style');
+            style.id = 'notification-animations';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOutRight {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Remove after 4 seconds with animation
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.remove();
+                    }
+                }, 300);
+            }
+        }, 4000);
     }
 }
 

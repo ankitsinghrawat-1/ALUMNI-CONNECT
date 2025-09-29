@@ -52,15 +52,60 @@ const showToast = (message, type = 'info') => {
             break;
     }
 
-    Toastify({
-        text: message,
-        duration: 3000,
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
-        backgroundColor: backgroundColor,
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-    }).showToast();
+    // Check if Toastify is available
+    if (typeof Toastify !== 'undefined') {
+        Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "top", // `top` or `bottom`
+            position: "right", // `left`, `center` or `right`
+            backgroundColor: backgroundColor,
+            stopOnFocus: true, // Prevents dismissing of toast on hover
+        }).showToast();
+    } else {
+        // Fallback to console log or simple alert
+        console.log(`Toast: ${type.toUpperCase()} - ${message}`);
+        
+        // Create a simple custom notification
+        const toast = document.createElement('div');
+        toast.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: ${backgroundColor};
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            z-index: 10000;
+            font-weight: 500;
+            max-width: 300px;
+            animation: slideInRight 0.3s ease;
+        `;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        
+        // Remove after 3 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 3000);
+        
+        // Add CSS animation if not exists
+        if (!document.querySelector('#toast-animations')) {
+            const style = document.createElement('style');
+            style.id = 'toast-animations';
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
 };
 
 /**

@@ -31,7 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Character count update with higher limit
     contentTextarea.addEventListener('input', () => {
-        const charCount = contentTextarea.value.length;
+        const content = contentTextarea.value;
+        const charCount = content.length;
         const maxLength = 2000;
         charCountSpan.textContent = charCount;
         
@@ -43,10 +44,31 @@ document.addEventListener('DOMContentLoaded', () => {
             charCountSpan.style.color = 'var(--subtle-text-color)';
         }
         
-        // Auto-resize textarea
+        // Auto-resize textarea with smooth animation
         contentTextarea.style.height = 'auto';
         contentTextarea.style.height = Math.max(140, contentTextarea.scrollHeight) + 'px';
+        
+        // Add visual feedback for active typing
+        contentTextarea.style.transform = charCount > 0 ? 'translateY(-2px)' : 'translateY(0)';
+        
+        // Smart hashtag suggestions based on content
+        if (charCount > 10 && selectedHashtags.length < 5) {
+            const words = content.toLowerCase().split(/\s+/);
+            const suggestedTags = words.filter(word => 
+                word.length > 4 && 
+                /^[a-zA-Z]+$/.test(word) &&
+                !commonWords.includes(word) &&
+                !selectedHashtags.includes(word)
+            ).slice(0, 3);
+            
+            if (suggestedTags.length > 0) {
+                showSmartHashtagSuggestions(suggestedTags);
+            }
+        }
     });
+    
+    // Common words to exclude from hashtag suggestions
+    const commonWords = ['with', 'that', 'this', 'from', 'they', 'have', 'been', 'will', 'would', 'could', 'should', 'about', 'after', 'before', 'during', 'through', 'between', 'among', 'under', 'over'];
 
     // Story toggle functionality
     storyToggle.addEventListener('change', () => {
@@ -128,12 +150,18 @@ document.addEventListener('DOMContentLoaded', () => {
         mediaCaptionInput.value = '';
     });
 
-    // Hashtag functionality
-    hashtagsInput.addEventListener('input', () => {
+    // Enhanced hashtag functionality with better parsing
+    hashtagsInput.addEventListener('input', (e) => {
         const value = hashtagsInput.value;
         
         if (hashtagSuggestionTimeout) {
             clearTimeout(hashtagSuggestionTimeout);
+        }
+        
+        // Auto-add hashtag prefix if user types without it
+        if (value && !value.startsWith('#')) {
+            hashtagsInput.value = '#' + value;
+            return;
         }
         
         if (value.length >= 2) {
@@ -149,6 +177,46 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key === 'Enter' || e.key === ' ' || e.key === ',') {
             e.preventDefault();
             addHashtagFromInput();
+        }
+        // Prevent entering special characters except # and alphanumeric
+        if (!/[a-zA-Z0-9#_]/.test(e.key) && !['Enter', ' ', ',', 'Backspace', 'Delete'].includes(e.key)) {
+            e.preventDefault();
+        }
+    });
+
+    // Enhanced mention functionality
+    mentionsInput.addEventListener('input', (e) => {
+        const value = mentionsInput.value;
+        
+        if (mentionSuggestionTimeout) {
+            clearTimeout(mentionSuggestionTimeout);
+        }
+        
+        // Auto-add mention prefix if user types without it
+        if (value && !value.startsWith('@')) {
+            mentionsInput.value = '@' + value;
+            return;
+        }
+        
+        if (value.length >= 3) {
+            mentionSuggestionTimeout = setTimeout(() => {
+                fetchMentionSuggestions(value);
+            }, 300);
+        } else {
+            mentionSuggestions.style.display = 'none';
+        }
+    });
+
+    mentionsInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' || e.key === ' ' || e.key === ',') {
+            e.preventDefault();
+            // For mentions, we need a selected suggestion, not just text
+            if (mentionSuggestions.style.display !== 'none') {
+                const firstSuggestion = mentionSuggestions.querySelector('.mention-suggestion');
+                if (firstSuggestion) {
+                    firstSuggestion.click();
+                }
+            }
         }
     });
 
@@ -172,6 +240,33 @@ document.addEventListener('DOMContentLoaded', () => {
             `<div class="hashtag-suggestion" onclick="selectHashtag('${tag}')">#${tag}</div>`
         ).join('');
         hashtagSuggestions.style.display = 'block';
+    }
+    
+    function showSmartHashtagSuggestions(suggestions) {
+        if (!hashtagSuggestions) return;
+        
+        // Create smart suggestions with better styling
+        hashtagSuggestions.innerHTML = `
+            <div class="suggestion-header">
+                <i class="fas fa-lightbulb"></i>
+                <span>Suggested hashtags from your content:</span>
+            </div>
+            ${suggestions.map(tag => 
+                `<div class="hashtag-suggestion smart-suggestion" onclick="selectHashtag('${tag}')">
+                    <i class="fas fa-hashtag"></i>
+                    <span>${tag}</span>
+                    <small class="add-btn">Add</small>
+                </div>`
+            ).join('')}
+        `;
+        hashtagSuggestions.style.display = 'block';
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+            if (hashtagSuggestions.style.display === 'block') {
+                hashtagSuggestions.style.display = 'none';
+            }
+        }, 5000);
     }
 
     window.selectHashtag = function(tag) {
