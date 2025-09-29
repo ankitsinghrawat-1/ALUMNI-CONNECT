@@ -533,12 +533,25 @@ CREATE TABLE IF NOT EXISTS stories (
     media_type ENUM('image', 'video') DEFAULT NULL,
     background_color VARCHAR(7) DEFAULT NULL, -- For text-only stories
     text_color VARCHAR(7) DEFAULT '#FFFFFF',
+    story_type ENUM('text', 'photo', 'video', 'poll') DEFAULT 'text',
+    privacy_level ENUM('public', 'alumni', 'close-friends', 'private') DEFAULT 'public',
+    allow_reactions BOOLEAN DEFAULT TRUE,
+    allow_replies BOOLEAN DEFAULT TRUE,
+    allow_screenshot BOOLEAN DEFAULT FALSE,
+    location VARCHAR(255) DEFAULT NULL,
+    text_effect ENUM('none', 'shadow', 'outline', 'glow') DEFAULT 'none',
+    poll_question TEXT DEFAULT NULL,
+    poll_options JSON DEFAULT NULL,
+    poll_allow_multiple BOOLEAN DEFAULT FALSE,
     expires_at TIMESTAMP NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
     INDEX idx_created_at (created_at),
-    INDEX idx_expires_at (expires_at)
+    INDEX idx_expires_at (expires_at),
+    INDEX idx_stories_type_privacy (story_type, privacy_level),
+    INDEX idx_stories_user_created (user_id, created_at),
+    INDEX idx_stories_expires_created (expires_at, created_at)
 );
 
 
@@ -556,3 +569,214 @@ CREATE TABLE IF NOT EXISTS story_views (
     INDEX idx_story_id (story_id),
     INDEX idx_viewer_user_id (viewer_user_id)
 );
+
+
+--34. Story likes table
+
+
+CREATE TABLE IF NOT EXISTS story_likes (
+    like_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_story_like (story_id, user_id),
+    INDEX idx_story_likes_story_id (story_id),
+    INDEX idx_story_likes_user_id (user_id)
+);
+
+
+--35. Story replies table
+
+
+CREATE TABLE IF NOT EXISTS story_replies (
+    reply_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_story_replies_story_id (story_id),
+    INDEX idx_story_replies_user_id (user_id)
+);
+
+
+--36. Story mentions table
+
+
+CREATE TABLE IF NOT EXISTS story_mentions (
+    mention_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    mentioned_user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (mentioned_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_story_mention (story_id, mentioned_user_id),
+    INDEX idx_story_mentions_story_id (story_id),
+    INDEX idx_story_mentions_user_id (mentioned_user_id)
+);
+
+
+--37. Story poll votes table
+
+
+CREATE TABLE IF NOT EXISTS story_poll_votes (
+    vote_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    user_id INT NOT NULL,
+    option_index INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_story_poll_votes_story_id (story_id),
+    INDEX idx_story_poll_votes_user_id (user_id)
+);
+
+
+--38. Story reactions table (for future emoji reactions)
+
+
+CREATE TABLE IF NOT EXISTS story_reactions (
+    reaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reaction_type ENUM('like', 'love', 'laugh', 'wow', 'sad', 'angry', 'fire', 'clap') DEFAULT 'like',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_story_reaction (story_id, user_id, reaction_type),
+    INDEX idx_story_reactions_story_id (story_id),
+    INDEX idx_story_reactions_user_id (user_id)
+);
+
+
+--39. Story templates table (for predefined templates)
+
+
+CREATE TABLE IF NOT EXISTS story_templates (
+    template_id INT AUTO_INCREMENT PRIMARY KEY,
+    template_name VARCHAR(100) NOT NULL,
+    template_type ENUM('graduation', 'achievement', 'networking', 'career', 'announcement', 'celebration') NOT NULL,
+    background_color VARCHAR(7) NOT NULL,
+    text_color VARCHAR(7) NOT NULL,
+    text_effect ENUM('none', 'shadow', 'outline', 'glow') DEFAULT 'none',
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_story_templates_type (template_type)
+);
+
+
+--40. Story drafts table (for saved drafts)
+
+
+CREATE TABLE IF NOT EXISTS story_drafts (
+    draft_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    story_type ENUM('text', 'photo', 'video', 'poll') DEFAULT 'text',
+    content TEXT DEFAULT NULL,
+    background_color VARCHAR(7) DEFAULT NULL,
+    text_color VARCHAR(7) DEFAULT NULL,
+    text_effect ENUM('none', 'shadow', 'outline', 'glow') DEFAULT 'none',
+    privacy_level ENUM('public', 'alumni', 'close-friends', 'private') DEFAULT 'public',
+    location VARCHAR(255) DEFAULT NULL,
+    poll_question TEXT DEFAULT NULL,
+    poll_options JSON DEFAULT NULL,
+    mentioned_users JSON DEFAULT NULL,
+    settings JSON DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_story_drafts_user_id (user_id)
+);
+
+
+--41. Story analytics table (for detailed analytics)
+
+
+CREATE TABLE IF NOT EXISTS story_analytics (
+    analytics_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    total_views INT DEFAULT 0,
+    total_likes INT DEFAULT 0,
+    total_replies INT DEFAULT 0,
+    total_shares INT DEFAULT 0,
+    unique_viewers INT DEFAULT 0,
+    engagement_rate DECIMAL(5,2) DEFAULT 0,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_story_analytics (story_id)
+);
+
+
+--42. Story shares table (for tracking shares)
+
+
+CREATE TABLE IF NOT EXISTS story_shares (
+    share_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    user_id INT NOT NULL,
+    share_type ENUM('direct', 'external', 'embed') DEFAULT 'direct',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_story_shares_story_id (story_id),
+    INDEX idx_story_shares_user_id (user_id)
+);
+
+
+--43. Close friends list table
+
+
+CREATE TABLE IF NOT EXISTS user_close_friends (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    friend_user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (friend_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_close_friend (user_id, friend_user_id),
+    INDEX idx_close_friends_user_id (user_id),
+    INDEX idx_close_friends_friend_id (friend_user_id)
+);
+
+
+--44. Story highlights table (for saving stories permanently)
+
+
+CREATE TABLE IF NOT EXISTS story_highlights (
+    highlight_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    highlight_name VARCHAR(100) NOT NULL,
+    cover_image_url VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_story_highlights_user_id (user_id)
+);
+
+
+--45. Story highlight items table
+
+
+CREATE TABLE IF NOT EXISTS story_highlight_items (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    highlight_id INT NOT NULL,
+    story_id INT NOT NULL,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (highlight_id) REFERENCES story_highlights(highlight_id) ON DELETE CASCADE,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_highlight_story (highlight_id, story_id),
+    INDEX idx_highlight_items_highlight_id (highlight_id),
+    INDEX idx_highlight_items_story_id (story_id)
+);
+
+
+-- Insert default story templates
+INSERT INTO story_templates (template_name, template_type, background_color, text_color, text_effect) VALUES
+('Graduation Blue', 'graduation', '#4facfe', '#ffffff', 'glow'),
+('Achievement Gold', 'achievement', '#fa709a', '#ffffff', 'shadow'),
+('Networking Green', 'networking', '#a8edea', '#333333', 'outline'),
+('Career Purple', 'career', '#ff9a9e', '#ffffff', 'none'),
+('Announcement Orange', 'announcement', '#ffc3a0', '#333333', 'shadow'),
+('Celebration Pink', 'celebration', '#fd746c', '#ffffff', 'glow');
