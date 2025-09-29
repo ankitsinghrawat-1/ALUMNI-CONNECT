@@ -174,9 +174,10 @@ html.dark-mode .search-filter-section {
 /* Enhanced Search Bar - Now Horizontal Layout */
 .search-bar-enhanced {
     display: flex;
-    gap: 1rem;
+    gap: 0.75rem;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .search-input-wrapper {
@@ -275,8 +276,33 @@ html.dark-mode .search-filter-section {
 .filter-controls {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
     flex-wrap: wrap;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+/* Mentor Action Area in Search Bar */
+.mentor-action-area-search {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-left: 0.5rem;
+}
+
+.mentor-action-area-search .btn {
+    padding: 0.6rem 1rem;
+    font-size: 0.875rem;
+    border-radius: var(--mentor-border-radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--mentor-transition);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+    text-decoration: none;
+    border: none;
 }
 
 .filter-toggle {
@@ -362,7 +388,7 @@ html.dark-mode .search-filter-section {
     padding: 0.6rem 0.75rem;
     font-size: 0.875rem;
     cursor: pointer;
-    min-width: 140px;
+    min-width: 120px;
 }
 
 /* Filters Panel */
