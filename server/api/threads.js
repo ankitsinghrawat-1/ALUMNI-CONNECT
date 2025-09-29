@@ -15,6 +15,8 @@ module.exports = (pool, upload) => {
                 t.content, 
                 t.media_url, 
                 t.media_type, 
+                t.media_caption,
+                t.location,
                 t.created_at,
                 u.full_name AS author, 
                 u.email as author_email,
@@ -26,6 +28,29 @@ module.exports = (pool, upload) => {
             JOIN users u ON t.user_id = u.user_id 
             ORDER BY t.created_at DESC
         `);
+
+        // Get hashtags and mentions for each thread
+        for (let thread of rows) {
+            // Get hashtags
+            const [hashtags] = await pool.query(`
+                SELECT h.tag_name 
+                FROM hashtags h
+                JOIN thread_hashtags th ON h.hashtag_id = th.hashtag_id
+                WHERE th.thread_id = ?
+            `, [thread.thread_id]);
+            
+            // Get mentions
+            const [mentions] = await pool.query(`
+                SELECT u.full_name, u.email
+                FROM users u
+                JOIN thread_mentions tm ON u.user_id = tm.mentioned_user_id
+                WHERE tm.thread_id = ?
+            `, [thread.thread_id]);
+            
+            thread.hashtags = hashtags.map(h => h.tag_name);
+            thread.mentions = mentions.map(m => ({ name: m.full_name, email: m.email }));
+        }
+
         res.json(rows);
     }));
 
@@ -101,7 +126,7 @@ module.exports = (pool, upload) => {
 
     // POST a new thread (Protected & handles media upload)
     router.post('/', verifyToken, upload.single('thread_media'), asyncHandler(async (req, res) => {
-        const { content } = req.body;
+        const { content, media_caption, location, hashtags, mentions } = req.body;
         const user_id = req.user.userId;
         
         if (!content && !req.file) {
@@ -116,15 +141,86 @@ module.exports = (pool, upload) => {
             media_type = req.file.mimetype.startsWith('image/') ? 'image' : 'video';
         }
 
-        const [result] = await pool.query(
-            'INSERT INTO threads (user_id, content, media_url, media_type) VALUES (?, ?, ?, ?)', 
-            [user_id, content, media_url, media_type]
-        );
+        // Start transaction
+        const connection = await pool.getConnection();
+        await connection.beginTransaction();
         
-        res.status(201).json({ 
-            message: 'Thread posted successfully',
-            threadId: result.insertId 
-        });
+        try {
+            // Insert the thread
+            const [result] = await connection.query(
+                'INSERT INTO threads (user_id, content, media_url, media_type, media_caption, location) VALUES (?, ?, ?, ?, ?, ?)', 
+                [user_id, content, media_url, media_type, media_caption, location]
+            );
+            
+            const threadId = result.insertId;
+
+            // Process hashtags if provided
+            if (hashtags && hashtags.length > 0) {
+                const hashtagList = Array.isArray(hashtags) ? hashtags : JSON.parse(hashtags);
+                
+                for (const hashtag of hashtagList) {
+                    const cleanTag = hashtag.replace('#', '').toLowerCase().trim();
+                    if (cleanTag) {
+                        // Insert or get hashtag
+                        await connection.query(
+                            'INSERT IGNORE INTO hashtags (tag_name) VALUES (?)',
+                            [cleanTag]
+                        );
+                        
+                        // Get hashtag ID
+                        const [hashtagResult] = await connection.query(
+                            'SELECT hashtag_id FROM hashtags WHERE tag_name = ?',
+                            [cleanTag]
+                        );
+                        
+                        if (hashtagResult.length > 0) {
+                            // Link thread to hashtag
+                            await connection.query(
+                                'INSERT INTO thread_hashtags (thread_id, hashtag_id) VALUES (?, ?)',
+                                [threadId, hashtagResult[0].hashtag_id]
+                            );
+                        }
+                    }
+                }
+            }
+
+            // Process mentions if provided
+            if (mentions && mentions.length > 0) {
+                const mentionList = Array.isArray(mentions) ? mentions : JSON.parse(mentions);
+                
+                for (const mention of mentionList) {
+                    const username = mention.replace('@', '').trim();
+                    if (username) {
+                        // Find user by email or username (assuming email is used as username)
+                        const [userResult] = await connection.query(
+                            'SELECT user_id FROM users WHERE email = ? OR full_name = ?',
+                            [username, username]
+                        );
+                        
+                        if (userResult.length > 0) {
+                            // Insert mention
+                            await connection.query(
+                                'INSERT IGNORE INTO thread_mentions (thread_id, mentioned_user_id) VALUES (?, ?)',
+                                [threadId, userResult[0].user_id]
+                            );
+                        }
+                    }
+                }
+            }
+
+            await connection.commit();
+            
+            res.status(201).json({ 
+                message: 'Thread posted successfully',
+                threadId: threadId 
+            });
+            
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
+        }
     }));
 
     // PUT (update) a thread (Protected & handles media upload)
@@ -322,6 +418,90 @@ module.exports = (pool, upload) => {
         );
 
         res.json({ shared: share.length > 0 });
+    }));
+
+    // --- HASHTAG FUNCTIONALITY ---
+
+    // GET trending hashtags
+    router.get('/hashtags/trending', asyncHandler(async (req, res) => {
+        const [hashtags] = await pool.query(`
+            SELECT 
+                h.tag_name, 
+                COUNT(th.thread_id) as usage_count
+            FROM hashtags h
+            JOIN thread_hashtags th ON h.hashtag_id = th.hashtag_id
+            JOIN threads t ON th.thread_id = t.thread_id
+            WHERE t.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+            GROUP BY h.hashtag_id, h.tag_name
+            ORDER BY usage_count DESC
+            LIMIT 20
+        `);
+        res.json(hashtags);
+    }));
+
+    // GET hashtag suggestions
+    router.get('/hashtags/search', asyncHandler(async (req, res) => {
+        const { q } = req.query;
+        if (!q || q.length < 2) {
+            return res.json([]);
+        }
+
+        const [hashtags] = await pool.query(
+            'SELECT tag_name FROM hashtags WHERE tag_name LIKE ? ORDER BY tag_name LIMIT 10',
+            [`%${q}%`]
+        );
+        res.json(hashtags.map(h => h.tag_name));
+    }));
+
+    // GET threads by hashtag
+    router.get('/hashtags/:hashtag', asyncHandler(async (req, res) => {
+        const { hashtag } = req.params;
+        
+        const [threads] = await pool.query(`
+            SELECT 
+                t.thread_id, 
+                t.content, 
+                t.media_url, 
+                t.media_type, 
+                t.media_caption,
+                t.location,
+                t.created_at,
+                u.full_name AS author, 
+                u.email as author_email,
+                u.profile_pic_url,
+                (SELECT COUNT(*) FROM thread_likes tl WHERE tl.thread_id = t.thread_id) as like_count,
+                (SELECT COUNT(*) FROM thread_comments tc WHERE tc.thread_id = t.thread_id) as comment_count,
+                (SELECT COUNT(*) FROM thread_shares ts WHERE ts.thread_id = t.thread_id) as share_count
+            FROM threads t 
+            JOIN users u ON t.user_id = u.user_id
+            JOIN thread_hashtags th ON t.thread_id = th.thread_id
+            JOIN hashtags h ON th.hashtag_id = h.hashtag_id
+            WHERE h.tag_name = ?
+            ORDER BY t.created_at DESC
+        `, [hashtag]);
+
+        res.json(threads);
+    }));
+
+    // --- USER SEARCH FOR MENTIONS ---
+
+    // GET user suggestions for mentions
+    router.get('/users/search', verifyToken, asyncHandler(async (req, res) => {
+        const { q } = req.query;
+        if (!q || q.length < 2) {
+            return res.json([]);
+        }
+
+        const [users] = await pool.query(`
+            SELECT user_id, full_name, email, profile_pic_url
+            FROM users 
+            WHERE (full_name LIKE ? OR email LIKE ?) 
+            AND user_id != ?
+            ORDER BY full_name 
+            LIMIT 10
+        `, [`%${q}%`, `%${q}%`, req.user.userId]);
+        
+        res.json(users);
     }));
 
     return router;

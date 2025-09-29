@@ -295,7 +295,11 @@ CREATE TABLE `group_join_requests` (
   FOREIGN KEY (`group_id`) REFERENCES `groups`(`group_id`) ON DELETE CASCADE,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
 );
+
+
 -- 18. Announcements Table
+
+
 CREATE TABLE `announcements` (
   `announcement_id` INT AUTO_INCREMENT PRIMARY KEY,
   `title` VARCHAR(255) NOT NULL,
@@ -348,7 +352,7 @@ CREATE TABLE `donations` (
 );
 
 
---21. Blog_comments
+--22. Blog_comments
 
 
 CREATE TABLE `blog_comments` (
@@ -362,7 +366,7 @@ CREATE TABLE `blog_comments` (
 );
 
 
--- 22. Create a new table to track invitations to groups
+-- 23. Create a new table to track invitations to groups
 
 
 CREATE TABLE `group_invites` (
@@ -379,7 +383,7 @@ CREATE TABLE `group_invites` (
 );
 
 
--- 23. create a new table to track verifications reuests 
+-- 24. create a new table to track verifications reuests 
 
 
 CREATE TABLE `verification_requests` (
@@ -407,7 +411,7 @@ CREATE TABLE `verification_requests` (
 );
 
 
---24. Main threads table
+--25. Main threads table
 
 
 CREATE TABLE IF NOT EXISTS threads (
@@ -416,15 +420,18 @@ CREATE TABLE IF NOT EXISTS threads (
     content TEXT,
     media_url VARCHAR(255) DEFAULT NULL,
     media_type ENUM('image', 'video') DEFAULT NULL,
+    media_caption TEXT DEFAULT NULL,
+    location VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
-    INDEX idx_created_at (created_at)
+    INDEX idx_created_at (created_at),
+    INDEX idx_location (location)
 );
 
 
---25. Thread likes table
+--26. Thread likes table
 
 
 CREATE TABLE IF NOT EXISTS thread_likes (
@@ -440,7 +447,7 @@ CREATE TABLE IF NOT EXISTS thread_likes (
 );
 
 
---26. Thread comments table
+--27. Thread comments table
 
 
 CREATE TABLE IF NOT EXISTS thread_comments (
@@ -457,7 +464,7 @@ CREATE TABLE IF NOT EXISTS thread_comments (
 );
 
 
---27. Thread shares table
+--28. Thread shares table
 
 
 CREATE TABLE IF NOT EXISTS thread_shares (
@@ -470,4 +477,82 @@ CREATE TABLE IF NOT EXISTS thread_shares (
     UNIQUE KEY unique_share (thread_id, user_id),
     INDEX idx_thread_id (thread_id),
     INDEX idx_user_id (user_id)
+);
+
+
+--29. Hashtags table
+
+
+CREATE TABLE IF NOT EXISTS hashtags (
+    hashtag_id INT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_tag_name (tag_name)
+);
+
+
+--30. Thread hashtags junction table
+
+
+CREATE TABLE IF NOT EXISTS thread_hashtags (
+    thread_id INT NOT NULL,
+    hashtag_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (thread_id, hashtag_id),
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (hashtag_id) REFERENCES hashtags(hashtag_id) ON DELETE CASCADE,
+    INDEX idx_thread_id (thread_id),
+    INDEX idx_hashtag_id (hashtag_id)
+);
+
+
+--31. Thread mentions table
+
+
+CREATE TABLE IF NOT EXISTS thread_mentions (
+    mention_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    mentioned_user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (mentioned_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_mention (thread_id, mentioned_user_id),
+    INDEX idx_thread_id (thread_id),
+    INDEX idx_mentioned_user_id (mentioned_user_id)
+);
+
+
+--32. Stories table
+
+
+CREATE TABLE IF NOT EXISTS stories (
+    story_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT DEFAULT NULL,
+    media_url VARCHAR(255) DEFAULT NULL,
+    media_type ENUM('image', 'video') DEFAULT NULL,
+    background_color VARCHAR(7) DEFAULT NULL, -- For text-only stories
+    text_color VARCHAR(7) DEFAULT '#FFFFFF',
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_user_id (user_id),
+    INDEX idx_created_at (created_at),
+    INDEX idx_expires_at (expires_at)
+);
+
+
+--33. Story views table
+
+
+CREATE TABLE IF NOT EXISTS story_views (
+    view_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    viewer_user_id INT NOT NULL,
+    viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (viewer_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_view (story_id, viewer_user_id),
+    INDEX idx_story_id (story_id),
+    INDEX idx_viewer_user_id (viewer_user_id)
 );

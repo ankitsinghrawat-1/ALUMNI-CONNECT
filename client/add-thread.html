@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Thread</title>
+    <title>Create Thread - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
@@ -24,56 +24,186 @@
         </nav>
     </header>
 
-    <main class="form-main">
-        <section class="form-container thread-composer">
-            <h2><i class="fas fa-feather-alt"></i> Create New Thread</h2>
-            <p>Share your thoughts, experiences, images or videos with the community</p>
-            
-            <form id="add-thread-form" enctype="multipart/form-data">
-                <div class="input-group">
-                    <label for="content">What's on your mind?</label>
-                    <textarea 
-                        id="content" 
-                        rows="6" 
-                        placeholder="Share your thoughts, ask a question, or start a discussion..."
-                        maxlength="500"
-                    ></textarea>
-                    <small class="char-count">0/500 characters</small>
-                </div>
-
-                <div class="input-group">
-                    <label for="thread_media">Attach Media (Optional)</label>
-                    <div class="media-upload-container">
-                        <input type="file" id="thread_media" name="thread_media" accept="image/*,video/*">
-                        <div class="upload-hint">
-                            <i class="fas fa-cloud-upload-alt"></i>
-                            <span>Click to upload an image or video (max 10MB)</span>
-                        </div>
+    <main class="create-thread-main">
+        <div class="create-thread-container">
+            <!-- Header Section -->
+            <div class="create-header">
+                <div class="create-header-content">
+                    <a href="threads.html" class="back-link">
+                        <i class="fas fa-arrow-left"></i>
+                    </a>
+                    <div class="create-title">
+                        <h1>Create Discussion</h1>
+                        <p>Share your thoughts with the alumni community</p>
                     </div>
-                </div>
-
-                <div id="media-preview" class="media-preview" style="display: none;">
-                    <div class="media-preview-header">
-                        <span>Preview:</span>
-                        <button type="button" id="remove-media" class="btn-remove">
-                            <i class="fas fa-times"></i>
+                    <div class="create-actions">
+                        <button type="button" class="draft-btn" disabled>
+                            <i class="fas fa-save"></i>
+                            Draft
                         </button>
                     </div>
-                    <div id="media-preview-content"></div>
                 </div>
+            </div>
 
-                <div id="message" class="form-message"></div>
+            <!-- Main Content -->
+            <div class="create-content">
+                <form id="add-thread-form" class="thread-form" enctype="multipart/form-data">
+                    <!-- User Info -->
+                    <div class="author-section">
+                        <div class="author-avatar" id="current-user-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="author-info">
+                            <div class="author-name" id="current-user-name">You</div>
+                            <div class="visibility-select">
+                                <select id="visibility" name="visibility">
+                                    <option value="public">Public</option>
+                                    <option value="alumni">Alumni Only</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                <div class="form-actions">
-                    <a href="threads.html" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Cancel
-                    </a>
-                    <button type="submit" class="btn btn-primary" id="submit-btn">
-                        <i class="fas fa-paper-plane"></i> Post Thread
-                    </button>
-                </div>
-            </form>
-        </section>
+                    <!-- Main Content Area -->
+                    <div class="content-section">
+                        <div class="compose-area">
+                            <textarea 
+                                id="content" 
+                                class="main-textarea"
+                                placeholder="What's on your mind? Share your thoughts, experiences, or ask a question..."
+                                maxlength="2000"
+                                rows="6"
+                            ></textarea>
+                            <div class="content-footer">
+                                <div class="char-counter">
+                                    <span id="char-count">0</span>/<span id="char-limit">2000</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Media Preview -->
+                        <div id="media-preview" class="media-preview-container" style="display: none;">
+                            <div class="media-preview-header">
+                                <span class="media-label">Media</span>
+                                <button type="button" id="remove-media" class="remove-btn">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <div id="media-preview-content" class="media-content"></div>
+                            <div class="media-caption-section">
+                                <input 
+                                    type="text" 
+                                    id="media-caption" 
+                                    class="caption-input"
+                                    placeholder="Add a caption to your media..."
+                                    maxlength="200"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enhanced Options -->
+                    <div class="options-section">
+                        <div class="options-grid">
+                            <!-- Location -->
+                            <div class="option-item">
+                                <div class="option-header">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span>Location</span>
+                                </div>
+                                <input 
+                                    type="text" 
+                                    id="location" 
+                                    class="option-input"
+                                    placeholder="Where are you posting from?"
+                                >
+                            </div>
+
+                            <!-- Hashtags -->
+                            <div class="option-item hashtag-option">
+                                <div class="option-header">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span>Tags</span>
+                                </div>
+                                <div class="hashtag-container">
+                                    <input 
+                                        type="text" 
+                                        id="hashtags" 
+                                        class="option-input"
+                                        placeholder="Add hashtags (e.g., #career #alumni)"
+                                    >
+                                    <div class="hashtag-suggestions" id="hashtag-suggestions"></div>
+                                    <div class="hashtag-tags" id="hashtag-tags"></div>
+                                </div>
+                            </div>
+
+                            <!-- Mentions -->
+                            <div class="option-item mention-option">
+                                <div class="option-header">
+                                    <i class="fas fa-at"></i>
+                                    <span>Mentions</span>
+                                </div>
+                                <div class="mention-container">
+                                    <input 
+                                        type="text" 
+                                        id="mentions" 
+                                        class="option-input"
+                                        placeholder="@mention someone"
+                                    >
+                                    <div class="mention-suggestions" id="mention-suggestions"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="action-bar">
+                        <div class="media-actions">
+                            <button type="button" class="media-btn" id="photo-btn">
+                                <i class="fas fa-image"></i>
+                                <span>Photo</span>
+                            </button>
+                            <button type="button" class="media-btn" id="video-btn">
+                                <i class="fas fa-video"></i>
+                                <span>Video</span>
+                            </button>
+                            <div class="story-toggle-container">
+                                <label class="story-toggle">
+                                    <input type="checkbox" id="story-toggle">
+                                    <span class="toggle-slider"></span>
+                                    <span class="toggle-label">Add to Stories</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="submit-actions">
+                            <button type="button" class="cancel-btn" onclick="window.location.href='threads.html'">
+                                Cancel
+                            </button>
+                            <button type="submit" class="submit-btn" id="submit-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                Share
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Hidden file input -->
+                    <input type="file" id="thread_media" name="thread_media" accept="image/*,video/*" style="display: none;">
+
+                    <!-- Story options (hidden by default) -->
+                    <div class="story-options" id="story-options" style="display: none;">
+                        <div class="story-colors">
+                            <label>Background:</label>
+                            <input type="color" id="story-bg-color" value="#4a90e2">
+                            <label>Text:</label>
+                            <input type="color" id="story-text-color" value="#ffffff">
+                        </div>
+                    </div>
+
+                    <div id="message" class="form-message"></div>
+                </form>
+            </div>
+        </div>
     </main>
     
     <footer class="main-footer">
