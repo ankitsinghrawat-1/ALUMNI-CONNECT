@@ -7782,6 +7782,110 @@ html.dark-mode .admin-stat-card i {
     padding: 1rem;
 }
 
+/* Modal Header with Back Button */
+.modal-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+.modal-header .back-btn {
+    background: none;
+    border: none;
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    margin-right: 1rem;
+    width: 40px;
+    height: 40px;
+}
+
+.modal-header .back-btn:hover {
+    background: var(--background-color);
+    transform: translateX(-2px);
+}
+
+.modal-header h3 {
+    flex: 1;
+    margin: 0;
+    color: var(--text-color);
+}
+
+.modal-header .close {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+    transition: color 0.3s ease;
+}
+
+.modal-header .close:hover {
+    color: var(--error-color);
+}
+
+/* Fix Thread Modal Image Aspect Ratios */
+.thread-media {
+    margin: 1rem 0;
+    max-width: 100%;
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+}
+
+.thread-image {
+    width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: var(--border-radius-medium);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.thread-image:hover {
+    transform: scale(1.02);
+}
+
+.thread-video {
+    width: 100%;
+    max-height: 400px;
+    border-radius: var(--border-radius-medium);
+}
+
+/* Loading Placeholder Styles */
+.loading-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 2rem;
+    color: var(--subtle-text-color);
+    font-size: 0.875rem;
+}
+
+.loading-placeholder i {
+    font-size: 1rem;
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    color: var(--subtle-text-color);
+    font-size: 0.875rem;
+    padding: 1rem;
+    font-style: italic;
+}
+
 /* Modern Thread Item */
 .modern-thread-item {
     background: var(--surface-color);
@@ -11945,8 +12049,8 @@ html.dark-mode .modern-top-bar {
     position: fixed;
     bottom: 2rem;
     right: 2rem;
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
     border-radius: 50%;
@@ -11958,12 +12062,24 @@ html.dark-mode .modern-top-bar {
     box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
     transition: all 0.3s ease;
     z-index: 1000;
+    border: none;
+    overflow: hidden;
+}
+
+.fab i {
+    position: relative;
+    z-index: 1;
+    transition: transform 0.3s ease;
 }
 
 .fab:hover {
-    transform: scale(1.1) rotate(90deg);
+    transform: scale(1.1);
     box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
     color: white;
+}
+
+.fab:hover i {
+    transform: rotate(180deg);
 }
 
 /* Modern Load More */

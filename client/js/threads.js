@@ -176,9 +176,32 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (!storiesScroll) return;
 
-            // Keep the "All" filter story item
-            const allStoryItem = storiesScroll.querySelector('.story-item[data-category=""]');
-            
+            // Keep only the "All" filter story item and build fresh content
+            let storiesHTML = `
+                <div class="story-item active" data-category="">
+                    <div class="story-ring">
+                        <div class="story-avatar">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                    </div>
+                    <span>All</span>
+                </div>
+            `;
+
+            // Add "Add Story" button for current user if logged in
+            if (currentUser) {
+                storiesHTML += `
+                    <div class="story-item add-story" onclick="openAddStoryModal()">
+                        <div class="story-ring add-story-ring">
+                            <div class="story-avatar add-story-avatar">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                        </div>
+                        <span>Add Story</span>
+                    </div>
+                `;
+            }
+
             // Create user story items
             const userStoryItems = storyFeed.map(user => {
                 const profilePicUrl = user.profile_pic_url 
@@ -201,45 +224,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 `;
             }).join('');
 
-            // Add "Add Story" button for current user if logged in
-            let addStoryButton = '';
-            if (currentUser) {
-                addStoryButton = `
-                    <div class="story-item add-story" onclick="openAddStoryModal()">
-                        <div class="story-ring add-story-ring">
-                            <div class="story-avatar add-story-avatar">
-                                <i class="fas fa-plus"></i>
+            // Only add category filters if there are no user stories
+            if (storyFeed.length === 0) {
+                storiesHTML += `
+                    <div class="story-item" data-category="career">
+                        <div class="story-ring">
+                            <div class="story-avatar career">
+                                <i class="fas fa-briefcase"></i>
                             </div>
                         </div>
-                        <span>Add Story</span>
+                        <span>Career</span>
+                    </div>
+                    <div class="story-item" data-category="networking">
+                        <div class="story-ring">
+                            <div class="story-avatar networking">
+                                <i class="fas fa-handshake"></i>
+                            </div>
+                        </div>
+                        <span>Network</span>
                     </div>
                 `;
             }
 
-            // Rebuild the stories scroll with all items, keeping the filter items but adding user stories
-            const existingFilterItems = storiesScroll.innerHTML;
-            const dividerIndex = existingFilterItems.indexOf('</div>');
-            const beforeDivider = existingFilterItems.substring(0, dividerIndex + 6);
-            
-            // Replace everything after the "All" category with user stories
-            storiesScroll.innerHTML = beforeDivider + addStoryButton + userStoryItems + `
-                <div class="story-item" data-category="career">
-                    <div class="story-ring">
-                        <div class="story-avatar career">
-                            <i class="fas fa-briefcase"></i>
-                        </div>
-                    </div>
-                    <span>Career</span>
-                </div>
-                <div class="story-item" data-category="networking">
-                    <div class="story-ring">
-                        <div class="story-avatar networking">
-                            <i class="fas fa-handshake"></i>
-                        </div>
-                    </div>
-                    <span>Network</span>
-                </div>
-            `;
+            // Set the complete stories scroll content
+            storiesScroll.innerHTML = storiesHTML + userStoryItems;
             
         } catch (error) {
             console.error('Error loading stories:', error);
@@ -402,6 +410,11 @@ document.addEventListener('DOMContentLoaded', () => {
         shareModal.style.display = 'none';
     };
 
+    // Close thread modal
+    window.closeThreadModal = () => {
+        threadModal.style.display = 'none';
+    };
+
     // Share to messages
     window.shareToMessages = () => {
         const threadLink = document.getElementById('thread-link-input').value;
@@ -473,7 +486,61 @@ document.addEventListener('DOMContentLoaded', () => {
         await initializeUser();
         await loadThreads();
         await loadStories();
+        await loadSidebarData();
         initializeModernFeatures();
+    };
+
+    // Load sidebar data (stats, trending hashtags, top contributors)
+    const loadSidebarData = async () => {
+        try {
+            // Load trending hashtags
+            const trendingHashtags = await window.api.get('/threads/hashtags/trending');
+            const trendingContainer = document.getElementById('trending-tags');
+            
+            if (trendingHashtags.length > 0) {
+                trendingContainer.innerHTML = trendingHashtags.slice(0, 5).map(hashtag => `
+                    <div class="trend-item">
+                        <span class="hashtag">#${hashtag.tag_name}</span>
+                        <span class="trend-count">${hashtag.usage_count} posts</span>
+                    </div>
+                `).join('');
+            } else {
+                trendingContainer.innerHTML = '<div class="no-data">No trending topics yet</div>';
+            }
+
+            // Load community stats (placeholder - would need actual API endpoints)
+            const statsContainer = document.getElementById('community-stats');
+            statsContainer.innerHTML = `
+                <div class="stat-box">
+                    <div class="stat-number">--</div>
+                    <div class="stat-label">Active Today</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">--</div>
+                    <div class="stat-label">Total Members</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">--</div>
+                    <div class="stat-label">New Posts</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-number">--</div>
+                    <div class="stat-label">Discussions</div>
+                </div>
+            `;
+
+            // Load top contributors (placeholder - would need actual API endpoints)
+            const contributorsContainer = document.getElementById('contributors-list');
+            contributorsContainer.innerHTML = '<div class="no-data">No contributor data available</div>';
+
+        } catch (error) {
+            console.error('Error loading sidebar data:', error);
+            
+            // Fallback content
+            document.getElementById('trending-tags').innerHTML = '<div class="no-data">Unable to load trending topics</div>';
+            document.getElementById('community-stats').innerHTML = '<div class="no-data">Stats unavailable</div>';
+            document.getElementById('contributors-list').innerHTML = '<div class="no-data">Contributors unavailable</div>';
+        }
     };
 
     // Initialize modern features

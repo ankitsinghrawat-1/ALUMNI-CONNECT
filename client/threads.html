@@ -163,22 +163,11 @@
                             <div class="widget-header">
                                 <h3>Community Stats</h3>
                             </div>
-                            <div class="stats-grid">
-                                <div class="stat-box">
-                                    <div class="stat-number">1.2k</div>
-                                    <div class="stat-label">Active Today</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-number">15k</div>
-                                    <div class="stat-label">Total Members</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-number">350</div>
-                                    <div class="stat-label">New Posts</div>
-                                </div>
-                                <div class="stat-box">
-                                    <div class="stat-number">2.8k</div>
-                                    <div class="stat-label">Discussions</div>
+                            <div class="stats-grid" id="community-stats">
+                                <!-- Community stats will be loaded dynamically -->
+                                <div class="loading-placeholder">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>Loading stats...</span>
                                 </div>
                             </div>
                         </div>
@@ -191,26 +180,11 @@
                                     Trending
                                 </h3>
                             </div>
-                            <div class="trending-tags">
-                                <div class="trend-item">
-                                    <span class="hashtag">#CareerSwitch</span>
-                                    <span class="trend-count">245 posts</span>
-                                </div>
-                                <div class="trend-item">
-                                    <span class="hashtag">#RemoteWork</span>
-                                    <span class="trend-count">189 posts</span>
-                                </div>
-                                <div class="trend-item">
-                                    <span class="hashtag">#StartupLife</span>
-                                    <span class="trend-count">156 posts</span>
-                                </div>
-                                <div class="trend-item">
-                                    <span class="hashtag">#AITechnology</span>
-                                    <span class="trend-count">134 posts</span>
-                                </div>
-                                <div class="trend-item">
-                                    <span class="hashtag">#WorkLifeBalance</span>
-                                    <span class="trend-count">98 posts</span>
+                            <div class="trending-tags" id="trending-tags">
+                                <!-- Trending hashtags will be loaded dynamically -->
+                                <div class="loading-placeholder">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>Loading trending topics...</span>
                                 </div>
                             </div>
                         </div>
@@ -223,45 +197,11 @@
                                     Top Contributors
                                 </h3>
                             </div>
-                            <div class="contributors-list">
-                                <div class="contributor-item">
-                                    <div class="contributor-avatar">
-                                        <img src="https://ui-avatars.com/api/?name=Sarah+Chen&background=4a90e2&color=fff&size=40" alt="Sarah Chen">
-                                    </div>
-                                    <div class="contributor-info">
-                                        <div class="contributor-name">Sarah Chen</div>
-                                        <div class="contributor-stats">
-                                            <span class="posts-count">24 posts</span>
-                                            <span class="likes-count">1.2k likes</span>
-                                        </div>
-                                    </div>
-                                    <button class="follow-btn">Follow</button>
-                                </div>
-                                <div class="contributor-item">
-                                    <div class="contributor-avatar">
-                                        <img src="https://ui-avatars.com/api/?name=Michael+Rodriguez&background=f5a623&color=fff&size=40" alt="Michael Rodriguez">
-                                    </div>
-                                    <div class="contributor-info">
-                                        <div class="contributor-name">Michael Rodriguez</div>
-                                        <div class="contributor-stats">
-                                            <span class="posts-count">18 posts</span>
-                                            <span class="likes-count">890 likes</span>
-                                        </div>
-                                    </div>
-                                    <button class="follow-btn">Follow</button>
-                                </div>
-                                <div class="contributor-item">
-                                    <div class="contributor-avatar">
-                                        <img src="https://ui-avatars.com/api/?name=Priya+Patel&background=2ecc71&color=fff&size=40" alt="Priya Patel">
-                                    </div>
-                                    <div class="contributor-info">
-                                        <div class="contributor-name">Priya Patel</div>
-                                        <div class="contributor-stats">
-                                            <span class="posts-count">16 posts</span>
-                                            <span class="likes-count">743 likes</span>
-                                        </div>
-                                    </div>
-                                    <button class="follow-btn">Follow</button>
+                            <div class="contributors-list" id="contributors-list">
+                                <!-- Top contributors will be loaded dynamically -->
+                                <div class="loading-placeholder">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                    <span>Loading contributors...</span>
                                 </div>
                             </div>
                         </div>
@@ -286,8 +226,11 @@
     <div id="thread-modal" class="modal">
         <div class="modal-content thread-modal-content">
             <div class="modal-header">
+                <button class="back-btn" onclick="closeThreadModal()">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
                 <h3>Thread Details</h3>
-                <span class="close">&times;</span>
+                <span class="close" onclick="closeThreadModal()">&times;</span>
             </div>
             <div id="thread-modal-body" class="modal-body">
                 <!-- Thread content will be loaded here -->
