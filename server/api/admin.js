@@ -12,8 +12,8 @@ module.exports = function (pool) {
         const connection = await pool.getConnection();
         try {
             const [
-                [newUsersResult], [pendingVerificationsResult], [activeGroupsResult], [newBlogsResult],
-                [totalEventsResult], [totalJobsResult], [totalUsersResult], [totalApplicationsResult], [totalGroupsResult]
+                [newUsersRows], [pendingVerificationsRows], [activeGroupsRows], [newBlogsRows],
+                [totalEventsRows], [totalJobsRows], [totalUsersRows], [totalApplicationsRows], [totalGroupsRows]
             ] = await Promise.all([
                 connection.query("SELECT COUNT(*) as count FROM users WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)"),
                 connection.query("SELECT COUNT(*) as count FROM verification_requests WHERE status = 'pending'"),
@@ -27,11 +27,11 @@ module.exports = function (pool) {
             ]);
             connection.release();
             res.json({
-                newUsersLast30Days: newUsersResult.count, pendingVerifications: pendingVerificationsResult.count,
-                activeGroups: activeGroupsResult.count, newBlogsLast7Days: newBlogsResult.count,
-                totalUsers: totalUsersResult.count, totalEvents: totalEventsResult.count,
-                totalJobs: totalJobsResult.count, totalApplications: totalApplicationsResult.count,
-                totalGroups: totalGroupsResult.count
+                newUsersLast30Days: newUsersRows[0].count, pendingVerifications: pendingVerificationsRows[0].count,
+                activeGroups: activeGroupsRows[0].count, newBlogsLast7Days: newBlogsRows[0].count,
+                totalUsers: totalUsersRows[0].count, totalEvents: totalEventsRows[0].count,
+                totalJobs: totalJobsRows[0].count, totalApplications: totalApplicationsRows[0].count,
+                totalGroups: totalGroupsRows[0].count
             });
         } catch (error) {
             console.error('Error fetching detailed admin stats:', error);
@@ -90,10 +90,10 @@ module.exports = function (pool) {
         try {
             const connection = await pool.getConnection();
             const [
-                [{ verifications }], [{ pendingJobs }], [{ pendingEvents }], [{ pendingCampaigns }],
+                [verificationsRows], [pendingJobsRows], [pendingEventsRows], [pendingCampaignsRows],
                 // This now correctly queries the `group_creation_requests` table
-                [{ groupCreations }],
-                [{ groupJoins }]
+                [groupCreationsRows],
+                [groupJoinsRows]
             ] = await Promise.all([
                 connection.query("SELECT COUNT(*) as verifications FROM verification_requests WHERE status = 'pending'"),
                 connection.query("SELECT COUNT(*) as pendingJobs FROM jobs WHERE status = 'pending'"),
@@ -103,7 +103,14 @@ module.exports = function (pool) {
                 connection.query("SELECT COUNT(*) as groupJoins FROM group_join_requests WHERE status = 'pending'")
             ]);
             connection.release();
-            res.json({ verifications, pendingJobs, pendingEvents, pendingCampaigns, groupCreations, groupJoins });
+            res.json({ 
+                verifications: verificationsRows[0].verifications, 
+                pendingJobs: pendingJobsRows[0].pendingJobs, 
+                pendingEvents: pendingEventsRows[0].pendingEvents, 
+                pendingCampaigns: pendingCampaignsRows[0].pendingCampaigns, 
+                groupCreations: groupCreationsRows[0].groupCreations, 
+                groupJoins: groupJoinsRows[0].groupJoins 
+            });
         } catch (error) {
             console.error('Error fetching pending requests summary:', error);
             res.status(500).json({ message: 'Failed to fetch pending requests' });
