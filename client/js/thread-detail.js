@@ -83,6 +83,69 @@ document.addEventListener('DOMContentLoaded', async () => {
         `;
     };
 
+    // Update Recent Activity section with real data
+    const loadRecentActivity = (thread) => {
+        const recentActivityContainer = document.getElementById('recent-activity');
+        
+        // Calculate real activity data based on thread stats
+        const likeCount = thread.like_count || 0;
+        const commentCount = thread.comment_count || 0;
+        const shareCount = thread.share_count || 0;
+        
+        // Create activity items based on real data
+        const activities = [];
+        
+        if (likeCount > 0) {
+            const lastLikeTime = thread.updated_at || thread.created_at;
+            const timeDiff = Math.floor((new Date() - new Date(lastLikeTime)) / (1000 * 60 * 60)); // hours ago
+            activities.push({
+                icon: 'fas fa-heart text-danger',
+                content: `${likeCount} total like${likeCount !== 1 ? 's' : ''}`,
+                time: `Last activity ${timeDiff < 1 ? 'less than 1h' : timeDiff + 'h'} ago`
+            });
+        }
+        
+        if (commentCount > 0) {
+            const lastCommentTime = thread.updated_at || thread.created_at;
+            const timeDiff = Math.floor((new Date() - new Date(lastCommentTime)) / (1000 * 60 * 60)); // hours ago
+            activities.push({
+                icon: 'fas fa-comment text-primary',
+                content: `${commentCount} comment${commentCount !== 1 ? 's' : ''}`,
+                time: `Last activity ${timeDiff < 1 ? 'less than 1h' : timeDiff + 'h'} ago`
+            });
+        }
+        
+        if (shareCount > 0) {
+            const daysDiff = Math.floor((new Date() - new Date(thread.created_at)) / (1000 * 60 * 60 * 24));
+            activities.push({
+                icon: 'fas fa-share text-success',
+                content: `${shareCount} share${shareCount !== 1 ? 's' : ''}`,
+                time: `Last activity ${daysDiff < 1 ? 'today' : daysDiff + 'd'} ago`
+            });
+        }
+        
+        // If no activity, show a default message
+        if (activities.length === 0) {
+            activities.push({
+                icon: 'fas fa-clock text-muted',
+                content: 'No recent activity',
+                time: 'Be the first to interact!'
+            });
+        }
+        
+        const activityHTML = activities.map(activity => `
+            <div class="activity-item">
+                <i class="${activity.icon}"></i>
+                <div class="activity-content">
+                    <span>${activity.content}</span>
+                    <small>${activity.time}</small>
+                </div>
+            </div>
+        `).join('');
+        
+        recentActivityContainer.innerHTML = activityHTML;
+    };
+
     // Load related threads (fetch from API)
     const loadRelatedThreads = async (currentThreadId) => {
         const relatedThreadsContainer = document.getElementById('related-threads');
@@ -249,6 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Update sidebar information
             updateSidebarStats(thread);
             loadAuthorInfo(thread);
+            loadRecentActivity(thread);
             loadRelatedThreads(threadId);
 
             // Update like status if user is logged in
