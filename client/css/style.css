@@ -8227,9 +8227,9 @@ fieldset.form-section legend {
     margin: 0;
     font-size: 0.85rem;
     line-height: 1.4;
-}
     line-height: 1.5;
 }
+
 
 .author-info-card {
     display: flex;
@@ -10796,7 +10796,7 @@ fieldset.form-section legend {
     font-size: 0.9rem;
     line-height: 1.4;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Increased from 2 to show more content */
+    /* -webkit-line-clamp: 3; Increased from 2 to show more content */
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
