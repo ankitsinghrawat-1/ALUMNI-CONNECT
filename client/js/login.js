@@ -116,10 +116,18 @@ class LoginManager {
             this.setLoadingState(true);
             this.hideMessage();
 
-            const formData = new FormData(this.form);
-            const email = formData.get('email').trim();
-            const password = formData.get('password').trim();
-            const remember = formData.get('remember') === 'on';
+            // Get values directly from form elements
+            const emailInput = this.form.querySelector('#email');
+            const passwordInput = this.form.querySelector('#password');
+            const rememberInput = this.form.querySelector('#remember');
+            
+            const email = emailInput ? emailInput.value.trim() : '';
+            const password = passwordInput ? passwordInput.value.trim() : '';
+            const remember = rememberInput ? rememberInput.checked : false;
+
+            if (!email || !password) {
+                throw new Error('Please enter both email and password.');
+            }
 
             // Simulate network delay for better UX
             await new Promise(resolve => setTimeout(resolve, 500));
@@ -315,67 +323,4 @@ class LoginManager {
 // Initialize enhanced login functionality
 document.addEventListener('DOMContentLoaded', () => {
     new LoginManager();
-});
-
-        if (messageDiv) {
-            messageDiv.textContent = 'Logging in...';
-            messageDiv.className = 'form-message info';
-        }
-
-        try {
-            const response = await fetch('http://localhost:3000/api/users/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                // Store all necessary info in localStorage
-                localStorage.setItem('alumniConnectToken', data.token);
-                localStorage.setItem('loggedInUserEmail', data.email);
-                localStorage.setItem('userRole', data.role);
-                localStorage.setItem('loggedInUserName', data.full_name);
-                localStorage.setItem('loggedInUserId', data.user_id); // UPDATED: Store the user's ID
-
-
-                if (messageDiv) {
-                    messageDiv.textContent = 'Login successful!';
-                    messageDiv.className = 'form-message success';
-                }
-
-                switch (data.role) {
-                    case 'admin':
-                        window.location.href = 'admin.html';
-                        break;
-                    case 'student':
-                        window.location.href = 'student-dashboard.html';
-                        break;
-                    case 'faculty':
-                        window.location.href = 'faculty-dashboard.html';
-                        break;
-                    case 'employer':
-                        window.location.href = 'employer-dashboard.html';
-                        break;
-                    case 'institute':
-                        window.location.href = 'institute-dashboard.html';
-                        break;
-                    default:
-                        window.location.href = 'dashboard.html'; // Alumni dashboard
-                }
-            } else {
-                if (messageDiv) {
-                    messageDiv.textContent = data.message;
-                    messageDiv.className = 'form-message error';
-                }
-            }
-        } catch (error) {
-            if (messageDiv) {
-                messageDiv.textContent = 'An error occurred. Please try again.';
-                messageDiv.className = 'form-message error';
-            }
-            console.error('Login error:', error);
-        }
-    });
 });

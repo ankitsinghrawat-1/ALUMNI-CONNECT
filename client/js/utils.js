@@ -469,20 +469,6 @@ if (typeof module !== 'undefined' && module.exports) {
         showToast
     };
 }
-            backgroundColor = 'linear-gradient(to right, #6a11cb, #2575fc)';
-            break;
-    }
-
-    Toastify({
-        text: message,
-        duration: 3000,
-        close: true,
-        gravity: "top", // `top` or `bottom`
-        position: "right", // `left`, `center` or `right`
-        backgroundColor: backgroundColor,
-        stopOnFocus: true, // Prevents dismissing of toast on hover
-    }).showToast();
-};
 
 /**
  * Sanitizes a string to prevent XSS attacks by converting HTML special characters.

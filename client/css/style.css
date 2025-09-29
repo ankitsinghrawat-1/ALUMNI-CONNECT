@@ -22,32 +22,34 @@
     --info-hover: #138496;
     --info-light: #E1F5FE;
     
-    /* Text Colors */
-    --text-color: #2C3E50;
-    --text-color-light: #6C757D;
-    --text-color-muted: #ADB5BD;
+    /* Text Colors - Lighter and more readable in light mode */
+    --text-color: #1a1a1a;
+    --text-color-light: #4a4a4a;
+    --text-color-muted: #888888;
     --link-color: #4A90E2;
     --link-hover: #357ABD;
     
-    /* Background Colors */
-    --background-color: #F8F9FA;
-    --background-light: #FFFFFF;
-    --background-dark: #E9ECEF;
+    /* Background Colors - Brighter and cleaner */
+    --background-color: #FFFFFF;
+    --background-light: #FAFAFA;
+    --background-dark: #F0F2F5;
     --card-bg: #FFFFFF;
     --card-hover-bg: #F8F9FA;
-    --overlay-bg: rgba(0, 0, 0, 0.5);
+    --overlay-bg: rgba(0, 0, 0, 0.4);
     
-    /* Border & Divider */
-    --border-color: #DEE2E6;
-    --border-light: #F1F3F4;
-    --divider-color: #E9ECEF;
+    /* Border & Divider - Lighter borders for better brightness */
+    --border-color: #E1E5E9;
+    --border-light: #F5F6F7;
+    --divider-color: #EAEAEA;
     
     /* Sidebar/Navigation */
     --sidebar-bg: #2C3E50;
     --sidebar-text: #ECF0F1;
     --sidebar-active: #34495E;
     --sidebar-hover: #34495E;
-    --nav-bg: rgba(255, 255, 255, 0.95);
+    /* Navigation - Brighter navigation bar */
+    --nav-bg: rgba(255, 255, 255, 0.98);
+    --nav-shadow: rgba(0, 0, 0, 0.08);
     --nav-shadow: rgba(0, 0, 0, 0.1);
     
     /* Shadows */
@@ -74,9 +76,9 @@
 
 /* Enhanced Dark Mode */
 html.dark-mode {
-    --text-color: #E9ECEF;
-    --text-color-light: #ADB5BD;
-    --text-color-muted: #6C757D;
+    --text-color: #F1F3F5;
+    --text-color-light: #C9D1D9;
+    --text-color-muted: #8B949E;
     --link-color: #58A6FF;
     --link-hover: #79B8FF;
 
