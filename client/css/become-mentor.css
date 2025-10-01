@@ -250,6 +250,10 @@
     background: var(--background-color);
 }
 
+.mentor-application-section .container {
+    max-width: 1500px;
+}
+
 .application-intro {
     text-align: center;
     margin-bottom: 4rem;
