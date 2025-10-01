@@ -262,6 +262,33 @@ html.dark-mode .mentor-card:hover {
     border-color: var(--mentor-primary);
 }
 
+html.dark-mode .pagination {
+    background: var(--mentor-gray-800);
+    border-color: var(--mentor-gray-700);
+}
+
+html.dark-mode .pagination-btn:not(:disabled):hover {
+    background: var(--mentor-gray-700);
+    color: var(--mentor-primary);
+}
+
+html.dark-mode .pagination-info {
+    color: var(--text-color);
+}
+
+html.dark-mode .empty-state {
+    background: var(--mentor-gray-800);
+    border-color: var(--mentor-gray-700);
+}
+
+html.dark-mode .empty-icon {
+    background: var(--mentor-gray-700);
+}
+
+html.dark-mode .loading-container p {
+    color: var(--text-color);
+}
+
 .search-filter-container {
     max-width: 1200px;
     margin: 0 auto;
@@ -399,6 +426,14 @@ html.dark-mode .mentor-card:hover {
     white-space: nowrap;
     text-decoration: none;
     border: none;
+    background: var(--mentor-primary);
+    color: white;
+}
+
+.mentor-action-area-search .btn:hover {
+    background: var(--mentor-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--mentor-shadow-md);
 }
 
 .filter-toggle {
