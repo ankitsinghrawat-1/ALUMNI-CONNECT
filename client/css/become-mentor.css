@@ -1,269 +1,125 @@
-/* Enhanced Become Mentor CSS */
+/* ========================================
+   Become Mentor - Complete Redesign
+   Modern, Professional, User-Friendly
+   ======================================== */
 
 :root {
-    --become-mentor-primary: #4A90E2;
-    --become-mentor-secondary: #50C878;
-    --become-mentor-accent: #FF6B6B;
-    --become-mentor-warning: #FFB347;
-    --become-mentor-success: #50C878;
-    --become-mentor-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    --step-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --bm-primary: #4A90E2;
+    --bm-primary-dark: #357ABD;
+    --bm-secondary: #50C878;
+    --bm-accent: #FF6B6B;
+    --bm-warning: #FFB347;
+    --bm-success: #50C878;
+    --bm-gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --bm-gradient-2: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+    --bm-shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+    --bm-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --bm-shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+    --bm-shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.15);
+    --bm-radius-sm: 8px;
+    --bm-radius-md: 12px;
+    --bm-radius-lg: 16px;
+    --bm-radius-xl: 24px;
+    --bm-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Main Layout */
+/* ========================================
+   Main Layout
+   ======================================== */
+
 .become-mentor-main {
     background: var(--background-color);
     min-height: 100vh;
 }
 
-/* Hero Section */
+/* ========================================
+   Hero Section - Redesigned
+   ======================================== */
+
 .become-mentor-hero {
-    background: var(--become-mentor-gradient);
-    color: white;
-    padding: 4rem 0;
     position: relative;
+    padding: 6rem 0 8rem;
     overflow: hidden;
+    background: var(--bm-gradient-1);
 }
 
-.become-mentor-hero::before {
-    content: '';
+.hero-background {
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>') repeat;
-    animation: gridMove 30s linear infinite;
-}
-
-@keyframes gridMove {
-    0% { transform: translate(0, 0); }
-    100% { transform: translate(10px, 10px); }
-}
-
-.become-mentor-hero .hero-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-}
-
-.become-mentor-hero h1 {
-    font-size: 3.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
-
-.become-mentor-hero .hero-subtitle {
-    font-size: 1.25rem;
-    opacity: 0.9;
-    margin-bottom: 3rem;
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
-    line-height: 1.6;
-}
-
-/* Mentor Benefits */
-.mentor-benefits {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-top: 3rem;
-}
-
-.benefit-item {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: var(--mentor-border-radius);
-    padding: 2rem 1.5rem;
-    text-align: center;
-    transition: var(--mentor-transition);
-}
-
-.benefit-item:hover {
-    transform: translateY(-4px);
-    background: rgba(255, 255, 255, 0.15);
-}
-
-.benefit-icon {
-    width: 60px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 1rem;
-    font-size: 1.5rem;
-}
-
-.benefit-item h3 {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 0.75rem;
-}
-
-.benefit-item p {
-    font-size: 0.9rem;
-    opacity: 0.9;
-    line-height: 1.5;
-}
-
-/* Application Section */
-.mentor-application-section {
-    padding: 4rem 0;
-    background: var(--background-color);
-}
-
-.application-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: var(--surface-color);
-    border-radius: var(--mentor-border-radius-lg);
-    box-shadow: var(--mentor-shadow-xl);
-    overflow: hidden;
-}
-
-.application-header {
-    background: linear-gradient(135deg, var(--mentor-gray-50) 0%, var(--mentor-gray-100) 100%);
-    padding: 3rem 2rem 2rem;
-    text-align: center;
-    border-bottom: 1px solid var(--border-color);
-}
-
-html.dark-mode .application-header {
-    background: linear-gradient(135deg, var(--mentor-gray-800) 0%, var(--mentor-gray-700) 100%);
-}
-
-html.dark-mode .application-container {
-    background: var(--mentor-gray-800);
-    border-color: var(--mentor-gray-700);
-}
-
-html.dark-mode .progress-step {
-    color: var(--mentor-gray-400);
-}
-
-html.dark-mode .progress-step.active,
-html.dark-mode .progress-step.completed {
-    color: var(--text-color);
-}
-
-html.dark-mode .form-step {
-    background: var(--mentor-gray-800);
-}
-
-html.dark-mode .step-header h3 {
-    color: var(--text-color);
-}
-
-html.dark-mode .step-header p {
-    color: var(--mentor-gray-400);
-}
-
-html.dark-mode .form-group label {
-    color: var(--text-color);
-}
-
-html.dark-mode .help-text {
-    color: var(--mentor-gray-400);
-}
-
-.application-header h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--text-color);
-    margin-bottom: 1rem;
-}
-
-.application-header p {
-    font-size: 1.125rem;
-    color: var(--mentor-gray-600);
-    margin-bottom: 2rem;
-}
-
-/* Progress Bar */
-.progress-bar {
-    display: flex;
-    justify-content: space-between;
-    position: relative;
-    margin: 2rem 0 0;
-}
-
-.progress-bar::before {
-    content: '';
-    position: absolute;
-    top: 30px;
-    left: 30px;
-    right: 30px;
-    height: 2px;
-    background: var(--mentor-gray-300);
+    inset: 0;
     z-index: 1;
 }
 
-.progress-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    animation: patternMove 20s ease-in-out infinite alternate;
+}
+
+.hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.2) 100%);
+}
+
+@keyframes patternMove {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(30px, 30px) scale(1.1); }
+}
+
+.hero-content {
     position: relative;
     z-index: 2;
-    background: var(--surface-color);
-    padding: 0 1rem;
-}
-
-.step-number {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--mentor-gray-300);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 1.25rem;
-    margin-bottom: 0.75rem;
-    transition: var(--step-transition);
-}
-
-.progress-step.active .step-number {
-    background: var(--become-mentor-primary);
-    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
-}
-
-.progress-step.completed .step-number {
-    background: var(--become-mentor-success);
-}
-
-.progress-step span {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--mentor-gray-600);
     text-align: center;
 }
 
-.progress-step.active span {
-    color: var(--become-mentor-primary);
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    padding: 0.5rem 1.25rem;
+    border-radius: 50px;
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    animation: fadeInDown 0.6s ease-out;
 }
 
-/* Form Styling */
-.mentor-application-form {
-    padding: 0;
+.hero-badge i {
+    color: #FFD700;
 }
 
-.form-step {
-    display: none;
-    padding: 3rem 2rem;
-    animation: fadeInUp 0.4s ease-out;
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.form-step.active {
-    display: block;
+.hero-title {
+    font-size: 4rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+}
+
+.hero-title .highlight {
+    background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
 }
 
 @keyframes fadeInUp {
@@ -277,21 +133,359 @@ html.dark-mode .help-text {
     }
 }
 
-.step-header {
-    text-align: center;
-    margin-bottom: 3rem;
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.95);
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    line-height: 1.7;
+    animation: fadeInUp 0.6s ease-out 0.4s both;
 }
 
-.step-header h3 {
-    font-size: 2rem;
+/* Benefit Cards */
+.mentor-benefits {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 4rem 0 3rem;
+    animation: fadeInUp 0.6s ease-out 0.6s both;
+}
+
+.benefit-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--bm-radius-lg);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    transition: var(--bm-transition);
+    cursor: pointer;
+}
+
+.benefit-card:hover {
+    transform: translateY(-8px);
+    background: rgba(255, 255, 255, 0.15);
+    box-shadow: var(--bm-shadow-xl);
+}
+
+.benefit-icon-wrapper {
+    margin-bottom: 1.5rem;
+}
+
+.benefit-icon {
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    font-size: 1.75rem;
+    color: white;
+    transition: var(--bm-transition);
+}
+
+.benefit-card:hover .benefit-icon {
+    background: white;
+    color: var(--bm-primary);
+    transform: scale(1.1) rotate(10deg);
+}
+
+.benefit-card h3 {
+    font-size: 1.25rem;
     font-weight: 700;
+    color: white;
+    margin-bottom: 0.75rem;
+}
+
+.benefit-card p {
+    font-size: 0.938rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.6;
+}
+
+/* Hero Action */
+.hero-action {
+    margin-top: 3rem;
+    animation: fadeInUp 0.6s ease-out 0.8s both;
+}
+
+.btn-scroll-down {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: white;
+    color: var(--bm-primary);
+    padding: 1rem 2.5rem;
+    border-radius: 50px;
+    font-size: 1.125rem;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: var(--bm-shadow-lg);
+    transition: var(--bm-transition);
+}
+
+.btn-scroll-down:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--bm-shadow-xl);
+    background: #f8f9fa;
+}
+
+.btn-scroll-down i {
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(5px); }
+}
+
+/* ========================================
+   Application Section - Redesigned
+   ======================================== */
+
+.mentor-application-section {
+    padding: 5rem 0;
+    background: var(--background-color);
+}
+
+.application-intro {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
     color: var(--text-color);
     margin-bottom: 1rem;
 }
 
-.step-header p {
+.section-subtitle {
     font-size: 1.125rem;
-    color: var(--mentor-gray-600);
+    color: var(--subtle-text-color);
+}
+
+.application-wrapper {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+/* ========================================
+   Progress Sidebar
+   ======================================== */
+
+.progress-sidebar {
+    position: sticky;
+    top: 100px;
+    background: var(--surface-color);
+    border-radius: var(--bm-radius-lg);
+    padding: 2rem;
+    box-shadow: var(--bm-shadow-md);
+    border: 1px solid var(--border-color);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.progress-header h3 {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.progress-percentage {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--bm-primary);
+}
+
+.progress-steps {
+    margin-bottom: 2rem;
+}
+
+.progress-step-item {
+    display: flex;
+    gap: 1rem;
+    align-items: start;
+    transition: var(--bm-transition);
+    padding: 0.5rem;
+    border-radius: var(--bm-radius-sm);
+    cursor: pointer;
+}
+
+.progress-step-item:hover {
+    background: var(--background-light);
+}
+
+.progress-step-item.active {
+    background: rgba(74, 144, 226, 0.1);
+}
+
+.progress-step-item.completed .step-indicator {
+    background: var(--bm-success);
+    border-color: var(--bm-success);
+}
+
+.progress-step-item.completed .step-number {
+    display: none;
+}
+
+.progress-step-item.completed .step-check {
+    display: flex;
+}
+
+.step-indicator {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: var(--background-light);
+    border: 3px solid var(--border-color);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--bm-transition);
+}
+
+.progress-step-item.active .step-indicator {
+    background: var(--bm-primary);
+    border-color: var(--bm-primary);
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.2);
+}
+
+.step-number {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--text-color);
+}
+
+.progress-step-item.active .step-number {
+    color: white;
+}
+
+.step-check {
+    display: none;
+    color: white;
+    font-size: 1.125rem;
+}
+
+.step-info h4 {
+    font-size: 0.938rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.step-info p {
+    font-size: 0.813rem;
+    color: var(--subtle-text-color);
+}
+
+.step-connector {
+    width: 3px;
+    height: 24px;
+    background: var(--border-color);
+    margin-left: 21px;
+}
+
+/* Progress Tips */
+.progress-tips {
+    background: linear-gradient(135deg, rgba(74, 144, 226, 0.1) 0%, rgba(80, 200, 120, 0.1) 100%);
+    border-radius: var(--bm-radius-sm);
+    padding: 1.5rem;
+    border: 1px solid rgba(74, 144, 226, 0.2);
+}
+
+.tip-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--bm-primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+    color: white;
+    font-size: 1.125rem;
+}
+
+.progress-tips h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.progress-tips p {
+    font-size: 0.875rem;
+    color: var(--subtle-text-color);
+    line-height: 1.6;
+}
+
+/* ========================================
+   Form Container
+   ======================================== */
+
+.form-container {
+    background: var(--surface-color);
+    border-radius: var(--bm-radius-lg);
+    box-shadow: var(--bm-shadow-md);
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+}
+
+.mentor-application-form {
+    padding: 0;
+}
+
+.form-step {
+    display: none;
+    padding: 3rem;
+    animation: slideIn 0.4s ease-out;
+}
+
+.form-step.active {
+    display: block;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.step-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.step-header h3 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.step-header p {
+    font-size: 1rem;
+    color: var(--subtle-text-color);
 }
 
 /* Form Grid */
@@ -299,7 +493,6 @@ html.dark-mode .help-text {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
-    margin-bottom: 3rem;
 }
 
 .form-group {
@@ -313,67 +506,69 @@ html.dark-mode .help-text {
 }
 
 .form-group label {
-    font-weight: 600;
-    color: var(--text-color);
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.875rem;
+    font-weight: 600;
+    font-size: 0.938rem;
+    color: var(--text-color);
 }
 
 .form-group label i {
-    color: var(--become-mentor-primary);
-    width: 16px;
+    color: var(--bm-primary);
+    width: 18px;
+    text-align: center;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-    background: var(--background-color);
+    background: var(--background-light);
     border: 2px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    font-size: 0.875rem;
-    transition: var(--mentor-transition);
-    resize: vertical;
+    border-radius: var(--bm-radius-sm);
+    padding: 0.875rem 1rem;
+    font-size: 0.938rem;
+    color: var(--text-color);
+    transition: var(--bm-transition);
+    font-family: inherit;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
     outline: none;
-    border-color: var(--become-mentor-primary);
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    border-color: var(--bm-primary);
+    background: var(--background-color);
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
 }
 
 .form-group input.error,
 .form-group select.error,
 .form-group textarea.error {
-    border-color: var(--mentor-accent);
-    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    border-color: var(--bm-accent);
+    background: rgba(255, 107, 107, 0.05);
 }
 
 .form-group input.error:focus,
 .form-group select.error:focus,
 .form-group textarea.error:focus {
-    border-color: var(--mentor-accent);
-    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+    box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
 }
 
 .form-group textarea {
+    resize: vertical;
     min-height: 120px;
-    font-family: inherit;
 }
 
 .char-counter {
-    align-self: flex-end;
-    font-size: 0.75rem;
-    color: var(--mentor-gray-500);
+    font-size: 0.813rem;
+    color: var(--subtle-text-color);
+    text-align: right;
 }
 
 .help-text {
-    font-size: 0.75rem;
-    color: var(--mentor-gray-500);
+    font-size: 0.813rem;
+    color: var(--subtle-text-color);
     margin-top: -0.5rem;
 }
 
@@ -388,52 +583,30 @@ html.dark-mode .help-text {
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    padding: 1rem;
+    background: var(--background-light);
+    border: 2px solid var(--border-color);
+    border-radius: var(--bm-radius-sm);
     cursor: pointer;
-    padding: 0.75rem;
-    border-radius: 8px;
-    transition: var(--mentor-transition);
+    transition: var(--bm-transition);
 }
 
 .checkbox-item:hover {
-    background: var(--mentor-gray-50);
-}
-
-html.dark-mode .checkbox-item:hover {
-    background: var(--mentor-gray-800);
+    border-color: var(--bm-primary);
+    background: var(--background-color);
 }
 
 .checkbox-item input[type="checkbox"] {
-    display: none;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 .checkmark {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border-color);
-    border-radius: 4px;
-    position: relative;
-    transition: var(--mentor-transition);
-    flex-shrink: 0;
+    display: none;
 }
 
-.checkbox-item input[type="checkbox"]:checked + .checkmark {
-    background: var(--become-mentor-primary);
-    border-color: var(--become-mentor-primary);
-}
-
-.checkbox-item input[type="checkbox"]:checked + .checkmark::after {
-    content: '';
-    position: absolute;
-    left: 6px;
-    top: 2px;
-    width: 6px;
-    height: 10px;
-    border: solid white;
-    border-width: 0 2px 2px 0;
-    transform: rotate(45deg);
-}
-
-/* Skills Input */
+/* Skills Tags */
 .skills-input-container {
     position: relative;
 }
@@ -443,47 +616,27 @@ html.dark-mode .checkbox-item:hover {
     flex-wrap: wrap;
     gap: 0.5rem;
     margin-top: 0.75rem;
-    min-height: 40px;
-    padding: 0.5rem;
-    background: var(--mentor-gray-50);
-    border-radius: 8px;
-    border: 1px solid var(--border-color);
-}
-
-html.dark-mode .skills-tags {
-    background: var(--mentor-gray-800);
+    padding: 0.75rem;
+    background: var(--background-light);
+    border: 2px dashed var(--border-color);
+    border-radius: var(--bm-radius-sm);
+    min-height: 60px;
 }
 
 .skill-tag {
-    background: var(--become-mentor-primary);
+    background: var(--bm-primary);
     color: white;
-    padding: 0.375rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 500;
+    padding: 0.5rem 0.875rem;
+    border-radius: 50px;
+    font-size: 0.875rem;
+    font-weight: 600;
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    animation: fadeIn 0.3s ease-out;
+    animation: popIn 0.3s ease-out;
 }
 
-.skill-tag .remove-skill {
-    background: none;
-    border: none;
-    color: white;
-    cursor: pointer;
-    font-size: 0.875rem;
-    padding: 0;
-    margin: 0;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-}
-
-.skill-tag .remove-skill:hover {
-    opacity: 1;
-}
-
-@keyframes fadeIn {
+@keyframes popIn {
     from {
         opacity: 0;
         transform: scale(0.8);
@@ -494,43 +647,54 @@ html.dark-mode .skills-tags {
     }
 }
 
-/* Specializations */
-.specialization-item {
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    background: var(--mentor-gray-50);
+.skill-tag .remove-skill {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 0.75rem;
+    padding: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--bm-transition);
 }
 
-html.dark-mode .specialization-item {
-    background: var(--mentor-gray-800);
+.skill-tag .remove-skill:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Specializations */
+.specialization-item {
+    background: var(--background-light);
+    border: 2px solid var(--border-color);
+    border-radius: var(--bm-radius-sm);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
 }
 
 .spec-inputs {
     display: grid;
-    grid-template-columns: 2fr 1fr 80px 40px;
+    grid-template-columns: 2fr 1fr 100px 40px;
     gap: 1rem;
     align-items: center;
 }
 
-.spec-inputs input,
-.spec-inputs select {
-    margin: 0;
-}
-
 .remove-spec {
-    background: var(--mentor-accent);
+    background: var(--bm-accent);
     color: white;
     border: none;
     border-radius: 50%;
-    width: 30px;
-    height: 30px;
+    width: 36px;
+    height: 36px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: var(--mentor-transition);
+    transition: var(--bm-transition);
 }
 
 .remove-spec:hover {
@@ -540,7 +704,7 @@ html.dark-mode .specialization-item {
 
 /* Availability Grid */
 .availability-section {
-    margin-bottom: 2rem;
+    margin: 2rem 0;
 }
 
 .availability-header {
@@ -550,26 +714,28 @@ html.dark-mode .specialization-item {
 
 .availability-header h4 {
     font-size: 1.5rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text-color);
     margin-bottom: 0.5rem;
 }
 
 .availability-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
 }
 
 .day-column {
-    background: var(--mentor-gray-50);
-    border-radius: 8px;
-    padding: 1rem;
-    border: 1px solid var(--border-color);
+    background: var(--background-light);
+    border: 2px solid var(--border-color);
+    border-radius: var(--bm-radius-md);
+    padding: 1.25rem;
+    transition: var(--bm-transition);
 }
 
-html.dark-mode .day-column {
-    background: var(--mentor-gray-800);
+.day-column:has(input[type="checkbox"]:checked) {
+    border-color: var(--bm-primary);
+    background: rgba(74, 144, 226, 0.05);
 }
 
 .day-header {
@@ -579,14 +745,17 @@ html.dark-mode .day-column {
 .day-checkbox {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 1rem;
     color: var(--text-color);
 }
 
-.day-name {
-    font-size: 0.875rem;
+.day-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 .time-slots {
@@ -598,91 +767,72 @@ html.dark-mode .day-column {
     align-items: center;
     gap: 0.5rem;
     margin-bottom: 0.75rem;
-    opacity: 0.5;
-    transition: var(--mentor-transition);
-}
-
-.day-checkbox input:checked ~ .time-slots .time-slot {
-    opacity: 1;
 }
 
 .time-input {
     flex: 1;
-    padding: 0.5rem;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: 0.75rem;
+    padding: 0.625rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--bm-radius-sm);
+    font-size: 0.875rem;
+    background: var(--background-color);
+    transition: var(--bm-transition);
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: var(--bm-primary);
 }
 
 .time-input:disabled {
-    background: var(--mentor-gray-200);
+    background: var(--background-light);
+    opacity: 0.5;
     cursor: not-allowed;
 }
 
 .remove-time-slot {
-    background: var(--mentor-accent);
+    background: var(--bm-accent);
     color: white;
     border: none;
     border-radius: 50%;
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
+    transition: var(--bm-transition);
+}
+
+.remove-time-slot:hover {
+    background: #e55555;
 }
 
 .add-time-slot {
-    background: var(--become-mentor-secondary);
+    width: 100%;
+    background: var(--bm-secondary);
     color: white;
     border: none;
-    border-radius: 4px;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.75rem;
+    border-radius: var(--bm-radius-sm);
+    padding: 0.625rem;
+    font-size: 0.875rem;
+    font-weight: 600;
     cursor: pointer;
-    width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 0.25rem;
-    transition: var(--mentor-transition);
+    gap: 0.5rem;
+    transition: var(--bm-transition);
 }
 
 .add-time-slot:hover {
-    background: #459a68;
+    background: #3db268;
 }
 
 .add-time-slot:disabled {
-    background: var(--mentor-gray-300);
+    opacity: 0.5;
     cursor: not-allowed;
-}
-
-/* Price Input */
-.price-input-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.currency-symbol {
-    position: absolute;
-    left: 1rem;
-    color: var(--mentor-gray-500);
-    font-weight: 600;
-    z-index: 2;
-}
-
-.price-input-container input {
-    padding-left: 2.5rem;
-    padding-right: 4rem;
-}
-
-.price-suffix {
-    position: absolute;
-    right: 1rem;
-    color: var(--mentor-gray-500);
-    font-size: 0.875rem;
 }
 
 /* Preferences Grid */
@@ -695,150 +845,315 @@ html.dark-mode .day-column {
 .preference-item {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.75rem;
 }
 
 .preference-item label {
-    font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.938rem;
     color: var(--text-color);
 }
 
-.preference-item input,
-.preference-item select {
-    padding: 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
+/* Price Input */
+.price-input-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--background-light);
+    border: 2px solid var(--border-color);
+    border-radius: var(--bm-radius-sm);
+    padding: 0.875rem 1rem;
+    transition: var(--bm-transition);
+}
+
+.price-input-container:focus-within {
+    border-color: var(--bm-primary);
+    background: var(--background-color);
+    box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+}
+
+.currency-symbol {
+    font-weight: 700;
+    color: var(--subtle-text-color);
+}
+
+.price-input-container input {
+    border: none;
+    background: transparent;
+    padding: 0;
+    font-size: 0.938rem;
+    flex: 1;
+}
+
+.price-input-container input:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.price-suffix {
     font-size: 0.875rem;
+    color: var(--subtle-text-color);
 }
 
 /* Agreement Section */
 .agreement-section {
-    background: var(--mentor-gray-50);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
+    background: rgba(74, 144, 226, 0.05);
+    border: 2px solid rgba(74, 144, 226, 0.2);
+    border-radius: var(--bm-radius-sm);
     padding: 1.5rem;
-    margin-top: 1rem;
-}
-
-html.dark-mode .agreement-section {
-    background: var(--mentor-gray-800);
 }
 
 .agreement-item {
-    margin-bottom: 1rem;
-    align-items: flex-start;
+    display: flex;
+    align-items: start;
+    gap: 1rem;
+    padding: 1rem 0;
+}
+
+.agreement-item:not(:last-child) {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.agreement-item input[type="checkbox"] {
+    margin-top: 0.25rem;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
 }
 
 .agreement-text {
-    line-height: 1.5;
-    font-size: 0.875rem;
+    font-size: 0.938rem;
+    line-height: 1.6;
+    color: var(--text-color);
 }
 
 .agreement-text a {
-    color: var(--become-mentor-primary);
+    color: var(--bm-primary);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .agreement-text a:hover {
     text-decoration: underline;
 }
 
-/* Step Actions */
+/* ========================================
+   Step Actions
+   ======================================== */
+
 .step-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem;
-    background: var(--mentor-gray-50);
-    border-top: 1px solid var(--border-color);
-    margin: 0 -2rem -3rem;
+    gap: 1rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
 }
 
-html.dark-mode .step-actions {
-    background: var(--mentor-gray-800);
-}
-
-.step-actions .btn {
-    padding: 1rem 2rem;
-    font-weight: 600;
-    border-radius: 8px;
+.btn-step {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    min-width: 140px;
-    justify-content: center;
-    transition: var(--mentor-transition);
+    gap: 0.75rem;
+    padding: 1rem 2rem;
+    border-radius: var(--bm-radius-md);
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--bm-transition);
+    border: none;
+    font-family: inherit;
 }
 
-.step-actions .prev-step {
-    background: transparent;
-    color: var(--mentor-gray-600);
+.btn-step-back {
+    background: var(--background-light);
+    color: var(--text-color);
     border: 2px solid var(--border-color);
 }
 
-.step-actions .prev-step:hover {
-    background: var(--mentor-gray-100);
-    border-color: var(--mentor-gray-400);
+.btn-step-back:hover {
+    background: var(--background-color);
+    border-color: var(--text-color);
+    transform: translateX(-4px);
 }
 
-.step-actions .next-step,
-.step-actions .submit-application {
-    background: var(--become-mentor-primary);
+.btn-step-next,
+.btn-step-submit {
+    background: var(--bm-primary);
     color: white;
-    border: 2px solid var(--become-mentor-primary);
+    box-shadow: var(--bm-shadow-md);
+    margin-left: auto;
 }
 
-.step-actions .next-step:hover,
-.step-actions .submit-application:hover {
-    background: var(--mentor-primary-dark);
-    border-color: var(--mentor-primary-dark);
-    transform: translateY(-1px);
+.btn-step-next:hover,
+.btn-step-submit:hover {
+    background: var(--bm-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: var(--bm-shadow-lg);
 }
 
-.step-actions .submit-application {
-    background: var(--become-mentor-success);
-    border-color: var(--become-mentor-success);
+.btn-step-submit {
+    background: var(--bm-success);
 }
 
-.step-actions .submit-application:hover {
-    background: #459a68;
-    border-color: #459a68;
+.btn-step-submit:hover {
+    background: #3db268;
+}
+
+.btn-step:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
 }
 
 /* Form Message */
 .form-message {
-    margin: 2rem 0;
-    padding: 1rem 1.5rem;
-    border-radius: 8px;
-    font-weight: 500;
-    text-align: center;
+    padding: 1rem;
+    border-radius: var(--bm-radius-sm);
+    margin-top: 1rem;
+    font-weight: 600;
+    display: none;
 }
 
 .form-message.success {
     background: rgba(80, 200, 120, 0.1);
-    color: var(--become-mentor-success);
-    border: 1px solid rgba(80, 200, 120, 0.3);
+    color: var(--bm-success);
+    border: 2px solid rgba(80, 200, 120, 0.3);
+    display: block;
 }
 
 .form-message.error {
     background: rgba(255, 107, 107, 0.1);
-    color: var(--mentor-accent);
-    border: 1px solid rgba(255, 107, 107, 0.3);
+    color: var(--bm-accent);
+    border: 2px solid rgba(255, 107, 107, 0.3);
+    display: block;
 }
 
-/* Responsive Design */
+/* ========================================
+   Dark Mode
+   ======================================== */
+
+html.dark-mode .benefit-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+html.dark-mode .benefit-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+html.dark-mode .progress-sidebar,
+html.dark-mode .form-container {
+    background: var(--surface-color);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .step-indicator {
+    background: var(--background-light);
+}
+
+html.dark-mode .form-group input,
+html.dark-mode .form-group select,
+html.dark-mode .form-group textarea {
+    background: var(--background-light);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
+
+html.dark-mode .checkbox-item,
+html.dark-mode .day-column,
+html.dark-mode .specialization-item,
+html.dark-mode .skills-tags {
+    background: var(--background-light);
+    border-color: var(--border-color);
+}
+
+html.dark-mode .btn-step-back {
+    background: var(--background-light);
+    border-color: var(--border-color);
+}
+
+/* ========================================
+   Responsive Design
+   ======================================== */
+
 @media (max-width: 1024px) {
-    .become-mentor-hero h1 {
+    .application-wrapper {
+        grid-template-columns: 280px 1fr;
+        gap: 2rem;
+    }
+    
+    .hero-title {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .become-mentor-hero {
+        padding: 4rem 0 5rem;
+    }
+    
+    .hero-title {
         font-size: 2.5rem;
     }
     
+    .hero-subtitle {
+        font-size: 1.125rem;
+    }
+    
     .mentor-benefits {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin: 3rem 0 2rem;
+    }
+    
+    .application-wrapper {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    .progress-sidebar {
+        position: static;
+    }
+    
+    .progress-steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .step-connector {
+        display: none;
+    }
+    
+    .progress-step-item {
+        flex-direction: column;
+        text-align: center;
+        padding: 1rem 0.5rem;
+    }
+    
+    .step-info h4 {
+        font-size: 0.813rem;
+    }
+    
+    .step-info p {
+        display: none;
+    }
+    
+    .form-step {
+        padding: 2rem 1.5rem;
     }
     
     .form-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .spec-inputs {
+        grid-template-columns: 1fr;
+    }
+    
+    .availability-grid {
         grid-template-columns: 1fr;
     }
     
@@ -846,180 +1161,54 @@ html.dark-mode .step-actions {
         grid-template-columns: 1fr;
     }
     
-    .availability-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 768px) {
-    .become-mentor-hero {
-        padding: 2rem 0;
-    }
-    
-    .become-mentor-hero h1 {
-        font-size: 2rem;
-    }
-    
-    .become-mentor-hero .hero-subtitle {
-        font-size: 1rem;
-    }
-    
-    .mentor-benefits {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .application-header {
-        padding: 2rem 1rem 1rem;
-    }
-    
-    .form-step {
-        padding: 2rem 1rem;
-    }
-    
     .step-actions {
-        padding: 1.5rem 1rem;
-        margin: 0 -1rem -2rem;
+        flex-direction: column;
     }
     
-    .progress-bar {
-        flex-wrap: wrap;
-        gap: 1rem;
+    .btn-step {
+        width: 100%;
         justify-content: center;
     }
     
-    .progress-bar::before {
-        display: none;
-    }
-    
-    .progress-step {
-        flex-direction: column;
-        text-align: center;
-        min-width: 80px;
-    }
-    
-    .progress-step .step-number {
-        margin-bottom: 0.5rem;
-    }
-    
-    .progress-step span {
-        font-size: 0.75rem;
-    }
-    
-    .availability-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    
-    .day-column {
-        width: 100%;
-    }
-    
-    .spec-inputs {
-        grid-template-columns: 1fr;
-        gap: 0.75rem;
-    }
-    
-    .checkbox-group {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-    
-    .form-group.full-width {
-        width: 100%;
+    .btn-step-next,
+    .btn-step-submit {
+        margin-left: 0;
     }
 }
 
 @media (max-width: 480px) {
-    .become-mentor-hero h1 {
-        font-size: 1.75rem;
-    }
-    
-    .become-mentor-hero .hero-subtitle {
-        font-size: 0.95rem;
-    }
-    
-    .application-header h2 {
+    .hero-title {
         font-size: 2rem;
+    }
+    
+    .hero-badge {
+        font-size: 0.813rem;
+        padding: 0.375rem 1rem;
+    }
+    
+    .form-step {
+        padding: 1.5rem 1rem;
     }
     
     .step-header h3 {
         font-size: 1.5rem;
     }
     
-    .benefit-item {
-        padding: 1.5rem 1rem;
+    .progress-steps {
+        grid-template-columns: repeat(2, 1fr);
     }
     
-    .step-actions {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: stretch;
-    }
-    
-    .step-actions .btn {
-        width: 100%;
-        min-height: 44px;
-        padding: 0.875rem 1.5rem;
-        font-size: 1rem;
-    }
-    
-    .progress-step span {
-        display: none;
-    }
-    
-    .day-header .day-name {
-        font-size: 0.875rem;
+    .checkbox-group {
+        grid-template-columns: 1fr;
     }
     
     .time-slot {
         flex-direction: column;
-        gap: 0.5rem;
     }
     
     .time-slot span {
         display: none;
     }
-    
-    .time-input {
-        width: 100%;
-    }
-    
-    .add-time-slot {
-        width: 100%;
-        justify-content: center;
-    }
-    
-    .preferences-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Loading and Success States */
-.btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
-}
-
-.btn .fa-spinner {
-    animation: spin 1s linear infinite;
-}
-
-/* Dark Mode Adjustments */
-html.dark-mode .form-group input,
-html.dark-mode .form-group select,
-html.dark-mode .form-group textarea {
-    background: var(--mentor-gray-800);
-    border-color: var(--mentor-gray-600);
-    color: var(--text-color);
-}
-
-html.dark-mode .time-input:disabled {
-    background: var(--mentor-gray-700);
 }
 
 /* Accessibility */
@@ -1032,28 +1221,10 @@ html.dark-mode .time-input:disabled {
 }
 
 /* Focus States */
-.btn:focus,
+.btn-step:focus,
 .form-group input:focus,
 .form-group select:focus,
-.form-group textarea:focus,
-.checkbox-item:focus-within {
-    outline: 2px solid var(--become-mentor-primary);
+.form-group textarea:focus {
+    outline: 2px solid var(--bm-primary);
     outline-offset: 2px;
-}
-
-/* High Contrast Mode Support */
-@media (prefers-contrast: high) {
-    .form-group input,
-    .form-group select,
-    .form-group textarea {
-        border-width: 2px;
-    }
-    
-    .btn {
-        border-width: 2px;
-    }
-    
-    .skill-tag {
-        border: 1px solid currentColor;
-    }
 }
