@@ -346,6 +346,20 @@ html.dark-mode .help-text {
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
 
+.form-group input.error,
+.form-group select.error,
+.form-group textarea.error {
+    border-color: var(--mentor-accent);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+.form-group input.error:focus,
+.form-group select.error:focus,
+.form-group textarea.error:focus {
+    border-color: var(--mentor-accent);
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+}
+
 .form-group textarea {
     min-height: 120px;
     font-family: inherit;
