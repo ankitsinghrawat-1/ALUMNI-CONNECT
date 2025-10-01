@@ -75,8 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
         steps.forEach(step => step.classList.remove('active'));
         progressSteps.forEach(step => step.classList.remove('active'));
 
-        // Show current step
-        const currentStepElement = document.querySelector(`[data-step="${stepNumber}"]`);
+        // Show current step - use specific selector for form-step
+        const currentStepElement = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
         const currentProgressStep = document.querySelector(`.progress-step[data-step="${stepNumber}"]`);
         
         if (currentStepElement) {
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function validateCurrentStep() {
-        const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`);
+        const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
         const requiredFields = currentStepElement.querySelectorAll('[required]');
         let isValid = true;
 
