@@ -140,6 +140,40 @@ html.dark-mode .application-header {
     background: linear-gradient(135deg, var(--mentor-gray-800) 0%, var(--mentor-gray-700) 100%);
 }
 
+html.dark-mode .application-container {
+    background: var(--mentor-gray-800);
+    border-color: var(--mentor-gray-700);
+}
+
+html.dark-mode .progress-step {
+    color: var(--mentor-gray-400);
+}
+
+html.dark-mode .progress-step.active,
+html.dark-mode .progress-step.completed {
+    color: var(--text-color);
+}
+
+html.dark-mode .form-step {
+    background: var(--mentor-gray-800);
+}
+
+html.dark-mode .step-header h3 {
+    color: var(--text-color);
+}
+
+html.dark-mode .step-header p {
+    color: var(--mentor-gray-400);
+}
+
+html.dark-mode .form-group label {
+    color: var(--text-color);
+}
+
+html.dark-mode .help-text {
+    color: var(--mentor-gray-400);
+}
+
 .application-header h2 {
     font-size: 2.5rem;
     font-weight: 700;
@@ -812,8 +846,13 @@ html.dark-mode .step-actions {
         font-size: 2rem;
     }
     
+    .become-mentor-hero .hero-subtitle {
+        font-size: 1rem;
+    }
+    
     .mentor-benefits {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
     .application-header {
@@ -839,8 +878,27 @@ html.dark-mode .step-actions {
         display: none;
     }
     
+    .progress-step {
+        flex-direction: column;
+        text-align: center;
+        min-width: 80px;
+    }
+    
+    .progress-step .step-number {
+        margin-bottom: 0.5rem;
+    }
+    
+    .progress-step span {
+        font-size: 0.75rem;
+    }
+    
     .availability-grid {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .day-column {
+        width: 100%;
     }
     
     .spec-inputs {
@@ -851,11 +909,23 @@ html.dark-mode .step-actions {
     .checkbox-group {
         grid-template-columns: 1fr;
     }
+    
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-group.full-width {
+        width: 100%;
+    }
 }
 
 @media (max-width: 480px) {
     .become-mentor-hero h1 {
         font-size: 1.75rem;
+    }
+    
+    .become-mentor-hero .hero-subtitle {
+        font-size: 0.95rem;
     }
     
     .application-header h2 {
@@ -866,6 +936,10 @@ html.dark-mode .step-actions {
         font-size: 1.5rem;
     }
     
+    .benefit-item {
+        padding: 1.5rem 1rem;
+    }
+    
     .step-actions {
         flex-direction: column;
         gap: 1rem;
@@ -874,6 +948,39 @@ html.dark-mode .step-actions {
     
     .step-actions .btn {
         width: 100%;
+        min-height: 44px;
+        padding: 0.875rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .progress-step span {
+        display: none;
+    }
+    
+    .day-header .day-name {
+        font-size: 0.875rem;
+    }
+    
+    .time-slot {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .time-slot span {
+        display: none;
+    }
+    
+    .time-input {
+        width: 100%;
+    }
+    
+    .add-time-slot {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .preferences-grid {
+        grid-template-columns: 1fr;
     }
 }
 
