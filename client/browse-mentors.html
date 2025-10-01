@@ -80,7 +80,7 @@
         <section class="search-filter-section">
             <div class="container">
                 <div class="search-filter-container">
-                    <!-- Advanced Search Bar -->
+                    <!-- Compact Search Bar with Controls -->
                     <div class="search-bar-enhanced">
                         <div class="search-input-wrapper">
                             <i class="fas fa-search search-icon"></i>
@@ -93,32 +93,36 @@
                             <i class="fas fa-search"></i>
                             <span>Search</span>
                         </button>
-                    </div>
-
-                    <!-- Filter Controls -->
-                    <div class="filter-controls">
-                        <button class="filter-toggle" id="filter-toggle">
-                            <i class="fas fa-filter"></i>
-                            <span>Filters</span>
-                            <span class="filter-count" id="filter-count" style="display: none;">0</span>
-                        </button>
-                        <div class="view-controls">
-                            <button class="view-btn active" data-view="grid" title="Grid View">
-                                <i class="fas fa-th"></i>
+                        
+                        <!-- Filter Controls moved to right side -->
+                        <div class="filter-controls">
+                            <button class="filter-toggle" id="filter-toggle">
+                                <i class="fas fa-filter"></i>
+                                <span>Filters</span>
+                                <span class="filter-count" id="filter-count" style="display: none;">0</span>
                             </button>
-                            <button class="view-btn" data-view="list" title="List View">
-                                <i class="fas fa-list"></i>
-                            </button>
-                        </div>
-                        <div class="sort-controls">
-                            <select id="sort-select">
-                                <option value="rating_desc">Highest Rated</option>
-                                <option value="reviews_desc">Most Reviews</option>
-                                <option value="experience_desc">Most Experience</option>
-                                <option value="response_time_asc">Fastest Response</option>
-                                <option value="hourly_rate_asc">Lowest Rate</option>
-                                <option value="created_at_desc">Newest</option>
-                            </select>
+                            <div class="view-controls">
+                                <button class="view-btn active" data-view="grid" title="Grid View">
+                                    <i class="fas fa-th"></i>
+                                </button>
+                                <button class="view-btn" data-view="list" title="List View">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                            <div class="sort-controls">
+                                <select id="sort-select">
+                                    <option value="rating_desc">Highest Rated</option>
+                                    <option value="reviews_desc">Most Reviews</option>
+                                    <option value="experience_desc">Most Experience</option>
+                                    <option value="response_time_asc">Fastest Response</option>
+                                    <option value="hourly_rate_asc">Lowest Rate</option>
+                                    <option value="created_at_desc">Newest</option>
+                                </select>
+                            </div>
+                            <!-- Become a Mentor button added to search bar -->
+                            <div id="mentor-action-area-search" class="mentor-action-area-search">
+                                <!-- Action buttons will be loaded here -->
+                            </div>
                         </div>
                     </div>
 

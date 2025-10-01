@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const nextPageBtn = document.getElementById('next-page');
     const pageInfo = document.getElementById('page-info');
     const mentorActionArea = document.getElementById('mentor-action-area');
+    const mentorActionAreaSearch = document.getElementById('mentor-action-area-search');
     const resetSearchBtn = document.getElementById('reset-search');
     const clearFiltersBtn = document.getElementById('clear-filters');
     const applyFiltersBtn = document.getElementById('apply-filters');
@@ -110,6 +111,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     Sign In to Connect
                 </a>
             `;
+            // Empty the search bar action area when not logged in
+            mentorActionAreaSearch.innerHTML = '';
             return;
         }
 
@@ -126,8 +129,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         Edit Profile
                     </a>
                 `;
+                // Empty the search bar action area for existing mentors
+                mentorActionAreaSearch.innerHTML = '';
             } else {
-                mentorActionArea.innerHTML = `
+                // Keep the original area empty for non-mentors
+                mentorActionArea.innerHTML = '';
+                
+                // Add "Become a Mentor" button to the search bar area
+                mentorActionAreaSearch.innerHTML = `
                     <a href="become-mentor.html" class="btn btn-primary">
                         <i class="fas fa-user-plus"></i>
                         Become a Mentor
@@ -146,7 +155,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
-            mentorActionArea.innerHTML = `
+            // On error, clear the original area and show "Become a Mentor" in search bar
+            mentorActionArea.innerHTML = '';
+            mentorActionAreaSearch.innerHTML = `
                 <a href="become-mentor.html" class="btn btn-primary">
                     <i class="fas fa-user-plus"></i>
                     Become a Mentor
