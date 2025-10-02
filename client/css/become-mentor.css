@@ -872,6 +872,7 @@
 .spec-inputs input,
 .spec-inputs select {
     height: 46px;
+    padding: 0.75rem 1rem;
 }
 
 .spec-name {
@@ -881,6 +882,8 @@
 .spec-level {
     color: var(--text-color);
     font-weight: 500;
+    padding: 0.75rem 1rem;
+    min-width: 140px;
 }
 
 .spec-years {
@@ -894,12 +897,15 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 1rem;
+    flex-shrink: 0;
 }
 
 .remove-spec:hover {
@@ -1003,16 +1009,20 @@
     border-radius: 50%;
     width: 28px;
     height: 28px;
+    min-width: 28px;
+    min-height: 28px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
     transition: var(--bm-transition);
+    flex-shrink: 0;
 }
 
 .remove-time-slot:hover {
     background: #e55555;
+    transform: scale(1.1) rotate(90deg);
 }
 
 .add-time-slot {
