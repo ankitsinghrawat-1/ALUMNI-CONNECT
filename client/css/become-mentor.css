@@ -1416,11 +1416,6 @@ html.dark-mode .btn-step-back {
         width: 100%;
         justify-content: center;
     }
-}
-    .btn-step {
-        width: 100%;
-        justify-content: center;
-    }
     
     .btn-step-next,
     .btn-step-submit {
