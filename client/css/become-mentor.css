@@ -251,7 +251,7 @@
 }
 
 .mentor-application-section .container {
-    max-width: 1500px;
+    max-width: 1800px;
 }
 
 .application-intro {
@@ -274,9 +274,9 @@
 .application-wrapper {
     display: grid;
     grid-template-columns: 280px 1fr;
-    gap: 1.5rem;
+    gap: 1rem;
     align-items: start;
-    max-width: 1600px;
+    max-width: 1800px;
     margin: 0 auto;
 }
 
@@ -559,6 +559,7 @@
     overflow: hidden;
     width: 100%;
     min-width: 0;
+    max-width: none;
     position: relative;
 }
 
@@ -580,7 +581,7 @@
 
 .form-step {
     display: none;
-    padding: 3.5rem 4.5rem;
+    padding: 3rem 3.5rem;
     animation: slideIn 0.4s ease-out;
     min-height: 600px;
 }
@@ -629,7 +630,7 @@
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem 2rem;
+    gap: 2rem 1.5rem;
     width: 100%;
 }
 
