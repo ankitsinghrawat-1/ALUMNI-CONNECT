@@ -174,6 +174,8 @@ CREATE TABLE `mentors` (
 
 
 -- 7a. Mentor Specializations Table
+
+
 CREATE TABLE `mentor_specializations` (
   `specialization_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -187,6 +189,8 @@ CREATE TABLE `mentor_specializations` (
 
 
 -- 7b. Mentor Availability Table
+
+
 CREATE TABLE `mentor_availability` (
   `availability_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -201,6 +205,8 @@ CREATE TABLE `mentor_availability` (
 
 
 -- 7c. Mentor Reviews Table
+
+
 CREATE TABLE `mentor_reviews` (
   `review_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -222,6 +228,8 @@ CREATE TABLE `mentor_reviews` (
 
 
 -- 7d. Mentor Sessions Table
+
+
 CREATE TABLE `mentor_sessions` (
   `session_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -249,6 +257,8 @@ CREATE TABLE `mentor_sessions` (
 
 
 -- 7e. Mentor Achievements Table
+
+
 CREATE TABLE `mentor_achievements` (
   `achievement_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -267,6 +277,8 @@ CREATE TABLE `mentor_achievements` (
 
 
 -- 7f. Mentor Portfolio Table
+
+
 CREATE TABLE `mentor_portfolio` (
   `portfolio_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -286,6 +298,8 @@ CREATE TABLE `mentor_portfolio` (
 
 
 -- 7g. Mentor Analytics Table
+
+
 CREATE TABLE `mentor_analytics` (
   `analytics_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -305,6 +319,8 @@ CREATE TABLE `mentor_analytics` (
 
 
 -- 7h. Mentor Pricing Tiers Table
+
+
 CREATE TABLE `mentor_pricing_tiers` (
   `tier_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -322,6 +338,8 @@ CREATE TABLE `mentor_pricing_tiers` (
 
 
 -- 7i. Mentor Preferences Table
+
+
 CREATE TABLE `mentor_preferences` (
   `preference_id` INT AUTO_INCREMENT PRIMARY KEY,
   `mentor_id` INT NOT NULL,
@@ -379,15 +397,22 @@ CREATE TABLE `campaigns` (
 
 
 CREATE TABLE `notifications` (
-  `notification_id` INT AUTO_INCREMENT PRIMARY KEY,
-  `user_id` INT,
+ `notification_id` INT AUTO_INCREMENT PRIMARY KEY,
+ `user_id` INT,
+ `actor_user_id` INT,
+ `notification_type` VARCHAR(50) NULL,
+ `reference_id` INT,
+ `reference_type` VARCHAR(50) NULL,
   `message` TEXT NOT NULL,
   `is_read` BOOLEAN DEFAULT FALSE,
   `link` VARCHAR(255),
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`actor_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+ INDEX idx_user_notifications (user_id, is_read, created_at),
+  INDEX idx_notification_type (notification_type),
+  INDEX idx_actor_user (actor_user_id)
 );
-
 
 -- 11. Conversations Table (for Messaging)
 
@@ -962,11 +987,6 @@ CREATE TABLE IF NOT EXISTS story_highlight_items (
 );
 
 
--- ==============================================================================
--- SOCIAL FEED ENHANCEMENTS - New Tables (Added for Social Features)
--- ==============================================================================
-
-
 --46. User Follows Table - Manages follower/following relationships
 
 
@@ -1001,39 +1021,3 @@ CREATE TABLE IF NOT EXISTS user_social_stats (
 );
 
 
--- ==============================================================================
--- NOTIFICATIONS TABLE ENHANCEMENTS (Existing table - columns added)
--- ==============================================================================
--- The notifications table (table #10, lines 381-389) has been enhanced with 
--- additional columns to support social interactions:
---
--- New columns added:
--- - actor_user_id: INT (User who triggered the notification)
--- - notification_type: VARCHAR(50) (Type: follow, like, comment, mention, reply, share)
--- - reference_id: INT (ID of the related object like thread, comment, story)
--- - reference_type: VARCHAR(50) (Type of object: thread, comment, story, profile)
---
--- New indexes added:
--- - idx_user_notifications (user_id, is_read, created_at)
--- - idx_notification_type (notification_type)
--- - idx_actor_user (actor_user_id)
---
--- Updated structure:
--- CREATE TABLE `notifications` (
---   `notification_id` INT AUTO_INCREMENT PRIMARY KEY,
---   `user_id` INT,
---   `actor_user_id` INT,                    -- NEW
---   `notification_type` VARCHAR(50) NULL,   -- NEW
---   `reference_id` INT,                     -- NEW
---   `reference_type` VARCHAR(50) NULL,      -- NEW
---   `message` TEXT NOT NULL,
---   `is_read` BOOLEAN DEFAULT FALSE,
---   `link` VARCHAR(255),
---   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
---   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
---   FOREIGN KEY (`actor_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,  -- NEW
---   INDEX idx_user_notifications (user_id, is_read, created_at),  -- NEW
---   INDEX idx_notification_type (notification_type),              -- NEW
---   INDEX idx_actor_user (actor_user_id)                          -- NEW
--- );
--- ==============================================================================
