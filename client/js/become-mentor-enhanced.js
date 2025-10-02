@@ -51,9 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
     prevButtons.forEach(btn => btn.addEventListener('click', prevStep));
     form.addEventListener('submit', handleSubmit);
     
-    // Prevent Enter key from submitting the form (except on submit button)
+    // Prevent Enter key from submitting the form (except on submit button, textarea, and skills input)
     form.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && e.target.type !== 'textarea' && e.target.type !== 'submit') {
+        if (e.key === 'Enter' && 
+            e.target.type !== 'textarea' && 
+            e.target.type !== 'submit' &&
+            e.target.id !== 'skills-input') {
             e.preventDefault();
             return false;
         }
