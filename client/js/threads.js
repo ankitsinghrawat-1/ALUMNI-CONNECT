@@ -56,10 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <article class="modern-thread-card" data-thread-id="${thread.thread_id}">
                 <div class="modern-thread-header">
                     <div class="modern-thread-author">
-                        <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="modern-author-avatar">
+                        <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="modern-author-avatar" onclick="window.location.href='social-profile.html?userId=${thread.user_id}'" style="cursor: pointer;">
                         <div class="modern-author-details">
                             <h4>
-                                <a href="view-profile.html?email=${thread.author_email}">${sanitizeHTML(thread.author)}</a>
+                                <a href="social-profile.html?userId=${thread.user_id}">${sanitizeHTML(thread.author)}</a>
                             </h4>
                             <span class="modern-thread-time">${timeAgo(thread.created_at)}</span>
                         </div>
@@ -338,9 +338,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="thread-detail">
                     <div class="thread-header">
                         <div class="thread-author">
-                            <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="author-avatar">
+                            <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="author-avatar" onclick="window.location.href='social-profile.html?userId=${thread.user_id}'" style="cursor: pointer;">
                             <div class="author-info">
-                                <h4><a href="view-profile.html?email=${thread.author_email}">${sanitizeHTML(thread.author)}</a></h4>
+                                <h4><a href="social-profile.html?userId=${thread.user_id}">${sanitizeHTML(thread.author)}</a></h4>
                                 <span>${timeAgo(thread.created_at)}</span>
                             </div>
                         </div>
