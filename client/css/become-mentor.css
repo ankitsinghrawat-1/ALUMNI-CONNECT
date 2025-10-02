@@ -251,7 +251,7 @@
 }
 
 .mentor-application-section .container {
-    max-width: 1500px;
+    max-width: 1800px;
 }
 
 .application-intro {
@@ -274,9 +274,9 @@
 .application-wrapper {
     display: grid;
     grid-template-columns: 280px 1fr;
-    gap: 2.5rem;
+    gap: 1rem;
     align-items: start;
-    max-width: 1400px;
+    max-width: 1800px;
     margin: 0 auto;
 }
 
@@ -559,6 +559,7 @@
     overflow: hidden;
     width: 100%;
     min-width: 0;
+    max-width: none;
     position: relative;
 }
 
@@ -580,7 +581,7 @@
 
 .form-step {
     display: none;
-    padding: 3.5rem 4.5rem;
+    padding: 3rem 3.5rem;
     animation: slideIn 0.4s ease-out;
     min-height: 600px;
 }
@@ -629,7 +630,7 @@
 .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 2.5rem 2rem;
+    gap: 2rem 1.5rem;
     width: 100%;
 }
 
@@ -871,6 +872,7 @@
 .spec-inputs input,
 .spec-inputs select {
     height: 46px;
+    padding: 0.75rem 1rem;
 }
 
 .spec-name {
@@ -880,6 +882,8 @@
 .spec-level {
     color: var(--text-color);
     font-weight: 500;
+    padding: 0.75rem 1rem;
+    min-width: 140px;
 }
 
 .spec-years {
@@ -893,12 +897,15 @@
     border-radius: 50%;
     width: 40px;
     height: 40px;
+    min-width: 40px;
+    min-height: 40px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     font-size: 1rem;
+    flex-shrink: 0;
 }
 
 .remove-spec:hover {
@@ -1002,16 +1009,20 @@
     border-radius: 50%;
     width: 28px;
     height: 28px;
+    min-width: 28px;
+    min-height: 28px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.75rem;
     transition: var(--bm-transition);
+    flex-shrink: 0;
 }
 
 .remove-time-slot:hover {
     background: #e55555;
+    transform: scale(1.1) rotate(90deg);
 }
 
 .add-time-slot {
@@ -1412,11 +1423,6 @@ html.dark-mode .btn-step-back {
         gap: 1rem;
     }
     
-    .btn-step {
-        width: 100%;
-        justify-content: center;
-    }
-}
     .btn-step {
         width: 100%;
         justify-content: center;
