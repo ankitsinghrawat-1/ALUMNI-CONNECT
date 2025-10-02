@@ -12,6 +12,7 @@ module.exports = (pool, upload) => {
         const [rows] = await pool.query(`
             SELECT 
                 t.thread_id, 
+                t.user_id,
                 t.content, 
                 t.media_url, 
                 t.media_type, 
@@ -102,7 +103,8 @@ module.exports = (pool, upload) => {
     router.get('/:id', asyncHandler(async (req, res) => {
         const [rows] = await pool.query(`
             SELECT 
-                t.thread_id, 
+                t.thread_id,
+                t.user_id,
                 t.content, 
                 t.media_url, 
                 t.media_type, 
@@ -340,7 +342,8 @@ module.exports = (pool, upload) => {
         const { id } = req.params;
         const [comments] = await pool.query(`
             SELECT 
-                tc.comment_id, 
+                tc.comment_id,
+                tc.user_id,
                 tc.content, 
                 tc.created_at, 
                 u.full_name as author, 
