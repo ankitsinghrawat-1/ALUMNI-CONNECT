@@ -148,8 +148,9 @@ module.exports = (pool) => {
 
         const user = userRows[0];
 
-        // Get or create social stats
+        // Get or create social stats and update them
         await ensureUserStats(pool, userId);
+        await updateUserStats(pool, userId);
         const [statsRows] = await pool.query(
             'SELECT * FROM user_social_stats WHERE user_id = ?',
             [userId]
