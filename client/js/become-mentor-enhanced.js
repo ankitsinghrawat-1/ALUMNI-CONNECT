@@ -1,4 +1,4 @@
-// Enhanced Become Mentor JavaScript
+// Enhanced Become Mentor JavaScript - Redesigned
 document.addEventListener('DOMContentLoaded', () => {
     // Check authentication
     if (!localStorage.getItem('alumniConnectToken')) {
@@ -9,7 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // DOM Elements
     const form = document.getElementById('become-mentor-form');
     const steps = document.querySelectorAll('.form-step');
-    const progressSteps = document.querySelectorAll('.progress-step');
+    const progressStepItems = document.querySelectorAll('.progress-step-item');
+    const progressPercentage = document.getElementById('progress-percentage');
+    const currentTip = document.getElementById('current-tip');
     const nextButtons = document.querySelectorAll('.next-step');
     const prevButtons = document.querySelectorAll('.prev-step');
     const submitButton = document.querySelector('.submit-application');
@@ -31,7 +33,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // State
     let currentStep = 1;
     let skillsArray = [];
-    let availabilityData = {};
+    let completedSteps = [];
+    
+    // Pro tips for each step
+    const proTips = {
+        1: 'Complete all sections to increase your visibility to potential mentees.',
+        2: 'Add at least 5 skills to make your profile more searchable.',
+        3: 'Being flexible with your availability increases connection opportunities.',
+        4: 'Setting competitive pricing helps attract more mentees.'
+    };
 
     // Initialize
     initializeForm();
@@ -42,11 +52,17 @@ document.addEventListener('DOMContentLoaded', () => {
     form.addEventListener('submit', handleSubmit);
 
     // Skills functionality
-    skillsInput.addEventListener('keypress', handleSkillInput);
-    addSpecializationBtn.addEventListener('click', addSpecialization);
+    if (skillsInput) {
+        skillsInput.addEventListener('keypress', handleSkillInput);
+    }
+    if (addSpecializationBtn) {
+        addSpecializationBtn.addEventListener('click', addSpecialization);
+    }
 
     // Bio character counter
-    bioTextarea.addEventListener('input', updateCharCounter);
+    if (bioTextarea) {
+        bioTextarea.addEventListener('input', updateCharCounter);
+    }
 
     // Availability handling
     setupAvailabilityHandlers();
@@ -56,13 +72,26 @@ document.addEventListener('DOMContentLoaded', () => {
     dayCheckboxes.forEach(checkbox => {
         checkbox.addEventListener('change', toggleDayAvailability);
     });
+    
+    // Smooth scroll for hero button
+    const scrollBtn = document.querySelector('.btn-scroll-down');
+    if (scrollBtn) {
+        scrollBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('application-form').scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+            });
+        });
+    }
 
     function initializeForm() {
         showStep(1);
+        updateProgress();
         updateCharCounter();
         
         // Initialize with one specialization
-        if (specializationsContainer.children.length === 0) {
+        if (specializationsContainer && specializationsContainer.children.length === 0) {
             addSpecialization();
         }
 
@@ -73,35 +102,50 @@ document.addEventListener('DOMContentLoaded', () => {
     function showStep(stepNumber) {
         // Hide all steps
         steps.forEach(step => step.classList.remove('active'));
-        progressSteps.forEach(step => step.classList.remove('active'));
+        progressStepItems.forEach(step => {
+            step.classList.remove('active');
+            if (completedSteps.includes(parseInt(step.dataset.step))) {
+                step.classList.add('completed');
+            }
+        });
 
         // Show current step
-        const currentStepElement = document.querySelector(`[data-step="${stepNumber}"]`);
-        const currentProgressStep = document.querySelector(`.progress-step[data-step="${stepNumber}"]`);
+        const currentStepElement = document.querySelector(`.form-step[data-step="${stepNumber}"]`);
+        const currentProgressItem = document.querySelector(`.progress-step-item[data-step="${stepNumber}"]`);
         
         if (currentStepElement) {
             currentStepElement.classList.add('active');
         }
         
-        if (currentProgressStep) {
-            currentProgressStep.classList.add('active');
+        if (currentProgressItem) {
+            currentProgressItem.classList.add('active');
         }
 
-        // Mark previous steps as completed
-        progressSteps.forEach(step => {
-            const stepNum = parseInt(step.dataset.step);
-            if (stepNum < stepNumber) {
-                step.classList.add('completed');
-            } else {
-                step.classList.remove('completed');
-            }
-        });
-
         currentStep = stepNumber;
+        
+        // Update tip
+        if (currentTip && proTips[stepNumber]) {
+            currentTip.textContent = proTips[stepNumber];
+        }
+        
+        // Update progress percentage
+        updateProgress();
+    }
+    
+    function updateProgress() {
+        const totalSteps = 4;
+        const percentage = Math.round((completedSteps.length / totalSteps) * 100);
+        if (progressPercentage) {
+            progressPercentage.textContent = percentage + '%';
+        }
     }
 
     function nextStep() {
         if (validateCurrentStep()) {
+            // Mark current step as completed
+            if (!completedSteps.includes(currentStep)) {
+                completedSteps.push(currentStep);
+            }
             if (currentStep < 4) {
                 showStep(currentStep + 1);
             }
@@ -115,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function validateCurrentStep() {
-        const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`);
+        const currentStepElement = document.querySelector(`.form-step[data-step="${currentStep}"]`);
         const requiredFields = currentStepElement.querySelectorAll('[required]');
         let isValid = true;
 

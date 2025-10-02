@@ -25,76 +25,148 @@
     </header>
 
     <main class="become-mentor-main">
-        <!-- Hero Section -->
+        <!-- Hero Section - Redesigned -->
         <section class="become-mentor-hero">
+            <div class="hero-background">
+                <div class="hero-pattern"></div>
+                <div class="hero-gradient"></div>
+            </div>
             <div class="container">
                 <div class="hero-content">
-                    <h1>Become a Mentor</h1>
-                    <p class="hero-subtitle">Share your knowledge, experience, and insights with the next generation of professionals. Make a meaningful impact while building valuable connections.</p>
+                    <div class="hero-badge">
+                        <i class="fas fa-star"></i>
+                        <span>Join 500+ Expert Mentors</span>
+                    </div>
+                    <h1 class="hero-title">
+                        Become a <span class="highlight">Mentor</span>
+                    </h1>
+                    <p class="hero-subtitle">
+                        Share your expertise, inspire the next generation, and build meaningful connections. 
+                        Transform lives while growing your professional network.
+                    </p>
                     
                     <div class="mentor-benefits">
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="fas fa-heart"></i>
+                        <div class="benefit-card">
+                            <div class="benefit-icon-wrapper">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-rocket"></i>
+                                </div>
                             </div>
                             <h3>Make an Impact</h3>
-                            <p>Guide careers and change lives through meaningful mentorship</p>
+                            <p>Guide careers and shape futures through personalized mentorship</p>
                         </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="fas fa-network-wired"></i>
+                        <div class="benefit-card">
+                            <div class="benefit-icon-wrapper">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
                             </div>
                             <h3>Expand Network</h3>
-                            <p>Connect with talented professionals across industries</p>
+                            <p>Connect with talented professionals across diverse industries</p>
                         </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="fas fa-brain"></i>
+                        <div class="benefit-card">
+                            <div class="benefit-icon-wrapper">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
                             </div>
                             <h3>Stay Current</h3>
-                            <p>Learn from fresh perspectives and stay updated with trends</p>
+                            <p>Learn from fresh perspectives and stay at the industry forefront</p>
                         </div>
-                        <div class="benefit-item">
-                            <div class="benefit-icon">
-                                <i class="fas fa-dollar-sign"></i>
+                        <div class="benefit-card">
+                            <div class="benefit-icon-wrapper">
+                                <div class="benefit-icon">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
                             </div>
                             <h3>Earn Revenue</h3>
-                            <p>Monetize your expertise through paid mentoring sessions</p>
+                            <p>Monetize your expertise through flexible paid sessions</p>
                         </div>
+                    </div>
+                    
+                    <div class="hero-action">
+                        <a href="#application-form" class="btn-scroll-down">
+                            <span>Start Your Journey</span>
+                            <i class="fas fa-arrow-down"></i>
+                        </a>
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- Application Form -->
-        <section class="mentor-application-section">
+        <!-- Application Form - Redesigned -->
+        <section id="application-form" class="mentor-application-section">
             <div class="container">
-                <div class="application-container">
-                    <div class="application-header">
-                        <h2>Mentor Application</h2>
-                        <p>Tell us about yourself and your expertise to create your mentor profile</p>
-                        
-                        <div class="progress-bar">
-                            <div class="progress-step active" data-step="1">
-                                <div class="step-number">1</div>
-                                <span>Basic Info</span>
+                <div class="application-intro">
+                    <h2 class="section-title">Complete Your Mentor Profile</h2>
+                    <p class="section-subtitle">Just a few steps to join our community of expert mentors</p>
+                </div>
+                
+                <div class="application-wrapper">
+                    <!-- Progress Sidebar -->
+                    <div class="progress-sidebar">
+                        <div class="progress-header">
+                            <h3>Application Progress</h3>
+                            <span class="progress-percentage" id="progress-percentage">0%</span>
+                        </div>
+                        <div class="progress-steps">
+                            <div class="progress-step-item active" data-step="1">
+                                <div class="step-indicator">
+                                    <div class="step-number">1</div>
+                                    <div class="step-check"><i class="fas fa-check"></i></div>
+                                </div>
+                                <div class="step-info">
+                                    <h4>Basic Information</h4>
+                                    <p>Your professional background</p>
+                                </div>
                             </div>
-                            <div class="progress-step" data-step="2">
-                                <div class="step-number">2</div>
-                                <span>Expertise</span>
+                            <div class="step-connector"></div>
+                            <div class="progress-step-item" data-step="2">
+                                <div class="step-indicator">
+                                    <div class="step-number">2</div>
+                                    <div class="step-check"><i class="fas fa-check"></i></div>
+                                </div>
+                                <div class="step-info">
+                                    <h4>Expertise & Skills</h4>
+                                    <p>Your areas of knowledge</p>
+                                </div>
                             </div>
-                            <div class="progress-step" data-step="3">
-                                <div class="step-number">3</div>
-                                <span>Availability</span>
+                            <div class="step-connector"></div>
+                            <div class="progress-step-item" data-step="3">
+                                <div class="step-indicator">
+                                    <div class="step-number">3</div>
+                                    <div class="step-check"><i class="fas fa-check"></i></div>
+                                </div>
+                                <div class="step-info">
+                                    <h4>Availability</h4>
+                                    <p>When you're available</p>
+                                </div>
                             </div>
-                            <div class="progress-step" data-step="4">
-                                <div class="step-number">4</div>
-                                <span>Pricing & Preferences</span>
+                            <div class="step-connector"></div>
+                            <div class="progress-step-item" data-step="4">
+                                <div class="step-indicator">
+                                    <div class="step-number">4</div>
+                                    <div class="step-check"><i class="fas fa-check"></i></div>
+                                </div>
+                                <div class="step-info">
+                                    <h4>Pricing & Details</h4>
+                                    <p>Final touches</p>
+                                </div>
                             </div>
                         </div>
+                        
+                        <div class="progress-tips">
+                            <div class="tip-icon">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <h4>Pro Tip</h4>
+                            <p id="current-tip">Complete all sections to increase your visibility to potential mentees.</p>
+                        </div>
                     </div>
-
-                    <form id="become-mentor-form" class="mentor-application-form">
+                    
+                    <!-- Form Content -->
+                    <div class="form-container">
+                        <form id="become-mentor-form" class="mentor-application-form">
                         <!-- Step 1: Basic Information -->
                         <div class="form-step active" data-step="1">
                             <div class="step-header">
@@ -258,8 +330,8 @@
                             </div>
 
                             <div class="step-actions">
-                                <button type="button" class="btn btn-primary next-step">
-                                    Continue
+                                <button type="button" class="btn-step btn-step-next next-step">
+                                    <span>Continue</span>
                                     <i class="fas fa-arrow-right"></i>
                                 </button>
                             </div>
@@ -376,11 +448,11 @@
                             </div>
 
                             <div class="step-actions">
-                                <button type="button" class="btn btn-secondary prev-step">
+                                <button type="button" class="btn-step btn-step-back prev-step">
                                     <i class="fas fa-arrow-left"></i>
                                     Back
                                 </button>
-                                <button type="button" class="btn btn-primary next-step">
+                                <button type="button" class="btn-step btn-step-next next-step">
                                     Continue
                                     <i class="fas fa-arrow-right"></i>
                                 </button>
@@ -558,11 +630,11 @@
                             </div>
 
                             <div class="step-actions">
-                                <button type="button" class="btn btn-secondary prev-step">
+                                <button type="button" class="btn-step btn-step-back prev-step">
                                     <i class="fas fa-arrow-left"></i>
                                     Back
                                 </button>
-                                <button type="button" class="btn btn-primary next-step">
+                                <button type="button" class="btn-step btn-step-next next-step">
                                     Continue
                                     <i class="fas fa-arrow-right"></i>
                                 </button>
@@ -692,19 +764,20 @@
                             </div>
 
                             <div class="step-actions">
-                                <button type="button" class="btn btn-secondary prev-step">
+                                <button type="button" class="btn-step btn-step-back prev-step">
                                     <i class="fas fa-arrow-left"></i>
                                     Back
                                 </button>
-                                <button type="submit" class="btn btn-primary submit-application">
+                                <button type="submit" class="btn-step btn-step-submit submit-application">
                                     <i class="fas fa-check-circle"></i>
-                                    Submit Application
+                                    <span>Submit Application</span>
                                 </button>
                             </div>
                         </div>
 
                         <div id="message" class="form-message"></div>
                     </form>
+                    </div>
                 </div>
             </div>
         </section>
