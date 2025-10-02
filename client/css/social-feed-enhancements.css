@@ -255,6 +255,63 @@
     transform: rotate(90deg);
 }
 
+/* Profile button with avatar */
+.profile-btn-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 0.5rem;
+    border: 2px solid var(--primary-color);
+}
+
+.view-profile-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.view-profile-btn #profile-btn-icon {
+    margin-right: 0;
+}
+
+/* Filter button next to search */
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    position: relative;
+    flex: 1;
+    max-width: 400px;
+}
+
+.modern-filter-btn {
+    background: var(--surface-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    height: 44px;
+}
+
+.modern-filter-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: var(--box-shadow-subtle);
+}
+
+.modern-filter-btn.active {
+    background: var(--primary-color);
+    color: white;
+}
+
 /* Better thread media styling */
 .modern-thread-media {
     margin: 1rem 0;

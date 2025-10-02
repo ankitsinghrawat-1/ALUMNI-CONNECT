@@ -552,9 +552,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize modern features
     const initializeModernFeatures = () => {
-        // Profile button handler
+        // Profile button handler with avatar
         const profileBtn = document.getElementById('view-profile-btn');
+        const profileBtnAvatar = document.getElementById('profile-btn-avatar');
+        const profileBtnIcon = document.getElementById('profile-btn-icon');
+        
         if (profileBtn && currentUser) {
+            // Load profile picture if available
+            if (currentUser.profile_pic_url && profileBtnAvatar && profileBtnIcon) {
+                const profilePicUrl = `http://localhost:3000/${currentUser.profile_pic_url}`;
+                profileBtnAvatar.src = profilePicUrl;
+                profileBtnAvatar.alt = currentUser.full_name;
+                profileBtnAvatar.style.display = 'block';
+                profileBtnIcon.style.display = 'none';
+            }
+            
             profileBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 window.location.href = `social-profile.html?userId=${currentUser.user_id}`;
