@@ -1,0 +1,530 @@
+/* Enhanced Social Feed Styles - Additional improvements */
+
+/* Better hover effects for thread cards */
+.modern-thread-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-thread-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Improved author avatar styling */
+.modern-author-avatar {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.modern-author-avatar:hover {
+    border-color: var(--primary-color);
+    transform: scale(1.05);
+}
+
+/* Better button styling */
+.modern-stat-btn {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-radius: var(--border-radius-small);
+    padding: 0.75rem 1rem;
+}
+
+.modern-stat-btn:hover {
+    background: rgba(74, 144, 226, 0.1);
+    transform: translateY(-2px);
+}
+
+.modern-stat-btn.liked {
+    color: #e74c3c;
+}
+
+.modern-stat-btn.liked i {
+    color: #e74c3c;
+}
+
+.modern-stat-btn.bookmarked i {
+    color: var(--primary-color);
+}
+
+/* Loading states */
+.skeleton-loader {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-thread-card {
+    background: var(--surface-color);
+    border-radius: var(--border-radius-medium);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.skeleton-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+.skeleton-text {
+    height: 1rem;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+    margin: 0.5rem 0;
+}
+
+.skeleton-text.short {
+    width: 60%;
+}
+
+.skeleton-text.medium {
+    width: 80%;
+}
+
+/* Improved empty states */
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-large);
+    box-shadow: var(--box-shadow-subtle);
+}
+
+.empty-state i {
+    font-size: 5rem;
+    color: var(--subtle-text-color);
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.empty-state h3 {
+    font-size: 1.75rem;
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+
+.empty-state p {
+    color: var(--subtle-text-color);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.empty-state-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* Better error states */
+.error-state {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(192, 57, 43, 0.1) 100%);
+    border: 2px solid rgba(231, 76, 60, 0.2);
+    border-radius: var(--border-radius-large);
+}
+
+.error-state i {
+    font-size: 4rem;
+    color: #e74c3c;
+    margin-bottom: 1.5rem;
+}
+
+.error-state h3 {
+    font-size: 1.5rem;
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+
+.error-state p {
+    color: var(--subtle-text-color);
+    margin-bottom: 1rem;
+}
+
+.error-reasons {
+    text-align: left;
+    max-width: 400px;
+    margin: 1.5rem auto;
+    padding: 1rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-small);
+}
+
+.error-reasons li {
+    padding: 0.5rem 0;
+    color: var(--text-color);
+}
+
+.error-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+/* Toast notifications improvements */
+.toastify {
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius-medium);
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toastify.success {
+    background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+}
+
+.toastify.error {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+}
+
+.toastify.info {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+}
+
+/* Improved modal styling */
+.modal {
+    backdrop-filter: blur(4px);
+}
+
+.modal-content {
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-header {
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-header h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.modal .close {
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--subtle-text-color);
+    opacity: 1;
+    transition: all 0.3s ease;
+}
+
+.modal .close:hover {
+    color: var(--text-color);
+    transform: rotate(90deg);
+}
+
+/* Better thread media styling */
+.modern-thread-media {
+    margin: 1rem 0;
+    border-radius: var(--border-radius-medium);
+    overflow: hidden;
+    position: relative;
+}
+
+.modern-thread-image {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modern-thread-image:hover {
+    transform: scale(1.02);
+}
+
+.modern-thread-video {
+    width: 100%;
+    max-height: 600px;
+    border-radius: var(--border-radius-medium);
+}
+
+/* Improved comment section */
+.comments-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
+}
+
+.comments-section h4 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+}
+
+#comment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+#comment-form textarea {
+    min-height: 100px;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: var(--border-radius-medium);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: vertical;
+    transition: all 0.3s ease;
+}
+
+#comment-form textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.comment-item {
+    padding: 1.5rem;
+    background: var(--surface-color);
+    border-radius: var(--border-radius-medium);
+    margin-bottom: 1rem;
+    transition: all 0.3s ease;
+}
+
+.comment-item:hover {
+    box-shadow: var(--box-shadow-subtle);
+    transform: translateX(5px);
+}
+
+.comment-author {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.comment-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-author strong {
+    font-size: 1rem;
+    color: var(--text-color);
+}
+
+.comment-author small {
+    color: var(--subtle-text-color);
+    font-size: 0.875rem;
+}
+
+.comment-content {
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-top: 0.5rem;
+}
+
+/* Improved story items */
+.story-item {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.story-item:hover {
+    transform: translateY(-5px);
+}
+
+.story-item.active .story-ring {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+}
+
+.story-ring {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 3px solid var(--border-color);
+    padding: 3px;
+    transition: all 0.3s ease;
+}
+
+.story-ring.has-stories {
+    border: 3px solid var(--primary-color);
+    background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+    padding: 3px;
+}
+
+.story-avatar {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--surface-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.story-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+    .content-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .modern-sidebar {
+        display: none;
+    }
+
+    .modern-thread-card {
+        border-radius: var(--border-radius-small);
+    }
+
+    .modern-thread-stats {
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+
+    .modern-stat-btn {
+        padding: 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .empty-state {
+        padding: 2rem 1rem;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+    }
+
+    .empty-state h3 {
+        font-size: 1.25rem;
+    }
+
+    .empty-state p {
+        font-size: 1rem;
+    }
+}
+
+/* Dark mode improvements */
+html.dark-mode .skeleton-avatar,
+html.dark-mode .skeleton-text {
+    background: linear-gradient(90deg, #2c3e50 25%, #34495e 50%, #2c3e50 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+html.dark-mode .error-state {
+    background: linear-gradient(135deg, rgba(231, 76, 60, 0.15) 0%, rgba(192, 57, 43, 0.15) 100%);
+}
+
+html.dark-mode .error-reasons {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+html.dark-mode .comment-item {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+html.dark-mode .comment-item:hover {
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Accessibility improvements */
+.btn:focus,
+.modern-stat-btn:focus,
+.modern-action-btn:focus {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+.modern-stat-btn:focus-visible,
+.modern-action-btn:focus-visible {
+    outline: 3px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Performance optimization: will-change for animated elements */
+.modern-thread-card,
+.story-item,
+.modern-stat-btn {
+    will-change: transform;
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Better link styling */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--accent-color);
+    text-decoration: underline;
+}
+
+/* Loading spinner improvements */
+.modern-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.spinner-ring {
+    border: 3px solid rgba(74, 144, 226, 0.1);
+    border-top-color: var(--primary-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}

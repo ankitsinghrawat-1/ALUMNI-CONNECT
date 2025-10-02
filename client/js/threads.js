@@ -116,6 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load threads
     const loadThreads = async () => {
         try {
+            // Show loading skeleton
+            threadsFeed.innerHTML = createLoadingSkeleton();
+            
             const threads = await window.api.get('/threads');
             allThreads = threads;
             
@@ -166,6 +169,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         }
+    };
+
+    // Create loading skeleton
+    const createLoadingSkeleton = () => {
+        return Array(3).fill(0).map(() => `
+            <div class="skeleton-thread-card">
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <div class="skeleton-avatar"></div>
+                    <div style="flex: 1;">
+                        <div class="skeleton-text short"></div>
+                        <div class="skeleton-text short" style="width: 40%;"></div>
+                    </div>
+                </div>
+                <div class="skeleton-text medium"></div>
+                <div class="skeleton-text medium"></div>
+                <div class="skeleton-text short" style="width: 30%;"></div>
+            </div>
+        `).join('');
     };
 
     // Load and display stories
