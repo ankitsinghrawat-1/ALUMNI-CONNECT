@@ -124,6 +124,7 @@ const userRoutes = require('./api/users')(pool, upload);
 const groupRoutes = require('./api/groups')(pool, upload);
 const threadRoutes = require('./api/threads')(pool, upload);
 const storyRoutes = require('./api/stories')(pool, upload);
+const socialRoutes = require('./api/social')(pool);
 
 // Apply verifyToken middleware to all routes that require authentication
 app.use('/api/admin', verifyToken, adminRoutes);
@@ -138,6 +139,7 @@ app.use('/api/users', userRoutes); // User creation and login don't need a token
 app.use('/api/groups', verifyToken, groupRoutes);
 app.use('/api/threads', threadRoutes); // Some thread endpoints are public (viewing)
 app.use('/api/stories', storyRoutes); // Some story endpoints are public (viewing)
+app.use('/api/social', socialRoutes); // Social features (follow, profile stats, highlights)
 
 
 // --- CENTRAL ERROR HANDLING MIDDLEWARE ---

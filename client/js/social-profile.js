@@ -1,0 +1,421 @@
+// client/js/social-profile.js
+document.addEventListener('DOMContentLoaded', async () => {
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('userId') || params.get('id');
+    let currentUser = null;
+    let profileUser = null;
+    let isOwnProfile = false;
+
+    if (!userId) {
+        showToast('User ID not provided', 'error');
+        window.location.href = 'threads.html';
+        return;
+    }
+
+    // Get current user
+    try {
+        currentUser = await window.api.get('/users/profile');
+        isOwnProfile = currentUser.user_id === parseInt(userId);
+    } catch (error) {
+        console.error('Error getting current user:', error);
+    }
+
+    // Load profile data
+    const loadProfile = async () => {
+        try {
+            const data = await window.api.get(`/social/profile/${userId}`);
+            profileUser = data.user;
+            
+            // Update profile header
+            const avatar = document.getElementById('profile-avatar');
+            if (profileUser.profile_pic_url) {
+                avatar.src = `http://localhost:3000/${profileUser.profile_pic_url}`;
+            } else {
+                avatar.src = createInitialsAvatar(profileUser.full_name);
+            }
+
+            document.getElementById('profile-name').textContent = profileUser.full_name;
+            
+            if (profileUser.verification_status === 'verified') {
+                document.getElementById('verification-badge').style.display = 'inline';
+            }
+
+            const titleParts = [];
+            if (profileUser.job_title) titleParts.push(profileUser.job_title);
+            if (profileUser.company) titleParts.push(`at ${profileUser.company}`);
+            if (titleParts.length > 0) {
+                document.getElementById('profile-title').textContent = titleParts.join(' ');
+            }
+
+            if (profileUser.bio) {
+                document.getElementById('profile-bio').textContent = profileUser.bio;
+            }
+
+            // Update stats
+            document.getElementById('threads-count').textContent = data.stats.threads;
+            document.getElementById('followers-count').textContent = data.stats.followers;
+            document.getElementById('following-count').textContent = data.stats.following;
+            document.getElementById('likes-count').textContent = data.stats.likes_received;
+            document.getElementById('activity-likes').textContent = data.stats.likes_received;
+            document.getElementById('activity-comments').textContent = data.stats.comments_received;
+
+            // Update profile links
+            const viewProfileBtn = document.getElementById('view-full-profile-btn');
+            viewProfileBtn.href = `view-profile.html?email=${profileUser.email}`;
+
+            // Setup follow button
+            if (!isOwnProfile && currentUser) {
+                const followBtn = document.getElementById('follow-btn');
+                followBtn.style.display = 'inline-flex';
+                await updateFollowButton();
+            }
+
+            // Load highlights
+            if (data.highlights && data.highlights.length > 0) {
+                loadHighlights(data.highlights);
+            }
+
+        } catch (error) {
+            console.error('Error loading profile:', error);
+            showToast('Error loading profile', 'error');
+        }
+    };
+
+    // Update follow button state
+    const updateFollowButton = async () => {
+        try {
+            const status = await window.api.get(`/social/follow-status/${userId}`);
+            const followBtn = document.getElementById('follow-btn');
+            
+            if (status.following) {
+                followBtn.innerHTML = '<i class="fas fa-user-check"></i> Following';
+                followBtn.classList.remove('btn-primary');
+                followBtn.classList.add('btn-secondary');
+            } else {
+                followBtn.innerHTML = '<i class="fas fa-user-plus"></i> Follow';
+                followBtn.classList.remove('btn-secondary');
+                followBtn.classList.add('btn-primary');
+            }
+        } catch (error) {
+            console.error('Error getting follow status:', error);
+        }
+    };
+
+    // Handle follow/unfollow
+    document.getElementById('follow-btn')?.addEventListener('click', async () => {
+        if (!currentUser) {
+            showToast('Please log in to follow users', 'error');
+            return;
+        }
+
+        try {
+            const followBtn = document.getElementById('follow-btn');
+            const isFollowing = followBtn.textContent.includes('Following');
+
+            if (isFollowing) {
+                await window.api.delete(`/social/follow/${userId}`);
+                showToast('Unfollowed successfully', 'success');
+            } else {
+                await window.api.post(`/social/follow/${userId}`);
+                showToast('Following successfully', 'success');
+            }
+
+            await updateFollowButton();
+            await loadProfile(); // Refresh stats
+        } catch (error) {
+            console.error('Error toggling follow:', error);
+            showToast('Error updating follow status', 'error');
+        }
+    });
+
+    // Handle message button
+    document.getElementById('message-btn').addEventListener('click', () => {
+        if (!currentUser) {
+            showToast('Please log in to send messages', 'error');
+            return;
+        }
+        window.location.href = `messages.html?user=${profileUser.email}`;
+    });
+
+    // Load highlights
+    const loadHighlights = (highlights) => {
+        const highlightsSection = document.getElementById('highlights-section');
+        const container = document.getElementById('highlights-container');
+        
+        if (highlights.length === 0) {
+            highlightsSection.style.display = 'none';
+            return;
+        }
+
+        highlightsSection.style.display = 'block';
+        
+        container.innerHTML = highlights.map(highlight => {
+            const coverUrl = highlight.cover_image_url 
+                ? `http://localhost:3000/${highlight.cover_image_url}`
+                : '';
+            
+            return `
+                <div class="highlight-item" onclick="viewHighlight(${highlight.highlight_id})">
+                    <div class="highlight-ring">
+                        <div class="highlight-cover">
+                            ${coverUrl ? `<img src="${coverUrl}" alt="${highlight.highlight_name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '<i class="fas fa-bookmark"></i>'}
+                        </div>
+                    </div>
+                    <span class="highlight-name">${highlight.highlight_name}</span>
+                </div>
+            `;
+        }).join('');
+    };
+
+    // Load user threads
+    const loadThreads = async () => {
+        try {
+            const data = await window.api.get(`/social/threads/${userId}`);
+            const container = document.getElementById('threads-list');
+            
+            if (data.threads.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-comments"></i>
+                        <h3>No Threads Yet</h3>
+                        <p>This user hasn't posted any threads yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = data.threads.map(thread => createThreadCard(thread)).join('');
+        } catch (error) {
+            console.error('Error loading threads:', error);
+            const container = document.getElementById('threads-list');
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Error Loading Threads</h3>
+                    <p>Unable to load threads at this time.</p>
+                </div>
+            `;
+        }
+    };
+
+    // Create thread card HTML
+    const createThreadCard = (thread) => {
+        const profilePicUrl = thread.profile_pic_url 
+            ? `http://localhost:3000/${thread.profile_pic_url}` 
+            : createInitialsAvatar(thread.author);
+
+        let mediaContent = '';
+        if (thread.media_url) {
+            const mediaUrl = `http://localhost:3000/${thread.media_url}`;
+            if (thread.media_type === 'image') {
+                mediaContent = `
+                    <img src="${mediaUrl}" alt="Thread media" class="modern-thread-image">
+                `;
+            } else if (thread.media_type === 'video') {
+                mediaContent = `
+                    <video controls class="modern-thread-video">
+                        <source src="${mediaUrl}" type="video/mp4">
+                    </video>
+                `;
+            }
+        }
+
+        return `
+            <article class="modern-thread-card" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'">
+                <div class="modern-thread-header">
+                    <div class="modern-thread-author">
+                        <img src="${profilePicUrl}" alt="${thread.author}" class="modern-author-avatar">
+                        <div class="modern-author-details">
+                            <h4>${thread.author}</h4>
+                            <span class="modern-thread-time">${timeAgo(thread.created_at)}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modern-thread-content">
+                    ${thread.content ? `<p class="modern-thread-text">${sanitizeHTML(thread.content).replace(/\n/g, '<br>')}</p>` : ''}
+                    ${mediaContent ? `<div class="modern-thread-media">${mediaContent}</div>` : ''}
+                </div>
+
+                <div class="modern-thread-stats">
+                    <span><i class="far fa-heart"></i> ${thread.like_count || 0}</span>
+                    <span><i class="far fa-comment"></i> ${thread.comment_count || 0}</span>
+                    <span><i class="far fa-share-square"></i> ${thread.share_count || 0}</span>
+                </div>
+            </article>
+        `;
+    };
+
+    // Load posts grid
+    const loadPostsGrid = async () => {
+        try {
+            const data = await window.api.get(`/social/threads/${userId}`);
+            const container = document.getElementById('posts-grid');
+            
+            if (data.threads.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <i class="fas fa-th"></i>
+                        <h3>No Posts Yet</h3>
+                        <p>This user hasn't created any posts yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = data.threads.map(thread => {
+                let mediaUrl = '';
+                let mediaType = 'text';
+                
+                if (thread.media_url) {
+                    mediaUrl = `http://localhost:3000/${thread.media_url}`;
+                    mediaType = thread.media_type;
+                }
+
+                return `
+                    <div class="post-card" onclick="window.location.href='thread-detail.html?id=${thread.thread_id}'">
+                        ${mediaType !== 'text' ? `
+                            <img src="${mediaUrl}" alt="Post" class="post-card-media">
+                        ` : `
+                            <div class="post-card-media" style="display:flex;align-items:center;justify-content:center;color:white;padding:1rem;text-align:center;">
+                                <p>${(thread.content || '').substring(0, 100)}...</p>
+                            </div>
+                        `}
+                        <div class="post-card-content">
+                            ${thread.content && mediaType !== 'text' ? `<p class="post-card-text">${sanitizeHTML(thread.content)}</p>` : ''}
+                            <div class="post-card-stats">
+                                <span><i class="far fa-heart"></i> ${thread.like_count || 0}</span>
+                                <span><i class="far fa-comment"></i> ${thread.comment_count || 0}</span>
+                                <span><i class="far fa-share-square"></i> ${thread.share_count || 0}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading posts:', error);
+        }
+    };
+
+    // Tab switching
+    const tabs = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabName = tab.dataset.tab;
+            
+            // Update active tab
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            
+            // Update active pane
+            tabPanes.forEach(pane => pane.classList.remove('active'));
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Load data if needed
+            if (tabName === 'threads' && document.getElementById('threads-list').innerHTML.includes('Loading')) {
+                loadThreads();
+            } else if (tabName === 'posts' && document.getElementById('posts-grid').innerHTML.includes('Loading')) {
+                loadPostsGrid();
+            }
+        });
+    });
+
+    // View followers/following
+    document.getElementById('followers-stat').addEventListener('click', () => {
+        showConnectionsModal('followers');
+    });
+
+    document.getElementById('following-stat').addEventListener('click', () => {
+        showConnectionsModal('following');
+    });
+
+    // Show connections modal
+    const showConnectionsModal = async (type) => {
+        const modal = document.getElementById('connections-modal');
+        const title = document.getElementById('connections-modal-title');
+        const list = document.getElementById('connections-list');
+        
+        title.textContent = type === 'followers' ? 'Followers' : 'Following';
+        list.innerHTML = '<div class="loading-container"><div class="modern-spinner"><div class="spinner-ring"></div></div><p>Loading...</p></div>';
+        modal.style.display = 'block';
+
+        try {
+            const endpoint = type === 'followers' ? `/social/followers/${userId}` : `/social/following/${userId}`;
+            const data = await window.api.get(endpoint);
+            const users = data[type];
+
+            if (users.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-users"></i>
+                        <p>No ${type} yet</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = users.map(user => {
+                const avatar = user.profile_pic_url 
+                    ? `http://localhost:3000/${user.profile_pic_url}`
+                    : createInitialsAvatar(user.full_name);
+                
+                const title = user.job_title && user.company 
+                    ? `${user.job_title} at ${user.company}`
+                    : user.job_title || user.company || '';
+
+                return `
+                    <div class="user-connection-item">
+                        <img src="${avatar}" alt="${user.full_name}" class="connection-avatar">
+                        <div class="connection-info">
+                            <div class="connection-name">${user.full_name}</div>
+                            ${title ? `<div class="connection-title">${title}</div>` : ''}
+                        </div>
+                        <div class="connection-action">
+                            <a href="social-profile.html?userId=${user.user_id}" class="btn btn-primary">View Profile</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading connections:', error);
+            list.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Error loading ${type}</p>
+                </div>
+            `;
+        }
+    };
+
+    // Close modals
+    document.querySelectorAll('.modal .close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', () => {
+            closeBtn.closest('.modal').style.display = 'none';
+        });
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+    });
+
+    // Utility: Time ago
+    const timeAgo = (date) => {
+        const now = new Date();
+        const postDate = new Date(date);
+        const diffInSeconds = Math.floor((now - postDate) / 1000);
+        
+        if (diffInSeconds < 60) return 'Just now';
+        if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+        if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+        if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        return postDate.toLocaleDateString();
+    };
+
+    // Initialize
+    await loadProfile();
+    await loadPostsGrid();
+});
