@@ -552,6 +552,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize modern features
     const initializeModernFeatures = () => {
+        // Profile button handler
+        const profileBtn = document.getElementById('view-profile-btn');
+        if (profileBtn && currentUser) {
+            profileBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = `social-profile.html?userId=${currentUser.user_id}`;
+            });
+        }
+
         // Filter toggle functionality
         const filterToggle = document.getElementById('filter-toggle');
         const filterPanel = document.getElementById('filter-panel');
