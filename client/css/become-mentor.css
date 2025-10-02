@@ -251,7 +251,8 @@
 }
 
 .mentor-application-section .container {
-    max-width: 1500px;
+    max-width: 1600px;
+    padding: 0 2rem;
 }
 
 .application-intro {
@@ -273,11 +274,12 @@
 
 .application-wrapper {
     display: grid;
-    grid-template-columns: 280px 1fr;
-    gap: 2.5rem;
+    grid-template-columns: 260px 1fr;
+    gap: 2rem;
     align-items: start;
-    max-width: 1400px;
+    max-width: 1550px;
     margin: 0 auto;
+    width: 100%;
 }
 
 /* ========================================
@@ -449,6 +451,9 @@
     box-shadow: var(--bm-shadow-md);
     border: 1px solid var(--border-color);
     overflow: hidden;
+    width: 100%;
+    min-width: 0;
+}
 }
 
 .mentor-application-form {
@@ -457,7 +462,7 @@
 
 .form-step {
     display: none;
-    padding: 3rem 3.5rem;
+    padding: 3rem 4rem;
     animation: slideIn 0.4s ease-out;
 }
 
@@ -499,6 +504,8 @@
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
+    width: 100%;
+}
 }
 
 .form-group {
@@ -1085,8 +1092,8 @@ html.dark-mode .btn-step-back {
 
 @media (max-width: 1024px) {
     .application-wrapper {
-        grid-template-columns: 260px 1fr;
-        gap: 2rem;
+        grid-template-columns: 240px 1fr;
+        gap: 1.5rem;
         max-width: 100%;
         padding: 0 1rem;
     }
@@ -1096,7 +1103,12 @@ html.dark-mode .btn-step-back {
     }
     
     .form-step {
-        padding: 2.5rem 2rem;
+        padding: 2.5rem 3rem;
+    }
+    
+    .mentor-application-section .container {
+        max-width: 100%;
+        padding: 0 1.5rem;
     }
 }
 
