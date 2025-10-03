@@ -636,13 +636,23 @@ CREATE TABLE IF NOT EXISTS threads (
     media_url VARCHAR(255) DEFAULT NULL,
     media_type ENUM('image', 'video') DEFAULT NULL,
     media_caption TEXT DEFAULT NULL,
+    visibility ENUM('public', 'alumni', 'followers', 'private') DEFAULT 'public',
+    is_pinned BOOLEAN DEFAULT FALSE,
+    is_featured BOOLEAN DEFAULT FALSE,
+    edit_count INT DEFAULT 0,
+    last_edited_at TIMESTAMP DEFAULT NULL,
+    view_count INT DEFAULT 0,
+    engagement_score INT DEFAULT 0,
     location VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
     INDEX idx_created_at (created_at),
-    INDEX idx_location (location)
+    INDEX idx_location (location),
+    INDEX idx_threads_visibility (visibility, created_at),
+    INDEX idx_threads_featured (is_featured, created_at),
+    INDEX idx_threads_engagement (engagement_score DESC)
 );
 
 
@@ -668,14 +678,20 @@ CREATE TABLE IF NOT EXISTS thread_likes (
 CREATE TABLE IF NOT EXISTS thread_comments (
     comment_id INT AUTO_INCREMENT PRIMARY KEY,
     thread_id INT NOT NULL,
+    parent_comment_id INT DEFAULT NULL,
     user_id INT NOT NULL,
     content TEXT NOT NULL,
+    is_edited BOOLEAN DEFAULT FALSE,
+    edited_at TIMESTAMP DEFAULT NULL,
+    like_count INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (parent_comment_id) REFERENCES thread_comments(comment_id) ON DELETE CASCADE,
     INDEX idx_thread_id (thread_id),
     INDEX idx_user_id (user_id),
-    INDEX idx_created_at (created_at)
+    INDEX idx_created_at (created_at),
+    INDEX idx_thread_comments_parent (parent_comment_id, created_at)
 );
 
 
@@ -759,6 +775,9 @@ CREATE TABLE IF NOT EXISTS stories (
     poll_options JSON DEFAULT NULL,
     poll_allow_multiple BOOLEAN DEFAULT FALSE,
     expires_at TIMESTAMP NOT NULL,
+    view_count INT DEFAULT 0,
+    screenshot_count INT DEFAULT 0,
+    share_count INT DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     INDEX idx_user_id (user_id),
@@ -766,7 +785,8 @@ CREATE TABLE IF NOT EXISTS stories (
     INDEX idx_expires_at (expires_at),
     INDEX idx_stories_type_privacy (story_type, privacy_level),
     INDEX idx_stories_user_created (user_id, created_at),
-    INDEX idx_stories_expires_created (expires_at, created_at)
+    INDEX idx_stories_expires_created (expires_at, created_at),
+    INDEX idx_stories_view_count (view_count DESC)
 );
 
 
@@ -1013,6 +1033,12 @@ CREATE TABLE IF NOT EXISTS user_social_stats (
     following_count INT DEFAULT 0 COMMENT 'Number of users being followed',
     threads_count INT DEFAULT 0 COMMENT 'Number of threads created',
     stories_count INT DEFAULT 0 COMMENT 'Number of active stories',
+    total_stories INT DEFAULT 0 COMMENT 'Total number of stories created',
+    total_views INT DEFAULT 0 COMMENT 'Total views across all content',
+    total_bookmarks_received INT DEFAULT 0 COMMENT 'Total bookmarks received',
+    avg_engagement_rate DECIMAL(5,2) DEFAULT 0.00 COMMENT 'Average engagement rate',
+    profile_views INT DEFAULT 0 COMMENT 'Profile page views',
+    reach_count INT DEFAULT 0 COMMENT 'Total reach',
     total_likes_received INT DEFAULT 0 COMMENT 'Total likes received on all content',
     total_comments_received INT DEFAULT 0 COMMENT 'Total comments received on all content',
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -1021,3 +1047,385 @@ CREATE TABLE IF NOT EXISTS user_social_stats (
 );
 
 
+
+
+--48. Thread Bookmarks Table
+
+
+CREATE TABLE IF NOT EXISTS thread_bookmarks (
+    bookmark_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    user_id INT NOT NULL,
+    collection_name VARCHAR(100) DEFAULT 'Saved',
+    notes TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_bookmark (thread_id, user_id),
+    INDEX idx_thread_bookmarks_user (user_id, created_at),
+    INDEX idx_thread_bookmarks_collection (user_id, collection_name)
+);
+
+
+--49. Thread Views Table
+
+
+CREATE TABLE IF NOT EXISTS thread_views (
+    view_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    user_id INT DEFAULT NULL,
+    ip_address VARCHAR(45) DEFAULT NULL,
+    user_agent TEXT DEFAULT NULL,
+    view_duration_seconds INT DEFAULT 0,
+    viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    INDEX idx_thread_views_thread (thread_id, viewed_at),
+    INDEX idx_thread_views_user (user_id, viewed_at)
+);
+
+
+--50. Thread Reports Table
+
+
+CREATE TABLE IF NOT EXISTS thread_reports (
+    report_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    reporter_user_id INT NOT NULL,
+    reason ENUM('spam', 'harassment', 'hate-speech', 'misinformation', 'inappropriate', 'other') NOT NULL,
+    description TEXT DEFAULT NULL,
+    status ENUM('pending', 'reviewing', 'resolved', 'dismissed') DEFAULT 'pending',
+    reviewed_by INT DEFAULT NULL,
+    reviewed_at TIMESTAMP DEFAULT NULL,
+    resolution_notes TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (reporter_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (reviewed_by) REFERENCES users(user_id) ON DELETE SET NULL,
+    INDEX idx_thread_reports_status (status, created_at),
+    INDEX idx_thread_reports_thread (thread_id)
+);
+
+
+--51. Thread Drafts Table
+
+
+CREATE TABLE IF NOT EXISTS thread_drafts (
+    draft_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT DEFAULT NULL,
+    media_url VARCHAR(255) DEFAULT NULL,
+    media_type ENUM('image', 'video') DEFAULT NULL,
+    media_caption TEXT DEFAULT NULL,
+    location VARCHAR(255) DEFAULT NULL,
+    hashtags TEXT DEFAULT NULL,
+    mentions TEXT DEFAULT NULL,
+    visibility ENUM('public', 'alumni', 'followers', 'private') DEFAULT 'public',
+    scheduled_at TIMESTAMP DEFAULT NULL,
+    last_edited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_thread_drafts_user (user_id, last_edited_at)
+);
+
+
+--52. Story Bookmarks Table
+
+
+CREATE TABLE IF NOT EXISTS story_bookmarks (
+    bookmark_id INT AUTO_INCREMENT PRIMARY KEY,
+    story_id INT NOT NULL,
+    user_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (story_id) REFERENCES stories(story_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_story_bookmark (story_id, user_id),
+    INDEX idx_story_bookmarks_user (user_id, created_at)
+);
+
+
+--53. User Feed Preferences Table
+
+
+CREATE TABLE IF NOT EXISTS user_feed_preferences (
+    preference_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    feed_algorithm ENUM('latest', 'trending', 'following', 'recommended') DEFAULT 'recommended',
+    show_reposts BOOLEAN DEFAULT TRUE,
+    show_replies BOOLEAN DEFAULT TRUE,
+    content_filter ENUM('all', 'safe', 'strict') DEFAULT 'safe',
+    muted_words TEXT DEFAULT NULL,
+    preferred_categories JSON DEFAULT NULL,
+    notification_frequency ENUM('instant', 'hourly', 'daily', 'weekly') DEFAULT 'instant',
+    email_digest BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+
+--54. Thread Analytics Table
+
+
+CREATE TABLE IF NOT EXISTS thread_analytics (
+    analytics_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    date DATE NOT NULL,
+    views_count INT DEFAULT 0,
+    unique_views_count INT DEFAULT 0,
+    likes_count INT DEFAULT 0,
+    comments_count INT DEFAULT 0,
+    shares_count INT DEFAULT 0,
+    bookmarks_count INT DEFAULT 0,
+    avg_read_time_seconds INT DEFAULT 0,
+    engagement_rate DECIMAL(5,2) DEFAULT 0.00,
+    reach_count INT DEFAULT 0,
+    impression_count INT DEFAULT 0,
+    click_through_rate DECIMAL(5,2) DEFAULT 0.00,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_thread_analytics (thread_id, date),
+    INDEX idx_thread_analytics_date (date),
+    INDEX idx_thread_analytics_engagement (engagement_rate DESC)
+);
+
+
+--55. Engagement Metrics Table
+
+
+CREATE TABLE IF NOT EXISTS engagement_metrics (
+    metric_id INT AUTO_INCREMENT PRIMARY KEY,
+    entity_type ENUM('thread', 'story', 'comment', 'profile') NOT NULL,
+    entity_id INT NOT NULL,
+    user_id INT NOT NULL,
+    action_type ENUM('view', 'like', 'comment', 'share', 'bookmark', 'click', 'hover') NOT NULL,
+    duration_seconds INT DEFAULT NULL,
+    metadata JSON DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_engagement_entity (entity_type, entity_id, action_type),
+    INDEX idx_engagement_user (user_id, created_at),
+    INDEX idx_engagement_action (action_type, created_at)
+);
+
+
+--56. Notification Preferences Table
+
+
+CREATE TABLE IF NOT EXISTS notification_preferences (
+    preference_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL UNIQUE,
+    email_notifications BOOLEAN DEFAULT TRUE,
+    push_notifications BOOLEAN DEFAULT TRUE,
+    sms_notifications BOOLEAN DEFAULT FALSE,
+    notify_on_follow BOOLEAN DEFAULT TRUE,
+    notify_on_like BOOLEAN DEFAULT TRUE,
+    notify_on_comment BOOLEAN DEFAULT TRUE,
+    notify_on_mention BOOLEAN DEFAULT TRUE,
+    notify_on_share BOOLEAN DEFAULT TRUE,
+    notify_on_reply BOOLEAN DEFAULT TRUE,
+    notify_on_story_view BOOLEAN DEFAULT FALSE,
+    notify_on_story_reaction BOOLEAN DEFAULT TRUE,
+    quiet_hours_start TIME DEFAULT NULL,
+    quiet_hours_end TIME DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+);
+
+
+--57. Trending Topics Table
+
+
+CREATE TABLE IF NOT EXISTS trending_topics (
+    trending_id INT AUTO_INCREMENT PRIMARY KEY,
+    hashtag_id INT NOT NULL,
+    date DATE NOT NULL,
+    mention_count INT DEFAULT 0,
+    thread_count INT DEFAULT 0,
+    user_count INT DEFAULT 0,
+    engagement_score INT DEFAULT 0,
+    rank_position INT DEFAULT NULL,
+    category VARCHAR(50) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (hashtag_id) REFERENCES hashtags(hashtag_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_trending (hashtag_id, date),
+    INDEX idx_trending_date (date, rank_position),
+    INDEX idx_trending_score (engagement_score DESC)
+);
+
+
+--58. Thread Reactions Table
+
+
+CREATE TABLE IF NOT EXISTS thread_reactions (
+    reaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reaction_type ENUM('like', 'love', 'insightful', 'celebrate', 'support', 'funny') NOT NULL DEFAULT 'like',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_thread_reaction (thread_id, user_id, reaction_type),
+    INDEX idx_thread_reactions_thread (thread_id, reaction_type),
+    INDEX idx_thread_reactions_user (user_id, created_at)
+);
+
+
+--59. Comment Reactions Table
+
+
+CREATE TABLE IF NOT EXISTS comment_reactions (
+    reaction_id INT AUTO_INCREMENT PRIMARY KEY,
+    comment_id INT NOT NULL,
+    user_id INT NOT NULL,
+    reaction_type ENUM('like', 'love', 'insightful', 'funny') NOT NULL DEFAULT 'like',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (comment_id) REFERENCES thread_comments(comment_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_comment_reaction (comment_id, user_id, reaction_type),
+    INDEX idx_comment_reactions_comment (comment_id),
+    INDEX idx_comment_reactions_user (user_id)
+);
+
+
+--60. User Blocks Table
+
+
+CREATE TABLE IF NOT EXISTS user_blocks (
+    block_id INT AUTO_INCREMENT PRIMARY KEY,
+    blocker_user_id INT NOT NULL,
+    blocked_user_id INT NOT NULL,
+    reason VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (blocker_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (blocked_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_block (blocker_user_id, blocked_user_id),
+    INDEX idx_user_blocks_blocker (blocker_user_id),
+    INDEX idx_user_blocks_blocked (blocked_user_id)
+);
+
+
+--61. User Mutes Table
+
+
+CREATE TABLE IF NOT EXISTS user_mutes (
+    mute_id INT AUTO_INCREMENT PRIMARY KEY,
+    muter_user_id INT NOT NULL,
+    muted_user_id INT NOT NULL,
+    mute_duration ENUM('temporary', 'permanent') DEFAULT 'permanent',
+    unmute_at TIMESTAMP DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (muter_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (muted_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_mute (muter_user_id, muted_user_id),
+    INDEX idx_user_mutes_muter (muter_user_id),
+    INDEX idx_user_mutes_unmute (unmute_at)
+);
+
+
+--62. Pinned Threads Table
+
+
+CREATE TABLE IF NOT EXISTS pinned_threads (
+    pin_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    thread_id INT NOT NULL,
+    pin_order INT DEFAULT 1,
+    pinned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_pinned_thread (user_id, thread_id),
+    INDEX idx_pinned_threads_user (user_id, pin_order)
+);
+
+
+--63. Thread Polls Table
+
+
+CREATE TABLE IF NOT EXISTS thread_polls (
+    poll_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    question TEXT NOT NULL,
+    options JSON NOT NULL,
+    allow_multiple BOOLEAN DEFAULT FALSE,
+    duration_hours INT DEFAULT 24,
+    expires_at TIMESTAMP NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    INDEX idx_thread_polls_thread (thread_id),
+    INDEX idx_thread_polls_expires (expires_at)
+);
+
+
+--64. Poll Votes Table
+
+
+CREATE TABLE IF NOT EXISTS poll_votes (
+    vote_id INT AUTO_INCREMENT PRIMARY KEY,
+    poll_id INT NOT NULL,
+    user_id INT NOT NULL,
+    option_index INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (poll_id) REFERENCES thread_polls(poll_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_poll_votes_poll (poll_id),
+    INDEX idx_poll_votes_user (user_id)
+);
+
+
+--65. Scheduled Threads Table
+
+
+CREATE TABLE IF NOT EXISTS scheduled_threads (
+    scheduled_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    content TEXT NOT NULL,
+    media_url VARCHAR(255) DEFAULT NULL,
+    media_type ENUM('image', 'video') DEFAULT NULL,
+    media_caption TEXT DEFAULT NULL,
+    location VARCHAR(255) DEFAULT NULL,
+    hashtags TEXT DEFAULT NULL,
+    visibility ENUM('public', 'alumni', 'followers', 'private') DEFAULT 'public',
+    scheduled_for TIMESTAMP NOT NULL,
+    status ENUM('pending', 'posted', 'failed', 'cancelled') DEFAULT 'pending',
+    posted_thread_id INT DEFAULT NULL,
+    error_message TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (posted_thread_id) REFERENCES threads(thread_id) ON DELETE SET NULL,
+    INDEX idx_scheduled_threads_user (user_id, scheduled_for),
+    INDEX idx_scheduled_threads_status (status, scheduled_for)
+);
+
+
+--66. Thread Tags Table
+
+
+CREATE TABLE IF NOT EXISTS thread_tags (
+    tag_id INT AUTO_INCREMENT PRIMARY KEY,
+    tag_name VARCHAR(50) NOT NULL UNIQUE,
+    tag_slug VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT DEFAULT NULL,
+    icon VARCHAR(50) DEFAULT NULL,
+    color VARCHAR(7) DEFAULT '#3B82F6',
+    is_active BOOLEAN DEFAULT TRUE,
+    thread_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_thread_tags_slug (tag_slug),
+    INDEX idx_thread_tags_active (is_active, thread_count DESC)
+);
+
+
+--67. Thread Tag Junction Table
+
+
+CREATE TABLE IF NOT EXISTS thread_tag_junction (
+    thread_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (thread_id, tag_id),
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES thread_tags(tag_id) ON DELETE CASCADE,
+    INDEX idx_thread_tag_junction_tag (tag_id, created_at)
+);

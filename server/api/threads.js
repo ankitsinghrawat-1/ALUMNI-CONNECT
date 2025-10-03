@@ -128,11 +128,39 @@ module.exports = (pool, upload) => {
 
     // POST a new thread (Protected & handles media upload)
     router.post('/', verifyToken, upload.single('thread_media'), asyncHandler(async (req, res) => {
-        const { content, media_caption, location, hashtags, mentions } = req.body;
+        const { 
+            title, thread_type, category, content, media_caption, location, hashtags, mentions,
+            is_anonymous, target_audience, batch_year, tags, content_warning, scheduled_at,
+            visibility, poll_question, poll_options, poll_duration, poll_allow_multiple
+        } = req.body;
         const user_id = req.user.userId;
+        
+        // Validate required fields
+        if (!title || title.trim().length < 5 || title.trim().length > 200) {
+            return res.status(400).json({ message: 'Title is required and must be between 5-200 characters' });
+        }
+        
+        if (!thread_type || !['discussion', 'question', 'announcement', 'poll'].includes(thread_type)) {
+            return res.status(400).json({ message: 'Invalid thread type' });
+        }
+        
+        if (!category) {
+            return res.status(400).json({ message: 'Category is required' });
+        }
         
         if (!content && !req.file) {
             return res.status(400).json({ message: 'Thread must have content or media' });
+        }
+        
+        // Poll validation
+        if (thread_type === 'poll') {
+            if (!poll_question || !poll_options) {
+                return res.status(400).json({ message: 'Poll requires question and options' });
+            }
+            const options = Array.isArray(poll_options) ? poll_options : JSON.parse(poll_options);
+            if (options.length < 2 || options.length > 10) {
+                return res.status(400).json({ message: 'Poll must have 2-10 options' });
+            }
         }
 
         let media_url = null;
@@ -142,19 +170,62 @@ module.exports = (pool, upload) => {
             media_url = `uploads/threads/${req.file.filename}`;
             media_type = req.file.mimetype.startsWith('image/') ? 'image' : 'video';
         }
+        
+        // Calculate read time (250 words per minute)
+        const word_count = content ? content.trim().split(/\s+/).length : 0;
+        const read_time = Math.max(1, Math.ceil(word_count / 250));
+        
+        // Parse tags
+        const tag_list = tags ? (Array.isArray(tags) ? tags : tags.split(',').map(t => t.trim().toLowerCase()).filter(t => t)) : [];
+        const tags_string = tag_list.slice(0, 10).join(','); // Max 10 tags
+        
+        // Determine if published
+        const is_published = scheduled_at ? false : true;
 
         // Start transaction
         const connection = await pool.getConnection();
         await connection.beginTransaction();
         
         try {
-            // Insert the thread
+            // Insert the thread with all new fields
             const [result] = await connection.query(
-                'INSERT INTO threads (user_id, content, media_url, media_type, media_caption, location) VALUES (?, ?, ?, ?, ?, ?)', 
-                [user_id, content, media_url, media_type, media_caption, location]
+                `INSERT INTO threads (
+                    user_id, title, thread_type, category, content, media_url, media_type, 
+                    media_caption, location, is_anonymous, target_audience, batch_year, 
+                    tags, content_warning, scheduled_at, is_published, read_time, visibility
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
+                [
+                    user_id, title.trim(), thread_type, category, content, media_url, media_type,
+                    media_caption, location, is_anonymous || false, target_audience || 'all',
+                    batch_year, tags_string, content_warning || 'none', scheduled_at || null,
+                    is_published, read_time, visibility || 'public'
+                ]
             );
             
             const threadId = result.insertId;
+            
+            // Create poll if thread type is poll
+            if (thread_type === 'poll' && poll_question) {
+                const options = Array.isArray(poll_options) ? poll_options : JSON.parse(poll_options);
+                const duration_hours = poll_duration || 168; // Default 7 days
+                const expires_at = new Date(Date.now() + duration_hours * 60 * 60 * 1000);
+                
+                const [pollResult] = await connection.query(
+                    `INSERT INTO thread_polls (thread_id, question, allow_multiple, duration_hours, expires_at) 
+                     VALUES (?, ?, ?, ?, ?)`,
+                    [threadId, poll_question, poll_allow_multiple || false, duration_hours, expires_at]
+                );
+                
+                const pollId = pollResult.insertId;
+                
+                // Insert poll options
+                for (let i = 0; i < options.length; i++) {
+                    await connection.query(
+                        'INSERT INTO poll_options (poll_id, option_text, display_order) VALUES (?, ?, ?)',
+                        [pollId, options[i], i + 1]
+                    );
+                }
+            }
 
             // Process hashtags if provided
             if (hashtags && hashtags.length > 0) {

@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Discussions - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/social-feed-enhancements.css">
-    <link rel="stylesheet" href="css/threads-modern-ux.css">
+    <link rel="stylesheet" href="css/social-feed-professional.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script>
         (function() {
             const theme = localStorage.getItem('theme');
@@ -279,5 +279,46 @@
     <script src="js/api.js"></script>
     <script src="js/story-modal.js"></script>
     <script src="js/threads.js"></script>
+    <script>
+        // Auto-hide/unhide top sections on scroll
+        (function() {
+            let lastScrollTop = 0;
+            let isScrollingDown = false;
+            const topBar = document.querySelector('.modern-top-bar');
+            const trendingSection = document.querySelector('.trending-stories');
+            const scrollThreshold = 150; // Minimum scroll distance before hiding
+            
+            window.addEventListener('scroll', function() {
+                const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Prevent negative scrolling
+                if (currentScroll <= 0) {
+                    topBar.classList.remove('hide-on-scroll');
+                    trendingSection.classList.remove('hide-on-scroll');
+                    lastScrollTop = currentScroll;
+                    return;
+                }
+                
+                // Scrolling down
+                if (currentScroll > lastScrollTop && currentScroll > scrollThreshold) {
+                    if (!isScrollingDown) {
+                        topBar.classList.add('hide-on-scroll');
+                        trendingSection.classList.add('hide-on-scroll');
+                        isScrollingDown = true;
+                    }
+                }
+                // Scrolling up
+                else if (currentScroll < lastScrollTop) {
+                    if (isScrollingDown) {
+                        topBar.classList.remove('hide-on-scroll');
+                        trendingSection.classList.remove('hide-on-scroll');
+                        isScrollingDown = false;
+                    }
+                }
+                
+                lastScrollTop = currentScroll;
+            }, { passive: true });
+        })();
+    </script>
 </body>
 </html>

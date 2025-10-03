@@ -125,6 +125,7 @@ const groupRoutes = require('./api/groups')(pool, upload);
 const threadRoutes = require('./api/threads')(pool, upload);
 const storyRoutes = require('./api/stories')(pool, upload);
 const socialRoutes = require('./api/social')(pool);
+const socialFeedEnhancedRoutes = require('./api/social-feed-enhanced')(pool);
 
 // Apply verifyToken middleware to all routes that require authentication
 app.use('/api/admin', verifyToken, adminRoutes);
@@ -140,6 +141,7 @@ app.use('/api/groups', verifyToken, groupRoutes);
 app.use('/api/threads', threadRoutes); // Some thread endpoints are public (viewing)
 app.use('/api/stories', storyRoutes); // Some story endpoints are public (viewing)
 app.use('/api/social', socialRoutes); // Social features (follow, profile stats, highlights)
+app.use('/api/social-feed', socialFeedEnhancedRoutes); // Enhanced social feed features
 
 
 // --- CENTRAL ERROR HANDLING MIDDLEWARE ---
