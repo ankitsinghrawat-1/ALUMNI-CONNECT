@@ -9,26 +9,22 @@
 /* Profile Header Section */
 .profile-header-section {
     background: var(--surface-color);
-    border-radius: var(--border-radius-large);
-    box-shadow: var(--box-shadow);
+    border-radius: 16px;
+    border: 1px solid #eff3f4;
     overflow: hidden;
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     position: relative;
 }
 
 .profile-cover {
-    height: 250px;
-    background: linear-gradient(135deg, var(--primary-color) 0%, var(--accent-color) 100%);
+    height: 200px;
+    background: #e7e9ea;
     position: relative;
+    border-bottom: 1px solid #eff3f4;
 }
 
 .cover-gradient {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100px;
-    background: linear-gradient(to top, rgba(0,0,0,0.3), transparent);
+    display: none;
 }
 
 .profile-info-wrapper {
@@ -37,15 +33,15 @@
 }
 
 .profile-avatar-container {
-    width: 150px;
-    height: 150px;
+    width: 133px;
+    height: 133px;
     border-radius: 50%;
-    border: 5px solid var(--surface-color);
+    border: 4px solid var(--surface-color);
     overflow: hidden;
     position: absolute;
-    top: -75px;
+    top: -66px;
     left: 2rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .profile-avatar {
@@ -67,27 +63,29 @@
 }
 
 .profile-name-section h1 {
-    font-size: 2rem;
+    font-size: 1.25rem;
+    font-weight: 700;
     margin: 0;
-    color: var(--text-color);
+    color: #0f1419;
 }
 
 .verification-badge {
-    color: var(--primary-color);
-    font-size: 1.5rem;
+    color: #1d9bf0;
+    font-size: 1.125rem;
 }
 
 .profile-title {
-    font-size: 1.1rem;
-    color: var(--subtle-text-color);
-    margin: 0.5rem 0;
+    font-size: 0.9375rem;
+    color: #536471;
+    margin: 0.25rem 0;
 }
 
 .profile-bio {
-    color: var(--text-color);
-    margin: 1rem 0;
-    line-height: 1.6;
+    color: #0f1419;
+    margin: 0.75rem 0;
+    line-height: 1.5;
     max-width: 600px;
+    font-size: 0.9375rem;
 }
 
 /* Profile Stats */
@@ -109,24 +107,24 @@
 
 .stat-item.clickable {
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
 }
 
 .stat-item.clickable:hover {
-    transform: translateY(-2px);
+    opacity: 0.7;
 }
 
 .stat-value {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 700;
-    color: var(--text-color);
+    color: #0f1419;
 }
 
 .stat-label {
-    font-size: 0.9rem;
-    color: var(--subtle-text-color);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-size: 0.8125rem;
+    color: #536471;
+    text-transform: none;
+    letter-spacing: 0;
 }
 
 /* Profile Actions */

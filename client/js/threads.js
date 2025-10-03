@@ -894,12 +894,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 .story-overlay {
                     position: relative;
-                    width: 400px;
-                    height: 600px;
+                    width: min(400px, 90vw);
+                    max-height: 80vh;
                     border-radius: 12px;
                     overflow: hidden;
                     display: flex;
                     flex-direction: column;
+                    background: #ffffff;
                 }
 
                 .story-header {
