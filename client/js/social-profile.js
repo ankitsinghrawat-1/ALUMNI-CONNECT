@@ -415,7 +415,204 @@ document.addEventListener('DOMContentLoaded', async () => {
         return postDate.toLocaleDateString();
     };
 
+    // Edit Profile Modal Functions
+    window.openEditProfileModal = () => {
+        const modal = document.getElementById('edit-profile-modal');
+        if (modal && profileUser) {
+            // Populate form with current data
+            document.getElementById('edit-bio').value = profileUser.bio || '';
+            document.getElementById('edit-job-title').value = profileUser.job_title || '';
+            document.getElementById('edit-company').value = profileUser.company || '';
+            document.getElementById('edit-location').value = profileUser.location || '';
+            document.getElementById('edit-website').value = profileUser.website || '';
+            
+            // Update char count
+            updateCharCount();
+            
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+    };
+
+    window.closeEditProfileModal = () => {
+        const modal = document.getElementById('edit-profile-modal');
+        if (modal) {
+            modal.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    };
+
+    // Bio character count
+    const updateCharCount = () => {
+        const bioInput = document.getElementById('edit-bio');
+        const charCount = document.getElementById('bio-char-count');
+        if (bioInput && charCount) {
+            charCount.textContent = `${bioInput.value.length}/160`;
+        }
+    };
+
+    // Listen for bio input
+    const bioInput = document.getElementById('edit-bio');
+    if (bioInput) {
+        bioInput.addEventListener('input', updateCharCount);
+    }
+
+    // Handle edit profile form submission
+    const editProfileForm = document.getElementById('edit-profile-form');
+    if (editProfileForm) {
+        editProfileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const submitBtn = editProfileForm.querySelector('button[type="submit"]');
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            
+            try {
+                const formData = {
+                    bio: document.getElementById('edit-bio').value,
+                    job_title: document.getElementById('edit-job-title').value,
+                    company: document.getElementById('edit-company').value,
+                    location: document.getElementById('edit-location').value,
+                    website: document.getElementById('edit-website').value
+                };
+                
+                await window.api.put('/users/profile', formData);
+                
+                submitBtn.classList.remove('loading');
+                submitBtn.classList.add('success');
+                
+                showToast('Profile updated successfully!', 'success');
+                
+                setTimeout(() => {
+                    closeEditProfileModal();
+                    loadProfile(); // Reload profile data
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showToast('Failed to update profile', 'error');
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+    }
+
+    // Share profile function
+    const shareProfileBtn = document.getElementById('share-profile-btn');
+    if (shareProfileBtn) {
+        shareProfileBtn.addEventListener('click', async () => {
+            const profileUrl = window.location.href;
+            
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: `${profileUser.full_name}'s Profile`,
+                        text: `Check out ${profileUser.full_name}'s profile on AlumniConnect`,
+                        url: profileUrl
+                    });
+                } catch (error) {
+                    if (error.name !== 'AbortError') {
+                        copyToClipboard(profileUrl);
+                    }
+                }
+            } else {
+                copyToClipboard(profileUrl);
+            }
+        });
+    }
+
+    // Copy to clipboard helper
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast('Profile link copied to clipboard!', 'success');
+        }).catch(() => {
+            showToast('Failed to copy link', 'error');
+        });
+    };
+
+    // Animate stat numbers with count-up effect
+    const animateStats = () => {
+        const statValues = document.querySelectorAll('.stat-value');
+        statValues.forEach(stat => {
+            const target = parseInt(stat.textContent);
+            if (isNaN(target)) return;
+            
+            let current = 0;
+            const increment = target / 30; // 30 frames
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    stat.textContent = target;
+                    clearInterval(timer);
+                } else {
+                    stat.textContent = Math.floor(current);
+                }
+            }, 20);
+        });
+    };
+
+    // Enhanced profile details display
+    const displayProfileDetails = () => {
+        if (profileUser.location) {
+            document.getElementById('location-detail').style.display = 'flex';
+            document.getElementById('profile-location').textContent = profileUser.location;
+        }
+        
+        if (profileUser.website) {
+            document.getElementById('website-detail').style.display = 'flex';
+            const websiteLink = document.getElementById('profile-website');
+            websiteLink.href = profileUser.website;
+            websiteLink.textContent = profileUser.website.replace(/^https?:\/\//, '');
+        }
+        
+        if (profileUser.created_at) {
+            const joinedDate = new Date(profileUser.created_at);
+            const monthNames = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            document.getElementById('profile-joined').textContent = 
+                `${monthNames[joinedDate.getMonth()]} ${joinedDate.getFullYear()}`;
+        }
+    };
+
+    // Show edit button for own profile
+    const setupEditButton = () => {
+        const editBtn = document.getElementById('edit-profile-btn');
+        if (editBtn && isOwnProfile) {
+            editBtn.style.display = 'inline-flex';
+            editBtn.addEventListener('click', openEditProfileModal);
+        }
+    };
+
+    // Close modal on outside click
+    window.addEventListener('click', (e) => {
+        const editModal = document.getElementById('edit-profile-modal');
+        if (e.target === editModal) {
+            closeEditProfileModal();
+        }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+        // Ctrl+E or Cmd+E to edit profile (if own profile)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'e' && isOwnProfile) {
+            e.preventDefault();
+            openEditProfileModal();
+        }
+        
+        // Escape to close modals
+        if (e.key === 'Escape') {
+            closeEditProfileModal();
+            closeConnectionsModal();
+        }
+    });
+
     // Initialize
     await loadProfile();
     await loadPostsGrid();
+    displayProfileDetails();
+    setupEditButton();
+    
+    // Animate stats after a small delay
+    setTimeout(animateStats, 300);
 });

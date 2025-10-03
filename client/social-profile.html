@@ -6,6 +6,7 @@
     <title>Social Profile - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/social-profile.css">
+    <link rel="stylesheet" href="css/social-profile-enhanced.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         (function() {
@@ -62,6 +63,22 @@
                         <p id="profile-title" class="profile-title"></p>
                         <p id="profile-bio" class="profile-bio"></p>
                         
+                        <!-- Additional Profile Details -->
+                        <div class="profile-details" id="profile-details">
+                            <div class="detail-item" id="location-detail" style="display: none;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="profile-location"></span>
+                            </div>
+                            <div class="detail-item" id="website-detail" style="display: none;">
+                                <i class="fas fa-link"></i>
+                                <a href="#" id="profile-website" target="_blank" rel="noopener"></a>
+                            </div>
+                            <div class="detail-item" id="joined-detail">
+                                <i class="fas fa-calendar"></i>
+                                <span>Joined <span id="profile-joined"></span></span>
+                            </div>
+                        </div>
+                        
                         <div class="profile-stats">
                             <div class="stat-item">
                                 <span class="stat-value" id="threads-count">0</span>
@@ -82,6 +99,9 @@
                         </div>
                         
                         <div class="profile-actions">
+                            <button id="edit-profile-btn" class="btn btn-edit-profile" style="display: none;">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
                             <button id="follow-btn" class="btn btn-primary" style="display: none;">
                                 <i class="fas fa-user-plus"></i> Follow
                             </button>
@@ -91,6 +111,9 @@
                             <a href="view-profile.html" id="view-full-profile-btn" class="btn btn-secondary">
                                 <i class="fas fa-id-card"></i> Full Profile
                             </a>
+                            <button id="share-profile-btn" class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -198,6 +221,65 @@
     <div id="connections-modal" class="modal">
         <div class="modal-content connections-modal-content">
             <div class="modal-header">
+                <h2 id="connections-modal-title">Connections</h2>
+                <button class="modal-close" onclick="closeConnectionsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="connections-modal-body">
+                <!-- Connections list will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content edit-profile-modal-content">
+            <div class="modal-header">
+                <h2>Edit Social Profile</h2>
+                <button class="modal-close" onclick="closeEditProfileModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form" class="edit-profile-form">
+                    <div class="form-group">
+                        <label for="edit-bio">Bio</label>
+                        <textarea id="edit-bio" name="bio" rows="4" maxlength="160" placeholder="Tell us about yourself..."></textarea>
+                        <span class="char-count" id="bio-char-count">0/160</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-job-title">Job Title</label>
+                        <input type="text" id="edit-job-title" name="job_title" placeholder="e.g. Software Engineer">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-company">Company</label>
+                        <input type="text" id="edit-company" name="company" placeholder="e.g. Tech Corp">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-location">Location</label>
+                        <input type="text" id="edit-location" name="location" placeholder="e.g. San Francisco, CA">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-website">Website</label>
+                        <input type="url" id="edit-website" name="website" placeholder="https://example.com">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditProfileModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
                 <h3 id="connections-modal-title">Followers</h3>
                 <span class="close">&times;</span>
             </div>

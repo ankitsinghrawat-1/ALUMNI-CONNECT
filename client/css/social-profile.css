@@ -30,6 +30,9 @@
 .profile-info-wrapper {
     padding: 0 2rem 2rem;
     position: relative;
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
 }
 
 .profile-avatar-container {
@@ -38,10 +41,16 @@
     border-radius: 50%;
     border: 4px solid var(--surface-color);
     overflow: hidden;
-    position: absolute;
-    top: -66px;
-    left: 2rem;
+    position: relative;
+    margin-top: -66px;
+    flex-shrink: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.profile-avatar-container:hover {
+    transform: scale(1.05);
 }
 
 .profile-avatar {
@@ -51,8 +60,9 @@
 }
 
 .profile-main-info {
-    margin-left: 180px;
+    flex: 1;
     margin-top: 1rem;
+    min-width: 0;
 }
 
 .profile-name-section {
@@ -86,6 +96,35 @@
     line-height: 1.5;
     max-width: 600px;
     font-size: 0.9375rem;
+}
+
+/* Profile Details */
+.profile-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    font-size: 0.9375rem;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #536471;
+}
+
+.detail-item i {
+    color: #1d9bf0;
+}
+
+.detail-item a {
+    color: #1d9bf0;
+    text-decoration: none;
+}
+
+.detail-item a:hover {
+    text-decoration: underline;
 }
 
 /* Profile Stats */
@@ -132,14 +171,32 @@
     display: flex;
     gap: 1rem;
     margin-top: 1.5rem;
+    flex-wrap: wrap;
 }
 
 .profile-actions .btn {
     padding: 0.75rem 1.5rem;
-    font-size: 1rem;
+    font-size: 0.9375rem;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
+    transition: all 0.2s ease;
+}
+
+.profile-actions .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 155, 240, 0.2);
+}
+
+.btn-edit-profile {
+    background: transparent;
+    border: 1px solid #1d9bf0;
+    color: #1d9bf0;
+}
+
+.btn-edit-profile:hover {
+    background: #1d9bf0;
+    color: white;
 }
 
 /* Highlights Section */
