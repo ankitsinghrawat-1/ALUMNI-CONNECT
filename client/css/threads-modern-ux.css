@@ -1,0 +1,104 @@
+/* Modern Threads UX Enhancements */
+
+/* Modern Thread Cards */
+.modern-thread-card {
+    border: 1px solid #eff3f4;
+    border-radius: 12px;
+    transition: all 0.2s ease;
+    background: white;
+}
+
+.modern-thread-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Quick Actions on Hover */
+.thread-quick-actions {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.modern-thread-card:hover .thread-quick-actions {
+    opacity: 1;
+}
+
+/* Enhanced Search Bar */
+.search-bar-modern {
+    border-radius: 24px;
+    border: 1px solid #eff3f4;
+    padding: 12px 20px;
+    transition: all 0.2s ease;
+}
+
+.search-bar-modern:focus {
+    border-color: #1d9bf0;
+    box-shadow: 0 0 0 4px rgba(29, 155, 240, 0.1);
+}
+
+/* Filter Panel Modern */
+.filter-panel-modern {
+    background: white;
+    border: 1px solid #eff3f4;
+    border-radius: 16px;
+    padding: 16px;
+}
+
+/* Infinite Scroll Loader */
+.infinite-scroll-loader {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+.loader-spinner {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid #1d9bf0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* New Posts Indicator */
+.new-posts-indicator {
+    position: fixed;
+    top: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1d9bf0;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    z-index: 1000;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+    }
+}
+
+/* Mobile Touch Optimizations */
+@media (max-width: 768px) {
+    .modern-thread-card {
+        touch-action: pan-y;
+    }
+    
+    .thread-quick-actions {
+        opacity: 1;
+    }
+}
