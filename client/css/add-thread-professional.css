@@ -1,6 +1,6 @@
 /* ====================================================================
    ADD THREAD PAGE - PROFESSIONAL COMPOSER STYLING
-   LinkedIn & X Inspired Thread Creation Interface
+   LinkedIn & X Inspired Thread Creation Interface with Enhanced Features
    ==================================================================== */
 
 /* ====================================================================
@@ -9,19 +9,29 @@
 .create-thread-main {
     background: #f7f9f9 !important;
     min-height: 100vh !important;
+    padding: 2rem 0 !important;
 }
 
-.create-thread-main .composer-card {
+.create-thread-container {
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    padding: 0 1rem !important;
+}
+
+.create-thread-main .create-content {
     background: #ffffff !important;
     border: 1px solid #EFF3F4 !important;
     border-radius: 16px !important;
-    padding: 1.5rem !important;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+    padding: 0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
 }
 
 .create-thread-main textarea,
 .create-thread-main input[type="text"],
-.create-thread-main input[type="url"] {
+.create-thread-main input[type="number"],
+.create-thread-main input[type="datetime-local"],
+.create-thread-main input[type="url"],
+.create-thread-main select {
     background: #ffffff !important;
     border: 1px solid #CFD9DE !important;
     border-radius: 8px !important;
@@ -29,6 +39,15 @@
     font-size: 0.9375rem !important;
     color: #0F1419 !important;
     width: 100% !important;
+    transition: all 0.2s ease !important;
+}
+
+.create-thread-main textarea:focus,
+.create-thread-main input:focus,
+.create-thread-main select:focus {
+    outline: none !important;
+    border-color: #0A66C2 !important;
+    box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1) !important;
 }
 
 .create-thread-main button,
@@ -41,11 +60,14 @@
     font-size: 0.9375rem !important;
     font-weight: 600 !important;
     cursor: pointer !important;
+    transition: all 0.2s ease !important;
 }
 
 .create-thread-main button:hover,
 .create-thread-main .btn:hover {
     background: #004182 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
 .create-thread-main .toolbar-btn {
@@ -54,9 +76,21 @@
     border: 1px solid #CFD9DE !important;
     padding: 0.5rem !important;
     border-radius: 8px !important;
+    min-width: 36px !important;
 }
 
 .create-thread-main .toolbar-btn:hover {
+    background: #f7f9f9 !important;
+    color: #0F1419 !important;
+}
+
+.create-thread-main .cancel-btn {
+    background: transparent !important;
+    color: #536471 !important;
+    border: 1px solid #CFD9DE !important;
+}
+
+.create-thread-main .cancel-btn:hover {
     background: #f7f9f9 !important;
     color: #0F1419 !important;
 }
@@ -990,5 +1024,391 @@
     
     .toolbar-left {
         flex-wrap: wrap;
+    }
+}
+
+/* ====================================================================
+   NEW ENHANCED SECTIONS STYLING
+   ==================================================================== */
+
+/* Thread Meta Section (Type & Category) */
+.thread-meta-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-primary);
+}
+
+.meta-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.meta-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.field-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.field-label i {
+    color: var(--text-secondary);
+}
+
+.required {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+/* Title Section */
+.title-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-primary);
+}
+
+.title-input {
+    font-size: 1.25rem !important;
+    font-weight: 600 !important;
+    padding: 1rem !important;
+}
+
+.field-hint {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+    margin-top: 0.5rem;
+    text-align: right;
+}
+
+/* Content Section Enhanced */
+.content-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-primary);
+}
+
+.content-section > .field-label {
+    margin-bottom: 0.75rem;
+    display: flex;
+}
+
+/* Rich Text Toolbar */
+.rich-text-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-light);
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+}
+
+.toolbar-group {
+    display: flex;
+    gap: 0.25rem;
+}
+
+.toolbar-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border-medium);
+}
+
+.main-textarea {
+    border-radius: 0 0 8px 8px !important;
+    border-top: none !important;
+    min-height: 200px !important;
+    resize: vertical !important;
+}
+
+.read-time {
+    margin-left: 1rem;
+    color: var(--text-tertiary);
+    font-size: 0.875rem;
+}
+
+.read-time::before {
+    content: "•";
+    margin: 0 0.5rem;
+}
+
+/* Poll Section */
+.poll-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--bg-secondary);
+}
+
+.poll-header {
+    margin-bottom: 1rem;
+}
+
+.poll-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.poll-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.poll-option-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.poll-option-item::before {
+    content: "○";
+    font-size: 1.5rem;
+    color: var(--text-tertiary);
+    line-height: 1;
+}
+
+.poll-option-input {
+    flex: 1;
+}
+
+.add-poll-option-btn {
+    background: transparent !important;
+    color: var(--primary-blue) !important;
+    border: 1px dashed var(--border-medium) !important;
+    padding: 0.75rem !important;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.poll-settings {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+}
+
+.poll-setting-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.poll-setting-item input[type="checkbox"] {
+    width: auto !important;
+    margin: 0 !important;
+}
+
+.poll-duration {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.poll-duration label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+/* Advanced Options */
+.advanced-options-wrapper {
+    border-bottom: 1px solid var(--border-light);
+}
+
+.advanced-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1rem !important;
+    background: transparent !important;
+    color: var(--text-secondary) !important;
+    border: none !important;
+    border-radius: 0 !important;
+    font-weight: 500 !important;
+    transition: all 0.2s ease !important;
+}
+
+.advanced-toggle:hover {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+.advanced-toggle i {
+    transition: transform 0.2s ease;
+}
+
+.advanced-toggle.active i {
+    transform: rotate(180deg);
+}
+
+.advanced-options-content {
+    padding: 1.5rem;
+    background: var(--bg-secondary);
+}
+
+.options-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.option-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.option-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.option-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.option-label i {
+    color: var(--text-secondary);
+}
+
+/* Tags Container */
+.tags-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.tags-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    min-height: 30px;
+}
+
+.tag-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.75rem;
+    background: var(--primary-blue);
+    color: #ffffff;
+    border-radius: 16px;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.tag-chip button {
+    background: transparent !important;
+    border: none !important;
+    color: #ffffff !important;
+    padding: 0 !important;
+    width: 16px !important;
+    height: 16px !important;
+    min-width: unset !important;
+    border-radius: 50% !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.tag-chip button:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Anonymous Checkbox */
+.anonymous-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.anonymous-checkbox:hover {
+    background: var(--bg-tertiary);
+}
+
+.anonymous-checkbox input[type="checkbox"] {
+    width: auto !important;
+    margin: 0 !important;
+}
+
+.anonymous-checkbox span {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+/* Post Settings */
+.post-settings {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.post-settings select {
+    width: auto !important;
+    min-width: 150px !important;
+}
+
+/* Enhanced Responsive Design */
+@media (max-width: 768px) {
+    .meta-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .options-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .option-item.full-width {
+        grid-column: 1;
+    }
+    
+    .post-settings {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .post-settings select,
+    .anonymous-checkbox {
+        width: 100% !important;
+    }
+    
+    .rich-text-toolbar {
+        flex-wrap: wrap;
+    }
+    
+    .title-input {
+        font-size: 1.125rem !important;
     }
 }

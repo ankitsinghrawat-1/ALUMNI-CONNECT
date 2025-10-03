@@ -57,28 +57,131 @@
                         </div>
                         <div class="author-info">
                             <div class="author-name" id="current-user-name">You</div>
-                            <div class="visibility-select">
-                                <select id="visibility" name="visibility">
-                                    <option value="public">Public</option>
-                                    <option value="alumni">Alumni Only</option>
+                            <div class="post-settings">
+                                <select id="visibility" name="visibility" aria-label="Post visibility">
+                                    <option value="public">🌐 Public</option>
+                                    <option value="alumni">🎓 Alumni Only</option>
+                                    <option value="followers">👥 Followers</option>
+                                    <option value="private">🔒 Private</option>
+                                </select>
+                                <label class="anonymous-checkbox">
+                                    <input type="checkbox" id="anonymous" name="anonymous">
+                                    <i class="fas fa-user-secret"></i>
+                                    <span>Post Anonymously</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thread Type & Category -->
+                    <div class="thread-meta-section">
+                        <div class="meta-row">
+                            <div class="meta-field">
+                                <label for="thread-type" class="field-label">
+                                    <i class="fas fa-layer-group"></i>
+                                    Thread Type
+                                </label>
+                                <select id="thread-type" name="thread_type" aria-label="Thread type">
+                                    <option value="discussion">💬 Discussion</option>
+                                    <option value="question">❓ Question</option>
+                                    <option value="announcement">📢 Announcement</option>
+                                    <option value="poll">📊 Poll</option>
+                                </select>
+                            </div>
+                            <div class="meta-field">
+                                <label for="category" class="field-label">
+                                    <i class="fas fa-folder-open"></i>
+                                    Category
+                                </label>
+                                <select id="category" name="category" aria-label="Thread category">
+                                    <option value="">Select Category</option>
+                                    <option value="career">💼 Career & Jobs</option>
+                                    <option value="academic">📚 Academic</option>
+                                    <option value="social">🎉 Social & Networking</option>
+                                    <option value="events">📅 Events</option>
+                                    <option value="technology">💻 Technology</option>
+                                    <option value="general">🌟 General</option>
+                                    <option value="help">🆘 Help & Support</option>
+                                    <option value="announcements">📣 Announcements</option>
                                 </select>
                             </div>
                         </div>
                     </div>
 
+                    <!-- Title Field -->
+                    <div class="title-section">
+                        <label for="title" class="field-label">
+                            <i class="fas fa-heading"></i>
+                            Title <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="title" 
+                            name="title" 
+                            class="title-input"
+                            placeholder="Give your thread a clear, descriptive title..."
+                            maxlength="200"
+                            required
+                            aria-required="true"
+                        >
+                        <div class="field-hint">
+                            <span id="title-count">0</span>/200 characters
+                        </div>
+                    </div>
+
                     <!-- Main Content Area -->
                     <div class="content-section">
+                        <label for="content" class="field-label">
+                            <i class="fas fa-align-left"></i>
+                            Content <span class="required">*</span>
+                        </label>
                         <div class="compose-area">
+                            <!-- Rich Text Toolbar -->
+                            <div class="rich-text-toolbar">
+                                <div class="toolbar-group">
+                                    <button type="button" class="toolbar-btn" data-command="bold" title="Bold (Ctrl+B)" aria-label="Bold">
+                                        <i class="fas fa-bold"></i>
+                                    </button>
+                                    <button type="button" class="toolbar-btn" data-command="italic" title="Italic (Ctrl+I)" aria-label="Italic">
+                                        <i class="fas fa-italic"></i>
+                                    </button>
+                                    <button type="button" class="toolbar-btn" data-command="underline" title="Underline (Ctrl+U)" aria-label="Underline">
+                                        <i class="fas fa-underline"></i>
+                                    </button>
+                                </div>
+                                <div class="toolbar-divider"></div>
+                                <div class="toolbar-group">
+                                    <button type="button" class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List" aria-label="Bullet list">
+                                        <i class="fas fa-list-ul"></i>
+                                    </button>
+                                    <button type="button" class="toolbar-btn" data-command="insertOrderedList" title="Numbered List" aria-label="Numbered list">
+                                        <i class="fas fa-list-ol"></i>
+                                    </button>
+                                </div>
+                                <div class="toolbar-divider"></div>
+                                <div class="toolbar-group">
+                                    <button type="button" class="toolbar-btn" id="add-emoji-btn" title="Add Emoji" aria-label="Add emoji">
+                                        <i class="fas fa-smile"></i>
+                                    </button>
+                                    <button type="button" class="toolbar-btn" id="add-link-btn" title="Add Link" aria-label="Add link">
+                                        <i class="fas fa-link"></i>
+                                    </button>
+                                </div>
+                            </div>
                             <textarea 
                                 id="content" 
+                                name="content"
                                 class="main-textarea"
                                 placeholder="What's on your mind? Share your thoughts, experiences, or ask a question..."
-                                maxlength="2000"
-                                rows="6"
+                                maxlength="5000"
+                                rows="8"
+                                required
+                                aria-required="true"
                             ></textarea>
                             <div class="content-footer">
-                                <div class="char-counter">
-                                    <span id="char-count">0</span>/<span id="char-limit">2000</span>
+                                <div class="char-counter" role="status" aria-live="polite">
+                                    <span id="char-count">0</span>/<span id="char-limit">5000</span>
+                                    <span id="read-time" class="read-time"></span>
                                 </div>
                             </div>
                         </div>
@@ -104,56 +207,175 @@
                         </div>
                     </div>
 
-                    <!-- Enhanced Options -->
-                    <div class="options-section">
-                        <div class="options-grid">
-                            <!-- Location -->
-                            <div class="option-item">
-                                <div class="option-header">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span>Location</span>
-                                </div>
-                                <input 
-                                    type="text" 
-                                    id="location" 
-                                    class="option-input"
-                                    placeholder="Where are you posting from?"
-                                >
+                    <!-- Poll Creator (shown when thread type is "poll") -->
+                    <div id="poll-section" class="poll-section" style="display: none;">
+                        <div class="poll-header">
+                            <h3><i class="fas fa-poll"></i> Create Poll</h3>
+                        </div>
+                        <div class="poll-options">
+                            <div class="poll-option-item">
+                                <input type="text" class="poll-option-input" placeholder="Option 1" maxlength="100">
                             </div>
+                            <div class="poll-option-item">
+                                <input type="text" class="poll-option-input" placeholder="Option 2" maxlength="100">
+                            </div>
+                        </div>
+                        <button type="button" class="add-poll-option-btn" id="add-poll-option">
+                            <i class="fas fa-plus"></i> Add Option
+                        </button>
+                        <div class="poll-settings">
+                            <label class="poll-setting-item">
+                                <input type="checkbox" id="poll-multiple" name="poll_multiple">
+                                <span>Allow multiple selections</span>
+                            </label>
+                            <div class="poll-duration">
+                                <label for="poll-duration">Poll Duration:</label>
+                                <select id="poll-duration" name="poll_duration">
+                                    <option value="1">1 Day</option>
+                                    <option value="3">3 Days</option>
+                                    <option value="7" selected>1 Week</option>
+                                    <option value="14">2 Weeks</option>
+                                    <option value="30">1 Month</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
-                            <!-- Hashtags -->
-                            <div class="option-item hashtag-option">
-                                <div class="option-header">
-                                    <i class="fas fa-hashtag"></i>
-                                    <span>Tags</span>
+                    <!-- Advanced Options (Collapsible) -->
+                    <div class="advanced-options-wrapper">
+                        <button type="button" class="advanced-toggle" id="advanced-toggle">
+                            <i class="fas fa-chevron-down"></i>
+                            <span>Advanced Options</span>
+                        </button>
+                        <div class="advanced-options-content" id="advanced-options" style="display: none;">
+                            <div class="options-grid">
+                                <!-- Target Audience -->
+                                <div class="option-item">
+                                    <label for="target-audience" class="option-label">
+                                        <i class="fas fa-users"></i>
+                                        Target Audience
+                                    </label>
+                                    <select id="target-audience" name="target_audience" class="option-input">
+                                        <option value="all">All Alumni</option>
+                                        <option value="batch">Specific Batch Year</option>
+                                        <option value="department">Specific Department</option>
+                                    </select>
                                 </div>
-                                <div class="hashtag-container">
+
+                                <!-- Batch Year (conditional) -->
+                                <div class="option-item" id="batch-year-option" style="display: none;">
+                                    <label for="batch-year" class="option-label">
+                                        <i class="fas fa-calendar"></i>
+                                        Batch Year
+                                    </label>
+                                    <input 
+                                        type="number" 
+                                        id="batch-year" 
+                                        name="batch_year" 
+                                        class="option-input"
+                                        placeholder="e.g., 2020"
+                                        min="1950"
+                                        max="2030"
+                                    >
+                                </div>
+
+                                <!-- Location -->
+                                <div class="option-item">
+                                    <label for="location" class="option-label">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        Location
+                                    </label>
                                     <input 
                                         type="text" 
-                                        id="hashtags" 
+                                        id="location" 
+                                        name="location"
                                         class="option-input"
-                                        placeholder="Add hashtags (e.g., #career #alumni)"
+                                        placeholder="Where are you posting from?"
                                     >
-                                    <div class="hashtag-suggestions" id="hashtag-suggestions"></div>
-                                    <div class="hashtag-tags" id="hashtag-tags"></div>
                                 </div>
-                            </div>
 
-                            <!-- Mentions -->
-                            <div class="option-item mention-option">
-                                <div class="option-header">
-                                    <i class="fas fa-at"></i>
-                                    <span>Mentions</span>
+                                <!-- Tags -->
+                                <div class="option-item full-width">
+                                    <label for="tags" class="option-label">
+                                        <i class="fas fa-tags"></i>
+                                        Tags/Keywords
+                                    </label>
+                                    <div class="tags-container">
+                                        <input 
+                                            type="text" 
+                                            id="tags" 
+                                            name="tags"
+                                            class="option-input"
+                                            placeholder="Add tags for better discoverability (press Enter)"
+                                        >
+                                        <div class="tags-list" id="tags-list"></div>
+                                    </div>
                                 </div>
-                                <div class="mention-container">
+
+                                <!-- Hashtags -->
+                                <div class="option-item full-width">
+                                    <label for="hashtags" class="option-label">
+                                        <i class="fas fa-hashtag"></i>
+                                        Hashtags
+                                    </label>
+                                    <div class="hashtag-container">
+                                        <input 
+                                            type="text" 
+                                            id="hashtags" 
+                                            name="hashtags"
+                                            class="option-input"
+                                            placeholder="Add hashtags (e.g., #career #alumni)"
+                                        >
+                                        <div class="hashtag-suggestions" id="hashtag-suggestions"></div>
+                                        <div class="hashtag-tags" id="hashtag-tags"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Mentions -->
+                                <div class="option-item full-width">
+                                    <label for="mentions" class="option-label">
+                                        <i class="fas fa-at"></i>
+                                        Mentions
+                                    </label>
+                                    <div class="mention-container">
+                                        <input 
+                                            type="text" 
+                                            id="mentions" 
+                                            name="mentions"
+                                            class="option-input"
+                                            placeholder="@mention someone"
+                                        >
+                                        <div class="mention-suggestions" id="mention-suggestions"></div>
+                                        <div class="mention-tags" id="mention-tags"></div>
+                                    </div>
+                                </div>
+
+                                <!-- Content Warning -->
+                                <div class="option-item">
+                                    <label for="content-warning" class="option-label">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                        Content Warning
+                                    </label>
+                                    <select id="content-warning" name="content_warning" class="option-input">
+                                        <option value="">None</option>
+                                        <option value="sensitive">Sensitive Content</option>
+                                        <option value="spoiler">Spoiler Alert</option>
+                                        <option value="nsfw">Not Safe For Work</option>
+                                    </select>
+                                </div>
+
+                                <!-- Scheduled Publishing -->
+                                <div class="option-item">
+                                    <label for="schedule-date" class="option-label">
+                                        <i class="fas fa-clock"></i>
+                                        Schedule For Later
+                                    </label>
                                     <input 
-                                        type="text" 
-                                        id="mentions" 
+                                        type="datetime-local" 
+                                        id="schedule-date" 
+                                        name="schedule_date"
                                         class="option-input"
-                                        placeholder="@mention someone"
                                     >
-                                    <div class="mention-suggestions" id="mention-suggestions"></div>
-                                    <div class="mention-tags" id="mention-tags"></div>
                                 </div>
                             </div>
                         </div>
