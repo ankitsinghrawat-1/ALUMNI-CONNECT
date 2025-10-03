@@ -937,6 +937,31 @@ html {
 }
 
 /* ====================================================================
+   AUTO-HIDE ON SCROLL FEATURE
+   ==================================================================== */
+.modern-top-bar,
+.trending-stories {
+    transition: transform var(--transition-slow), opacity var(--transition-base);
+}
+
+.modern-top-bar.hide-on-scroll {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.trending-stories.hide-on-scroll {
+    transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Adjust main content margin when sections are hidden */
+.modern-content {
+    transition: margin-top var(--transition-slow);
+}
+
+/* ====================================================================
    PRINT STYLES
    ==================================================================== */
 @media print {
