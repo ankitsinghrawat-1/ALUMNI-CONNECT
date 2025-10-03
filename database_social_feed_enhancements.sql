@@ -331,40 +331,45 @@ CREATE TABLE IF NOT EXISTS thread_tag_junction (
 
 -- Add new fields to threads table
 ALTER TABLE threads 
-ADD COLUMN IF NOT EXISTS visibility ENUM('public', 'alumni', 'followers', 'private') DEFAULT 'public' AFTER media_caption,
-ADD COLUMN IF NOT EXISTS is_pinned BOOLEAN DEFAULT FALSE AFTER visibility,
-ADD COLUMN IF NOT EXISTS is_featured BOOLEAN DEFAULT FALSE AFTER is_pinned,
-ADD COLUMN IF NOT EXISTS edit_count INT DEFAULT 0 AFTER is_featured,
-ADD COLUMN IF NOT EXISTS last_edited_at TIMESTAMP DEFAULT NULL AFTER edit_count,
-ADD COLUMN IF NOT EXISTS view_count INT DEFAULT 0 AFTER last_edited_at,
-ADD COLUMN IF NOT EXISTS engagement_score INT DEFAULT 0 AFTER view_count,
+ADD COLUMN visibility ENUM('public', 'alumni', 'followers', 'private') DEFAULT 'public' AFTER media_caption,
+ADD COLUMN is_pinned BOOLEAN DEFAULT FALSE AFTER visibility,
+ADD COLUMN is_featured BOOLEAN DEFAULT FALSE AFTER is_pinned,
+ADD COLUMN edit_count INT DEFAULT 0 AFTER is_featured,
+ADD COLUMN last_edited_at TIMESTAMP DEFAULT NULL AFTER edit_count,
+ADD COLUMN view_count INT DEFAULT 0 AFTER last_edited_at,
+ADD COLUMN engagement_score INT DEFAULT 0 AFTER view_count,
 ADD INDEX idx_threads_visibility (visibility, created_at),
 ADD INDEX idx_threads_featured (is_featured, created_at),
 ADD INDEX idx_threads_engagement (engagement_score DESC);
 
 -- Add new fields to stories table
 ALTER TABLE stories
-ADD COLUMN IF NOT EXISTS view_count INT DEFAULT 0 AFTER expires_at,
-ADD COLUMN IF NOT EXISTS screenshot_count INT DEFAULT 0 AFTER view_count,
-ADD COLUMN IF NOT EXISTS share_count INT DEFAULT 0 AFTER screenshot_count,
+ADD COLUMN view_count INT DEFAULT 0 AFTER expires_at,
+ADD COLUMN screenshot_count INT DEFAULT 0 AFTER view_count,
+ADD COLUMN share_count INT DEFAULT 0 AFTER screenshot_count,
 ADD INDEX idx_stories_view_count (view_count DESC);
 
 -- Add new fields to thread_comments table
 ALTER TABLE thread_comments
-ADD COLUMN IF NOT EXISTS parent_comment_id INT DEFAULT NULL AFTER thread_id,
-ADD COLUMN IF NOT EXISTS is_edited BOOLEAN DEFAULT FALSE AFTER content,
-ADD COLUMN IF NOT EXISTS edited_at TIMESTAMP DEFAULT NULL AFTER is_edited,
-ADD COLUMN IF NOT EXISTS like_count INT DEFAULT 0 AFTER edited_at,
+ADD COLUMN parent_comment_id INT DEFAULT NULL AFTER thread_id,
+ADD COLUMN is_edited BOOLEAN DEFAULT FALSE AFTER content,
+ADD COLUMN edited_at TIMESTAMP DEFAULT NULL AFTER is_edited,
+ADD COLUMN like_count INT DEFAULT 0 AFTER edited_at,
 ADD FOREIGN KEY (parent_comment_id) REFERENCES thread_comments(comment_id) ON DELETE CASCADE,
 ADD INDEX idx_thread_comments_parent (parent_comment_id, created_at);
 
 -- Add new fields to user_social_stats table
+-- First add total_stories column if it doesn't exist
 ALTER TABLE user_social_stats
-ADD COLUMN IF NOT EXISTS total_views INT DEFAULT 0 AFTER total_stories,
-ADD COLUMN IF NOT EXISTS total_bookmarks_received INT DEFAULT 0 AFTER total_views,
-ADD COLUMN IF NOT EXISTS avg_engagement_rate DECIMAL(5,2) DEFAULT 0.00 AFTER total_bookmarks_received,
-ADD COLUMN IF NOT EXISTS profile_views INT DEFAULT 0 AFTER avg_engagement_rate,
-ADD COLUMN IF NOT EXISTS reach_count INT DEFAULT 0 AFTER profile_views;
+ADD COLUMN total_stories INT DEFAULT 0 AFTER stories_count;
+
+-- Then add the other new columns
+ALTER TABLE user_social_stats
+ADD COLUMN total_views INT DEFAULT 0 AFTER total_stories,
+ADD COLUMN total_bookmarks_received INT DEFAULT 0 AFTER total_views,
+ADD COLUMN avg_engagement_rate DECIMAL(5,2) DEFAULT 0.00 AFTER total_bookmarks_received,
+ADD COLUMN profile_views INT DEFAULT 0 AFTER avg_engagement_rate,
+ADD COLUMN reach_count INT DEFAULT 0 AFTER profile_views;
 
 -- ====================================================================
 -- INSERT DEFAULT DATA
