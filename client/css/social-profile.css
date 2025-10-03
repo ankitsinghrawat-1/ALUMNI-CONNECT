@@ -659,3 +659,504 @@
     }
 }
 
+
+/* ========================================
+   PROFESSIONAL X-INSPIRED PROFILE DESIGN
+   Clean, minimal, business-focused
+   ======================================== */
+
+/* Override Instagram-like styling with professional design */
+.social-profile-main {
+    background: #ffffff;
+    padding-top: 0;
+}
+
+.dark-mode .social-profile-main {
+    background: #000000;
+}
+
+/* Professional Profile Header */
+.profile-header-section {
+    background: #ffffff;
+    border-radius: 0;
+    box-shadow: none;
+    border-bottom: 1px solid var(--professional-border);
+    margin-bottom: 0;
+}
+
+.dark-mode .profile-header-section {
+    background: #000000;
+    border-bottom-color: var(--professional-border);
+}
+
+.profile-cover {
+    height: 200px;
+    background: var(--professional-hover);
+    position: relative;
+}
+
+.dark-mode .profile-cover {
+    background: #16181c;
+}
+
+.cover-gradient {
+    display: none;
+}
+
+/* Professional Avatar */
+.profile-avatar-container {
+    width: 134px;
+    height: 134px;
+    border: 4px solid #ffffff;
+    top: 140px;
+    left: 1rem;
+    box-shadow: none;
+}
+
+.dark-mode .profile-avatar-container {
+    border-color: #000000;
+}
+
+/* Professional Profile Info */
+.profile-info-wrapper {
+    padding: 0 1rem 1rem;
+}
+
+.profile-main-info {
+    margin-left: 0;
+    margin-top: 60px;
+}
+
+.profile-name-section h1 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--professional-text);
+}
+
+.verification-badge {
+    color: var(--professional-primary);
+    font-size: 1.125rem;
+}
+
+.profile-title {
+    font-size: 0.9375rem;
+    color: var(--professional-text-secondary);
+    margin: 0.25rem 0 0.5rem 0;
+}
+
+.profile-bio {
+    font-size: 0.9375rem;
+    color: var(--professional-text);
+    margin: 1rem 0;
+    line-height: 1.5;
+}
+
+/* Professional Stats */
+.profile-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    padding: 0;
+    border: none;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: row;
+    gap: 0.25rem;
+    align-items: baseline;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.stat-item:hover {
+    color: var(--professional-text);
+}
+
+.stat-value {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--professional-text);
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: var(--professional-text-secondary);
+    font-weight: 400;
+}
+
+.stat-item.clickable:hover .stat-label {
+    text-decoration: underline;
+}
+
+/* Professional Action Buttons */
+.profile-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.profile-actions .btn {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border: 1px solid var(--professional-border);
+    transition: all 0.2s ease;
+}
+
+.profile-actions .btn-primary {
+    background: var(--professional-text);
+    color: #ffffff;
+    border-color: var(--professional-text);
+}
+
+.dark-mode .profile-actions .btn-primary {
+    background: #eff3f4;
+    color: #0f1419;
+}
+
+.profile-actions .btn-primary:hover {
+    background: var(--professional-text-secondary);
+}
+
+.profile-actions .btn-secondary {
+    background: transparent;
+    color: var(--professional-text);
+    border-color: var(--professional-border);
+}
+
+.profile-actions .btn-secondary:hover {
+    background: var(--professional-hover);
+}
+
+.dark-mode .profile-actions .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Professional Top Actions */
+.profile-top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: #ffffff;
+    border-bottom: 1px solid var(--professional-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.dark-mode .profile-top-actions {
+    background: #000000;
+    border-bottom-color: var(--professional-border);
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: none;
+    color: var(--professional-text);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.back-btn:hover {
+    background: var(--professional-hover);
+}
+
+.dark-mode .back-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.profile-action-btns {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.profile-action-btns .btn {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border: 1px solid var(--professional-border);
+}
+
+.profile-action-btns .btn-primary {
+    background: var(--professional-primary);
+    color: #ffffff;
+    border-color: var(--professional-primary);
+}
+
+.profile-action-btns .btn-primary:hover {
+    background: var(--professional-primary-hover);
+}
+
+.profile-action-btns .btn-secondary {
+    background: transparent;
+    color: var(--professional-text);
+}
+
+.profile-action-btns .btn-secondary:hover {
+    background: var(--professional-hover);
+}
+
+.dark-mode .profile-action-btns .btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Professional Tabs */
+.profile-tabs {
+    display: flex;
+    background: #ffffff;
+    border-bottom: 1px solid var(--professional-border);
+    position: sticky;
+    top: 65px;
+    z-index: 99;
+}
+
+.dark-mode .profile-tabs {
+    background: #000000;
+    border-bottom-color: var(--professional-border);
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 1rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--professional-text-secondary);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.tab-btn:hover {
+    background: var(--professional-hover);
+    color: var(--professional-text);
+}
+
+.dark-mode .tab-btn:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.tab-btn.active {
+    color: var(--professional-text);
+    border-bottom-color: var(--professional-primary);
+}
+
+/* Professional Tab Content */
+.tab-content {
+    background: #ffffff;
+    padding: 0;
+}
+
+.dark-mode .tab-content {
+    background: #000000;
+}
+
+.tab-pane {
+    padding: 1rem;
+}
+
+/* Professional Post Grid */
+.posts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+}
+
+.post-grid-item {
+    aspect-ratio: 1;
+    background: var(--professional-hover);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.dark-mode .post-grid-item {
+    background: #16181c;
+}
+
+.post-grid-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.post-grid-item:hover .post-overlay {
+    opacity: 1;
+}
+
+.post-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    color: #ffffff;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.post-overlay-stat {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+}
+
+/* Professional Highlights */
+.highlights-section {
+    padding: 1rem;
+    background: #ffffff;
+    border-bottom: 1px solid var(--professional-border);
+}
+
+.dark-mode .highlights-section {
+    background: #000000;
+    border-bottom-color: var(--professional-border);
+}
+
+.highlights-scroll {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.5rem 0;
+    scrollbar-width: none;
+}
+
+.highlights-scroll::-webkit-scrollbar {
+    display: none;
+}
+
+.highlight-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: fit-content;
+    cursor: pointer;
+}
+
+.highlight-ring {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 2px solid var(--professional-border);
+    padding: 2px;
+    background: #ffffff;
+}
+
+.dark-mode .highlight-ring {
+    background: #000000;
+}
+
+.highlight-cover {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--professional-hover);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.dark-mode .highlight-cover {
+    background: #202327;
+}
+
+.highlight-cover img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.highlight-name {
+    font-size: 0.8125rem;
+    color: var(--professional-text);
+    font-weight: 500;
+}
+
+/* Professional Thread List */
+.threads-list {
+    background: #ffffff;
+}
+
+.dark-mode .threads-list {
+    background: #000000;
+}
+
+.thread-list-item {
+    padding: 1.25rem 1rem;
+    border-bottom: 1px solid var(--professional-border);
+    transition: background 0.2s ease;
+    cursor: pointer;
+}
+
+.thread-list-item:hover {
+    background: var(--professional-hover);
+}
+
+.dark-mode .thread-list-item:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+/* Professional Responsive Design */
+@media (max-width: 768px) {
+    .profile-cover {
+        height: 120px;
+    }
+    
+    .profile-avatar-container {
+        width: 80px;
+        height: 80px;
+        top: 80px;
+    }
+    
+    .profile-main-info {
+        margin-top: 40px;
+    }
+    
+    .profile-name-section h1 {
+        font-size: 1.125rem;
+    }
+    
+    .profile-stats {
+        gap: 1rem;
+    }
+    
+    .posts-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .profile-action-btns .btn span {
+        display: none;
+    }
+    
+    .profile-action-btns .btn {
+        padding: 0.5rem;
+        min-width: 44px;
+        justify-content: center;
+    }
+}
+
+/* Remove Instagram-like effects */
+.profile-header-section,
+.profile-tabs,
+.tab-content {
+    box-shadow: none;
+}
