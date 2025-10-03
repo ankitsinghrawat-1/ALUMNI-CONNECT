@@ -4,6 +4,83 @@
    ==================================================================== */
 
 /* ====================================================================
+   BASE OVERRIDES - Ensure professional styles take precedence
+   ==================================================================== */
+.add-story-main {
+    background: #f7f9f9 !important;
+    min-height: 100vh !important;
+}
+
+.add-story-main .story-creator-card {
+    background: #ffffff !important;
+    border: 1px solid #EFF3F4 !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.add-story-main .story-type-card {
+    background: #ffffff !important;
+    border: 2px solid #EFF3F4 !important;
+    border-radius: 12px !important;
+    padding: 1.5rem !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+}
+
+.add-story-main .story-type-card:hover {
+    border-color: #0A66C2 !important;
+    background: #f7f9f9 !important;
+}
+
+.add-story-main .story-type-card.active {
+    border-color: #0A66C2 !important;
+    background: #E7F3FF !important;
+}
+
+.add-story-main textarea,
+.add-story-main input[type="text"],
+.add-story-main input[type="color"],
+.add-story-main select {
+    background: #ffffff !important;
+    border: 1px solid #CFD9DE !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9375rem !important;
+    color: #0F1419 !important;
+}
+
+.add-story-main button,
+.add-story-main .btn {
+    background: #0A66C2 !important;
+    color: #ffffff !important;
+    border: 1px solid #0A66C2 !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 24px !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+.add-story-main button:hover,
+.add-story-main .btn:hover {
+    background: #004182 !important;
+}
+
+.add-story-main .tool-btn {
+    background: transparent !important;
+    color: #536471 !important;
+    border: 1px solid #CFD9DE !important;
+    padding: 0.5rem !important;
+    border-radius: 8px !important;
+}
+
+.add-story-main .tool-btn:hover {
+    background: #f7f9f9 !important;
+    color: #0F1419 !important;
+}
+
+/* ====================================================================
    CSS VARIABLES & DESIGN TOKENS
    ==================================================================== */
 :root {

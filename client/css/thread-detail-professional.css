@@ -4,6 +4,69 @@
    ==================================================================== */
 
 /* ====================================================================
+   BASE OVERRIDES - Ensure professional styles take precedence
+   ==================================================================== */
+.thread-detail-main {
+    background: #f7f9f9 !important;
+    min-height: 100vh !important;
+}
+
+.thread-detail-main .thread-content-card {
+    background: #ffffff !important;
+    border: 1px solid #EFF3F4 !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+}
+
+.thread-detail-main .comment-card {
+    background: #ffffff !important;
+    border: 1px solid #EFF3F4 !important;
+    border-radius: 12px !important;
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+}
+
+.thread-detail-main textarea,
+.thread-detail-main input[type="text"] {
+    background: #ffffff !important;
+    border: 1px solid #CFD9DE !important;
+    border-radius: 8px !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 0.9375rem !important;
+    color: #0F1419 !important;
+    width: 100% !important;
+}
+
+.thread-detail-main button,
+.thread-detail-main .btn {
+    background: #0A66C2 !important;
+    color: #ffffff !important;
+    border: 1px solid #0A66C2 !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: 24px !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+}
+
+.thread-detail-main button:hover,
+.thread-detail-main .btn:hover {
+    background: #004182 !important;
+}
+
+.thread-detail-main .action-btn {
+    background: transparent !important;
+    color: #536471 !important;
+    border: 1px solid transparent !important;
+    padding: 0.5rem !important;
+}
+
+.thread-detail-main .action-btn:hover {
+    background: #f7f9f9 !important;
+    color: #0F1419 !important;
+}
+
+/* ====================================================================
    CSS VARIABLES & DESIGN TOKENS
    ==================================================================== */
 :root {
