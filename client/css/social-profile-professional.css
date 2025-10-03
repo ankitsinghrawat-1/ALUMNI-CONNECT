@@ -16,36 +16,60 @@
     box-sizing: border-box !important;
 }
 
-/* Override base button styles */
+/* Override base button styles - Modern LinkedIn/X Design */
 .social-profile-main .btn,
-.social-profile-main button,
-.social-profile-main .profile-action-btns .btn {
-    background: #0A66C2 !important;
-    color: #ffffff !important;
-    border: 1px solid #0A66C2 !important;
-    padding: 0.625rem 1.25rem !important;
+.social-profile-main button {
+    padding: 0.5rem 1.25rem !important;
     border-radius: 24px !important;
     font-size: 0.9375rem !important;
     font-weight: 600 !important;
     cursor: pointer !important;
-    transition: all 0.2s ease !important;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    border: 1px solid transparent !important;
+    text-decoration: none !important;
+    line-height: 1.5 !important;
 }
 
-.social-profile-main .btn:hover,
-.social-profile-main button:hover {
+.social-profile-main .btn-primary,
+.social-profile-main .btn.btn-primary {
+    background: #0A66C2 !important;
+    color: #ffffff !important;
+    border-color: #0A66C2 !important;
+}
+
+.social-profile-main .btn-primary:hover {
     background: #004182 !important;
     border-color: #004182 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(10, 102, 194, 0.3) !important;
 }
 
-.social-profile-main .btn-secondary {
+.social-profile-main .btn-secondary,
+.social-profile-main .btn.btn-secondary {
     background: transparent !important;
     color: #0F1419 !important;
-    border: 1px solid #CFD9DE !important;
+    border: 1px solid #536471 !important;
 }
 
 .social-profile-main .btn-secondary:hover {
-    background: #f7f9f9 !important;
+    background: rgba(15, 20, 25, 0.05) !important;
     border-color: #0F1419 !important;
+    transform: translateY(-1px) !important;
+}
+
+.social-profile-main .back-btn {
+    background: transparent !important;
+    color: #0F1419 !important;
+    border: 1px solid #CFD9DE !important;
+    padding: 0.5rem 1rem !important;
+}
+
+.social-profile-main .back-btn:hover {
+    background: #f7f9f9 !important;
+    border-color: #536471 !important;
 }
 
 /* ====================================================================
@@ -197,6 +221,28 @@
 }
 
 /* ====================================================================
+   TOP ACTIONS BAR
+   ==================================================================== */
+.profile-top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-lg) 0;
+}
+
+.profile-action-btns {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.profile-action-btns .btn {
+    padding: 0.5rem 1.25rem !important;
+    font-size: 0.9375rem !important;
+    font-weight: 600 !important;
+}
+
+/* ====================================================================
    PROFILE HEADER SECTION
    ==================================================================== */
 .profile-header-section {
@@ -292,13 +338,15 @@
 /* Profile Main Info */
 .profile-main-info {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: var(--spacing-xl);
+    flex-direction: column;
+    gap: var(--spacing-lg);
 }
 
 .profile-name-section {
-    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-xl);
 }
 
 .profile-name-section h1 {
@@ -309,6 +357,7 @@
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
+    flex: 1;
 }
 
 .verified-badge {
@@ -338,53 +387,104 @@
     margin-bottom: var(--spacing-sm);
 }
 
+.profile-title {
+    font-size: var(--font-size-lg);
+    color: var(--text-secondary);
+    margin: var(--spacing-xs) 0;
+    font-weight: 500;
+}
+
 .profile-bio {
     font-size: var(--font-size-base);
     line-height: 1.6;
     color: var(--text-primary);
-    margin-top: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+    max-width: 600px;
+}
+
+.profile-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    margin: var(--spacing-md) 0;
+}
+
+.detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+}
+
+.detail-item i {
+    color: var(--text-tertiary);
+}
+
+.detail-item a {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.detail-item a:hover {
+    text-decoration: underline;
 }
 
 /* Profile Actions */
-.profile-action-buttons {
+.profile-actions {
     display: flex;
-    gap: var(--spacing-md);
-    flex-shrink: 0;
-}
-
-.profile-action-btn {
-    padding: var(--spacing-md) var(--spacing-xl);
-    border-radius: var(--radius-full);
-    font-size: var(--font-size-sm);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-base);
-    display: inline-flex;
-    align-items: center;
     gap: var(--spacing-sm);
-    white-space: nowrap;
+    flex-wrap: wrap;
+    margin-top: var(--spacing-md);
 }
 
-.profile-action-btn.primary {
-    background: var(--primary-blue);
-    color: white;
-    border: none;
+.profile-actions .btn {
+    padding: 0.625rem 1.5rem !important;
+    border-radius: var(--radius-full) !important;
+    font-size: var(--font-size-sm) !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all var(--transition-base) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: var(--spacing-xs) !important;
+    white-space: nowrap !important;
+    border: 1px solid transparent !important;
 }
 
-.profile-action-btn.primary:hover {
-    background: var(--primary-blue-hover);
-    box-shadow: var(--shadow-md);
+.profile-actions .btn-edit-profile {
+    background: var(--primary-blue) !important;
+    color: white !important;
+    border-color: var(--primary-blue) !important;
 }
 
-.profile-action-btn.secondary {
-    background: var(--bg-primary);
-    color: var(--text-primary);
-    border: 1px solid var(--border-medium);
+.profile-actions .btn-edit-profile:hover {
+    background: var(--primary-blue-hover) !important;
+    border-color: var(--primary-blue-hover) !important;
+    box-shadow: var(--shadow-sm) !important;
 }
 
-.profile-action-btn.secondary:hover {
-    background: var(--bg-hover);
-    border-color: var(--border-dark);
+.profile-actions .btn-primary {
+    background: var(--primary-blue) !important;
+    color: white !important;
+    border-color: var(--primary-blue) !important;
+}
+
+.profile-actions .btn-primary:hover {
+    background: var(--primary-blue-hover) !important;
+    border-color: var(--primary-blue-hover) !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+.profile-actions .btn-secondary {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-medium) !important;
+}
+
+.profile-actions .btn-secondary:hover {
+    background: var(--bg-hover) !important;
+    border-color: var(--border-dark) !important;
 }
 
 .profile-more-btn {
