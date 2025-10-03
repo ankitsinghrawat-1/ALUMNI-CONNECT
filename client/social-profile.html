@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Profile - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/social-profile.css">
+    <link rel="stylesheet" href="css/social-profile-enhanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="social-profile-main">
+        <div class="container">
+            <!-- Back Button and Action Buttons -->
+            <div class="profile-top-actions">
+                <button onclick="history.back()" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back
+                </button>
+                <div class="profile-action-btns">
+                    <a href="add-story.html" class="btn btn-secondary">
+                        <i class="fas fa-plus-circle"></i> Add Story
+                    </a>
+                    <a href="add-thread.html" class="btn btn-primary">
+                        <i class="fas fa-plus"></i> Add Thread
+                    </a>
+                </div>
+            </div>
+
+            <!-- Profile Header Section -->
+            <section class="profile-header-section">
+                <div class="profile-cover">
+                    <div class="cover-gradient"></div>
+                </div>
+                
+                <div class="profile-info-wrapper">
+                    <div class="profile-avatar-container">
+                        <img id="profile-avatar" src="" alt="Profile" class="profile-avatar">
+                    </div>
+                    
+                    <div class="profile-main-info">
+                        <div class="profile-name-section">
+                            <h1 id="profile-name">Loading...</h1>
+                            <span id="verification-badge" class="verification-badge" style="display: none;">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                        </div>
+                        <p id="profile-title" class="profile-title"></p>
+                        <p id="profile-bio" class="profile-bio"></p>
+                        
+                        <!-- Additional Profile Details -->
+                        <div class="profile-details" id="profile-details">
+                            <div class="detail-item" id="location-detail" style="display: none;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="profile-location"></span>
+                            </div>
+                            <div class="detail-item" id="website-detail" style="display: none;">
+                                <i class="fas fa-link"></i>
+                                <a href="#" id="profile-website" target="_blank" rel="noopener"></a>
+                            </div>
+                            <div class="detail-item" id="joined-detail">
+                                <i class="fas fa-calendar"></i>
+                                <span>Joined <span id="profile-joined"></span></span>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-stats">
+                            <div class="stat-item">
+                                <span class="stat-value" id="threads-count">0</span>
+                                <span class="stat-label">Posts</span>
+                            </div>
+                            <div class="stat-item clickable" id="followers-stat">
+                                <span class="stat-value" id="followers-count">0</span>
+                                <span class="stat-label">Followers</span>
+                            </div>
+                            <div class="stat-item clickable" id="following-stat">
+                                <span class="stat-value" id="following-count">0</span>
+                                <span class="stat-label">Following</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-value" id="likes-count">0</span>
+                                <span class="stat-label">Likes</span>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-actions">
+                            <button id="edit-profile-btn" class="btn btn-edit-profile" style="display: none;">
+                                <i class="fas fa-edit"></i> Edit Profile
+                            </button>
+                            <button id="follow-btn" class="btn btn-primary" style="display: none;">
+                                <i class="fas fa-user-plus"></i> Follow
+                            </button>
+                            <button id="message-btn" class="btn btn-secondary">
+                                <i class="fas fa-paper-plane"></i> Message
+                            </button>
+                            <a href="view-profile.html" id="view-full-profile-btn" class="btn btn-secondary">
+                                <i class="fas fa-id-card"></i> Full Profile
+                            </a>
+                            <button id="share-profile-btn" class="btn btn-secondary">
+                                <i class="fas fa-share-alt"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Story Highlights Section -->
+            <section class="highlights-section" id="highlights-section" style="display: none;">
+                <h3 class="section-title">
+                    <i class="fas fa-bookmark"></i> Story Highlights
+                </h3>
+                <div class="highlights-container" id="highlights-container">
+                    <!-- Highlights will be loaded here -->
+                </div>
+            </section>
+
+            <!-- Tabs Navigation -->
+            <nav class="profile-tabs">
+                <button class="tab-btn active" data-tab="posts">
+                    <i class="fas fa-th"></i> Posts
+                </button>
+                <button class="tab-btn" data-tab="threads">
+                    <i class="fas fa-comments"></i> Threads
+                </button>
+                <button class="tab-btn" data-tab="stories">
+                    <i class="fas fa-images"></i> Stories
+                </button>
+                <button class="tab-btn" data-tab="activity">
+                    <i class="fas fa-chart-line"></i> Activity
+                </button>
+            </nav>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <!-- Posts Tab -->
+                <div id="posts-tab" class="tab-pane active">
+                    <div class="posts-grid" id="posts-grid">
+                        <div class="loading-container">
+                            <div class="modern-spinner">
+                                <div class="spinner-ring"></div>
+                            </div>
+                            <p>Loading posts...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Threads Tab -->
+                <div id="threads-tab" class="tab-pane">
+                    <div class="threads-list" id="threads-list">
+                        <div class="loading-container">
+                            <div class="modern-spinner">
+                                <div class="spinner-ring"></div>
+                            </div>
+                            <p>Loading threads...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stories Tab -->
+                <div id="stories-tab" class="tab-pane">
+                    <div class="stories-grid" id="stories-grid">
+                        <div class="info-message">
+                            <i class="fas fa-clock"></i>
+                            <p>Active stories expire after 24 hours</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Activity Tab -->
+                <div id="activity-tab" class="tab-pane">
+                    <div class="activity-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-heart"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number" id="activity-likes">0</span>
+                                <span class="stat-text">Total Likes Received</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-comment"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number" id="activity-comments">0</span>
+                                <span class="stat-text">Total Comments Received</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-share"></i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-number" id="activity-shares">0</span>
+                                <span class="stat-text">Total Shares</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Followers/Following Modal -->
+    <div id="connections-modal" class="modal">
+        <div class="modal-content connections-modal-content">
+            <div class="modal-header">
+                <h2 id="connections-modal-title">Connections</h2>
+                <button class="modal-close" onclick="closeConnectionsModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="connections-modal-body">
+                <!-- Connections list will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div id="edit-profile-modal" class="modal">
+        <div class="modal-content edit-profile-modal-content">
+            <div class="modal-header">
+                <h2>Edit Social Profile</h2>
+                <button class="modal-close" onclick="closeEditProfileModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="edit-profile-form" class="edit-profile-form">
+                    <div class="form-group">
+                        <label for="edit-bio">Bio</label>
+                        <textarea id="edit-bio" name="bio" rows="4" maxlength="160" placeholder="Tell us about yourself..."></textarea>
+                        <span class="char-count" id="bio-char-count">0/160</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-job-title">Job Title</label>
+                        <input type="text" id="edit-job-title" name="job_title" placeholder="e.g. Software Engineer">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-company">Company</label>
+                        <input type="text" id="edit-company" name="company" placeholder="e.g. Tech Corp">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-location">Location</label>
+                        <input type="text" id="edit-location" name="location" placeholder="e.g. San Francisco, CA">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-website">Website</label>
+                        <input type="url" id="edit-website" name="website" placeholder="https://example.com">
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditProfileModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+                <h3 id="connections-modal-title">Followers</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="connections-list">
+                <!-- Users list will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Highlight Viewer Modal -->
+    <div id="highlight-viewer-modal" class="modal">
+        <div class="modal-content highlight-viewer-content">
+            <span class="close">&times;</span>
+            <div class="highlight-viewer" id="highlight-viewer">
+                <!-- Highlight stories will be displayed here -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/social-profile.js"></script>
+</body>
+</html>

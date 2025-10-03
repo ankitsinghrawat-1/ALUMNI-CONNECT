@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Discussions - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/social-feed-enhancements.css">
+    <link rel="stylesheet" href="css/threads-modern-ux.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         (function() {
@@ -35,6 +37,9 @@
                     <div class="search-container">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" placeholder="Search discussions..." class="modern-search">
+                        <button class="modern-filter-btn" id="filter-toggle">
+                            <i class="fas fa-filter"></i>
+                        </button>
                     </div>
                     <div class="action-buttons">
                         <a href="add-story.html" class="add-story-btn" title="Create a new story">
@@ -45,14 +50,12 @@
                             <i class="fas fa-plus"></i>
                             <span>New Thread</span>
                         </a>
-                        <a href="stories.html" class="view-stories-btn" title="View all stories">
-                            <i class="fas fa-images"></i>
-                            <span>Stories</span>
+                        <a href="#" id="view-profile-btn" class="view-profile-btn" title="View your social profile">
+                            <img id="profile-btn-avatar" src="" alt="" class="profile-btn-avatar" style="display: none;">
+                            <i class="fas fa-user" id="profile-btn-icon"></i>
+                            <span>Profile</span>
                         </a>
                     </div>
-                    <button class="modern-filter-btn" id="filter-toggle">
-                        <i class="fas fa-filter"></i>
-                    </button>
                 </div>
             </div>
         </div>

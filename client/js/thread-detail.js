@@ -73,11 +73,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         authorInfoCard.innerHTML = `
             <div class="author-card-content">
-                <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}">
-                <h4>${sanitizeHTML(thread.author)}</h4>
+                <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" onclick="window.location.href='social-profile.html?userId=${thread.user_id}'" style="cursor: pointer;">
+                <h4><a href="social-profile.html?userId=${thread.user_id}" style="text-decoration: none; color: inherit;">${sanitizeHTML(thread.author)}</a></h4>
                 <p>Alumni member since ${new Date(thread.created_at).getFullYear()}</p>
-                <a href="view-profile.html?email=${thread.author_email}" class="btn btn-secondary btn-sm">
-                    <i class="fas fa-user"></i> View Profile
+                <a href="social-profile.html?userId=${thread.user_id}" class="btn btn-secondary btn-sm">
+                    <i class="fas fa-user"></i> View Social Profile
+                </a>
+                <a href="view-profile.html?email=${thread.author_email}" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;">
+                    <i class="fas fa-id-card"></i> Full Profile
                 </a>
             </div>
         `;
@@ -236,10 +239,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="modern-thread-header">
                         <div class="modern-author-section">
                             <div class="modern-author-info">
-                                <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="modern-author-avatar">
+                                <img src="${profilePicUrl}" alt="${sanitizeHTML(thread.author)}" class="modern-author-avatar" onclick="window.location.href='social-profile.html?userId=${thread.user_id}'" style="cursor: pointer;">
                                 <div class="modern-author-details">
                                     <h4>
-                                        <a href="view-profile.html?email=${thread.author_email}">${sanitizeHTML(thread.author)}</a>
+                                        <a href="social-profile.html?userId=${thread.user_id}">${sanitizeHTML(thread.author)}</a>
                                     </h4>
                                     <div class="thread-time">
                                         <i class="far fa-clock"></i> ${timeAgo(thread.created_at)}

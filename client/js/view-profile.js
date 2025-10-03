@@ -56,6 +56,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 badgeContainer.innerHTML = '';
             }
 
+            // Update social profile link with user_id
+            const socialProfileLink = document.getElementById('social-profile-link');
+            if (socialProfileLink && user.user_id) {
+                socialProfileLink.href = `social-profile.html?userId=${user.user_id}`;
+            }
+
             document.getElementById('profile-subheader').textContent = `${user.job_title || 'N/A'} at ${user.current_company || 'N/A'}`;
             document.getElementById('bio-view').textContent = user.bio || 'No bio available.';
             document.getElementById('university-view').textContent = user.university || 'N/A';
