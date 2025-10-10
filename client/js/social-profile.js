@@ -17,11 +17,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentUser = await window.api.get('/users/profile');
         isOwnProfile = currentUser.user_id === parseInt(userId);
         
+        console.log('User check:', { currentUserId: currentUser.user_id, profileUserId: parseInt(userId), isOwnProfile });
+        
         // Immediately hide follow button if viewing own profile
         if (isOwnProfile) {
             const followBtn = document.getElementById('follow-btn');
             if (followBtn) {
+                followBtn.classList.add('hidden-own-profile');
                 followBtn.style.display = 'none';
+                followBtn.style.visibility = 'hidden';
+                followBtn.disabled = true;
+                console.log('Follow button hidden (own profile detected)');
             }
         }
     } catch (error) {
@@ -126,9 +132,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             const followBtn = document.getElementById('follow-btn');
             // Always ensure follow button is hidden for own profile
             if (isOwnProfile) {
+                followBtn.classList.add('hidden-own-profile');
                 followBtn.style.display = 'none';
             } else if (currentUser && !isOwnProfile) {
                 // Only show follow button when viewing another user's profile
+                followBtn.classList.remove('hidden-own-profile');
                 followBtn.style.display = 'inline-flex';
                 await updateFollowButton();
             } else {
@@ -491,6 +499,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.openEditProfileModal = () => {
         const modal = document.getElementById('edit-profile-modal');
         if (modal && profileUser) {
+            // Debug: Log profileUser to help diagnose issues
+            console.log('Opening edit modal with profileUser:', profileUser);
+            
             // Populate form with current data
             document.getElementById('edit-bio').value = profileUser.bio || '';
             document.getElementById('edit-job-title').value = profileUser.job_title || '';
@@ -510,6 +521,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
+        } else {
+            console.error('Cannot open edit modal - modal or profileUser missing:', { modal, profileUser });
         }
     };
 
@@ -566,6 +579,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 // Update profileUser object with new data immediately
                 Object.assign(profileUser, formData);
+                console.log('Profile updated locally:', profileUser);
                 
                 submitBtn.classList.remove('loading');
                 submitBtn.classList.add('success');
@@ -675,6 +689,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Extra safeguard: Ensure follow button is hidden for own profile
             if (followBtn) {
+                followBtn.classList.add('hidden-own-profile');
                 followBtn.style.display = 'none';
             }
         }

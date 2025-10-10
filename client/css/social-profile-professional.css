@@ -576,6 +576,12 @@
     border-color: var(--border-dark) !important;
 }
 
+/* Hide follow button on own profile */
+#follow-btn.hidden-own-profile {
+    display: none !important;
+    visibility: hidden !important;
+}
+
 .profile-more-btn {
     width: 44px;
     height: 44px;
