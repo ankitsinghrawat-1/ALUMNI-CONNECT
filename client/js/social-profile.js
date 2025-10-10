@@ -62,16 +62,70 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Update profile links
             const viewProfileBtn = document.getElementById('view-full-profile-btn');
             viewProfileBtn.href = `view-profile.html?email=${profileUser.email}`;
+            
+            // Update extended profile info
+            if (profileUser.skills) {
+                document.getElementById('profile-skills').textContent = profileUser.skills;
+                document.getElementById('skills-detail').style.display = 'flex';
+            }
+            
+            if (profileUser.interests) {
+                document.getElementById('profile-interests').textContent = profileUser.interests;
+                document.getElementById('interests-detail').style.display = 'flex';
+            }
+            
+            if (profileUser.current_project) {
+                document.getElementById('profile-project').textContent = profileUser.current_project;
+                document.getElementById('project-detail').style.display = 'flex';
+            }
+            
+            if (profileUser.available_mentor) {
+                document.getElementById('mentor-badge').style.display = 'flex';
+            }
+            
+            // Update social links
+            let hasSocialLinks = false;
+            
+            if (profileUser.linkedin) {
+                const linkedinLink = document.getElementById('linkedin-link');
+                linkedinLink.href = profileUser.linkedin.startsWith('http') 
+                    ? profileUser.linkedin 
+                    : `https://linkedin.com/in/${profileUser.linkedin}`;
+                linkedinLink.style.display = 'flex';
+                hasSocialLinks = true;
+            }
+            
+            if (profileUser.twitter) {
+                const twitterLink = document.getElementById('twitter-link');
+                const username = profileUser.twitter.replace('@', '');
+                twitterLink.href = `https://twitter.com/${username}`;
+                twitterLink.style.display = 'flex';
+                hasSocialLinks = true;
+            }
+            
+            if (profileUser.github) {
+                const githubLink = document.getElementById('github-link');
+                githubLink.href = `https://github.com/${profileUser.github}`;
+                githubLink.style.display = 'flex';
+                hasSocialLinks = true;
+            }
+            
+            if (hasSocialLinks) {
+                document.getElementById('profile-social-links').style.display = 'flex';
+            }
 
             // Setup follow button - only show if viewing someone else's profile
             const followBtn = document.getElementById('follow-btn');
+            // Always ensure follow button is hidden for own profile
             if (isOwnProfile) {
-                // Hide follow button for own profile
                 followBtn.style.display = 'none';
-            } else if (currentUser) {
-                // Show and update follow button for other users
+            } else if (currentUser && !isOwnProfile) {
+                // Only show follow button when viewing another user's profile
                 followBtn.style.display = 'inline-flex';
                 await updateFollowButton();
+            } else {
+                // Not logged in or viewing own profile - hide follow button
+                followBtn.style.display = 'none';
             }
 
             // Load highlights
@@ -429,6 +483,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('edit-company').value = profileUser.company || '';
             document.getElementById('edit-location').value = profileUser.location || '';
             document.getElementById('edit-website').value = profileUser.website || '';
+            document.getElementById('edit-skills').value = profileUser.skills || '';
+            document.getElementById('edit-interests').value = profileUser.interests || '';
+            document.getElementById('edit-current-project').value = profileUser.current_project || '';
+            document.getElementById('edit-linkedin').value = profileUser.linkedin || '';
+            document.getElementById('edit-twitter').value = profileUser.twitter || '';
+            document.getElementById('edit-github').value = profileUser.github || '';
+            document.getElementById('edit-available-mentor').checked = profileUser.available_mentor || false;
             
             // Update char count
             updateCharCount();
@@ -477,7 +538,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     job_title: document.getElementById('edit-job-title').value,
                     company: document.getElementById('edit-company').value,
                     location: document.getElementById('edit-location').value,
-                    website: document.getElementById('edit-website').value
+                    website: document.getElementById('edit-website').value,
+                    skills: document.getElementById('edit-skills').value,
+                    interests: document.getElementById('edit-interests').value,
+                    current_project: document.getElementById('edit-current-project').value,
+                    linkedin: document.getElementById('edit-linkedin').value,
+                    twitter: document.getElementById('edit-twitter').value,
+                    github: document.getElementById('edit-github').value,
+                    available_mentor: document.getElementById('edit-available-mentor').checked
                 };
                 
                 await window.api.put('/users/profile', formData);

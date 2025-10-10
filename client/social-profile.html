@@ -79,6 +79,48 @@
                             </div>
                         </div>
                         
+                        <!-- Extended Profile Info -->
+                        <div class="profile-extended-info" id="profile-extended-info">
+                            <div class="extended-item" id="skills-detail" style="display: none;">
+                                <i class="fas fa-code"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Skills:</span>
+                                    <span id="profile-skills"></span>
+                                </div>
+                            </div>
+                            <div class="extended-item" id="interests-detail" style="display: none;">
+                                <i class="fas fa-heart"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Interests:</span>
+                                    <span id="profile-interests"></span>
+                                </div>
+                            </div>
+                            <div class="extended-item" id="project-detail" style="display: none;">
+                                <i class="fas fa-project-diagram"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Current Project:</span>
+                                    <span id="profile-project"></span>
+                                </div>
+                            </div>
+                            <div class="extended-item" id="mentor-badge" style="display: none;">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <span class="mentor-badge">Available for Mentoring</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Social Links -->
+                        <div class="profile-social-links" id="profile-social-links" style="display: none;">
+                            <a href="#" id="linkedin-link" class="social-link" target="_blank" rel="noopener" style="display: none;">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="#" id="twitter-link" class="social-link" target="_blank" rel="noopener" style="display: none;">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" id="github-link" class="social-link" target="_blank" rel="noopener" style="display: none;">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                        
                         <div class="profile-stats">
                             <div class="stat-item">
                                 <span class="stat-value" id="threads-count">0</span>
@@ -244,29 +286,95 @@
             <div class="modal-body">
                 <form id="edit-profile-form" class="edit-profile-form">
                     <div class="form-group">
-                        <label for="edit-bio">Bio</label>
+                        <label for="edit-bio">
+                            <i class="fas fa-user"></i> Bio
+                        </label>
                         <textarea id="edit-bio" name="bio" rows="4" maxlength="160" placeholder="Tell us about yourself..."></textarea>
                         <span class="char-count" id="bio-char-count">0/160</span>
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-job-title">Job Title</label>
+                        <label for="edit-job-title">
+                            <i class="fas fa-briefcase"></i> Job Title
+                        </label>
                         <input type="text" id="edit-job-title" name="job_title" placeholder="e.g. Software Engineer">
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-company">Company</label>
+                        <label for="edit-company">
+                            <i class="fas fa-building"></i> Company
+                        </label>
                         <input type="text" id="edit-company" name="company" placeholder="e.g. Tech Corp">
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-location">Location</label>
+                        <label for="edit-location">
+                            <i class="fas fa-map-marker-alt"></i> Location
+                        </label>
                         <input type="text" id="edit-location" name="location" placeholder="e.g. San Francisco, CA">
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-website">Website</label>
+                        <label for="edit-skills">
+                            <i class="fas fa-code"></i> Skills & Expertise
+                        </label>
+                        <input type="text" id="edit-skills" name="skills" placeholder="e.g. JavaScript, Python, Project Management">
+                        <small class="field-hint">Separate multiple skills with commas</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-interests">
+                            <i class="fas fa-heart"></i> Interests
+                        </label>
+                        <input type="text" id="edit-interests" name="interests" placeholder="e.g. AI/ML, Startups, Photography">
+                        <small class="field-hint">What are you passionate about?</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-current-project">
+                            <i class="fas fa-project-diagram"></i> Current Project/Activity
+                        </label>
+                        <input type="text" id="edit-current-project" name="current_project" placeholder="e.g. Building a SaaS platform">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-website">
+                            <i class="fas fa-globe"></i> Website
+                        </label>
                         <input type="url" id="edit-website" name="website" placeholder="https://example.com">
+                    </div>
+                    
+                    <div class="form-section-title">
+                        <i class="fas fa-share-alt"></i> Social Media Links
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-linkedin">
+                            <i class="fab fa-linkedin"></i> LinkedIn
+                        </label>
+                        <input type="url" id="edit-linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-twitter">
+                            <i class="fab fa-twitter"></i> Twitter/X
+                        </label>
+                        <input type="text" id="edit-twitter" name="twitter" placeholder="@yourusername">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-github">
+                            <i class="fab fa-github"></i> GitHub
+                        </label>
+                        <input type="text" id="edit-github" name="github" placeholder="yourusername">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="edit-available-mentor" name="available_mentor">
+                            <i class="fas fa-chalkboard-teacher"></i> Available for mentoring
+                        </label>
+                        <small class="field-hint">Let others know you're open to mentoring opportunities</small>
                     </div>
                     
                     <div class="form-actions">
