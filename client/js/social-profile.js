@@ -63,9 +63,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const viewProfileBtn = document.getElementById('view-full-profile-btn');
             viewProfileBtn.href = `view-profile.html?email=${profileUser.email}`;
 
-            // Setup follow button
-            if (!isOwnProfile && currentUser) {
-                const followBtn = document.getElementById('follow-btn');
+            // Setup follow button - only show if viewing someone else's profile
+            const followBtn = document.getElementById('follow-btn');
+            if (isOwnProfile) {
+                // Hide follow button for own profile
+                followBtn.style.display = 'none';
+            } else if (currentUser) {
+                // Show and update follow button for other users
                 followBtn.style.display = 'inline-flex';
                 await updateFollowButton();
             }
