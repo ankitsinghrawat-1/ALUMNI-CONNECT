@@ -929,6 +929,25 @@
     background: var(--primary-blue-bg);
 }
 
+.emoji-search {
+    margin-bottom: var(--spacing-md);
+}
+
+.emoji-search-input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.emoji-search-input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
+
 .emoji-grid {
     display: grid;
     grid-template-columns: repeat(8, 1fr);
