@@ -564,6 +564,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 await window.api.put('/users/profile', formData);
                 
+                // Update profileUser object with new data immediately
+                Object.assign(profileUser, formData);
+                
                 submitBtn.classList.remove('loading');
                 submitBtn.classList.add('success');
                 
@@ -571,7 +574,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 setTimeout(() => {
                     closeEditProfileModal();
-                    loadProfile(); // Reload profile data
+                    loadProfile(); // Reload profile data from server
                 }, 1000);
                 
             } catch (error) {
