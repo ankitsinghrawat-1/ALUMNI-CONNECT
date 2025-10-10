@@ -839,3 +839,61 @@ class StoryValidator {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { StoryCreator, StoryAnalytics, StoryValidator };
 }
+
+// Initialize professional features for story creation
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize Emoji Picker for story text
+    if (typeof EmojiPicker !== 'undefined') {
+        const storyTextarea = document.getElementById('story-text');
+        if (storyTextarea) {
+            const emojiBtn = document.createElement('button');
+            emojiBtn.type = 'button';
+            emojiBtn.className = 'emoji-trigger-btn';
+            emojiBtn.innerHTML = '<i class="fas fa-smile"></i>';
+            emojiBtn.style.cssText = 'position: absolute; right: 10px; top: 10px; background: transparent; border: none; font-size: 20px; cursor: pointer; z-index: 10;';
+            
+            const textareaContainer = storyTextarea.closest('.textarea-container');
+            if (textareaContainer) {
+                textareaContainer.style.position = 'relative';
+                textareaContainer.appendChild(emojiBtn);
+                
+                const emojiPicker = new EmojiPicker({
+                    target: emojiBtn,
+                    position: 'bottom',
+                    onSelect: (emoji) => {
+                        const cursorPos = storyTextarea.selectionStart;
+                        const textBefore = storyTextarea.value.substring(0, cursorPos);
+                        const textAfter = storyTextarea.value.substring(cursorPos);
+                        storyTextarea.value = textBefore + emoji + textAfter;
+                        storyTextarea.focus();
+                        storyTextarea.selectionStart = storyTextarea.selectionEnd = cursorPos + emoji.length;
+                        
+                        // Trigger input event
+                        const event = new Event('input', { bubbles: true });
+                        storyTextarea.dispatchEvent(event);
+                    }
+                });
+
+                emojiBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    emojiPicker.toggle();
+                });
+            }
+        }
+    }
+
+    // Initialize Autocomplete for Mentions in story
+    if (typeof ProfessionalAutocomplete !== 'undefined') {
+        const mentionInput = document.getElementById('mention-input');
+        if (mentionInput) {
+            new ProfessionalAutocomplete(mentionInput, {
+                type: 'mention',
+                minChars: 1,
+                maxResults: 10,
+                onSelect: (item) => {
+                    console.log('Story mention selected:', item);
+                }
+            });
+        }
+    }
+});

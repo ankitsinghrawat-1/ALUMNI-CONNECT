@@ -509,4 +509,63 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     init();
+
+    // Initialize Emoji Picker
+    if (typeof EmojiPicker !== 'undefined') {
+        const emojiBtn = document.getElementById('add-emoji-btn');
+        if (emojiBtn) {
+            const emojiPicker = new EmojiPicker({
+                target: emojiBtn,
+                position: 'top',
+                onSelect: (emoji) => {
+                    const textarea = document.getElementById('content');
+                    const cursorPos = textarea.selectionStart;
+                    const textBefore = textarea.value.substring(0, cursorPos);
+                    const textAfter = textarea.value.substring(cursorPos);
+                    textarea.value = textBefore + emoji + textAfter;
+                    textarea.focus();
+                    textarea.selectionStart = textarea.selectionEnd = cursorPos + emoji.length;
+                    
+                    // Trigger input event for character count
+                    const event = new Event('input', { bubbles: true });
+                    textarea.dispatchEvent(event);
+                }
+            });
+
+            emojiBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                emojiPicker.toggle();
+            });
+        }
+    }
+
+    // Initialize Autocomplete for Mentions
+    if (typeof ProfessionalAutocomplete !== 'undefined') {
+        const mentionsInput = document.getElementById('mentions');
+        if (mentionsInput) {
+            new ProfessionalAutocomplete(mentionsInput, {
+                type: 'mention',
+                minChars: 1,
+                maxResults: 10,
+                onSelect: (item) => {
+                    console.log('Mention selected:', item);
+                }
+            });
+        }
+    }
+
+    // Initialize Autocomplete for Hashtags
+    if (typeof ProfessionalAutocomplete !== 'undefined') {
+        const hashtagsInput = document.getElementById('hashtags');
+        if (hashtagsInput) {
+            new ProfessionalAutocomplete(hashtagsInput, {
+                type: 'hashtag',
+                minChars: 1,
+                maxResults: 10,
+                onSelect: (item) => {
+                    console.log('Hashtag selected:', item);
+                }
+            });
+        }
+    }
 });
