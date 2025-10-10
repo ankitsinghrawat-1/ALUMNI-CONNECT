@@ -16,6 +16,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         currentUser = await window.api.get('/users/profile');
         isOwnProfile = currentUser.user_id === parseInt(userId);
+        
+        // Immediately hide follow button if viewing own profile
+        if (isOwnProfile) {
+            const followBtn = document.getElementById('follow-btn');
+            if (followBtn) {
+                followBtn.style.display = 'none';
+            }
+        }
     } catch (error) {
         console.error('Error getting current user:', error);
     }
@@ -161,6 +169,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Handle follow/unfollow
     document.getElementById('follow-btn')?.addEventListener('click', async () => {
+        // Prevent following own profile
+        if (isOwnProfile) {
+            showToast('You cannot follow yourself', 'error');
+            return;
+        }
+        
         if (!currentUser) {
             showToast('Please log in to follow users', 'error');
             return;
@@ -650,9 +664,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Show edit button for own profile
     const setupEditButton = () => {
         const editBtn = document.getElementById('edit-profile-btn');
+        const followBtn = document.getElementById('follow-btn');
+        
         if (editBtn && isOwnProfile) {
             editBtn.style.display = 'inline-flex';
             editBtn.addEventListener('click', openEditProfileModal);
+            
+            // Extra safeguard: Ensure follow button is hidden for own profile
+            if (followBtn) {
+                followBtn.style.display = 'none';
+            }
         }
     };
 
