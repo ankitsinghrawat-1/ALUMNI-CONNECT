@@ -7,8 +7,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isOwnProfile = false;
 
     if (!userId) {
+        console.error('No userId parameter provided');
         showToast('User ID not provided', 'error');
-        window.location.href = 'threads.html';
+        setTimeout(() => {
+            window.location.href = 'threads.html';
+        }, 2000);
         return;
     }
 
@@ -16,8 +19,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         currentUser = await window.api.get('/users/profile');
         isOwnProfile = currentUser.user_id === parseInt(userId);
-        
-        console.log('User check:', { currentUserId: currentUser.user_id, profileUserId: parseInt(userId), isOwnProfile });
         
         // Immediately hide follow button if viewing own profile
         if (isOwnProfile) {
@@ -27,7 +28,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 followBtn.style.display = 'none';
                 followBtn.style.visibility = 'hidden';
                 followBtn.disabled = true;
-                console.log('Follow button hidden (own profile detected)');
             }
         }
     } catch (error) {
@@ -499,9 +499,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.openEditProfileModal = () => {
         const modal = document.getElementById('edit-profile-modal');
         if (modal && profileUser) {
-            // Debug: Log profileUser to help diagnose issues
-            console.log('Opening edit modal with profileUser:', profileUser);
-            
             // Populate form with current data
             document.getElementById('edit-bio').value = profileUser.bio || '';
             document.getElementById('edit-job-title').value = profileUser.job_title || '';
@@ -521,8 +518,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
-        } else {
-            console.error('Cannot open edit modal - modal or profileUser missing:', { modal, profileUser });
         }
     };
 
@@ -579,7 +574,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 // Update profileUser object with new data immediately
                 Object.assign(profileUser, formData);
-                console.log('Profile updated locally:', profileUser);
                 
                 submitBtn.classList.remove('loading');
                 submitBtn.classList.add('success');
