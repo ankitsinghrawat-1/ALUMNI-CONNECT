@@ -35,6 +35,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const user = await window.api.get(`/users/profile/${email}`);
             
+            // Always update social profile link with user_id if available
+            const socialProfileLink = document.getElementById('social-profile-link');
+            if (socialProfileLink && user.user_id) {
+                socialProfileLink.href = `social-profile.html?userId=${user.user_id}`;
+            }
+            
             if (user.message && user.message.includes('private')) {
                 const badgeHTML = user.verification_status === 'verified' ? '<span class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i> Verified</span>' : '';
                 document.querySelector('.profile-container-view').innerHTML = `
@@ -54,12 +60,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 badgeContainer.innerHTML = '<span class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i> Verified</span>';
             } else {
                 badgeContainer.innerHTML = '';
-            }
-
-            // Update social profile link with user_id
-            const socialProfileLink = document.getElementById('social-profile-link');
-            if (socialProfileLink && user.user_id) {
-                socialProfileLink.href = `social-profile.html?userId=${user.user_id}`;
             }
 
             document.getElementById('profile-subheader').textContent = `${user.job_title || 'N/A'} at ${user.current_company || 'N/A'}`;
