@@ -346,18 +346,26 @@
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--spacing-xl);
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+}
+
+.profile-name-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    flex: 1;
+    min-width: 0;
 }
 
 .profile-name-section h1 {
     font-size: var(--font-size-3xl);
     font-weight: 700;
     color: var(--text-primary);
-    margin: 0 0 var(--spacing-xs) 0;
+    margin: 0;
     display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    flex: 1;
 }
 
 .verified-badge {
@@ -515,13 +523,14 @@
     display: flex;
     gap: var(--spacing-sm);
     flex-wrap: wrap;
-    margin-top: var(--spacing-md);
+    align-items: flex-start;
+    justify-content: flex-end;
 }
 
 .profile-actions .btn {
-    padding: 0.625rem 1.5rem !important;
+    padding: 0.5rem 1rem !important;
     border-radius: var(--radius-full) !important;
-    font-size: var(--font-size-sm) !important;
+    font-size: var(--font-size-xs) !important;
     font-weight: 600 !important;
     cursor: pointer !important;
     transition: all var(--transition-base) !important;
@@ -1088,6 +1097,22 @@
     
     .profile-name-section h1 {
         font-size: var(--font-size-2xl);
+    }
+    
+    .profile-name-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .profile-actions {
+        justify-content: flex-start;
+        width: 100%;
+    }
+    
+    .profile-actions .btn {
+        flex: 1;
+        justify-content: center;
+        min-width: 100px;
     }
     
     .profile-action-buttons {

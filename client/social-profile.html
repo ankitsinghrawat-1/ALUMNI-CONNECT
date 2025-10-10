@@ -55,10 +55,30 @@
                     
                     <div class="profile-main-info">
                         <div class="profile-name-section">
-                            <h1 id="profile-name">Loading...</h1>
-                            <span id="verification-badge" class="verification-badge" style="display: none;">
-                                <i class="fas fa-check-circle"></i>
-                            </span>
+                            <div class="profile-name-wrapper">
+                                <h1 id="profile-name">Loading...</h1>
+                                <span id="verification-badge" class="verification-badge" style="display: none;">
+                                    <i class="fas fa-check-circle"></i>
+                                </span>
+                            </div>
+                            
+                            <div class="profile-actions">
+                                <button id="edit-profile-btn" class="btn btn-edit-profile" style="display: none;">
+                                    <i class="fas fa-edit"></i> Edit Profile
+                                </button>
+                                <button id="follow-btn" class="btn btn-primary" style="display: none;">
+                                    <i class="fas fa-user-plus"></i> Follow
+                                </button>
+                                <button id="message-btn" class="btn btn-secondary">
+                                    <i class="fas fa-paper-plane"></i> Message
+                                </button>
+                                <a href="view-profile.html" id="view-full-profile-btn" class="btn btn-secondary">
+                                    <i class="fas fa-id-card"></i> Full Profile
+                                </a>
+                                <button id="share-profile-btn" class="btn btn-secondary">
+                                    <i class="fas fa-share-alt"></i> Share
+                                </button>
+                            </div>
                         </div>
                         <p id="profile-title" class="profile-title"></p>
                         <p id="profile-bio" class="profile-bio"></p>
@@ -138,24 +158,6 @@
                                 <span class="stat-value" id="likes-count">0</span>
                                 <span class="stat-label">Likes</span>
                             </div>
-                        </div>
-                        
-                        <div class="profile-actions">
-                            <button id="edit-profile-btn" class="btn btn-edit-profile" style="display: none;">
-                                <i class="fas fa-edit"></i> Edit Profile
-                            </button>
-                            <button id="follow-btn" class="btn btn-primary" style="display: none;">
-                                <i class="fas fa-user-plus"></i> Follow
-                            </button>
-                            <button id="message-btn" class="btn btn-secondary">
-                                <i class="fas fa-paper-plane"></i> Message
-                            </button>
-                            <a href="view-profile.html" id="view-full-profile-btn" class="btn btn-secondary">
-                                <i class="fas fa-id-card"></i> Full Profile
-                            </a>
-                            <button id="share-profile-btn" class="btn btn-secondary">
-                                <i class="fas fa-share-alt"></i> Share
-                            </button>
                         </div>
                     </div>
                 </div>
