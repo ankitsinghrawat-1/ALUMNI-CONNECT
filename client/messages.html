@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Messages</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/messages-modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         (function() {
@@ -23,37 +24,70 @@
         </nav>
     </header>
 
-    <main class="messaging-main">
+    <main class="messaging-main modern-messaging">
         <div class="messaging-container">
+            <!-- Conversations Panel -->
             <div class="conversations-panel">
                 <div class="panel-header">
-                    <h2>Conversations</h2>
-                     <div class="conversation-search">
-                        <input type="text" id="user-search-input" placeholder="Search to start a new chat...">
+                    <h2><i class="fas fa-comments"></i> Messages</h2>
+                    <div class="conversation-search">
+                        <div class="search-input-wrapper">
+                            <i class="fas fa-search search-icon"></i>
+                            <input type="text" id="user-search-input" placeholder="Search or start new chat...">
+                        </div>
                         <div id="search-results" class="search-results-list"></div>
                     </div>
                 </div>
                 <div id="conversations-list" class="conversations-list">
-                    </div>
-            </div>
-            <div class="chat-panel">
-                <div id="chat-welcome" class="chat-welcome">
-                    <i class="fas fa-comments"></i>
-                    <h3>Select a conversation to start chatting</h3>
+                    <!-- Conversations will be loaded here -->
                 </div>
-                <div id="chat-area" class="chat-area" style="display: none;">
-                    <div id="chat-header" class="chat-header">
+            </div>
+
+            <!-- Chat Panel -->
+            <div class="chat-panel">
+                <!-- Welcome Screen -->
+                <div id="chat-welcome" class="chat-welcome">
+                    <div class="welcome-content">
+                        <div class="welcome-icon">
+                            <i class="fas fa-comments"></i>
                         </div>
+                        <h3>Your Messages</h3>
+                        <p>Select a conversation to start chatting or search for someone to message</p>
+                    </div>
+                </div>
+
+                <!-- Chat Area -->
+                <div id="chat-area" class="chat-area" style="display: none;">
+                    <!-- Chat Header -->
+                    <div id="chat-header" class="chat-header">
+                        <!-- Header content will be populated by JS -->
+                    </div>
+
+                    <!-- Messages Display -->
                     <div id="messages-display" class="messages-display"></div>
-                    <div id="typing-indicator" class="typing-indicator"></div> <form id="message-form" class="message-form">
+
+                    <!-- Typing Indicator -->
+                    <div id="typing-indicator" class="typing-indicator"></div>
+
+                    <!-- Message Form -->
+                    <form id="message-form" class="message-form">
                         <input type="file" id="image-upload-input" accept="image/*" style="display: none;" />
-                        <button type="button" id="attach-btn" class="btn"><i class="fas fa-paperclip"></i></button>
+                        
+                        <button type="button" id="attach-btn" class="form-btn attach-btn" title="Attach file">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
                         
                         <emoji-picker class="light"></emoji-picker>
-                        <button type="button" id="emoji-btn" class="btn"><i class="fas fa-smile"></i></button>
                         
-                        <input type="text" id="message-input" placeholder="Type a message..." autocomplete="off" required>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i></button>
+                        <button type="button" id="emoji-btn" class="form-btn emoji-btn" title="Insert emoji">
+                            <i class="fas fa-smile"></i>
+                        </button>
+                        
+                        <input type="text" id="message-input" placeholder="Type your message..." autocomplete="off" required>
+                        
+                        <button type="submit" class="form-btn send-btn" title="Send message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
                     </form>
                 </div>
             </div>
