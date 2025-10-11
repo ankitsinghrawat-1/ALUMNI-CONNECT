@@ -1,0 +1,706 @@
+/* 
+ * Advanced Social Feed Styles - Beyond Instagram/Facebook
+ * Unique interactive features for AlumniConnect
+ */
+
+/* ====================================================================
+   LIVE REACTION ANIMATIONS
+   ==================================================================== */
+
+/* Reaction particle animation */
+@keyframes particleFloat {
+    0% {
+        opacity: 0;
+        transform: translate(0, 0) scale(0);
+    }
+    20% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(
+            calc(cos(var(--angle)) * var(--distance)),
+            calc(sin(var(--angle)) * var(--distance) - 100px)
+        ) scale(1.5);
+    }
+}
+
+.reaction-particle {
+    animation: particleFloat 2s ease-out forwards;
+}
+
+/* Reaction menu with smooth animations */
+.reaction-menu {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(10px) scale(0.8);
+    background: white;
+    border-radius: 50px;
+    padding: 8px 12px;
+    display: flex;
+    gap: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.reaction-menu.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(-50%) translateY(0) scale(1);
+}
+
+.reaction-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    background: transparent;
+    border: 2px solid transparent;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 24px;
+}
+
+.reaction-option:hover {
+    background: var(--reaction-color, #3b82f6);
+    color: white;
+    transform: translateY(-5px) scale(1.1);
+    border-color: var(--reaction-color, #3b82f6);
+}
+
+.reaction-option span {
+    font-size: 10px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.reaction-option:hover span {
+    opacity: 1;
+}
+
+.reaction-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 8px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    animation: reactionPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes reactionPop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+}
+
+.user-reaction {
+    font-size: 16px;
+}
+
+/* ====================================================================
+   SMART SUGGESTIONS
+   ==================================================================== */
+
+.smart-suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    margin-top: 8px;
+}
+
+.suggestion-header {
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-radius: 12px 12px 0 0;
+}
+
+.suggestion-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 100%);
+    transform: translateX(5px);
+}
+
+.smart-hashtag {
+    color: #667eea;
+    font-weight: 600;
+}
+
+.smart-hashtag .add-tag-btn {
+    margin-left: auto;
+    padding: 4px 12px;
+    background: #667eea;
+    color: white;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.smart-hashtag:hover .add-tag-btn {
+    background: #5a67d8;
+    transform: scale(1.05);
+}
+
+.usage-count {
+    margin-left: auto;
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.suggestion-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.suggestion-info {
+    flex: 1;
+}
+
+.suggestion-name {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 14px;
+}
+
+.suggestion-meta {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.verified-badge {
+    color: #3b82f6;
+    font-size: 16px;
+}
+
+/* ====================================================================
+   MILESTONE CELEBRATIONS
+   ==================================================================== */
+
+.milestone-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-left: 12px;
+    animation: badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+}
+
+.milestone-thread {
+    border: 2px solid #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Confetti animation */
+@keyframes confettiFall {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(400px) rotate(720deg);
+    }
+}
+
+.confetti {
+    pointer-events: none;
+}
+
+/* ====================================================================
+   LIVE ENGAGEMENT INDICATORS
+   ==================================================================== */
+
+.live-viewers {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 20px;
+    font-size: 12px;
+    color: #ef4444;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.live-indicator {
+    width: 8px;
+    height: 8px;
+    background: #ef4444;
+    border-radius: 50%;
+    animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.7;
+    }
+}
+
+.viewer-count {
+    font-weight: 700;
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #f3f4f6;
+    border-radius: 20px;
+    margin-top: 8px;
+    animation: fadeIn 0.3s;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    background: #6b7280;
+    border-radius: 50%;
+    animation: typingBounce 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-10px);
+    }
+}
+
+.typing-text {
+    color: #6b7280;
+    font-size: 13px;
+    font-style: italic;
+}
+
+/* ====================================================================
+   COLLABORATION FEATURES
+   ==================================================================== */
+
+.composer-toolbar {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+
+.toolbar-btn {
+    padding: 8px 16px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #4b5563;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.toolbar-btn:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.toolbar-btn i {
+    font-size: 14px;
+}
+
+.coauthor-modal {
+    max-width: 600px;
+    width: 90%;
+}
+
+.search-coauthors {
+    margin-bottom: 24px;
+}
+
+.coauthor-search {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid #e5e7eb;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.coauthor-search:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.coauthor-results {
+    margin-top: 12px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.coauthor-result-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.coauthor-result-item:hover {
+    background: #f3f4f6;
+}
+
+.coauthor-result-item img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-info {
+    flex: 1;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 2px;
+}
+
+.user-meta {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.add-coauthor {
+    padding: 6px 16px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.add-coauthor:hover {
+    background: #5a67d8;
+    transform: scale(1.05);
+}
+
+.selected-coauthors h4 {
+    color: #4b5563;
+    font-size: 14px;
+    margin-bottom: 12px;
+}
+
+.coauthor-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+/* ====================================================================
+   CONTENT QUALITY INDICATOR
+   ==================================================================== */
+
+.content-quality-indicator {
+    margin-top: 12px;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.quality-bar {
+    height: 4px;
+    transition: all 0.3s ease;
+}
+
+.quality-label {
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #4b5563;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.quality-label i {
+    color: #667eea;
+}
+
+/* ====================================================================
+   ENHANCED THREAD INTERACTIONS
+   ==================================================================== */
+
+.reaction-trigger {
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.reaction-trigger:hover {
+    transform: scale(1.1);
+}
+
+/* Alumni verification badge styling */
+.verified-alumni-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    margin-left: 6px;
+}
+
+.verified-alumni-badge i {
+    font-size: 11px;
+}
+
+/* Career opportunity highlighting */
+.career-highlight {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border-left: 4px solid #f59e0b;
+    padding: 4px 12px;
+    border-radius: 8px;
+    margin: 8px 0;
+    font-weight: 600;
+    color: #92400e;
+}
+
+.career-highlight i {
+    margin-right: 8px;
+    color: #f59e0b;
+}
+
+/* Enhanced hover effects */
+.modern-thread-card {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-thread-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* ====================================================================
+   DARK MODE SUPPORT
+   ==================================================================== */
+
+.dark-mode .reaction-menu {
+    background: #1f2937;
+    border: 1px solid #374151;
+}
+
+.dark-mode .smart-suggestions {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+.dark-mode .suggestion-item {
+    border-bottom-color: #374151;
+}
+
+.dark-mode .suggestion-item:hover {
+    background: #374151;
+}
+
+.dark-mode .suggestion-name {
+    color: #f3f4f6;
+}
+
+.dark-mode .typing-indicator {
+    background: #374151;
+}
+
+.dark-mode .typing-text {
+    color: #9ca3af;
+}
+
+.dark-mode .content-quality-indicator {
+    background: #1f2937;
+    border-color: #374151;
+}
+
+.dark-mode .quality-label {
+    color: #e5e7eb;
+}
+
+.dark-mode .toolbar-btn {
+    background: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+}
+
+.dark-mode .toolbar-btn:hover {
+    background: #667eea;
+    border-color: #667eea;
+    color: white;
+}
+
+/* ====================================================================
+   RESPONSIVE DESIGN
+   ==================================================================== */
+
+@media (max-width: 768px) {
+    .reaction-menu {
+        bottom: auto;
+        top: 100%;
+        margin-top: 8px;
+    }
+    
+    .reaction-option {
+        padding: 6px 10px;
+        font-size: 20px;
+    }
+    
+    .smart-suggestions {
+        max-height: 200px;
+    }
+    
+    .milestone-badge {
+        font-size: 11px;
+        padding: 4px 10px;
+    }
+    
+    .toolbar-btn {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .coauthor-modal {
+        max-width: 95%;
+    }
+}
+
+/* ====================================================================
+   ANIMATIONS AND MICRO-INTERACTIONS
+   ==================================================================== */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Success state animations */
+.success-animation {
+    animation: successPop 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes successPop {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
