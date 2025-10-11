@@ -51,13 +51,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             animateCounter('total-likes', totalLikes);
             animateCounter('total-comments', totalComments);
 
-            // For now, use placeholder values for connections and events
-            // These can be updated when the API endpoints are available
-            const connectionsCount = Math.floor(Math.random() * 100) + 50;
-            const eventsCount = Math.floor(Math.random() * 20) + 5;
-            const profileViews = Math.floor(Math.random() * 500) + 100;
-            const networkScore = Math.floor(connectionsCount * 1.5 + postsCount * 2);
-            const activityStreak = Math.floor(Math.random() * 30) + 1;
+            // Set real data values (0 for now until API endpoints are available)
+            // These will be updated when the backend provides these endpoints
+            const connectionsCount = 0;
+            const eventsCount = 0;
+            const profileViews = 0;
+            const networkScore = 0;
+            const activityStreak = 0;
             
             animateCounter('connections-count', connectionsCount);
             animateCounter('events-count', eventsCount);
