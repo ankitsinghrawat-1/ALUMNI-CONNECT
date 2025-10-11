@@ -1046,6 +1046,7 @@ CREATE TABLE IF NOT EXISTS user_social_stats (
     followers_count INT DEFAULT 0 COMMENT 'Number of followers',
     following_count INT DEFAULT 0 COMMENT 'Number of users being followed',
     threads_count INT DEFAULT 0 COMMENT 'Number of threads created',
+    total_threads INT DEFAULT 0 COMMENT 'Total number of threads created (for trigger compatibility)',
     stories_count INT DEFAULT 0 COMMENT 'Number of active stories',
     total_stories INT DEFAULT 0 COMMENT 'Total number of stories created',
     total_views INT DEFAULT 0 COMMENT 'Total views across all content',
