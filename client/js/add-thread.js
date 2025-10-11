@@ -1,6 +1,8 @@
 // client/js/add-thread.js
 document.addEventListener('DOMContentLoaded', () => {
     const addThreadForm = document.getElementById('add-thread-form');
+    const titleInput = document.getElementById('title');
+    const titleCountSpan = document.getElementById('title-count');
     const contentTextarea = document.getElementById('content');
     const locationInput = document.getElementById('location');
     const hashtagsInput = document.getElementById('hashtags');
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeMediaBtn = document.getElementById('remove-media');
     const messageDiv = document.getElementById('message');
     const submitBtn = document.getElementById('submit-btn');
+    const draftBtn = document.querySelector('.draft-btn');
     const charCountSpan = document.getElementById('char-count');
     const charLimitSpan = document.getElementById('char-limit');
     const storyToggle = document.getElementById('story-toggle');
@@ -22,12 +25,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const hashtagTags = document.getElementById('hashtag-tags');
     const mentionSuggestions = document.getElementById('mention-suggestions');
     const mentionTags = document.getElementById('mention-tags');
+    const advancedToggle = document.getElementById('advanced-toggle');
+    const advancedOptions = document.getElementById('advanced-options');
+    const threadTypeSelect = document.getElementById('thread-type');
+    const pollSection = document.getElementById('poll-section');
+    const toolbarBtns = document.querySelectorAll('.toolbar-btn[data-command]');
     
     let selectedFile = null;
     let selectedHashtags = [];
     let selectedMentions = [];
     let hashtagSuggestionTimeout = null;
     let mentionSuggestionTimeout = null;
+
+    // Title field character counter
+    if (titleInput && titleCountSpan) {
+        titleInput.addEventListener('input', () => {
+            const charCount = titleInput.value.length;
+            titleCountSpan.textContent = charCount;
+            
+            // Enable/disable draft button based on title
+            if (draftBtn) {
+                draftBtn.disabled = charCount === 0;
+            }
+        });
+    }
 
     // Character count update with higher limit
     contentTextarea.addEventListener('input', () => {
@@ -67,8 +88,100 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    // Advanced options toggle
+    if (advancedToggle && advancedOptions) {
+        advancedToggle.addEventListener('click', () => {
+            const isVisible = advancedOptions.style.display !== 'none';
+            advancedOptions.style.display = isVisible ? 'none' : 'block';
+            const icon = advancedToggle.querySelector('i');
+            if (icon) {
+                icon.className = isVisible ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+            }
+        });
+    }
+    
+    // Thread type selector - show/hide poll section
+    if (threadTypeSelect && pollSection) {
+        threadTypeSelect.addEventListener('change', () => {
+            pollSection.style.display = threadTypeSelect.value === 'poll' ? 'block' : 'none';
+        });
+    }
+    
+    // Toolbar buttons for rich text formatting
+    toolbarBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const command = btn.dataset.command;
+            if (command && contentTextarea) {
+                // Simple text wrapping for basic formatting
+                const start = contentTextarea.selectionStart;
+                const end = contentTextarea.selectionEnd;
+                const selectedText = contentTextarea.value.substring(start, end);
+                
+                let formattedText = selectedText;
+                if (command === 'bold') {
+                    formattedText = `**${selectedText}**`;
+                } else if (command === 'italic') {
+                    formattedText = `*${selectedText}*`;
+                } else if (command === 'underline') {
+                    formattedText = `__${selectedText}__`;
+                }
+                
+                contentTextarea.value = contentTextarea.value.substring(0, start) + formattedText + contentTextarea.value.substring(end);
+                contentTextarea.focus();
+                contentTextarea.setSelectionRange(start + formattedText.length, start + formattedText.length);
+            }
+        });
+    });
+    
+    // Draft button functionality
+    if (draftBtn) {
+        draftBtn.addEventListener('click', () => {
+            const draft = {
+                title: titleInput?.value || '',
+                content: contentTextarea?.value || '',
+                category: document.getElementById('category')?.value || '',
+                visibility: document.getElementById('visibility')?.value || 'public',
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('threadDraft', JSON.stringify(draft));
+            showToast('Draft saved successfully!', 'success');
+        });
+        
+        // Load draft if exists
+        const savedDraft = localStorage.getItem('threadDraft');
+        if (savedDraft) {
+            try {
+                const draft = JSON.parse(savedDraft);
+                if (titleInput) titleInput.value = draft.title || '';
+                if (contentTextarea) contentTextarea.value = draft.content || '';
+                if (document.getElementById('category')) document.getElementById('category').value = draft.category || '';
+                if (document.getElementById('visibility')) document.getElementById('visibility').value = draft.visibility || 'public';
+                showToast('Draft loaded', 'info');
+            } catch (e) {
+                console.error('Error loading draft:', e);
+            }
+        }
+    }
+    
     // Common words to exclude from hashtag suggestions
     const commonWords = ['with', 'that', 'this', 'from', 'they', 'have', 'been', 'will', 'would', 'could', 'should', 'about', 'after', 'before', 'during', 'through', 'between', 'among', 'under', 'over'];
+    
+    // Toast notification helper
+    function showToast(message, type = 'info') {
+        if (typeof Toastify !== 'undefined') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: 'top',
+                position: 'right',
+                backgroundColor: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6',
+                stopOnFocus: true
+            }).showToast();
+        } else {
+            alert(message);
+        }
+    }
 
     // Story toggle functionality
     storyToggle.addEventListener('change', () => {

@@ -4,6 +4,58 @@
    ==================================================================== */
 
 /* ====================================================================
+   CRITICAL FIXES FOR FUNCTIONALITY
+   ==================================================================== */
+/* Ensure modals and overlays are visible */
+.modal, .modal-overlay, [role="dialog"] {
+    display: none; /* Hidden by default, shown via JS */
+}
+
+.modal.active, .modal-overlay.active, [role="dialog"].active {
+    display: flex !important;
+    z-index: 9999 !important;
+}
+
+/* Ensure checkboxes and radios are visible and clickable */
+input[type="checkbox"],
+input[type="radio"] {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    width: auto !important;
+    height: auto !important;
+    position: relative !important;
+}
+
+/* Anonymous checkbox visibility */
+.anonymous-checkbox {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.5rem !important;
+    cursor: pointer !important;
+}
+
+.anonymous-checkbox input[type="checkbox"] {
+    margin: 0 !important;
+}
+
+.anonymous-checkbox span {
+    display: inline !important;
+}
+
+/* Ensure visibility select is properly styled and visible */
+.post-settings {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+    flex-wrap: wrap !important;
+}
+
+.post-settings select {
+    min-width: 150px !important;
+}
+
+/* ====================================================================
    BASE OVERRIDES - Ensure professional styles take precedence
    ==================================================================== */
 .create-thread-main {
