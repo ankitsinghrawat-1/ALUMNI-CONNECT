@@ -544,6 +544,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             const mentor = await window.api.get(`/mentors/${mentorId}`);
             content.innerHTML = generateMentorProfileHTML(mentor);
 
+            // Load and display badges asynchronously
+            if (window.mentorFeatures) {
+                window.mentorFeatures.loadMentorBadges(mentorId).then(badges => {
+                    const container = document.getElementById(`profile-badges-${mentorId}`);
+                    if (container && badges.length > 0) {
+                        window.mentorFeatures.renderMentorBadges(badges, container);
+                    }
+                }).catch(err => console.error('Error loading profile badges:', err));
+            }
+
         } catch (error) {
             console.error('Error loading mentor profile:', error);
             content.innerHTML = '<div class="error-state"><h3>Error loading profile</h3><p>Please try again later.</p></div>';
@@ -573,6 +583,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
 
                 <div class="profile-content">
+                    <!-- Mentor Badges Section -->
+                    <div class="profile-section">
+                        <h3><i class="fas fa-award"></i> Achievements & Recognition</h3>
+                        <div class="mentor-badges" id="profile-badges-${mentor.mentor_id}"></div>
+                    </div>
+
                     <div class="profile-section">
                         <h3>About</h3>
                         <p>${sanitizeHTML(mentor.bio || 'No bio available.')}</p>

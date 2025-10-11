@@ -1,11 +1,53 @@
 /* Enhanced Mentor Features CSS - Badges, Recommendations, Comparison, etc. */
 
+/* ===== Animations ===== */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
 /* ===== Mentor Badges ===== */
 .mentor-badges {
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
     margin: 1rem 0;
+    animation: fadeIn 0.5s ease;
 }
 
 .mentor-badge {
@@ -19,11 +61,13 @@
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: slideInRight 0.3s ease;
 }
 
 .mentor-badge:hover {
-    transform: translateY(-2px);
+    transform: translateY(-2px) scale(1.05);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    animation: pulse 1s infinite;
 }
 
 .mentor-badge i {
