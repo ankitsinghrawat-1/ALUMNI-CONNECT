@@ -128,28 +128,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await window.api.get('/mentors/status');
             if (data.isMentor) {
                 mentorActionArea.innerHTML = `
-                    <a href="mentor-requests.html" class="btn btn-primary">
-                        <i class="fas fa-inbox"></i>
-                        View Requests
+                    <a href="mentor-profile.html" class="btn btn-primary">
+                        <i class="fas fa-user-tie"></i>
+                        Your Mentor Profile
                     </a>
-                    <a href="edit-mentor.html" class="btn btn-secondary">
-                        <i class="fas fa-edit"></i>
-                        Edit Profile
+                    <a href="mentor-requests.html" class="btn btn-secondary">
+                        <i class="fas fa-inbox"></i>
+                        Requests
                     </a>
                 `;
                 // Empty the search bar action area for existing mentors
                 mentorActionAreaSearch.innerHTML = '';
             } else {
-                // Keep the original area empty for non-mentors
-                mentorActionArea.innerHTML = '';
-                
-                // Add "Become a Mentor" button to the search bar area
-                mentorActionAreaSearch.innerHTML = `
+                // User is not a mentor - show "Become a Mentor" button in main area (permanent spot)
+                mentorActionArea.innerHTML = `
                     <a href="become-mentor.html" class="btn btn-primary">
                         <i class="fas fa-user-plus"></i>
                         Become a Mentor
                     </a>
                 `;
+                // Empty the search bar action area
+                mentorActionAreaSearch.innerHTML = '';
             }
 
             // Load sent requests
@@ -163,14 +162,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
-            // On error, clear the original area and show "Become a Mentor" in search bar
-            mentorActionArea.innerHTML = '';
-            mentorActionAreaSearch.innerHTML = `
+            // On error, show "Become a Mentor" in main area (permanent spot)
+            mentorActionArea.innerHTML = `
                 <a href="become-mentor.html" class="btn btn-primary">
                     <i class="fas fa-user-plus"></i>
                     Become a Mentor
                 </a>
             `;
+            mentorActionAreaSearch.innerHTML = '';
         }
     }
 
@@ -389,7 +388,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${generateActionButtons(mentor, requestStatus)}
                     <button class="mentor-btn btn-add-comparison" data-action="compare" title="Add to comparison">
                         <i class="fas fa-balance-scale"></i>
-                        Compare
+                        Add
                     </button>
                 </div>
                 <div class="response-time">
