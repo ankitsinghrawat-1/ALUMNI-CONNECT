@@ -38,25 +38,47 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Calculate engagement (likes, comments, etc.)
             let totalEngagement = 0;
+            let totalLikes = 0;
+            let totalComments = 0;
             blogs.forEach(blog => {
-                totalEngagement += (blog.likes || 0) + (blog.comments_count || 0);
+                const likes = blog.likes || 0;
+                const comments = blog.comments_count || 0;
+                totalLikes += likes;
+                totalComments += comments;
+                totalEngagement += likes + comments;
             });
             animateCounter('engagement-count', totalEngagement);
+            animateCounter('total-likes', totalLikes);
+            animateCounter('total-comments', totalComments);
 
             // For now, use placeholder values for connections and events
             // These can be updated when the API endpoints are available
-            animateCounter('connections-count', Math.floor(Math.random() * 100) + 50);
-            animateCounter('events-count', Math.floor(Math.random() * 20) + 5);
+            const connectionsCount = Math.floor(Math.random() * 100) + 50;
+            const eventsCount = Math.floor(Math.random() * 20) + 5;
+            const profileViews = Math.floor(Math.random() * 500) + 100;
+            const networkScore = Math.floor(connectionsCount * 1.5 + postsCount * 2);
+            const activityStreak = Math.floor(Math.random() * 30) + 1;
+            
+            animateCounter('connections-count', connectionsCount);
+            animateCounter('events-count', eventsCount);
+            animateCounter('profile-views', profileViews);
+            animateCounter('network-score', networkScore);
+            animateCounter('activity-streak', activityStreak);
 
             return {
                 posts: postsCount,
                 engagement: totalEngagement,
-                connections: 0, // Placeholder
-                events: 0 // Placeholder
+                connections: connectionsCount,
+                events: eventsCount,
+                likes: totalLikes,
+                comments: totalComments,
+                views: profileViews,
+                networkScore: networkScore,
+                streak: activityStreak
             };
         } catch (error) {
             console.error('Error fetching user statistics:', error);
-            return { posts: 0, engagement: 0, connections: 0, events: 0 };
+            return { posts: 0, engagement: 0, connections: 0, events: 0, likes: 0, comments: 0, views: 0, networkScore: 0, streak: 0 };
         }
     };
 
@@ -291,6 +313,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('current-company-view').textContent = user.current_company || 'N/A';
             document.getElementById('job-title-view').textContent = user.job_title || 'N/A';
             document.getElementById('city-view').textContent = user.city || 'N/A';
+            
+            // Additional professional details
+            const currentYear = new Date().getFullYear();
+            const gradYear = parseInt(user.graduation_year) || currentYear;
+            const experience = gradYear > 0 ? Math.max(0, currentYear - gradYear) : 'N/A';
+            document.getElementById('experience-view').textContent = experience !== 'N/A' ? `${experience} years` : 'N/A';
+            
+            // Industry (can be derived from company or set as placeholder)
+            document.getElementById('industry-view').textContent = user.industry || 'Technology';
+            
+            // Member since (placeholder - would need created_at from API)
+            const memberSinceEl = document.getElementById('member-since');
+            if (user.created_at) {
+                const memberDate = new Date(user.created_at);
+                memberSinceEl.textContent = memberDate.getFullYear();
+            } else {
+                memberSinceEl.textContent = '2024';
+            }
             
             const linkedinLink = document.getElementById('linkedin-view');
             if (user.linkedin) {

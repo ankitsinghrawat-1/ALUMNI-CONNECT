@@ -43,8 +43,9 @@ html.dark-mode .modern-profile {
 }
 
 .profile-container-view {
-    max-width: 1000px;
-    margin: 0 auto;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
     background: transparent;
     box-shadow: none;
     border-radius: 0;
@@ -110,20 +111,31 @@ html.dark-mode .modern-profile {
     box-shadow: var(--shadow-md);
     padding: 0;
     border: 1px solid var(--border-light);
+    max-width: 100%;
 }
 
 .profile-header-content {
     padding: 0 2rem 2rem;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-    text-align: center;
+    justify-content: space-between;
+    gap: 2rem;
+    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .profile-header-content {
+        flex-direction: column;
+        text-align: center;
+    }
 }
 
 .profile-avatar-wrapper {
     position: relative;
     margin-top: -60px;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+    flex-shrink: 0;
 }
 
 .profile-pic-view {
@@ -150,15 +162,26 @@ html.dark-mode .modern-profile {
 }
 
 .profile-info {
-    width: 100%;
+    flex: 1;
+    min-width: 0;
 }
 
 .profile-name-wrapper {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+    .profile-name-wrapper {
+        justify-content: center;
+    }
+    
+    .profile-avatar-wrapper {
+        margin-bottom: 1rem;
+    }
 }
 
 .profile-header-view h2 {
@@ -177,8 +200,15 @@ html.dark-mode .modern-profile {
 .profile-actions {
     display: flex;
     gap: 1rem;
-    justify-content: center;
+    justify-content: flex-start;
     flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+    .profile-actions {
+        justify-content: center;
+    }
 }
 
 .profile-actions .btn {
@@ -221,9 +251,15 @@ html.dark-mode .modern-profile {
 /* Profile Content Cards */
 .profile-content-view {
     padding: 0 20px 40px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
     gap: 20px;
+}
+
+@media (max-width: 1200px) {
+    .profile-content-view {
+        grid-template-columns: 1fr;
+    }
 }
 
 .profile-card {
@@ -665,6 +701,91 @@ html.dark-mode .modern-profile {
     background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);
 }
 
+.stats-icon {
+    background: linear-gradient(135deg, #ff9a56 0%, #ff6a88 100%);
+}
+
+/* Detailed Stats Grid */
+.detailed-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.25rem;
+}
+
+.stat-detail-card {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.stat-detail-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary-blue);
+}
+
+.stat-detail-card:hover::before {
+    opacity: 1;
+}
+
+.stat-detail-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    color: var(--primary-blue);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-detail-info {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.stat-detail-info h4 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem;
+    line-height: 1;
+}
+
+.stat-detail-info p {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Chart Container */
 .chart-container {
     position: relative;
     height: 300px;
