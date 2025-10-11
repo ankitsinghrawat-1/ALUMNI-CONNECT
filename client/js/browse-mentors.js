@@ -1031,4 +1031,35 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('Error loading trending mentors:', error);
         }
     }
+
+    // Scroll behavior for search bar
+    let lastScrollTop = 0;
+    let scrollThreshold = 10; // 10% of viewport height
+    const searchFilterSection = document.querySelector('.search-filter-section');
+    
+    if (searchFilterSection) {
+        window.addEventListener('scroll', () => {
+            const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const viewportHeight = window.innerHeight;
+            const scrollPercentage = (currentScrollTop / viewportHeight) * 100;
+            
+            // Hide on scroll down, show on scroll up by 10%
+            if (currentScrollTop > lastScrollTop) {
+                // Scrolling down
+                if (scrollPercentage > scrollThreshold) {
+                    searchFilterSection.style.transform = 'translateY(-100%)';
+                    searchFilterSection.style.opacity = '0';
+                }
+            } else {
+                // Scrolling up
+                searchFilterSection.style.transform = 'translateY(0)';
+                searchFilterSection.style.opacity = '1';
+            }
+            
+            lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+        });
+        
+        // Ensure smooth transition
+        searchFilterSection.style.transition = 'transform 0.3s ease-in-out, opacity 0.3s ease-in-out';
+    }
 });
