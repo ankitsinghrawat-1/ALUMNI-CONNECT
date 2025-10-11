@@ -500,9 +500,17 @@ document.addEventListener('DOMContentLoaded', () => {
     addThreadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        const title = titleInput.value.trim();
         const content = contentTextarea.value.trim();
         const location = locationInput.value.trim();
         const mediaCaption = mediaCaptionInput.value.trim();
+        
+        // Validate title
+        if (!title || title.length < 5 || title.length > 200) {
+            showToast('Title is required and must be between 5-200 characters', 'error');
+            titleInput.focus();
+            return;
+        }
         
         // Validate input
         if (!content && !selectedFile) {
@@ -521,6 +529,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const formData = new FormData();
+            formData.append('title', title);
             if (content) {
                 formData.append('content', content);
             }
