@@ -339,6 +339,8 @@ module.exports = (pool, upload) => {
         const user = userRows[0];
         
         // Role-specific profile fields configuration
+        // NOTE: This configuration is duplicated in client/js/profile.js (line ~109)
+        // Any changes here MUST be synchronized with the client-side definition
         const roleFieldsConfig = {
             alumni: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department', 'experience_years', 'specialization', 'achievements', 'certifications', 'languages'],
             student: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department', 'expected_graduation', 'current_year', 'gpa', 'research_interests', 'languages'],

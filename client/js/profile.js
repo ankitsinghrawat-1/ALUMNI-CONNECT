@@ -106,6 +106,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // Role-specific field configurations that match user needs
+    // NOTE: This configuration is duplicated in server/api/users.js (line ~342)
+    // Any changes here MUST be synchronized with the server-side definition
     const roleFieldsConfig = {
         alumni: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'company', 'job_title', 'industry', 'skills', 'institute_name', 'major', 'graduation_year', 'department', 'experience_years', 'specialization', 'achievements', 'certifications', 'languages'],
         student: ['full_name', 'bio', 'city', 'phone_number', 'linkedin_profile', 'skills', 'institute_name', 'major', 'graduation_year', 'department', 'expected_graduation', 'current_year', 'gpa', 'research_interests', 'languages'],
