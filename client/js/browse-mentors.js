@@ -1078,18 +1078,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             const scrollPercentage = (currentScrollTop / viewportHeight) * 100;
             
             // Show/hide based on scroll position
-            if (currentScrollTop > lastScrollTop && scrollPercentage > scrollThreshold) {
-                // Scrolling down - hide search bar, show floating button
-                searchFilterSection.style.transform = 'translateY(-100%)';
-                searchFilterSection.style.opacity = '0';
-                searchFilterSection.style.pointerEvents = 'none';
-                floatingSearchBtn.classList.add('show');
-            } else if (currentScrollTop < lastScrollTop || currentScrollTop <= 0) {
-                // Scrolling up or at top - show search bar, hide floating button
+            if (currentScrollTop <= 0) {
+                // At the very top - show search bar, hide floating button
                 searchFilterSection.style.transform = 'translateY(0)';
                 searchFilterSection.style.opacity = '1';
                 searchFilterSection.style.pointerEvents = 'auto';
                 floatingSearchBtn.classList.remove('show');
+            } else if (scrollPercentage > scrollThreshold) {
+                // Scrolled down past threshold - hide search bar, show floating button
+                searchFilterSection.style.transform = 'translateY(-100%)';
+                searchFilterSection.style.opacity = '0';
+                searchFilterSection.style.pointerEvents = 'none';
+                floatingSearchBtn.classList.add('show');
             }
             
             lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
