@@ -456,19 +456,52 @@
 }
 
 /* Story Preview Section */
+/* Story Preview - Relocated to Top Right */
 .story-preview-section {
-    background: var(--bg-tertiary);
-    border-radius: var(--radius-lg);
+    position: fixed;
+    top: 100px;
+    right: 24px;
+    z-index: 100;
+    background: var(--bg-primary);
+    border-radius: 20px;
     padding: var(--spacing-lg);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    width: 240px;
+    animation: fadeInSlide 0.4s ease-out;
+    transition: all 0.3s ease;
+}
+
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.story-preview-section.minimized {
+    width: 60px;
+    height: 60px;
+    padding: var(--spacing-sm);
+    overflow: hidden;
+}
+
+.story-preview-section.minimized .story-preview-container,
+.story-preview-section.minimized h3 span {
+    display: none;
 }
 
 .story-preview-section h3 {
-    font-size: var(--font-size-base);
+    font-size: var(--font-size-sm);
     font-weight: 600;
     color: var(--text-primary);
     margin: 0 0 var(--spacing-md) 0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: var(--spacing-sm);
 }
 
@@ -480,15 +513,15 @@
 .story-preview-container {
     background: #000;
     border-radius: var(--radius-lg);
-    padding: var(--spacing-md);
+    padding: var(--spacing-sm);
     display: flex;
     justify-content: center;
 }
 
 .story-preview-frame {
     width: 100%;
-    max-width: 200px;
-    aspect-ratio: 9/16;
+    max-width: 220px;
+    height: 390px;
     background: linear-gradient(135deg, var(--primary-blue), var(--accent-blue));
     border-radius: var(--radius-md);
     overflow: hidden;
@@ -1327,14 +1360,37 @@
 /* ====================================================================
    RESPONSIVE DESIGN
    ==================================================================== */
+@media (max-width: 1200px) {
+    .story-preview-section {
+        top: 80px;
+        right: 16px;
+        width: 200px;
+    }
+    
+    .story-preview-frame {
+        max-width: 180px;
+        height: 320px;
+    }
+}
+
 @media (max-width: 1024px) {
     .story-creation-grid {
         grid-template-columns: 1fr;
     }
     
     .story-preview-section {
+        position: relative;
+        top: auto;
+        right: auto;
         order: -1;
-        position: static;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto var(--spacing-xl) auto;
+    }
+    
+    .story-preview-frame {
+        max-width: 220px;
+        height: 390px;
     }
 }
 
