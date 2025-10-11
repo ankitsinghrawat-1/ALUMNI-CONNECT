@@ -243,8 +243,8 @@
 
 .story-creation-grid {
     display: grid;
-    grid-template-columns: 320px 1fr;
-    gap: var(--spacing-2xl);
+    grid-template-columns: 280px 1fr;
+    gap: var(--spacing-3xl);
 }
 
 /* ====================================================================
@@ -537,7 +537,7 @@
 
 .template-preview {
     width: 100%;
-    aspect-ratio: 9/16;
+    height: 80px;
     border-radius: var(--radius-sm);
     margin-bottom: var(--spacing-xs);
 }
@@ -607,7 +607,7 @@
 
 .story-preview-frame {
     width: 100%;
-    max-width: 320px;
+    max-width: 200px;
     aspect-ratio: 9/16;
     background: #000000;
     border-radius: var(--radius-xl);
@@ -1027,9 +1027,11 @@
    ==================================================================== */
 .story-right-panel {
     background: var(--bg-primary);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-2xl);
-    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-3xl);
+    box-shadow: var(--shadow-md);
+    border: 2px solid var(--border-light);
+    margin: var(--spacing-lg);
 }
 
 .story-form .input-group {
@@ -1420,4 +1422,31 @@
         flex: 1;
         justify-content: center;
     }
+}
+
+/* ====================================================================
+   EMOJI PICKER FIX - Z-INDEX AND POSITIONING
+   ==================================================================== */
+emoji-picker,
+.emoji-picker-container {
+    position: fixed !important;
+    z-index: 9999 !important;
+    max-height: 400px !important;
+}
+
+.emoji-trigger-btn {
+    position: absolute !important;
+    right: 10px !important;
+    top: 10px !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 20px !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    color: var(--text-secondary) !important;
+    transition: color 0.2s ease !important;
+}
+
+.emoji-trigger-btn:hover {
+    color: var(--primary-blue) !important;
 }
