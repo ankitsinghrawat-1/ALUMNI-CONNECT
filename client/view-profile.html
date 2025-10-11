@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumni Profile</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/view-profile-modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         (function() {
@@ -26,56 +27,148 @@
         </nav>
     </header>
 
-    <main class="profile-main-view">
+    <main class="profile-main-view modern-profile">
         <div class="profile-container-view">
-            <div class="profile-header-view">
-                <img id="profile-pic-view" class="profile-pic-view" src="" alt="Profile Picture" onerror="this.src=createInitialsAvatar('User')">
-                <h2 id="profile-name-view"></h2>
-                <div id="verified-badge-container"></div>
-                <p id="profile-subheader" class="profile-subheader"></p>
-                <button id="send-message-btn" class="btn btn-primary" style="margin-top: 1rem;">
-                    <i class="fas fa-paper-plane"></i> Send Message
+            <!-- Profile Cover Section -->
+            <div class="profile-cover-section">
+                <div class="profile-cover-gradient"></div>
+                <button onclick="history.back()" class="back-btn-modern">
+                    <i class="fas fa-arrow-left"></i>
                 </button>
-                <a id="social-profile-link" href="social-profile.html" class="btn btn-secondary" style="margin-top: 0.5rem; display: inline-block; text-decoration: none;">
-                    <i class="fas fa-users"></i> View Social Profile
-                </a>
-                
+            </div>
+
+            <!-- Profile Header Section -->
+            <div class="profile-header-view">
+                <div class="profile-header-content">
+                    <div class="profile-avatar-wrapper">
+                        <img id="profile-pic-view" class="profile-pic-view" src="" alt="Profile Picture" onerror="this.src=createInitialsAvatar('User')">
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-name-wrapper">
+                            <h2 id="profile-name-view"></h2>
+                            <div id="verified-badge-container"></div>
+                        </div>
+                        <p id="profile-subheader" class="profile-subheader"></p>
+                        <div class="profile-actions">
+                            <button id="send-message-btn" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                <span>Send Message</span>
+                            </button>
+                            <a id="social-profile-link" href="social-profile.html" class="btn btn-secondary">
+                                <i class="fas fa-users"></i>
+                                <span>View Social Profile</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             
+            <!-- Profile Content Cards -->
             <div class="profile-content-view">
-                
-                <section class="profile-section">
-                    <h3><i class="fas fa-info-circle"></i> About Me</h3>
-                    <p id="bio-view"></p>
-                </section>
-                
-                <section class="profile-section">
-                    <h3><i class="fas fa-graduation-cap"></i> Academic Details</h3>
-                    <p><strong>University:</strong> <span id="university-view"></span></p>
-                    <p><strong>Graduation Year:</strong> <span id="graduation-year-view"></span></p>
-                    <p><strong>Degree:</strong> <span id="degree-view"></span></p>
-                    <p><strong>Major:</strong> <span id="major-view"></span></p>
-                </section>
-                
-                <section class="profile-section">
-                    <h3><i class="fas fa-briefcase"></i> Professional Details</h3>
-                    <p><strong>Current Company:</strong> <span id="current-company-view"></span></p>
-                    <p><strong>Job Title:</strong> <span id="job-title-view"></span></p>
-                    <p><strong>City:</strong> <span id="city-view"></span></p>
-                    <p><strong>LinkedIn:</strong> <a id="linkedin-view" class="link-styled" target="_blank"></a></p>
-                </section>
-
-                <section class="profile-section">
-                    <h3><i class="fas fa-envelope"></i> Contact</h3>
-                    <p id="email-view"></p>
-                </section>
-
-                <section class="profile-section">
-                    <h3><i class="fas fa-feather-alt"></i> Blog Posts</h3>
-                    <div id="user-blog-posts" class="user-posts-container">
+                <!-- About Section -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon about-icon">
+                            <i class="fas fa-info-circle"></i>
                         </div>
-                </section>
+                        <h3>About Me</h3>
+                    </div>
+                    <div class="card-body">
+                        <p id="bio-view" class="bio-text"></p>
+                    </div>
+                </div>
+                
+                <!-- Academic Details Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon academic-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Academic Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">University</span>
+                                <span id="university-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Graduation Year</span>
+                                <span id="graduation-year-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Degree</span>
+                                <span id="degree-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Major</span>
+                                <span id="major-view" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Professional Details Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon professional-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Professional Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Current Company</span>
+                                <span id="current-company-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Job Title</span>
+                                <span id="job-title-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">City</span>
+                                <span id="city-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">LinkedIn</span>
+                                <a id="linkedin-view" class="info-link" target="_blank">
+                                    <i class="fab fa-linkedin"></i> View Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Contact Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Contact Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="contact-info">
+                            <i class="fas fa-envelope"></i>
+                            <span id="email-view"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blog Posts Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon blog-icon">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <h3>Blog Posts</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="user-blog-posts" class="user-posts-container"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
