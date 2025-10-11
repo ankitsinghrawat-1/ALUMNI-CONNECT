@@ -632,11 +632,22 @@ CREATE TABLE `verification_requests` (
 CREATE TABLE IF NOT EXISTS threads (
     thread_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    VARCHAR(200) NOT NULL;
+    title VARCHAR(200) NOT NULL,
+    thread_type ENUM('discussion', 'question', 'announcement', 'poll') DEFAULT 'discussion',
+    category VARCHAR(100) DEFAULT NULL,
     content TEXT,
     media_url VARCHAR(255) DEFAULT NULL,
     media_type ENUM('image', 'video') DEFAULT NULL,
     media_caption TEXT DEFAULT NULL,
+    location VARCHAR(255) DEFAULT NULL,
+    is_anonymous BOOLEAN DEFAULT FALSE,
+    target_audience ENUM('all', 'alumni', 'students', 'faculty') DEFAULT 'all',
+    batch_year VARCHAR(20) DEFAULT NULL,
+    tags VARCHAR(500) DEFAULT NULL,
+    content_warning ENUM('none', 'sensitive', 'nsfw') DEFAULT 'none',
+    scheduled_at TIMESTAMP DEFAULT NULL,
+    is_published BOOLEAN DEFAULT TRUE,
+    read_time INT DEFAULT 0,
     visibility ENUM('public', 'alumni', 'followers', 'private') DEFAULT 'public',
     is_pinned BOOLEAN DEFAULT FALSE,
     is_featured BOOLEAN DEFAULT FALSE,
@@ -644,7 +655,6 @@ CREATE TABLE IF NOT EXISTS threads (
     last_edited_at TIMESTAMP DEFAULT NULL,
     view_count INT DEFAULT 0,
     engagement_score INT DEFAULT 0,
-    location VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
@@ -653,7 +663,10 @@ CREATE TABLE IF NOT EXISTS threads (
     INDEX idx_location (location),
     INDEX idx_threads_visibility (visibility, created_at),
     INDEX idx_threads_featured (is_featured, created_at),
-    INDEX idx_threads_engagement (engagement_score DESC)
+    INDEX idx_threads_engagement (engagement_score DESC),
+    INDEX idx_threads_type (thread_type),
+    INDEX idx_threads_category (category),
+    INDEX idx_threads_published (is_published, scheduled_at)
 );
 
 
