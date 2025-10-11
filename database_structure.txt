@@ -632,11 +632,22 @@ CREATE TABLE `verification_requests` (
 CREATE TABLE IF NOT EXISTS threads (
     thread_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    VARCHAR(200) NOT NULL;
+    title VARCHAR(200) NOT NULL,
+    thread_type ENUM('discussion', 'question', 'announcement', 'poll') DEFAULT 'discussion',
+    category VARCHAR(100) DEFAULT NULL,
     content TEXT,
     media_url VARCHAR(255) DEFAULT NULL,
     media_type ENUM('image', 'video') DEFAULT NULL,
     media_caption TEXT DEFAULT NULL,
+    location VARCHAR(255) DEFAULT NULL,
+    is_anonymous BOOLEAN DEFAULT FALSE,
+    target_audience ENUM('all', 'alumni', 'students', 'faculty') DEFAULT 'all',
+    batch_year VARCHAR(20) DEFAULT NULL,
+    tags VARCHAR(500) DEFAULT NULL,
+    content_warning ENUM('none', 'sensitive', 'nsfw') DEFAULT 'none',
+    scheduled_at TIMESTAMP DEFAULT NULL,
+    is_published BOOLEAN DEFAULT TRUE,
+    read_time INT DEFAULT 0,
     visibility ENUM('public', 'alumni', 'followers', 'private') DEFAULT 'public',
     is_pinned BOOLEAN DEFAULT FALSE,
     is_featured BOOLEAN DEFAULT FALSE,
@@ -644,7 +655,6 @@ CREATE TABLE IF NOT EXISTS threads (
     last_edited_at TIMESTAMP DEFAULT NULL,
     view_count INT DEFAULT 0,
     engagement_score INT DEFAULT 0,
-    location VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
@@ -653,7 +663,10 @@ CREATE TABLE IF NOT EXISTS threads (
     INDEX idx_location (location),
     INDEX idx_threads_visibility (visibility, created_at),
     INDEX idx_threads_featured (is_featured, created_at),
-    INDEX idx_threads_engagement (engagement_score DESC)
+    INDEX idx_threads_engagement (engagement_score DESC),
+    INDEX idx_threads_type (thread_type),
+    INDEX idx_threads_category (category),
+    INDEX idx_threads_published (is_published, scheduled_at)
 );
 
 
@@ -1033,6 +1046,7 @@ CREATE TABLE IF NOT EXISTS user_social_stats (
     followers_count INT DEFAULT 0 COMMENT 'Number of followers',
     following_count INT DEFAULT 0 COMMENT 'Number of users being followed',
     threads_count INT DEFAULT 0 COMMENT 'Number of threads created',
+    total_threads INT DEFAULT 0 COMMENT 'Total number of threads created (for trigger compatibility)',
     stories_count INT DEFAULT 0 COMMENT 'Number of active stories',
     total_stories INT DEFAULT 0 COMMENT 'Total number of stories created',
     total_views INT DEFAULT 0 COMMENT 'Total views across all content',
@@ -1430,3 +1444,205 @@ CREATE TABLE IF NOT EXISTS thread_tag_junction (
     FOREIGN KEY (tag_id) REFERENCES thread_tags(tag_id) ON DELETE CASCADE,
     INDEX idx_thread_tag_junction_tag (tag_id, created_at)
 );
+
+
+-- ====================================================================
+-- PHASE 2 ENHANCEMENTS - Real-Time Features & Backend Integration
+-- Added: 2025-10-11
+-- ====================================================================
+
+
+--68. Thread Co-Authors Table (Phase 2)
+
+
+CREATE TABLE IF NOT EXISTS thread_coauthors (
+    coauthor_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL,
+    user_id INT NOT NULL,
+    added_by INT NOT NULL,
+    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (added_by) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_coauthor (thread_id, user_id),
+    INDEX idx_thread_coauthors_thread (thread_id),
+    INDEX idx_thread_coauthors_user (user_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--69. Thread Quality Scores Table (Phase 2)
+
+
+CREATE TABLE IF NOT EXISTS thread_quality_scores (
+    score_id INT AUTO_INCREMENT PRIMARY KEY,
+    thread_id INT NOT NULL UNIQUE,
+    quality_score INT NOT NULL,
+    word_count INT DEFAULT 0,
+    hashtag_count INT DEFAULT 0,
+    mention_count INT DEFAULT 0,
+    has_media BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    INDEX idx_quality_scores_score (quality_score DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--70. User Milestones Table (Phase 2)
+
+
+CREATE TABLE IF NOT EXISTS user_milestones (
+    milestone_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    thread_id INT DEFAULT NULL,
+    milestone_type ENUM('promotion', 'new_job', 'graduation', 'certification', 'award', 'publication', 'patent', 'founded', 'launched', 'other') NOT NULL,
+    milestone_title VARCHAR(255) NOT NULL,
+    milestone_description TEXT DEFAULT NULL,
+    celebration_count INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE SET NULL,
+    INDEX idx_milestones_user (user_id, created_at),
+    INDEX idx_milestones_type (milestone_type, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--71. Real-time Activity Log Table (Phase 2)
+
+
+CREATE TABLE IF NOT EXISTS realtime_activity_log (
+    activity_id INT AUTO_INCREMENT PRIMARY KEY,
+    activity_type ENUM('view', 'typing', 'reaction', 'comment', 'share') NOT NULL,
+    thread_id INT NOT NULL,
+    user_id INT DEFAULT NULL,
+    session_id VARCHAR(100) DEFAULT NULL,
+    duration_seconds INT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (thread_id) REFERENCES threads(thread_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    INDEX idx_activity_thread (thread_id, created_at),
+    INDEX idx_activity_user (user_id, created_at),
+    INDEX idx_activity_type (activity_type, created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--72. Hashtag Statistics Table (Phase 2)
+
+
+CREATE TABLE IF NOT EXISTS hashtag_statistics (
+    hashtag_id INT AUTO_INCREMENT PRIMARY KEY,
+    hashtag VARCHAR(100) NOT NULL UNIQUE,
+    usage_count INT DEFAULT 1,
+    last_used_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    trending_score FLOAT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_hashtags_usage (usage_count DESC),
+    INDEX idx_hashtags_trending (trending_score DESC),
+    INDEX idx_hashtags_recent (last_used_at DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--73. User Engagement Metrics Table (Phase 2)
+
+
+CREATE TABLE IF NOT EXISTS user_engagement_metrics (
+    metric_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    date DATE NOT NULL,
+    threads_created INT DEFAULT 0,
+    comments_made INT DEFAULT 0,
+    reactions_given INT DEFAULT 0,
+    reactions_received INT DEFAULT 0,
+    threads_viewed INT DEFAULT 0,
+    time_spent_minutes INT DEFAULT 0,
+    engagement_score FLOAT DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_date (user_id, date),
+    INDEX idx_engagement_user (user_id, date),
+    INDEX idx_engagement_score (engagement_score DESC)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ====================================================================
+-- PHASE 2 STORED PROCEDURES
+-- ====================================================================
+
+
+-- Procedure to increment hashtag usage
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS increment_hashtag_usage(IN hashtag_text VARCHAR(100))
+BEGIN
+    INSERT INTO hashtag_statistics (hashtag, usage_count, last_used_at)
+    VALUES (hashtag_text, 1, NOW())
+    ON DUPLICATE KEY UPDATE
+        usage_count = usage_count + 1,
+        last_used_at = NOW(),
+        trending_score = trending_score + (1.0 / TIMESTAMPDIFF(HOUR, last_used_at, NOW()) + 1);
+END//
+DELIMITER ;
+
+
+-- Procedure to update user engagement metrics
+DELIMITER //
+CREATE PROCEDURE IF NOT EXISTS update_user_engagement(
+    IN p_user_id INT,
+    IN p_date DATE,
+    IN p_threads INT,
+    IN p_comments INT,
+    IN p_reactions_given INT,
+    IN p_reactions_received INT
+)
+BEGIN
+    INSERT INTO user_engagement_metrics (
+        user_id, date, threads_created, comments_made, 
+        reactions_given, reactions_received, engagement_score
+    )
+    VALUES (
+        p_user_id, p_date, p_threads, p_comments,
+        p_reactions_given, p_reactions_received,
+        (p_threads * 10 + p_comments * 5 + p_reactions_given * 2 + p_reactions_received * 3)
+    )
+    ON DUPLICATE KEY UPDATE
+        threads_created = threads_created + p_threads,
+        comments_made = comments_made + p_comments,
+        reactions_given = reactions_given + p_reactions_given,
+        reactions_received = reactions_received + p_reactions_received,
+        engagement_score = engagement_score + (p_threads * 10 + p_comments * 5 + p_reactions_given * 2 + p_reactions_received * 3);
+END//
+DELIMITER ;
+
+
+-- ====================================================================
+-- PHASE 2 MODIFICATIONS TO EXISTING TABLES
+-- ====================================================================
+
+
+-- Modified table 58 (thread_reactions) to change UNIQUE KEY
+-- Original had: UNIQUE KEY unique_thread_reaction (thread_id, user_id, reaction_type)
+-- Changed to: UNIQUE KEY unique_reaction (thread_id, user_id)
+-- Reason: Allow users to change their reaction type (only one reaction per user per thread)
+
+ALTER TABLE thread_reactions 
+DROP INDEX IF EXISTS unique_thread_reaction,
+ADD UNIQUE KEY unique_reaction (thread_id, user_id);
+
+
+-- Modified table 59 (comment_reactions) to use same reaction types as thread_reactions
+-- Added 'celebrate' and 'support' reaction types for consistency
+
+ALTER TABLE comment_reactions
+MODIFY COLUMN reaction_type ENUM('like', 'love', 'insightful', 'celebrate', 'support', 'funny') NOT NULL;
+
+
+-- Add indexes to existing tables for Phase 2 performance
+ALTER TABLE threads ADD INDEX IF NOT EXISTS idx_threads_created (created_at DESC);
+ALTER TABLE threads ADD INDEX IF NOT EXISTS idx_threads_user (user_id, created_at DESC);
+ALTER TABLE thread_comments ADD INDEX IF NOT EXISTS idx_comments_thread (thread_id, created_at DESC);
+
+
+-- ====================================================================
+-- END OF PHASE 2 ENHANCEMENTS
+-- Total tables: 73 (67 original + 6 new Phase 2 tables)
+-- Note: Tables 58 & 59 were modified for Phase 2 compatibility
+-- ====================================================================

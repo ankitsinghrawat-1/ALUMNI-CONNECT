@@ -170,7 +170,7 @@
     margin: 0 auto;
     padding: 0 var(--spacing-lg);
     display: grid;
-    grid-template-columns: 2.5fr 1fr;
+    grid-template-columns: 300px 1fr;
     gap: var(--spacing-xl);
 }
 
