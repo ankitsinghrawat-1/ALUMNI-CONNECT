@@ -16,6 +16,7 @@
         })();
     </script>
     <script src="js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     
@@ -64,6 +65,48 @@
                 </div>
             </div>
             
+            <!-- Profile Statistics -->
+            <div class="profile-stats-section">
+                <div class="stats-grid">
+                    <div class="stat-box" data-aos="fade-up">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="connections-count">0</h4>
+                            <p>Connections</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon">
+                            <i class="fas fa-blog"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="posts-count">0</h4>
+                            <p>Blog Posts</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="engagement-count">0</h4>
+                            <p>Engagement</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="events-count">0</h4>
+                            <p>Events Attended</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Profile Content Cards -->
             <div class="profile-content-view">
                 <!-- About Section -->
@@ -108,7 +151,35 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Skills & Expertise Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon skills-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Skills & Expertise</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="skills-view" class="skills-container"></div>
+                    </div>
+                </div>
+
+                <!-- Activity Analytics Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon analytics-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Activity Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Professional Details Card -->
                 <div class="profile-card">
                     <div class="card-header">
