@@ -16,6 +16,7 @@
         })();
     </script>
     <script src="js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     
@@ -64,6 +65,48 @@
                 </div>
             </div>
             
+            <!-- Profile Statistics -->
+            <div class="profile-stats-section">
+                <div class="stats-grid">
+                    <div class="stat-box" data-aos="fade-up">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="connections-count">0</h4>
+                            <p>Connections</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon">
+                            <i class="fas fa-blog"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="posts-count">0</h4>
+                            <p>Blog Posts</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="engagement-count">0</h4>
+                            <p>Engagement</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="events-count">0</h4>
+                            <p>Events Attended</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!-- Profile Content Cards -->
             <div class="profile-content-view">
                 <!-- About Section -->
@@ -108,7 +151,35 @@
                         </div>
                     </div>
                 </div>
-                
+
+                <!-- Skills & Expertise Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon skills-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Skills & Expertise</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="skills-view" class="skills-container"></div>
+                    </div>
+                </div>
+
+                <!-- Activity Analytics Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon analytics-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Activity Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Professional Details Card -->
                 <div class="profile-card">
                     <div class="card-header">
@@ -134,6 +205,114 @@
                             <div class="info-item">
                                 <span class="info-label">LinkedIn</span>
                                 <a id="linkedin-view" class="info-link" target="_blank">
+                                    <i class="fab fa-linkedin"></i> View Profile
+                                </a>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Experience</span>
+                                <span id="experience-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Industry</span>
+                                <span id="industry-view" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Stats Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon stats-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h3>Detailed Statistics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="detailed-stats-grid">
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="total-likes">0</h4>
+                                    <p>Total Likes Received</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="total-comments">0</h4>
+                                    <p>Total Comments</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="profile-views">0</h4>
+                                    <p>Profile Views</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="network-score">0</h4>
+                                    <p>Network Score</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="member-since">-</h4>
+                                    <p>Member Since</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="activity-streak">0</h4>
+                                    <p>Day Activity Streak</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Details Card -->
+                <div class="profile-card" style="display:none;">
+                    <div class="card-header">
+                        <div class="card-icon professional-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Professional Details (Old)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid" style="display:none;">
+                            <div class="info-item">
+                                <span class="info-label">Current Company</span>
+                                <span id="current-company-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Job Title</span>
+                                <span id="job-title-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">City</span>
+                                <span id="city-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">LinkedIn</span>
+                                <a id="linkedin-view-old" class="info-link" target="_blank">
                                     <i class="fab fa-linkedin"></i> View Profile
                                 </a>
                             </div>
