@@ -1032,34 +1032,96 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    // Scroll behavior for search bar
+    // Scroll behavior for search bar with floating button
     let lastScrollTop = 0;
     let scrollThreshold = 10; // 10% of viewport height
     const searchFilterSection = document.querySelector('.search-filter-section');
+    const floatingSearchBtn = document.getElementById('floating-search-btn');
+    const searchModalOverlay = document.getElementById('search-modal-overlay');
+    const closeSearchModal = document.getElementById('close-search-modal');
+    const searchModalBody = document.getElementById('search-modal-body');
     
-    if (searchFilterSection) {
+    if (searchFilterSection && floatingSearchBtn) {
+        // Clone the search bar content for the modal
+        const searchBarClone = searchFilterSection.querySelector('.search-filter-container').cloneNode(true);
+        searchModalBody.appendChild(searchBarClone);
+        
+        // Re-attach event listeners for cloned elements
+        const clonedSearchInput = searchModalBody.querySelector('#mentor-search');
+        const clonedSearchBtn = searchModalBody.querySelector('#search-btn');
+        const clonedClearBtn = searchModalBody.querySelector('#clear-search');
+        const clonedFilterToggle = searchModalBody.querySelector('#filter-toggle');
+        const clonedSortSelect = searchModalBody.querySelector('#sort-select');
+        
+        if (clonedSearchInput) {
+            clonedSearchInput.addEventListener('input', handleSearchInput);
+        }
+        if (clonedSearchBtn) {
+            clonedSearchBtn.addEventListener('click', performSearch);
+        }
+        if (clonedClearBtn) {
+            clonedClearBtn.addEventListener('click', clearSearch);
+        }
+        if (clonedFilterToggle) {
+            clonedFilterToggle.addEventListener('click', () => {
+                filtersPanel.style.display = filtersPanel.style.display === 'none' ? 'grid' : 'none';
+                clonedFilterToggle.classList.toggle('active');
+            });
+        }
+        if (clonedSortSelect) {
+            clonedSortSelect.addEventListener('change', handleSortChange);
+        }
+        
+        // Scroll event handler
         window.addEventListener('scroll', () => {
             const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
             const viewportHeight = window.innerHeight;
             const scrollPercentage = (currentScrollTop / viewportHeight) * 100;
             
-            // Hide on scroll down, show on scroll up by 10%
-            if (currentScrollTop > lastScrollTop) {
-                // Scrolling down
-                if (scrollPercentage > scrollThreshold) {
-                    searchFilterSection.style.transform = 'translateY(-100%)';
-                    searchFilterSection.style.opacity = '0';
-                }
-            } else {
-                // Scrolling up
+            // Show/hide based on scroll position
+            if (currentScrollTop > lastScrollTop && scrollPercentage > scrollThreshold) {
+                // Scrolling down - hide search bar, show floating button
+                searchFilterSection.style.transform = 'translateY(-100%)';
+                searchFilterSection.style.opacity = '0';
+                searchFilterSection.style.pointerEvents = 'none';
+                floatingSearchBtn.classList.add('show');
+            } else if (currentScrollTop < lastScrollTop || currentScrollTop <= 0) {
+                // Scrolling up or at top - show search bar, hide floating button
                 searchFilterSection.style.transform = 'translateY(0)';
                 searchFilterSection.style.opacity = '1';
+                searchFilterSection.style.pointerEvents = 'auto';
+                floatingSearchBtn.classList.remove('show');
             }
             
             lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
         });
         
-        // Ensure smooth transition
-        searchFilterSection.style.transition = 'transform 0.3s ease-in-out, opacity 0.3s ease-in-out';
+        // Floating button click - open modal
+        floatingSearchBtn.addEventListener('click', () => {
+            searchModalOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Close modal
+        closeSearchModal.addEventListener('click', () => {
+            searchModalOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+        
+        // Close on overlay click
+        searchModalOverlay.addEventListener('click', (e) => {
+            if (e.target === searchModalOverlay) {
+                searchModalOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && searchModalOverlay.classList.contains('show')) {
+                searchModalOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
     }
 });
