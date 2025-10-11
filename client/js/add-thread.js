@@ -1,6 +1,8 @@
 // client/js/add-thread.js
 document.addEventListener('DOMContentLoaded', () => {
     const addThreadForm = document.getElementById('add-thread-form');
+    const titleInput = document.getElementById('title');
+    const titleCountSpan = document.getElementById('title-count');
     const contentTextarea = document.getElementById('content');
     const locationInput = document.getElementById('location');
     const hashtagsInput = document.getElementById('hashtags');
@@ -14,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeMediaBtn = document.getElementById('remove-media');
     const messageDiv = document.getElementById('message');
     const submitBtn = document.getElementById('submit-btn');
+    const draftBtn = document.querySelector('.draft-btn');
     const charCountSpan = document.getElementById('char-count');
     const charLimitSpan = document.getElementById('char-limit');
     const storyToggle = document.getElementById('story-toggle');
@@ -22,12 +25,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const hashtagTags = document.getElementById('hashtag-tags');
     const mentionSuggestions = document.getElementById('mention-suggestions');
     const mentionTags = document.getElementById('mention-tags');
+    const advancedToggle = document.getElementById('advanced-toggle');
+    const advancedOptions = document.getElementById('advanced-options');
+    const threadTypeSelect = document.getElementById('thread-type');
+    const pollSection = document.getElementById('poll-section');
+    const toolbarBtns = document.querySelectorAll('.toolbar-btn[data-command]');
     
     let selectedFile = null;
     let selectedHashtags = [];
     let selectedMentions = [];
     let hashtagSuggestionTimeout = null;
     let mentionSuggestionTimeout = null;
+
+    // Title field character counter
+    if (titleInput && titleCountSpan) {
+        titleInput.addEventListener('input', () => {
+            const charCount = titleInput.value.length;
+            titleCountSpan.textContent = charCount;
+            
+            // Enable/disable draft button based on title
+            if (draftBtn) {
+                draftBtn.disabled = charCount === 0;
+            }
+        });
+    }
 
     // Character count update with higher limit
     contentTextarea.addEventListener('input', () => {
@@ -67,8 +88,127 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
+    // Advanced options toggle
+    if (advancedToggle && advancedOptions) {
+        advancedToggle.addEventListener('click', () => {
+            const isVisible = advancedOptions.style.display !== 'none';
+            advancedOptions.style.display = isVisible ? 'none' : 'block';
+            const icon = advancedToggle.querySelector('i');
+            if (icon) {
+                icon.className = isVisible ? 'fas fa-chevron-down' : 'fas fa-chevron-up';
+            }
+        });
+    }
+    
+    // Thread type selector - show/hide poll section
+    if (threadTypeSelect && pollSection) {
+        threadTypeSelect.addEventListener('change', () => {
+            pollSection.style.display = threadTypeSelect.value === 'poll' ? 'block' : 'none';
+        });
+    }
+    
+    // Toolbar buttons for rich text formatting with contentEditable
+    toolbarBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const command = btn.dataset.command;
+            
+            // For emoji and link buttons, handle separately
+            if (command === 'emoji' || command === 'link') {
+                return; // These will be handled by their specific click handlers
+            }
+            
+            if (command && contentTextarea) {
+                const start = contentTextarea.selectionStart;
+                const end = contentTextarea.selectionEnd;
+                const selectedText = contentTextarea.value.substring(start, end);
+                
+                // If no text selected, just insert markers
+                if (!selectedText) {
+                    let markers = '';
+                    if (command === 'bold') markers = '****';
+                    else if (command === 'italic') markers = '**';
+                    else if (command === 'underline') markers = '____';
+                    
+                    const newStart = start + markers.length / 2;
+                    contentTextarea.value = contentTextarea.value.substring(0, start) + markers + contentTextarea.value.substring(end);
+                    contentTextarea.focus();
+                    contentTextarea.setSelectionRange(newStart, newStart);
+                    return;
+                }
+                
+                // Apply formatting to selected text
+                let formattedText = selectedText;
+                if (command === 'bold') {
+                    formattedText = `**${selectedText}**`;
+                } else if (command === 'italic') {
+                    formattedText = `*${selectedText}*`;
+                } else if (command === 'underline') {
+                    formattedText = `__${selectedText}__`;
+                } else if (command === 'insertUnorderedList') {
+                    formattedText = `• ${selectedText}`;
+                } else if (command === 'insertOrderedList') {
+                    formattedText = `1. ${selectedText}`;
+                }
+                
+                contentTextarea.value = contentTextarea.value.substring(0, start) + formattedText + contentTextarea.value.substring(end);
+                contentTextarea.focus();
+                contentTextarea.setSelectionRange(start, start + formattedText.length);
+                
+                // Trigger input event to update character count
+                contentTextarea.dispatchEvent(new Event('input'));
+            }
+        });
+    });
+    
+    // Draft button functionality
+    if (draftBtn) {
+        draftBtn.addEventListener('click', () => {
+            const draft = {
+                title: titleInput?.value || '',
+                content: contentTextarea?.value || '',
+                category: document.getElementById('category')?.value || '',
+                visibility: document.getElementById('visibility')?.value || 'public',
+                timestamp: new Date().toISOString()
+            };
+            localStorage.setItem('threadDraft', JSON.stringify(draft));
+            showToast('Draft saved successfully!', 'success');
+        });
+        
+        // Load draft if exists
+        const savedDraft = localStorage.getItem('threadDraft');
+        if (savedDraft) {
+            try {
+                const draft = JSON.parse(savedDraft);
+                if (titleInput) titleInput.value = draft.title || '';
+                if (contentTextarea) contentTextarea.value = draft.content || '';
+                if (document.getElementById('category')) document.getElementById('category').value = draft.category || '';
+                if (document.getElementById('visibility')) document.getElementById('visibility').value = draft.visibility || 'public';
+                showToast('Draft loaded', 'info');
+            } catch (e) {
+                console.error('Error loading draft:', e);
+            }
+        }
+    }
+    
     // Common words to exclude from hashtag suggestions
     const commonWords = ['with', 'that', 'this', 'from', 'they', 'have', 'been', 'will', 'would', 'could', 'should', 'about', 'after', 'before', 'during', 'through', 'between', 'among', 'under', 'over'];
+    
+    // Toast notification helper
+    function showToast(message, type = 'info') {
+        if (typeof Toastify !== 'undefined') {
+            Toastify({
+                text: message,
+                duration: 3000,
+                gravity: 'top',
+                position: 'right',
+                backgroundColor: type === 'success' ? '#10b981' : type === 'error' ? '#ef4444' : '#3b82f6',
+                stopOnFocus: true
+            }).showToast();
+        } else {
+            alert(message);
+        }
+    }
 
     // Story toggle functionality
     storyToggle.addEventListener('change', () => {
@@ -383,13 +523,58 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Emoji button handler
+    const emojiBtn = document.getElementById('add-emoji-btn');
+    if (emojiBtn && typeof window.ProfessionalEmojiPicker !== 'undefined') {
+        const emojiPicker = new window.ProfessionalEmojiPicker(emojiBtn, {
+            onSelect: (emoji) => {
+                const start = contentTextarea.selectionStart;
+                const end = contentTextarea.selectionEnd;
+                contentTextarea.value = contentTextarea.value.substring(0, start) + emoji + contentTextarea.value.substring(end);
+                contentTextarea.focus();
+                contentTextarea.setSelectionRange(start + emoji.length, start + emoji.length);
+                contentTextarea.dispatchEvent(new Event('input'));
+            }
+        });
+    }
+    
+    // Link button handler
+    const linkBtn = document.getElementById('add-link-btn');
+    if (linkBtn) {
+        linkBtn.addEventListener('click', () => {
+            const url = prompt('Enter URL:');
+            if (url) {
+                const linkText = prompt('Enter link text (optional):') || url;
+                const start = contentTextarea.selectionStart;
+                const end = contentTextarea.selectionEnd;
+                const linkMarkdown = `[${linkText}](${url})`;
+                contentTextarea.value = contentTextarea.value.substring(0, start) + linkMarkdown + contentTextarea.value.substring(end);
+                contentTextarea.focus();
+                contentTextarea.setSelectionRange(start + linkMarkdown.length, start + linkMarkdown.length);
+                contentTextarea.dispatchEvent(new Event('input'));
+            }
+        });
+    }
+    
     // Form submission
     addThreadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         
+        const title = titleInput.value.trim();
         const content = contentTextarea.value.trim();
         const location = locationInput.value.trim();
         const mediaCaption = mediaCaptionInput.value.trim();
+        const threadType = threadTypeSelect?.value || 'discussion';
+        const category = document.getElementById('category')?.value || '';
+        const visibility = document.getElementById('visibility')?.value || 'public';
+        const anonymous = document.getElementById('anonymous')?.checked || false;
+        
+        // Validate title
+        if (!title || title.length < 5 || title.length > 200) {
+            showToast('Title is required and must be between 5-200 characters', 'error');
+            titleInput.focus();
+            return;
+        }
         
         // Validate input
         if (!content && !selectedFile) {
@@ -408,6 +593,11 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const formData = new FormData();
+            formData.append('title', title);
+            formData.append('thread_type', threadType);
+            formData.append('category', category);
+            formData.append('visibility', visibility);
+            formData.append('anonymous', anonymous ? '1' : '0');
             if (content) {
                 formData.append('content', content);
             }
@@ -509,4 +699,63 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     init();
+
+    // Initialize Emoji Picker
+    if (typeof EmojiPicker !== 'undefined') {
+        const emojiBtn = document.getElementById('add-emoji-btn');
+        if (emojiBtn) {
+            const emojiPicker = new EmojiPicker({
+                target: emojiBtn,
+                position: 'top',
+                onSelect: (emoji) => {
+                    const textarea = document.getElementById('content');
+                    const cursorPos = textarea.selectionStart;
+                    const textBefore = textarea.value.substring(0, cursorPos);
+                    const textAfter = textarea.value.substring(cursorPos);
+                    textarea.value = textBefore + emoji + textAfter;
+                    textarea.focus();
+                    textarea.selectionStart = textarea.selectionEnd = cursorPos + emoji.length;
+                    
+                    // Trigger input event for character count
+                    const event = new Event('input', { bubbles: true });
+                    textarea.dispatchEvent(event);
+                }
+            });
+
+            emojiBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                emojiPicker.toggle();
+            });
+        }
+    }
+
+    // Initialize Autocomplete for Mentions
+    if (typeof ProfessionalAutocomplete !== 'undefined') {
+        const mentionsInput = document.getElementById('mentions');
+        if (mentionsInput) {
+            new ProfessionalAutocomplete(mentionsInput, {
+                type: 'mention',
+                minChars: 1,
+                maxResults: 10,
+                onSelect: (item) => {
+                    console.log('Mention selected:', item);
+                }
+            });
+        }
+    }
+
+    // Initialize Autocomplete for Hashtags
+    if (typeof ProfessionalAutocomplete !== 'undefined') {
+        const hashtagsInput = document.getElementById('hashtags');
+        if (hashtagsInput) {
+            new ProfessionalAutocomplete(hashtagsInput, {
+                type: 'hashtag',
+                minChars: 1,
+                maxResults: 10,
+                onSelect: (item) => {
+                    console.log('Hashtag selected:', item);
+                }
+            });
+        }
+    }
 });

@@ -745,5 +745,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     loadThread().then(() => {
         // Setup sidebar interactions after thread is loaded
         setupSidebarInteractions();
+        
+        // Initialize emoji picker for comment textarea
+        if (typeof EmojiPicker !== 'undefined') {
+            const commentTextarea = document.getElementById('comment-content');
+            if (commentTextarea) {
+                // Create emoji button
+                const emojiBtn = document.createElement('button');
+                emojiBtn.type = 'button';
+                emojiBtn.className = 'comment-emoji-btn';
+                emojiBtn.innerHTML = '<i class="fas fa-smile"></i>';
+                emojiBtn.title = 'Add emoji';
+                
+                const formActions = commentTextarea.closest('.comment-form-modern')?.querySelector('.comment-form-actions');
+                if (formActions) {
+                    formActions.insertBefore(emojiBtn, formActions.firstChild);
+                    
+                    const emojiPicker = new EmojiPicker({
+                        target: emojiBtn,
+                        position: 'top',
+                        onSelect: (emoji) => {
+                            const cursorPos = commentTextarea.selectionStart;
+                            const textBefore = commentTextarea.value.substring(0, cursorPos);
+                            const textAfter = commentTextarea.value.substring(cursorPos);
+                            commentTextarea.value = textBefore + emoji + textAfter;
+                            commentTextarea.focus();
+                            commentTextarea.selectionStart = commentTextarea.selectionEnd = cursorPos + emoji.length;
+                            
+                            // Trigger input event
+                            const event = new Event('input', { bubbles: true });
+                            commentTextarea.dispatchEvent(event);
+                        }
+                    });
+
+                    emojiBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        emojiPicker.toggle();
+                    });
+                }
+            }
+        }
     });
 });

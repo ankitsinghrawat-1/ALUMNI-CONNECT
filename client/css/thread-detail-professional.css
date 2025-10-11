@@ -170,7 +170,7 @@
     margin: 0 auto;
     padding: 0 var(--spacing-lg);
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 2.5fr 1fr;
     gap: var(--spacing-xl);
 }
 
@@ -507,11 +507,24 @@
     cursor: pointer;
     border-radius: var(--radius-md);
     transition: all var(--transition-fast);
+    font-size: var(--font-size-md);
 }
 
-.comment-tool-btn:hover {
+.comment-tool-btn:hover,
+.comment-emoji-btn:hover {
     background: var(--bg-hover);
     color: var(--primary-blue);
+}
+
+.comment-emoji-btn {
+    padding: var(--spacing-sm);
+    background: transparent;
+    border: none;
+    color: var(--text-tertiary);
+    cursor: pointer;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    font-size: var(--font-size-lg);
 }
 
 .comment-submit-btn {

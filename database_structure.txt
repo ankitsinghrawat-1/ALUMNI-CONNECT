@@ -632,6 +632,7 @@ CREATE TABLE `verification_requests` (
 CREATE TABLE IF NOT EXISTS threads (
     thread_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
+    VARCHAR(200) NOT NULL;
     content TEXT,
     media_url VARCHAR(255) DEFAULT NULL,
     media_type ENUM('image', 'video') DEFAULT NULL,
