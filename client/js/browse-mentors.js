@@ -89,6 +89,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Load mentor stats and populate filters
             await loadMentorStats();
+
+            // Load recommendations if logged in
+            if (localStorage.getItem('alumniConnectToken')) {
+                loadAndDisplayRecommendations();
+            }
+
+            // Load trending mentors
+            loadAndDisplayTrending();
             
             // Load initial mentors
             await loadMentors();
@@ -346,6 +354,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 ` : ''}
 
+                <!-- Mentor Badges -->
+                <div class="mentor-badges" id="badges-${mentor.mentor_id}"></div>
+
                 ${mentor.hourly_rate > 0 ? `
                     <div class="mentor-pricing">
                         <div class="pricing-info">
@@ -360,6 +371,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="mentor-footer">
                 <div class="mentor-actions">
                     ${generateActionButtons(mentor, requestStatus)}
+                    <button class="mentor-btn btn-add-comparison" data-action="compare" title="Add to comparison">
+                        <i class="fas fa-balance-scale"></i>
+                        Compare
+                    </button>
                 </div>
                 <div class="response-time">
                     <span class="response-indicator"></span>
@@ -368,12 +383,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
         `;
 
+        // Load and display badges asynchronously
+        loadMentorBadgesForCard(mentor.mentor_id);
+
         // Add click handlers
-        card.addEventListener('click', () => showMentorProfile(mentor.mentor_id));
+        card.addEventListener('click', (e) => {
+            // Don't navigate if clicking on action buttons
+            if (!e.target.closest('.mentor-btn')) {
+                showMentorProfile(mentor.mentor_id);
+                // Track profile view
+                window.mentorFeatures.trackMentorView(mentor.mentor_id);
+            }
+        });
         card.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 showMentorProfile(mentor.mentor_id);
+                window.mentorFeatures.trackMentorView(mentor.mentor_id);
             }
         });
 
@@ -387,6 +413,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         return card;
+    }
+
+    // Load badges for mentor card
+    async function loadMentorBadgesForCard(mentorId) {
+        try {
+            const badges = await window.mentorFeatures.loadMentorBadges(mentorId);
+            const container = document.getElementById(`badges-${mentorId}`);
+            if (container && badges.length > 0) {
+                window.mentorFeatures.renderMentorBadges(badges.slice(0, 3), container);
+            }
+        } catch (error) {
+            console.error('Error loading badges for mentor:', mentorId, error);
+        }
     }
 
     // Generate star rating HTML
@@ -480,6 +519,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 break;
             case 'view-profile':
                 showMentorProfile(mentor.mentor_id);
+                break;
+            case 'compare':
+                const added = window.mentorFeatures.addToComparison(mentor);
+                if (added) {
+                    button.innerHTML = '<i class="fas fa-check"></i> Added';
+                    button.classList.add('added');
+                    button.disabled = true;
+                }
                 break;
         }
     }
@@ -924,6 +971,32 @@ document.addEventListener('DOMContentLoaded', async () => {
                 background: backgrounds[type] || backgrounds.info,
                 stopOnFocus: true
             }).showToast();
+        }
+    }
+
+    // Load and display recommendations
+    async function loadAndDisplayRecommendations() {
+        try {
+            const data = await window.mentorFeatures.loadRecommendedMentors();
+            if (data.recommendations && data.recommendations.length > 0) {
+                const container = document.getElementById('recommendations-container');
+                window.mentorFeatures.renderRecommendationsWidget(data.recommendations, container);
+            }
+        } catch (error) {
+            console.error('Error loading recommendations:', error);
+        }
+    }
+
+    // Load and display trending mentors
+    async function loadAndDisplayTrending() {
+        try {
+            const trending = await window.mentorFeatures.loadTrendingMentors(6);
+            if (trending && trending.length > 0) {
+                const container = document.getElementById('trending-container');
+                window.mentorFeatures.renderTrendingMentors(trending, container);
+            }
+        } catch (error) {
+            console.error('Error loading trending mentors:', error);
         }
     }
 });
