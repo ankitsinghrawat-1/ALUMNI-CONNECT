@@ -4,6 +4,29 @@
    ==================================================================== */
 
 /* ====================================================================
+   HEADER SPACING FIX - Create Discussion Modal
+   ==================================================================== */
+.create-header {
+    margin-bottom: 1.5rem !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+.create-header-content {
+    background: #ffffff !important;
+    border: 1px solid #EFF3F4 !important;
+    border-radius: 16px !important;
+    padding: 1.5rem !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+}
+
+.create-content {
+    margin-top: 0 !important;
+    position: relative !important;
+    z-index: 1 !important;
+}
+
+/* ====================================================================
    CRITICAL FIXES FOR FUNCTIONALITY
    ==================================================================== */
 /* Ensure modals and overlays are visible */

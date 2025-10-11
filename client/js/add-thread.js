@@ -107,17 +107,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    // Toolbar buttons for rich text formatting
+    // Toolbar buttons for rich text formatting with contentEditable
     toolbarBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             const command = btn.dataset.command;
+            
+            // For emoji and link buttons, handle separately
+            if (command === 'emoji' || command === 'link') {
+                return; // These will be handled by their specific click handlers
+            }
+            
             if (command && contentTextarea) {
-                // Simple text wrapping for basic formatting
                 const start = contentTextarea.selectionStart;
                 const end = contentTextarea.selectionEnd;
                 const selectedText = contentTextarea.value.substring(start, end);
                 
+                // If no text selected, just insert markers
+                if (!selectedText) {
+                    let markers = '';
+                    if (command === 'bold') markers = '****';
+                    else if (command === 'italic') markers = '**';
+                    else if (command === 'underline') markers = '____';
+                    
+                    const newStart = start + markers.length / 2;
+                    contentTextarea.value = contentTextarea.value.substring(0, start) + markers + contentTextarea.value.substring(end);
+                    contentTextarea.focus();
+                    contentTextarea.setSelectionRange(newStart, newStart);
+                    return;
+                }
+                
+                // Apply formatting to selected text
                 let formattedText = selectedText;
                 if (command === 'bold') {
                     formattedText = `**${selectedText}**`;
@@ -125,11 +145,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     formattedText = `*${selectedText}*`;
                 } else if (command === 'underline') {
                     formattedText = `__${selectedText}__`;
+                } else if (command === 'insertUnorderedList') {
+                    formattedText = `• ${selectedText}`;
+                } else if (command === 'insertOrderedList') {
+                    formattedText = `1. ${selectedText}`;
                 }
                 
                 contentTextarea.value = contentTextarea.value.substring(0, start) + formattedText + contentTextarea.value.substring(end);
                 contentTextarea.focus();
-                contentTextarea.setSelectionRange(start + formattedText.length, start + formattedText.length);
+                contentTextarea.setSelectionRange(start, start + formattedText.length);
+                
+                // Trigger input event to update character count
+                contentTextarea.dispatchEvent(new Event('input'));
             }
         });
     });
@@ -496,6 +523,39 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // Emoji button handler
+    const emojiBtn = document.getElementById('add-emoji-btn');
+    if (emojiBtn && typeof window.ProfessionalEmojiPicker !== 'undefined') {
+        const emojiPicker = new window.ProfessionalEmojiPicker(emojiBtn, {
+            onSelect: (emoji) => {
+                const start = contentTextarea.selectionStart;
+                const end = contentTextarea.selectionEnd;
+                contentTextarea.value = contentTextarea.value.substring(0, start) + emoji + contentTextarea.value.substring(end);
+                contentTextarea.focus();
+                contentTextarea.setSelectionRange(start + emoji.length, start + emoji.length);
+                contentTextarea.dispatchEvent(new Event('input'));
+            }
+        });
+    }
+    
+    // Link button handler
+    const linkBtn = document.getElementById('add-link-btn');
+    if (linkBtn) {
+        linkBtn.addEventListener('click', () => {
+            const url = prompt('Enter URL:');
+            if (url) {
+                const linkText = prompt('Enter link text (optional):') || url;
+                const start = contentTextarea.selectionStart;
+                const end = contentTextarea.selectionEnd;
+                const linkMarkdown = `[${linkText}](${url})`;
+                contentTextarea.value = contentTextarea.value.substring(0, start) + linkMarkdown + contentTextarea.value.substring(end);
+                contentTextarea.focus();
+                contentTextarea.setSelectionRange(start + linkMarkdown.length, start + linkMarkdown.length);
+                contentTextarea.dispatchEvent(new Event('input'));
+            }
+        });
+    }
+    
     // Form submission
     addThreadForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -504,6 +564,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const content = contentTextarea.value.trim();
         const location = locationInput.value.trim();
         const mediaCaption = mediaCaptionInput.value.trim();
+        const threadType = threadTypeSelect?.value || 'discussion';
+        const category = document.getElementById('category')?.value || '';
+        const visibility = document.getElementById('visibility')?.value || 'public';
+        const anonymous = document.getElementById('anonymous')?.checked || false;
         
         // Validate title
         if (!title || title.length < 5 || title.length > 200) {
@@ -530,6 +594,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             const formData = new FormData();
             formData.append('title', title);
+            formData.append('thread_type', threadType);
+            formData.append('category', category);
+            formData.append('visibility', visibility);
+            formData.append('anonymous', anonymous ? '1' : '0');
             if (content) {
                 formData.append('content', content);
             }
