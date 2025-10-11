@@ -16,7 +16,7 @@ You're experiencing two errors when creating threads:
 ### Step 1: Run the Complete Fix
 
 ```bash
-mysql -u root -p alumni_connect < COMPLETE_DATABASE_FIX.sql
+mysql -u root -p alumni_db < COMPLETE_DATABASE_FIX.sql
 ```
 
 **Enter your MySQL password when prompted.**
@@ -69,7 +69,7 @@ After running the migration, verify it worked:
 
 ```sql
 -- Check threads table
-USE alumni_connect;
+USE alumni_db;
 DESCRIBE threads;
 
 -- Should show: thread_type, category, title, is_anonymous, etc.
@@ -98,7 +98,7 @@ If you prefer a GUI:
 
 ## Troubleshooting
 
-### Error: "Table 'alumni_connect' doesn't exist"
+### Error: "Table 'alumni_db' doesn't exist"
 
 Your database might be named differently. Check your database name:
 

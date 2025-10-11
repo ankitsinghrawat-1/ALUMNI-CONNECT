@@ -300,10 +300,10 @@ Track daily user engagement:
 ### 1. Database Setup
 ```bash
 # Run Phase 2 schema
-mysql -u root -p alumni_connect < database_phase2_schema.sql
+mysql -u root -p alumni_db < database_phase2_schema.sql
 
 # Verify tables created
-mysql -u root -p alumni_connect -e "SHOW TABLES LIKE '%thread_%';"
+mysql -u root -p alumni_db -e "SHOW TABLES LIKE '%thread_%';"
 ```
 
 ### 2. Server Restart

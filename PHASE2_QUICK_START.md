@@ -28,7 +28,7 @@ Make sure your `.env` file has:
 DB_HOST=localhost
 DB_USER=your_username
 DB_PASSWORD=your_password
-DB_NAME=alumni_connect
+DB_NAME=alumni_db
 PORT=3000
 ```
 
@@ -182,7 +182,7 @@ Verify everything works:
 **Problem**: "Table doesn't exist" errors
 **Solution**:
 ```bash
-mysql -u root -p alumni_connect < database_phase2_schema.sql
+mysql -u root -p alumni_db < database_phase2_schema.sql
 ```
 
 ### Reactions Not Saving

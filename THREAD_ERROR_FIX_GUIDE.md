@@ -17,12 +17,12 @@ Run the migration script to add the missing columns to your existing `threads` t
 
 #### Option A: Using MySQL CLI (Recommended)
 ```bash
-mysql -u root -p alumni_connect < database_threads_migration_safe.sql
+mysql -u root -p alumni_db < database_threads_migration_safe.sql
 ```
 
 #### Option B: Using phpMyAdmin or MySQL Workbench
 1. Open your database tool
-2. Select the `alumni_connect` database
+2. Select the `alumni_db` database
 3. Go to SQL tab
 4. Copy and paste the contents of `database_threads_migration_safe.sql`
 5. Execute the queries
