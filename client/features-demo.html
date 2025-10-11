@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Features Demo - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/social-feed-professional.css">
+    <link rel="stylesheet" href="css/social-feed-advanced.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .demo-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .demo-header h1 {
+            font-size: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        
+        .demo-header p {
+            font-size: 20px;
+            color: #6b7280;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 24px;
+            margin-bottom: 12px;
+            color: #1f2937;
+        }
+        
+        .feature-card p {
+            color: #6b7280;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .demo-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .demo-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .comparison-section {
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 60px;
+        }
+        
+        .comparison-section h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 40px;
+            color: #1f2937;
+        }
+        
+        .comparison-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .comparison-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .comparison-table td {
+            padding: 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .check-icon {
+            color: #10b981;
+            font-size: 20px;
+        }
+        
+        .cross-icon {
+            color: #ef4444;
+            font-size: 20px;
+        }
+        
+        .demo-area {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .demo-area h3 {
+            font-size: 28px;
+            margin-bottom: 24px;
+            color: #1f2937;
+        }
+        
+        .demo-thread-card {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+        
+        .demo-reactions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        
+        .demo-reaction-btn {
+            padding: 10px 20px;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 20px;
+            position: relative;
+        }
+        
+        .demo-reaction-btn:hover {
+            transform: scale(1.1);
+            border-color: var(--color);
+            background: var(--color);
+        }
+        
+        .test-textarea {
+            width: 100%;
+            min-height: 150px;
+            padding: 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 16px;
+            resize: vertical;
+        }
+        
+        .test-textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-page">
+        <!-- Header -->
+        <div class="demo-header">
+            <h1>🚀 Advanced Social Feed Features</h1>
+            <p>Discover the innovative features that make AlumniConnect better than Instagram and Facebook for professional networking</p>
+        </div>
+        
+        <!-- Features Grid -->
+        <div class="features-grid">
+            <!-- Feature 1 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-sparkles"></i>
+                </div>
+                <h3>Live Reaction Animations</h3>
+                <p>Beautiful particle effects burst when you react to posts. 6 unique reactions with animated particles that make engagement more fun and satisfying.</p>
+                <button class="demo-btn" onclick="demoReaction(this)">
+                    <i class="fas fa-heart"></i> Try It
+                </button>
+            </div>
+            
+            <!-- Feature 2 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3>Smart Hashtag Suggestions</h3>
+                <p>AI-powered hashtag recommendations based on your content. Analyzes keywords and suggests relevant professional tags automatically.</p>
+                <button class="demo-btn" onclick="scrollToDemo('hashtag-demo')">
+                    <i class="fas fa-hashtag"></i> See Demo
+                </button>
+            </div>
+            
+            <!-- Feature 3 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h3>Career Milestone Celebrations</h3>
+                <p>Automatic detection of career achievements with confetti animations, trophy badges, and special highlighting.</p>
+                <button class="demo-btn" onclick="showMilestone()">
+                    <i class="fas fa-medal"></i> Celebrate
+                </button>
+            </div>
+            
+            <!-- Feature 4 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-users"></i>
+                </div>
+                <h3>Thread Co-Authoring</h3>
+                <p>Collaborate on posts with multiple authors. Perfect for team announcements, joint ventures, and group projects.</p>
+                <button class="demo-btn" onclick="alert('Co-authoring dialog would open here!')">
+                    <i class="fas fa-user-plus"></i> Collaborate
+                </button>
+            </div>
+            
+            <!-- Feature 5 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-chart-line"></i>
+                </div>
+                <h3>Content Quality Score</h3>
+                <p>Real-time quality analysis as you type. Get feedback on length, keywords, formatting, and engagement potential.</p>
+                <button class="demo-btn" onclick="scrollToDemo('quality-demo')">
+                    <i class="fas fa-star"></i> Try It
+                </button>
+            </div>
+            
+            <!-- Feature 6 -->
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>Live Engagement Metrics</h3>
+                <p>See real-time viewer counts and typing indicators. Know when your content is trending and conversations are active.</p>
+                <button class="demo-btn" onclick="showLiveMetrics()">
+                    <i class="fas fa-pulse"></i> Show Live
+                </button>
+            </div>
+        </div>
+        
+        <!-- Comparison Section -->
+        <div class="comparison-section">
+            <h2>📊 How We Compare</h2>
+            <div class="comparison-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Instagram / Facebook</th>
+                            <th>AlumniConnect</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Reactions</strong></td>
+                            <td><i class="fas fa-times cross-icon"></i> Static emoji</td>
+                            <td><i class="fas fa-check check-icon"></i> Animated particles</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hashtag Suggestions</strong></td>
+                            <td><i class="fas fa-times cross-icon"></i> Trending only</td>
+                            <td><i class="fas fa-check check-icon"></i> Context-aware AI</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Career Milestones</strong></td>
+                            <td><i class="fas fa-times cross-icon"></i> Generic posts</td>
+                            <td><i class="fas fa-check check-icon"></i> Auto-detected + celebrations</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Co-Authoring</strong></td>
+                            <td><i class="fas fa-times cross-icon"></i> Not available</td>
+                            <td><i class="fas fa-check check-icon"></i> Full collaboration</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Content Quality</strong></td>
+                            <td><i class="fas fa-times cross-icon"></i> No feedback</td>
+                            <td><i class="fas fa-check check-icon"></i> Real-time scoring</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Live Metrics</strong></td>
+                            <td><i class="fas fa-minus" style="color: #f59e0b;"></i> Views only</td>
+                            <td><i class="fas fa-check check-icon"></i> Viewers + typing</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Verification</strong></td>
+                            <td><i class="fas fa-times cross-icon"></i> Celebrities only</td>
+                            <td><i class="fas fa-check check-icon"></i> All alumni</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Professional Focus</strong></td>
+                            <td><i class="fas fa-times cross-icon"></i> General social</td>
+                            <td><i class="fas fa-check check-icon"></i> Career networking</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- Interactive Demo: Hashtag Suggestions -->
+        <div class="demo-area" id="hashtag-demo">
+            <h3>🔍 Try Smart Hashtag Suggestions</h3>
+            <p style="color: #6b7280; margin-bottom: 20px;">Type about your career, job search, or achievements and watch as we suggest relevant hashtags:</p>
+            <div style="position: relative;">
+                <textarea class="test-textarea" id="hashtag-test" placeholder="Example: I'm excited to start my new role as a Software Engineer at Tech Corp. Looking forward to working on innovative projects and learning from amazing mentors!"></textarea>
+            </div>
+            <p style="margin-top: 12px; font-size: 14px; color: #6b7280;">
+                <i class="fas fa-info-circle"></i> Try keywords like: job, career, promotion, startup, graduated, mentor, opportunity
+            </p>
+        </div>
+        
+        <!-- Interactive Demo: Quality Score -->
+        <div class="demo-area" id="quality-demo">
+            <h3>⭐ Try Content Quality Analyzer</h3>
+            <p style="color: #6b7280; margin-bottom: 20px;">Write a post and get real-time quality feedback:</p>
+            <div style="position: relative;">
+                <textarea class="test-textarea" id="quality-test" placeholder="Write a professional post here... Try adding hashtags, mentions, and questions to improve your score!"></textarea>
+            </div>
+            <p style="margin-top: 12px; font-size: 14px; color: #6b7280;">
+                <i class="fas fa-lightbulb"></i> Tips: Use 50-300 words, add hashtags, mention others, ask questions, use professional keywords
+            </p>
+        </div>
+        
+        <!-- Demo: Reactions -->
+        <div class="demo-area">
+            <h3>❤️ Try Live Reaction Animations</h3>
+            <p style="color: #6b7280; margin-bottom: 20px;">Click on any reaction to see the animated particle effect:</p>
+            <div class="demo-thread-card">
+                <p><strong>Sample Post:</strong> "Just got promoted to Senior Engineer! Grateful for this opportunity and excited for the challenges ahead. 🚀"</p>
+                <div class="demo-reactions">
+                    <button class="demo-reaction-btn reaction-trigger" data-thread-id="demo" style="--color: #3b82f6;" title="Like">
+                        👍 <span>Like</span>
+                    </button>
+                    <button class="demo-reaction-btn reaction-trigger" data-thread-id="demo" style="--color: #ef4444;" title="Love">
+                        ❤️ <span>Love</span>
+                    </button>
+                    <button class="demo-reaction-btn reaction-trigger" data-thread-id="demo" style="--color: #8b5cf6;" title="Insightful">
+                        💡 <span>Insightful</span>
+                    </button>
+                    <button class="demo-reaction-btn reaction-trigger" data-thread-id="demo" style="--color: #f59e0b;" title="Celebrate">
+                        🎉 <span>Celebrate</span>
+                    </button>
+                    <button class="demo-reaction-btn reaction-trigger" data-thread-id="demo" style="--color: #10b981;" title="Support">
+                        🤝 <span>Support</span>
+                    </button>
+                    <button class="demo-reaction-btn reaction-trigger" data-thread-id="demo" style="--color: #ec4899;" title="Funny">
+                        😄 <span>Funny</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- CTA Section -->
+        <div style="text-align: center; padding: 60px 0;">
+            <h2 style="font-size: 36px; margin-bottom: 20px;">Ready to experience the future of professional networking?</h2>
+            <p style="color: #6b7280; font-size: 18px; margin-bottom: 30px;">Join AlumniConnect and connect with your network like never before.</p>
+            <a href="threads.html" class="demo-btn" style="font-size: 18px; padding: 16px 32px; text-decoration: none;">
+                <i class="fas fa-rocket"></i> Go to Social Feed
+            </a>
+        </div>
+    </div>
+    
+    <script src="js/api.js"></script>
+    <script src="js/social-feed-utils.js"></script>
+    <script src="js/social-feed-advanced.js"></script>
+    <script>
+        // Demo functions
+        function demoReaction(btn) {
+            window.SocialFeedAdvanced.createReactionParticles(btn, 'celebrate');
+            btn.innerHTML = '<i class="fas fa-check"></i> Amazing!';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-heart"></i> Try It';
+            }, 2000);
+        }
+        
+        function showMilestone() {
+            const card = document.querySelector('.demo-thread-card');
+            if (!card) return;
+            
+            const badge = document.createElement('div');
+            badge.className = 'milestone-badge';
+            badge.innerHTML = '<i class="fas fa-trophy"></i> <span>Career Milestone</span>';
+            badge.style.marginTop = '12px';
+            card.appendChild(badge);
+            
+            window.SocialFeedAdvanced.createReactionParticles(card, 'celebrate');
+            
+            // Create confetti
+            for (let i = 0; i < 30; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f7b731', '#5f27cd'];
+                confetti.style.cssText = `
+                    position: absolute;
+                    width: 8px;
+                    height: 8px;
+                    background: ${colors[Math.floor(Math.random() * colors.length)]};
+                    top: 0;
+                    left: ${Math.random() * 100}%;
+                    animation: confettiFall ${Math.random() * 3 + 2}s linear forwards;
+                    opacity: 0;
+                `;
+                card.style.position = 'relative';
+                card.appendChild(confetti);
+                setTimeout(() => confetti.remove(), 5000);
+            }
+            
+            setTimeout(() => badge.remove(), 5000);
+        }
+        
+        function showLiveMetrics() {
+            const card = document.querySelector('.demo-thread-card');
+            const badge = document.createElement('div');
+            badge.className = 'live-viewers';
+            badge.innerHTML = `
+                <span class="live-indicator"></span>
+                <i class="fas fa-eye"></i>
+                <span class="viewer-count">23</span>
+            `;
+            badge.style.marginTop = '12px';
+            card.appendChild(badge);
+            
+            // Animate count
+            let count = 23;
+            const interval = setInterval(() => {
+                count += Math.floor(Math.random() * 5) - 2;
+                count = Math.max(1, count);
+                badge.querySelector('.viewer-count').textContent = count;
+            }, 2000);
+            
+            setTimeout(() => {
+                clearInterval(interval);
+                badge.remove();
+            }, 10000);
+        }
+        
+        function scrollToDemo(id) {
+            document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Initialize smart features on demo textareas
+        document.addEventListener('DOMContentLoaded', () => {
+            const hashtagTest = document.getElementById('hashtag-test');
+            const qualityTest = document.getElementById('quality-test');
+            
+            if (hashtagTest) {
+                window.SocialFeedAdvanced.initializeSmartHashtagSuggestions(hashtagTest);
+            }
+            
+            if (qualityTest) {
+                window.SocialFeedAdvanced.showQualityIndicator(qualityTest);
+            }
+        });
+    </script>
+</body>
+</html>
