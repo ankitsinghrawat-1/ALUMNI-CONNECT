@@ -111,9 +111,9 @@ function initializeAdvancedReactions() {
             // Create particle effect
             createReactionParticles(option, reactionType);
             
-            // Send to server
+            // Send to server (Phase 2 API)
             try {
-                const response = await window.api.post(`/threads/${threadId}/react`, {
+                const response = await window.api.post(`/social-feed-phase2/threads/${threadId}/react`, {
                     reaction_type: reactionType
                 });
                 
@@ -121,6 +121,16 @@ function initializeAdvancedReactions() {
                     // Update UI
                     updateReactionDisplay(reactionBtn, reactionType, response);
                     window.SocialFeedUtils.showToast('Reaction added!', 'success');
+                    
+                    // Broadcast via WebSocket
+                    if (window.socialFeedWS && window.socialFeedWS.isConnected) {
+                        window.socialFeedWS.broadcastReaction(
+                            threadId,
+                            reactionType,
+                            response.total_reactions,
+                            response.counts
+                        );
+                    }
                 }
             } catch (error) {
                 console.error('Error adding reaction:', error);

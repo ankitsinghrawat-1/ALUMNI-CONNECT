@@ -126,6 +126,7 @@ const threadRoutes = require('./api/threads')(pool, upload);
 const storyRoutes = require('./api/stories')(pool, upload);
 const socialRoutes = require('./api/social')(pool);
 const socialFeedEnhancedRoutes = require('./api/social-feed-enhanced')(pool);
+const socialFeedPhase2Routes = require('./api/social-feed-phase2');
 
 // Apply verifyToken middleware to all routes that require authentication
 app.use('/api/admin', verifyToken, adminRoutes);
@@ -142,6 +143,7 @@ app.use('/api/threads', threadRoutes); // Some thread endpoints are public (view
 app.use('/api/stories', storyRoutes); // Some story endpoints are public (viewing)
 app.use('/api/social', socialRoutes); // Social features (follow, profile stats, highlights)
 app.use('/api/social-feed', socialFeedEnhancedRoutes); // Enhanced social feed features
+app.use('/api/social-feed-phase2', socialFeedPhase2Routes); // Phase 2: Advanced real-time features
 
 
 // --- CENTRAL ERROR HANDLING MIDDLEWARE ---
@@ -205,6 +207,10 @@ io.on("connection", (socket) => {
         io.emit("getUsers", onlineUsers);
     });
 });
+
+// --- INITIALIZE SOCIAL FEED WEBSOCKET ---
+const { initializeSocialFeedWebSocket } = require('./websocket/social-feed-realtime');
+initializeSocialFeedWebSocket(io);
 
 
 // --- START SERVER ---
