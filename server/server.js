@@ -134,7 +134,7 @@ app.use('/api/blogs', verifyToken, blogRoutes);
 app.use('/api/campaigns', verifyToken, campaignRoutes);
 app.use('/api/events', verifyToken, eventRoutes);
 app.use('/api/jobs', verifyToken, jobRoutes);
-app.use('/api/mentors', verifyToken, mentorRoutes);
+app.use('/api/mentors', mentorRoutes); // Mentor routes handle auth internally (some public, some protected)
 app.use('/api/messages', verifyToken, messageRoutes);
 app.use('/api/notifications', verifyToken, notificationRoutes);
 app.use('/api/users', userRoutes); // User creation and login don't need a token
