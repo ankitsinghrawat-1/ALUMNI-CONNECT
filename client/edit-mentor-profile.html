@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Mentor Profile - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/mentors-enhanced.css">
+    <link rel="stylesheet" href="css/mentor-profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="mentor-profile-main">
+        <div class="container">
+            <!-- Loading State -->
+            <div id="loading-state" class="loading-container">
+                <div class="loading-spinner">
+                    <div class="spinner"></div>
+                </div>
+                <p>Loading profile...</p>
+            </div>
+
+            <!-- Edit Form -->
+            <div id="edit-container" class="edit-profile-container" style="display: none;">
+                <div class="edit-header">
+                    <h1><i class="fas fa-edit"></i> Edit Mentor Profile</h1>
+                    <p>Update your mentor profile information</p>
+                </div>
+
+                <form id="edit-profile-form" class="edit-profile-form">
+                    <div class="form-content">
+                        <!-- Bio -->
+                        <div class="form-group full-width">
+                            <label for="edit-bio">
+                                <i class="fas fa-user"></i> Bio
+                                <span class="required">*</span>
+                            </label>
+                            <textarea id="edit-bio" name="bio" rows="6" required
+                                placeholder="Tell others about yourself, your experience, and what you can offer as a mentor..."></textarea>
+                        </div>
+
+                        <!-- Industry and Experience -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-industry">
+                                    <i class="fas fa-building"></i> Industry
+                                    <span class="required">*</span>
+                                </label>
+                                <select id="edit-industry" name="industry" required>
+                                    <option value="">Select Industry</option>
+                                    <option value="Technology">Technology</option>
+                                    <option value="Finance">Finance</option>
+                                    <option value="Healthcare">Healthcare</option>
+                                    <option value="Education">Education</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Sales">Sales</option>
+                                    <option value="Engineering">Engineering</option>
+                                    <option value="Design">Design</option>
+                                    <option value="Consulting">Consulting</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-experience-years">
+                                    <i class="fas fa-calendar-alt"></i> Years of Experience
+                                    <span class="required">*</span>
+                                </label>
+                                <input type="number" id="edit-experience-years" name="experience_years" 
+                                    min="0" max="50" required>
+                            </div>
+                        </div>
+
+                        <!-- Hourly Rate and Timezone -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="edit-hourly-rate">
+                                    <i class="fas fa-dollar-sign"></i> Hourly Rate (USD)
+                                </label>
+                                <input type="number" id="edit-hourly-rate" name="hourly_rate" 
+                                    min="0" step="5" placeholder="Optional">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="edit-timezone">
+                                    <i class="fas fa-globe"></i> Timezone
+                                </label>
+                                <select id="edit-timezone" name="timezone">
+                                    <option value="UTC">UTC (Universal)</option>
+                                    <option value="America/New_York">Eastern Time (ET)</option>
+                                    <option value="America/Chicago">Central Time (CT)</option>
+                                    <option value="America/Denver">Mountain Time (MT)</option>
+                                    <option value="America/Los_Angeles">Pacific Time (PT)</option>
+                                    <option value="Europe/London">London (GMT)</option>
+                                    <option value="Europe/Paris">Paris (CET)</option>
+                                    <option value="Asia/Tokyo">Tokyo (JST)</option>
+                                    <option value="Asia/Shanghai">Shanghai (CST)</option>
+                                    <option value="Asia/Dubai">Dubai (GST)</option>
+                                    <option value="Australia/Sydney">Sydney (AEDT)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Skills -->
+                        <div class="form-group">
+                            <label for="edit-skills">
+                                <i class="fas fa-tools"></i> Skills
+                            </label>
+                            <input type="text" id="edit-skills" name="skills" 
+                                placeholder="e.g., Python, JavaScript, Leadership, Project Management (comma-separated)">
+                        </div>
+
+                        <!-- Languages -->
+                        <div class="form-group">
+                            <label for="edit-languages">
+                                <i class="fas fa-language"></i> Languages
+                            </label>
+                            <input type="text" id="edit-languages" name="languages" 
+                                placeholder="e.g., English, Spanish, French (comma-separated)">
+                        </div>
+
+                        <!-- Mentoring Style -->
+                        <div class="form-group">
+                            <label for="edit-mentoring-style">
+                                <i class="fas fa-chalkboard-teacher"></i> Mentoring Style
+                                <span class="required">*</span>
+                            </label>
+                            <select id="edit-mentoring-style" name="mentoring_style" required>
+                                <option value="one_on_one">One-on-One Sessions</option>
+                                <option value="group">Group Mentoring</option>
+                                <option value="workshop">Workshops</option>
+                                <option value="mixed">Mixed Approach</option>
+                            </select>
+                        </div>
+
+                        <!-- Availability Schedule -->
+                        <div class="form-group full-width">
+                            <label>
+                                <i class="fas fa-calendar-alt"></i> Availability Schedule
+                            </label>
+                            <div id="availability-editor" class="availability-editor">
+                                <div class="availability-day" data-day="monday">
+                                    <label class="availability-checkbox">
+                                        <input type="checkbox" name="availability_monday" value="true">
+                                        <span>Monday</span>
+                                    </label>
+                                    <input type="time" name="monday_start" placeholder="Start" disabled>
+                                    <span>to</span>
+                                    <input type="time" name="monday_end" placeholder="End" disabled>
+                                </div>
+                                <div class="availability-day" data-day="tuesday">
+                                    <label class="availability-checkbox">
+                                        <input type="checkbox" name="availability_tuesday" value="true">
+                                        <span>Tuesday</span>
+                                    </label>
+                                    <input type="time" name="tuesday_start" placeholder="Start" disabled>
+                                    <span>to</span>
+                                    <input type="time" name="tuesday_end" placeholder="End" disabled>
+                                </div>
+                                <div class="availability-day" data-day="wednesday">
+                                    <label class="availability-checkbox">
+                                        <input type="checkbox" name="availability_wednesday" value="true">
+                                        <span>Wednesday</span>
+                                    </label>
+                                    <input type="time" name="wednesday_start" placeholder="Start" disabled>
+                                    <span>to</span>
+                                    <input type="time" name="wednesday_end" placeholder="End" disabled>
+                                </div>
+                                <div class="availability-day" data-day="thursday">
+                                    <label class="availability-checkbox">
+                                        <input type="checkbox" name="availability_thursday" value="true">
+                                        <span>Thursday</span>
+                                    </label>
+                                    <input type="time" name="thursday_start" placeholder="Start" disabled>
+                                    <span>to</span>
+                                    <input type="time" name="thursday_end" placeholder="End" disabled>
+                                </div>
+                                <div class="availability-day" data-day="friday">
+                                    <label class="availability-checkbox">
+                                        <input type="checkbox" name="availability_friday" value="true">
+                                        <span>Friday</span>
+                                    </label>
+                                    <input type="time" name="friday_start" placeholder="Start" disabled>
+                                    <span>to</span>
+                                    <input type="time" name="friday_end" placeholder="End" disabled>
+                                </div>
+                                <div class="availability-day" data-day="saturday">
+                                    <label class="availability-checkbox">
+                                        <input type="checkbox" name="availability_saturday" value="true">
+                                        <span>Saturday</span>
+                                    </label>
+                                    <input type="time" name="saturday_start" placeholder="Start" disabled>
+                                    <span>to</span>
+                                    <input type="time" name="saturday_end" placeholder="End" disabled>
+                                </div>
+                                <div class="availability-day" data-day="sunday">
+                                    <label class="availability-checkbox">
+                                        <input type="checkbox" name="availability_sunday" value="true">
+                                        <span>Sunday</span>
+                                    </label>
+                                    <input type="time" name="sunday_start" placeholder="Start" disabled>
+                                    <span>to</span>
+                                    <input type="time" name="sunday_end" placeholder="End" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Social Links -->
+                        <div class="form-group">
+                            <label for="edit-linkedin-url">
+                                <i class="fab fa-linkedin"></i> LinkedIn URL
+                            </label>
+                            <input type="url" id="edit-linkedin-url" name="linkedin_url" 
+                                placeholder="https://linkedin.com/in/yourprofile">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-github-url">
+                                <i class="fab fa-github"></i> GitHub URL
+                            </label>
+                            <input type="url" id="edit-github-url" name="github_url" 
+                                placeholder="https://github.com/yourusername">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="edit-portfolio-url">
+                                <i class="fas fa-briefcase"></i> Portfolio URL
+                            </label>
+                            <input type="url" id="edit-portfolio-url" name="portfolio_url" 
+                                placeholder="https://yourportfolio.com">
+                        </div>
+
+                        <!-- Form Actions -->
+                        <div class="form-actions full-width">
+                            <a href="#" id="cancel-edit-btn" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                            <button type="button" id="preview-changes-btn" class="btn btn-secondary">
+                                <i class="fas fa-eye"></i> Preview
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Changes
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Error State -->
+            <div id="error-state" class="error-container" style="display: none;">
+                <div class="error-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3>Unable to Load Profile</h3>
+                <p id="error-message">Please try again later.</p>
+                <a href="mentor-profile.html" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i> Back to Profile
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="modal preview-modal">
+        <div class="modal-content preview-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye"></i> Preview Changes</h3>
+                <button class="close-btn" id="close-preview-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="preview-modal-body">
+                <!-- Preview content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="back-to-edit-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Edit
+                </button>
+                <button class="btn btn-primary" id="confirm-save-btn">
+                    <i class="fas fa-save"></i> Confirm & Save
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/mentor-profile-edit.js"></script>
+</body>
+</html>
