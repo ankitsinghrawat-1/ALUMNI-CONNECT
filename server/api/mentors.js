@@ -828,5 +828,290 @@ module.exports = (pool) => {
         res.status(200).json({ message: 'Mentor profile deleted successfully' });
     }));
 
+    // Get mentor statistics (for dashboard/analytics)
+    router.get('/stats/overview', asyncHandler(async (req, res) => {
+        // Get total mentors count
+        const [totalResult] = await pool.query(`
+            SELECT COUNT(*) as total_mentors FROM mentors WHERE is_available = TRUE
+        `);
+
+        // Get average rating
+        const [avgRatingResult] = await pool.query(`
+            SELECT AVG(average_rating) as avg_rating FROM mentors WHERE is_available = TRUE AND total_reviews > 0
+        `);
+
+        // Get total sessions
+        const [totalSessionsResult] = await pool.query(`
+            SELECT COUNT(*) as total_sessions FROM mentor_sessions WHERE status = 'completed'
+        `);
+
+        // Get active mentors (those who had a session in last 30 days)
+        const [activeMentorsResult] = await pool.query(`
+            SELECT COUNT(DISTINCT mentor_id) as active_mentors 
+            FROM mentor_sessions 
+            WHERE status = 'completed' AND actual_end_time >= DATE_SUB(NOW(), INTERVAL 30 DAY)
+        `);
+
+        // Get top industries
+        const [topIndustries] = await pool.query(`
+            SELECT industry, COUNT(*) as count 
+            FROM mentors 
+            WHERE is_available = TRUE AND industry IS NOT NULL 
+            GROUP BY industry 
+            ORDER BY count DESC 
+            LIMIT 5
+        `);
+
+        // Get mentor distribution by verification level
+        const [verificationStats] = await pool.query(`
+            SELECT verification_level, COUNT(*) as count 
+            FROM mentors 
+            WHERE is_available = TRUE 
+            GROUP BY verification_level
+        `);
+
+        res.json({
+            total_mentors: totalResult[0].total_mentors,
+            avg_rating: parseFloat(avgRatingResult[0].avg_rating || 0).toFixed(1),
+            total_sessions: totalSessionsResult[0].total_sessions,
+            active_mentors: activeMentorsResult[0].active_mentors,
+            top_industries: topIndustries,
+            verification_stats: verificationStats
+        });
+    }));
+
+    // Get recommended mentors based on user profile/interests
+    router.get('/recommendations', verifyToken, asyncHandler(async (req, res) => {
+        const user_id = req.user.userId;
+
+        // Get user profile to understand their interests
+        const [userProfile] = await pool.query(`
+            SELECT industry, job_title, skills, interests FROM users WHERE user_id = ?
+        `, [user_id]);
+
+        if (userProfile.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        const user = userProfile[0];
+        let recommendedMentors = [];
+
+        // Find mentors in same industry
+        if (user.industry) {
+            const [industryMentors] = await pool.query(`
+                SELECT 
+                    m.mentor_id,
+                    u.user_id, 
+                    u.full_name, 
+                    u.job_title, 
+                    u.company, 
+                    u.profile_pic_url, 
+                    m.industry,
+                    m.experience_years,
+                    m.average_rating,
+                    m.total_reviews,
+                    m.bio,
+                    GROUP_CONCAT(DISTINCT ms.specialization) as specializations,
+                    'same_industry' as recommendation_reason
+                FROM mentors m 
+                JOIN users u ON m.user_id = u.user_id 
+                LEFT JOIN mentor_specializations ms ON m.mentor_id = ms.mentor_id
+                WHERE m.is_available = TRUE 
+                    AND m.industry = ?
+                    AND m.user_id != ?
+                GROUP BY m.mentor_id
+                ORDER BY m.average_rating DESC, m.total_reviews DESC
+                LIMIT 3
+            `, [user.industry, user_id]);
+
+            recommendedMentors = recommendedMentors.concat(industryMentors);
+        }
+
+        // Find top-rated mentors
+        const [topRated] = await pool.query(`
+            SELECT 
+                m.mentor_id,
+                u.user_id, 
+                u.full_name, 
+                u.job_title, 
+                u.company, 
+                u.profile_pic_url, 
+                m.industry,
+                m.experience_years,
+                m.average_rating,
+                m.total_reviews,
+                m.bio,
+                GROUP_CONCAT(DISTINCT ms.specialization) as specializations,
+                'top_rated' as recommendation_reason
+            FROM mentors m 
+            JOIN users u ON m.user_id = u.user_id 
+            LEFT JOIN mentor_specializations ms ON m.mentor_id = ms.mentor_id
+            WHERE m.is_available = TRUE 
+                AND m.user_id != ?
+                AND m.average_rating >= 4.0
+                AND m.total_reviews >= 5
+            GROUP BY m.mentor_id
+            ORDER BY m.average_rating DESC, m.total_reviews DESC
+            LIMIT 3
+        `, [user_id]);
+
+        // Merge and deduplicate
+        const mentorIds = new Set(recommendedMentors.map(m => m.mentor_id));
+        topRated.forEach(mentor => {
+            if (!mentorIds.has(mentor.mentor_id)) {
+                recommendedMentors.push(mentor);
+                mentorIds.add(mentor.mentor_id);
+            }
+        });
+
+        res.json({
+            recommendations: recommendedMentors.slice(0, 6),
+            user_industry: user.industry
+        });
+    }));
+
+    // Track mentor profile view
+    router.post('/:mentorId/track-view', asyncHandler(async (req, res) => {
+        const { mentorId } = req.params;
+        const today = new Date().toISOString().split('T')[0];
+
+        // Update or insert analytics record
+        await pool.query(`
+            INSERT INTO mentor_analytics (mentor_id, date, profile_views)
+            VALUES (?, ?, 1)
+            ON DUPLICATE KEY UPDATE profile_views = profile_views + 1
+        `, [mentorId, today]);
+
+        res.json({ success: true });
+    }));
+
+    // Get mentor availability calendar
+    router.get('/:mentorId/availability/calendar', asyncHandler(async (req, res) => {
+        const { mentorId } = req.params;
+        const { start_date, end_date } = req.query;
+
+        // Get mentor's weekly availability
+        const [availability] = await pool.query(`
+            SELECT day_of_week, start_time, end_time, is_available
+            FROM mentor_availability 
+            WHERE mentor_id = ? AND is_available = TRUE
+            ORDER BY FIELD(day_of_week, 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday')
+        `, [mentorId]);
+
+        // Get already booked sessions
+        const [bookedSessions] = await pool.query(`
+            SELECT scheduled_datetime, duration_minutes
+            FROM mentor_sessions 
+            WHERE mentor_id = ? 
+                AND status IN ('scheduled', 'in_progress')
+                AND scheduled_datetime BETWEEN ? AND ?
+            ORDER BY scheduled_datetime
+        `, [mentorId, start_date || new Date(), end_date || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)]);
+
+        res.json({
+            weekly_availability: availability,
+            booked_sessions: bookedSessions
+        });
+    }));
+
+    // Get trending/featured mentors
+    router.get('/featured/trending', asyncHandler(async (req, res) => {
+        const { limit = 6 } = req.query;
+
+        // Get mentors with high recent activity
+        const [trendingMentors] = await pool.query(`
+            SELECT 
+                m.mentor_id,
+                u.user_id, 
+                u.full_name, 
+                u.job_title, 
+                u.company, 
+                u.profile_pic_url, 
+                m.industry,
+                m.experience_years,
+                m.average_rating,
+                m.total_reviews,
+                m.total_sessions,
+                m.bio,
+                m.is_premium,
+                m.verification_level,
+                GROUP_CONCAT(DISTINCT ms.specialization) as specializations,
+                COALESCE(SUM(ma.profile_views), 0) as recent_views
+            FROM mentors m 
+            JOIN users u ON m.user_id = u.user_id 
+            LEFT JOIN mentor_specializations ms ON m.mentor_id = ms.mentor_id
+            LEFT JOIN mentor_analytics ma ON m.mentor_id = ma.mentor_id 
+                AND ma.date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            WHERE m.is_available = TRUE
+            GROUP BY m.mentor_id
+            ORDER BY recent_views DESC, m.average_rating DESC, m.total_reviews DESC
+            LIMIT ?
+        `, [parseInt(limit)]);
+
+        res.json({
+            trending: trendingMentors
+        });
+    }));
+
+    // Get mentor badges/achievements
+    router.get('/:mentorId/badges', asyncHandler(async (req, res) => {
+        const { mentorId } = req.params;
+
+        const [mentor] = await pool.query(`
+            SELECT 
+                average_rating,
+                total_reviews,
+                total_sessions,
+                total_mentees,
+                response_time_hours,
+                success_rate,
+                is_premium,
+                verification_level,
+                created_at
+            FROM mentors 
+            WHERE mentor_id = ?
+        `, [mentorId]);
+
+        if (mentor.length === 0) {
+            return res.status(404).json({ message: 'Mentor not found' });
+        }
+
+        const m = mentor[0];
+        const badges = [];
+
+        // Determine badges
+        if (m.average_rating >= 4.8 && m.total_reviews >= 10) {
+            badges.push({ name: 'Top Rated', icon: 'fa-star', color: '#FFD700' });
+        }
+        if (m.response_time_hours <= 12) {
+            badges.push({ name: 'Quick Responder', icon: 'fa-bolt', color: '#4A90E2' });
+        }
+        if (m.total_sessions >= 50) {
+            badges.push({ name: 'Experienced', icon: 'fa-award', color: '#50C878' });
+        }
+        if (m.total_mentees >= 20) {
+            badges.push({ name: 'Popular', icon: 'fa-users', color: '#FF6B6B' });
+        }
+        if (m.success_rate >= 90) {
+            badges.push({ name: 'High Success', icon: 'fa-check-circle', color: '#50C878' });
+        }
+        if (m.is_premium) {
+            badges.push({ name: 'Premium', icon: 'fa-crown', color: '#FFD700' });
+        }
+        if (m.verification_level === 'verified' || m.verification_level === 'premium') {
+            badges.push({ name: 'Verified', icon: 'fa-shield-check', color: '#4A90E2' });
+        }
+
+        // Calculate tenure
+        const monthsSinceJoined = Math.floor((Date.now() - new Date(m.created_at).getTime()) / (1000 * 60 * 60 * 24 * 30));
+        if (monthsSinceJoined >= 12) {
+            badges.push({ name: 'Veteran', icon: 'fa-trophy', color: '#9B59B6' });
+        }
+
+        res.json({
+            badges
+        });
+    }));
+
     return router;
 };

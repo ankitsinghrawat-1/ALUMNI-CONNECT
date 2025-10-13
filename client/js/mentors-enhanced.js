@@ -225,6 +225,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
                 ` : ''}
+
+                <!-- Mentor Badges -->
+                <div class="mentor-badges" id="badges-${mentor.mentor_id}"></div>
             </div>
 
             <div class="mentor-footer">
@@ -237,6 +240,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             </div>
         `;
+
+        // Load and display badges asynchronously
+        if (window.mentorFeatures) {
+            window.mentorFeatures.loadMentorBadges(mentor.mentor_id).then(badges => {
+                const container = document.getElementById(`badges-${mentor.mentor_id}`);
+                if (container && badges.length > 0) {
+                    window.mentorFeatures.renderMentorBadges(badges.slice(0, 3), container);
+                }
+            }).catch(err => console.error('Error loading badges:', err));
+        }
 
         // Add click handler for viewing full profile
         card.addEventListener('click', (e) => {

@@ -6,7 +6,9 @@
     <title>Browse Mentors - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/mentors-enhanced.css">
+    <link rel="stylesheet" href="css/mentor-features-enhanced.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script>
         (function() {
             const theme = localStorage.getItem('theme');
@@ -344,6 +346,35 @@
             </form>
         </div>
     </div>
+
+    <!-- Comparison Widget (Floating) -->
+    <div id="comparison-widget" style="display: none;"></div>
+
+    <!-- Recommendations Container -->
+    <div id="recommendations-container" style="display: none;"></div>
+
+    <!-- Trending Mentors Container -->
+    <div id="trending-container"></div>
+
+    <!-- Floating Search Button -->
+    <button id="floating-search-btn" class="floating-search-btn" aria-label="Open Search">
+        <i class="fas fa-search"></i>
+    </button>
+
+    <!-- Search Modal -->
+    <div id="search-modal-overlay" class="search-modal-overlay">
+        <div class="search-modal-content">
+            <div class="search-modal-header">
+                <h3><i class="fas fa-search"></i> Search & Filter Mentors</h3>
+                <button class="close-search-modal" id="close-search-modal" aria-label="Close">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="search-modal-body">
+                <!-- Search content will be cloned here -->
+            </div>
+        </div>
+    </div>
     
     <footer class="main-footer">
         <div class="container">
@@ -355,6 +386,7 @@
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
+    <script src="js/mentor-features-enhanced.js"></script>
     <script src="js/browse-mentors.js"></script>
 </body>
 </html>

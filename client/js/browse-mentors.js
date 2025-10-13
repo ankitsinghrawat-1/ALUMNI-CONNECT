@@ -89,6 +89,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Load mentor stats and populate filters
             await loadMentorStats();
+
+            // Load recommendations if logged in
+            if (localStorage.getItem('alumniConnectToken')) {
+                loadAndDisplayRecommendations();
+            }
+
+            // Load trending mentors
+            loadAndDisplayTrending();
             
             // Load initial mentors
             await loadMentors();
@@ -120,28 +128,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await window.api.get('/mentors/status');
             if (data.isMentor) {
                 mentorActionArea.innerHTML = `
-                    <a href="mentor-requests.html" class="btn btn-primary">
-                        <i class="fas fa-inbox"></i>
-                        View Requests
+                    <a href="mentor-profile.html" class="btn btn-primary">
+                        <i class="fas fa-user-tie"></i>
+                        Your Mentor Profile
                     </a>
-                    <a href="edit-mentor.html" class="btn btn-secondary">
-                        <i class="fas fa-edit"></i>
-                        Edit Profile
+                    <a href="mentor-requests.html" class="btn btn-secondary">
+                        <i class="fas fa-inbox"></i>
+                        Requests
                     </a>
                 `;
                 // Empty the search bar action area for existing mentors
                 mentorActionAreaSearch.innerHTML = '';
             } else {
-                // Keep the original area empty for non-mentors
-                mentorActionArea.innerHTML = '';
-                
-                // Add "Become a Mentor" button to the search bar area
-                mentorActionAreaSearch.innerHTML = `
+                // User is not a mentor - show "Become a Mentor" button in main area (permanent spot)
+                mentorActionArea.innerHTML = `
                     <a href="become-mentor.html" class="btn btn-primary">
                         <i class="fas fa-user-plus"></i>
                         Become a Mentor
                     </a>
                 `;
+                // Empty the search bar action area
+                mentorActionAreaSearch.innerHTML = '';
             }
 
             // Load sent requests
@@ -155,14 +162,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
-            // On error, clear the original area and show "Become a Mentor" in search bar
-            mentorActionArea.innerHTML = '';
-            mentorActionAreaSearch.innerHTML = `
+            // On error, show "Become a Mentor" in main area (permanent spot)
+            mentorActionArea.innerHTML = `
                 <a href="become-mentor.html" class="btn btn-primary">
                     <i class="fas fa-user-plus"></i>
                     Become a Mentor
                 </a>
             `;
+            mentorActionAreaSearch.innerHTML = '';
         }
     }
 
@@ -172,39 +179,55 @@ document.addEventListener('DOMContentLoaded', async () => {
             const stats = await window.api.get('/mentors/stats/overview');
             mentorStats = stats;
 
-            // Update stats display
-            updateStatsDisplay(stats.overview);
+            // Update stats display with animated counters
+            updateStatsDisplay(stats);
 
-            // Populate industry filter
-            populateFilter(industryFilter, stats.top_industries, 'industry', 'mentor_count');
-
-            // Populate specialization filter
-            populateFilter(specializationFilter, stats.top_specializations, 'specialization', 'mentor_count');
-
+            // Note: Industry and specialization filters will be populated from mentor data
+            // as the stats/overview endpoint returns industry counts for stats display
+            
         } catch (error) {
             console.error('Error loading mentor stats:', error);
+            // Set default values on error
+            const defaultStats = {
+                total_mentors: '500+',
+                avg_rating: '4.8',
+                total_sessions: '10K+'
+            };
+            updateStatsDisplay(defaultStats);
         }
     }
 
-    // Update stats display
+    // Update stats display with animation
     function updateStatsDisplay(stats) {
         const totalMentors = document.querySelector('[data-stat="total_mentors"]');
         const avgRating = document.querySelector('[data-stat="avg_rating"]');
         const totalSessions = document.querySelector('[data-stat="total_sessions"]');
 
-        if (totalMentors) totalMentors.textContent = formatNumber(stats.total_mentors);
-        if (avgRating) avgRating.textContent = parseFloat(stats.avg_rating).toFixed(1);
-        if (totalSessions) totalSessions.textContent = formatNumber(stats.total_sessions_completed);
+        if (totalMentors && stats.total_mentors) {
+            animateNumber(totalMentors, 0, stats.total_mentors, 1000);
+        }
+        if (avgRating && stats.avg_rating) {
+            avgRating.textContent = parseFloat(stats.avg_rating).toFixed(1);
+        }
+        if (totalSessions && stats.total_sessions) {
+            totalSessions.textContent = formatNumber(stats.total_sessions);
+        }
     }
 
-    // Populate filter dropdowns
-    function populateFilter(selectElement, data, valueKey, countKey) {
-        data.forEach(item => {
-            const option = document.createElement('option');
-            option.value = item[valueKey];
-            option.textContent = `${item[valueKey]} (${item[countKey]})`;
-            selectElement.appendChild(option);
-        });
+    // Animate number count up
+    function animateNumber(element, start, end, duration) {
+        const range = end - start;
+        const increment = range / (duration / 16); // 60fps
+        let current = start;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= end) {
+                current = end;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current) + (current >= end && end > 100 ? '+' : '');
+        }, 16);
     }
 
     // Load mentors with current filters
@@ -346,6 +369,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                 ` : ''}
 
+                <!-- Mentor Badges -->
+                <div class="mentor-badges" id="badges-${mentor.mentor_id}"></div>
+
                 ${mentor.hourly_rate > 0 ? `
                     <div class="mentor-pricing">
                         <div class="pricing-info">
@@ -360,6 +386,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             <div class="mentor-footer">
                 <div class="mentor-actions">
                     ${generateActionButtons(mentor, requestStatus)}
+                    <button class="mentor-btn btn-add-comparison" data-action="compare" title="Add to comparison">
+                        <i class="fas fa-balance-scale"></i>
+                        Add
+                    </button>
                 </div>
                 <div class="response-time">
                     <span class="response-indicator"></span>
@@ -368,12 +398,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
         `;
 
+        // Load and display badges asynchronously
+        loadMentorBadgesForCard(mentor.mentor_id);
+
         // Add click handlers
-        card.addEventListener('click', () => showMentorProfile(mentor.mentor_id));
+        card.addEventListener('click', (e) => {
+            // Don't navigate if clicking on action buttons
+            if (!e.target.closest('.mentor-btn')) {
+                showMentorProfile(mentor.mentor_id);
+                // Track profile view
+                window.mentorFeatures.trackMentorView(mentor.mentor_id);
+            }
+        });
         card.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 showMentorProfile(mentor.mentor_id);
+                window.mentorFeatures.trackMentorView(mentor.mentor_id);
             }
         });
 
@@ -387,6 +428,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         return card;
+    }
+
+    // Load badges for mentor card
+    async function loadMentorBadgesForCard(mentorId) {
+        try {
+            const badges = await window.mentorFeatures.loadMentorBadges(mentorId);
+            const container = document.getElementById(`badges-${mentorId}`);
+            if (container && badges.length > 0) {
+                window.mentorFeatures.renderMentorBadges(badges.slice(0, 3), container);
+            }
+        } catch (error) {
+            console.error('Error loading badges for mentor:', mentorId, error);
+        }
     }
 
     // Generate star rating HTML
@@ -481,6 +535,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             case 'view-profile':
                 showMentorProfile(mentor.mentor_id);
                 break;
+            case 'compare':
+                const added = window.mentorFeatures.addToComparison(mentor);
+                if (added) {
+                    button.innerHTML = '<i class="fas fa-check"></i> Added';
+                    button.classList.add('added');
+                    button.disabled = true;
+                }
+                break;
         }
     }
 
@@ -491,11 +553,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         try {
             content.innerHTML = '<div class="loading-container"><div class="loading-spinner"><div class="spinner"></div></div><p>Loading profile...</p></div>';
-            modal.style.display = 'block';
+            modal.classList.add('show');
+            modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
             const mentor = await window.api.get(`/mentors/${mentorId}`);
             content.innerHTML = generateMentorProfileHTML(mentor);
+
+            // Load and display badges asynchronously
+            if (window.mentorFeatures) {
+                window.mentorFeatures.loadMentorBadges(mentorId).then(badges => {
+                    const container = document.getElementById(`profile-badges-${mentorId}`);
+                    if (container && badges.length > 0) {
+                        window.mentorFeatures.renderMentorBadges(badges, container);
+                    }
+                }).catch(err => console.error('Error loading profile badges:', err));
+            }
 
         } catch (error) {
             console.error('Error loading mentor profile:', error);
@@ -505,35 +578,89 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Generate mentor profile HTML
     function generateMentorProfileHTML(mentor) {
+        const skills = mentor.skills ? mentor.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+        const languages = mentor.languages ? mentor.languages.split(',').map(l => l.trim()).filter(Boolean) : [];
+        
         return `
             <div class="mentor-profile-full">
                 <div class="profile-header">
                     <div class="profile-hero">
-                        <div class="profile-avatar-large">
-                            <img src="${mentor.profile_pic_url || createInitialsAvatar(mentor.full_name)}" 
-                                 alt="${sanitizeHTML(mentor.full_name)}" />
-                        </div>
-                        <div class="profile-info">
-                            <h1>${sanitizeHTML(mentor.full_name)} ${mentor.verification_status === 'verified' ? '<i class="fas fa-check-circle verified-badge"></i>' : ''}</h1>
-                            <p class="profile-title">${sanitizeHTML(mentor.job_title || 'Professional')} at ${sanitizeHTML(mentor.company || 'Independent')}</p>
-                            <div class="profile-rating">
-                                <div class="rating-stars">${generateStarRating(mentor.average_rating)}</div>
-                                <span class="rating-value">${parseFloat(mentor.average_rating || 0).toFixed(1)}</span>
-                                <span class="rating-count">(${mentor.total_reviews || 0} reviews)</span>
+                        <div class="profile-hero-left">
+                            <div class="profile-avatar-large">
+                                <img src="${mentor.profile_pic_url || createInitialsAvatar(mentor.full_name)}" 
+                                     alt="${sanitizeHTML(mentor.full_name)}" />
                             </div>
+                            <div class="profile-info">
+                                <h1>${sanitizeHTML(mentor.full_name)} ${mentor.verification_status === 'verified' ? '<i class="fas fa-check-circle verified-badge"></i>' : ''}</h1>
+                                <p class="profile-title">${sanitizeHTML(mentor.job_title || 'Professional')} at ${sanitizeHTML(mentor.company || 'Independent')}</p>
+                                <div class="profile-rating">
+                                    <div class="rating-stars">${generateStarRating(mentor.average_rating)}</div>
+                                    <span class="rating-value">${parseFloat(mentor.average_rating || 0).toFixed(1)}</span>
+                                    <span class="rating-count">(${mentor.total_reviews || 0} reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="profile-hero-actions">
+                            <a href="mentor-profile.html?id=${mentor.mentor_id}" class="profile-hero-btn primary">
+                                <i class="fas fa-user-circle"></i>
+                                View Profile
+                            </a>
+                            <button class="profile-hero-btn secondary" onclick="openRequestModal(${JSON.stringify(mentor).replace(/"/g, '&quot;')})">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Request
+                            </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="profile-content">
+                    <!-- Key Stats Grid -->
+                    <div class="profile-stats-grid">
+                        <div class="profile-stat-card">
+                            <i class="fas fa-briefcase stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">${mentor.experience_years || 0}</span>
+                                <span class="stat-label">Years Experience</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <i class="fas fa-users stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">${mentor.total_mentees || 0}</span>
+                                <span class="stat-label">Total Mentees</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <i class="fas fa-calendar-check stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">${mentor.total_sessions || 0}</span>
+                                <span class="stat-label">Sessions</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <i class="fas fa-clock stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">~${mentor.response_time_hours || 24}h</span>
+                                <span class="stat-label">Response</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Mentor Badges Section -->
                     <div class="profile-section">
-                        <h3>About</h3>
+                        <h3><i class="fas fa-award"></i> Achievements</h3>
+                        <div class="mentor-badges" id="profile-badges-${mentor.mentor_id}"></div>
+                    </div>
+
+                    <!-- About Section -->
+                    <div class="profile-section">
+                        <h3><i class="fas fa-user"></i> About</h3>
                         <p>${sanitizeHTML(mentor.bio || 'No bio available.')}</p>
                     </div>
 
                     ${mentor.specializations && mentor.specializations.length > 0 ? `
                         <div class="profile-section">
-                            <h3>Specializations</h3>
+                            <h3><i class="fas fa-star"></i> Specializations</h3>
                             <div class="specialization-list">
                                 ${mentor.specializations.map(spec => `
                                     <div class="specialization-item">
@@ -546,31 +673,82 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     ` : ''}
 
-                    ${mentor.achievements && mentor.achievements.length > 0 ? `
+                    ${skills.length > 0 ? `
                         <div class="profile-section">
-                            <h3>Achievements</h3>
-                            <div class="achievements-grid">
-                                ${mentor.achievements.slice(0, 6).map(achievement => `
-                                    <div class="achievement-card">
-                                        <div class="achievement-icon">
-                                            <i class="fas fa-trophy"></i>
-                                        </div>
-                                        <div class="achievement-info">
-                                            <h4>${sanitizeHTML(achievement.title)}</h4>
-                                            <p>${sanitizeHTML(achievement.issuer_organization || '')}</p>
-                                            <span class="achievement-date">${formatDate(achievement.achievement_date)}</span>
-                                        </div>
-                                    </div>
+                            <h3><i class="fas fa-tools"></i> Skills</h3>
+                            <div class="skills-tags">
+                                ${skills.map(skill => `
+                                    <span class="skill-tag">${sanitizeHTML(skill)}</span>
                                 `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    <!-- Professional Details -->
+                    <div class="profile-section">
+                        <h3><i class="fas fa-info-circle"></i> Details</h3>
+                        <div class="detail-list">
+                            ${mentor.industry ? `
+                                <div class="detail-item">
+                                    <span class="detail-label"><i class="fas fa-building"></i> Industry:</span>
+                                    <span class="detail-value">${sanitizeHTML(mentor.industry)}</span>
+                                </div>
+                            ` : ''}
+                            ${mentor.hourly_rate ? `
+                                <div class="detail-item">
+                                    <span class="detail-label"><i class="fas fa-dollar-sign"></i> Rate:</span>
+                                    <span class="detail-value">$${mentor.hourly_rate}/hour</span>
+                                </div>
+                            ` : ''}
+                            ${mentor.mentoring_style ? `
+                                <div class="detail-item">
+                                    <span class="detail-label"><i class="fas fa-chalkboard-teacher"></i> Style:</span>
+                                    <span class="detail-value">${mentor.mentoring_style.replace('_', ' ')}</span>
+                                </div>
+                            ` : ''}
+                            ${languages.length > 0 ? `
+                                <div class="detail-item">
+                                    <span class="detail-label"><i class="fas fa-globe"></i> Languages:</span>
+                                    <span class="detail-value">${languages.join(', ')}</span>
+                                </div>
+                            ` : ''}
+                            ${mentor.success_rate ? `
+                                <div class="detail-item">
+                                    <span class="detail-label"><i class="fas fa-chart-line"></i> Success Rate:</span>
+                                    <span class="detail-value">${mentor.success_rate}%</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    ${(mentor.linkedin_url || mentor.github_url || mentor.portfolio_url) ? `
+                        <div class="profile-section">
+                            <h3><i class="fas fa-link"></i> Connect</h3>
+                            <div class="social-links">
+                                ${mentor.linkedin_url ? `
+                                    <a href="${mentor.linkedin_url}" target="_blank" rel="noopener noreferrer" class="social-link linkedin">
+                                        <i class="fab fa-linkedin"></i> LinkedIn
+                                    </a>
+                                ` : ''}
+                                ${mentor.github_url ? `
+                                    <a href="${mentor.github_url}" target="_blank" rel="noopener noreferrer" class="social-link github">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </a>
+                                ` : ''}
+                                ${mentor.portfolio_url ? `
+                                    <a href="${mentor.portfolio_url}" target="_blank" rel="noopener noreferrer" class="social-link portfolio">
+                                        <i class="fas fa-briefcase"></i> Portfolio
+                                    </a>
+                                ` : ''}
                             </div>
                         </div>
                     ` : ''}
 
                     ${mentor.reviews && mentor.reviews.length > 0 ? `
                         <div class="profile-section">
-                            <h3>Recent Reviews</h3>
+                            <h3><i class="fas fa-comments"></i> Reviews (${mentor.reviews.length})</h3>
                             <div class="reviews-list">
-                                ${mentor.reviews.map(review => `
+                                ${mentor.reviews.slice(0, 3).map(review => `
                                     <div class="review-card">
                                         <div class="review-header">
                                             <div class="reviewer-info">
@@ -854,8 +1032,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Modal close handlers
     document.querySelectorAll('.modal .close-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            this.closest('.modal').style.display = 'none';
+            const modal = this.closest('.modal');
+            modal.style.display = 'none';
+            modal.classList.remove('show');
             document.body.style.overflow = '';
+        });
+    });
+
+    // Close modal when clicking outside the modal content
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            // Only close if clicking directly on the modal overlay (not the content)
+            if (e.target === this) {
+                this.style.display = 'none';
+                this.classList.remove('show');
+                document.body.style.overflow = '';
+            }
         });
     });
 
@@ -925,5 +1117,103 @@ document.addEventListener('DOMContentLoaded', async () => {
                 stopOnFocus: true
             }).showToast();
         }
+    }
+
+    // Load and display recommendations
+    async function loadAndDisplayRecommendations() {
+        try {
+            const data = await window.mentorFeatures.loadRecommendedMentors();
+            if (data.recommendations && data.recommendations.length > 0) {
+                const container = document.getElementById('recommendations-container');
+                window.mentorFeatures.renderRecommendationsWidget(data.recommendations, container);
+            }
+        } catch (error) {
+            console.error('Error loading recommendations:', error);
+        }
+    }
+
+    // Load and display trending mentors
+    async function loadAndDisplayTrending() {
+        try {
+            const trending = await window.mentorFeatures.loadTrendingMentors(6);
+            if (trending && trending.length > 0) {
+                const container = document.getElementById('trending-container');
+                window.mentorFeatures.renderTrendingMentors(trending, container);
+            }
+        } catch (error) {
+            console.error('Error loading trending mentors:', error);
+        }
+    }
+
+    // Scroll behavior for search bar with floating button
+    let lastScrollTop = 0;
+    let scrollThreshold = 10; // 10% of viewport height
+    const searchFilterSection = document.querySelector('.search-filter-section');
+    const floatingSearchBtn = document.getElementById('floating-search-btn');
+    const searchModalOverlay = document.getElementById('search-modal-overlay');
+    const closeSearchModal = document.getElementById('close-search-modal');
+    const searchModalBody = document.getElementById('search-modal-body');
+    
+    if (searchFilterSection && floatingSearchBtn) {
+        // Clone the search bar content for the modal
+        const searchBarClone = searchFilterSection.querySelector('.search-filter-container').cloneNode(true);
+        searchModalBody.appendChild(searchBarClone);
+        
+        // Re-attach event listeners for cloned elements
+        const clonedSearchInput = searchModalBody.querySelector('#mentor-search');
+        const clonedSearchBtn = searchModalBody.querySelector('#search-btn');
+        const clonedClearBtn = searchModalBody.querySelector('#clear-search');
+        const clonedFilterToggle = searchModalBody.querySelector('#filter-toggle');
+        const clonedSortSelect = searchModalBody.querySelector('#sort-select');
+        
+        if (clonedSearchInput) {
+            clonedSearchInput.addEventListener('input', handleSearchInput);
+        }
+        if (clonedSearchBtn) {
+            clonedSearchBtn.addEventListener('click', performSearch);
+        }
+        if (clonedClearBtn) {
+            clonedClearBtn.addEventListener('click', clearSearch);
+        }
+        if (clonedFilterToggle) {
+            clonedFilterToggle.addEventListener('click', () => {
+                filtersPanel.style.display = filtersPanel.style.display === 'none' ? 'grid' : 'none';
+                clonedFilterToggle.classList.toggle('active');
+            });
+        }
+        if (clonedSortSelect) {
+            clonedSortSelect.addEventListener('change', handleSortChange);
+        }
+        
+        // Scroll event handler - REMOVED (sticky search bar disabled, only floating button now)
+        // The floating search button is always visible via CSS
+        
+        // Floating button click - open modal
+        floatingSearchBtn.addEventListener('click', () => {
+            searchModalOverlay.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        // Close modal
+        closeSearchModal.addEventListener('click', () => {
+            searchModalOverlay.classList.remove('show');
+            document.body.style.overflow = '';
+        });
+        
+        // Close on overlay click
+        searchModalOverlay.addEventListener('click', (e) => {
+            if (e.target === searchModalOverlay) {
+                searchModalOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+        
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && searchModalOverlay.classList.contains('show')) {
+                searchModalOverlay.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
     }
 });
