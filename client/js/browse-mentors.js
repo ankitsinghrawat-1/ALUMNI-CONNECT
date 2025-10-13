@@ -578,6 +578,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Generate mentor profile HTML
     function generateMentorProfileHTML(mentor) {
+        const skills = mentor.skills ? mentor.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
+        const languages = mentor.languages ? mentor.languages.split(',').map(l => l.trim()).filter(Boolean) : [];
+        
         return `
             <div class="mentor-profile-full">
                 <div class="profile-header">
@@ -599,35 +602,147 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
 
                 <div class="profile-content">
+                    <!-- Key Stats Grid -->
+                    <div class="profile-stats-grid">
+                        <div class="profile-stat-card">
+                            <i class="fas fa-briefcase stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">${mentor.experience_years || 0}</span>
+                                <span class="stat-label">Years Experience</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <i class="fas fa-users stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">${mentor.total_mentees || 0}</span>
+                                <span class="stat-label">Total Mentees</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <i class="fas fa-calendar-check stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">${mentor.total_sessions || 0}</span>
+                                <span class="stat-label">Sessions Completed</span>
+                            </div>
+                        </div>
+                        <div class="profile-stat-card">
+                            <i class="fas fa-clock stat-icon"></i>
+                            <div class="stat-details">
+                                <span class="stat-number">~${mentor.response_time_hours || 24}h</span>
+                                <span class="stat-label">Response Time</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- Mentor Badges Section -->
                     <div class="profile-section">
                         <h3><i class="fas fa-award"></i> Achievements & Recognition</h3>
                         <div class="mentor-badges" id="profile-badges-${mentor.mentor_id}"></div>
                     </div>
 
+                    <!-- About Section -->
                     <div class="profile-section">
-                        <h3>About</h3>
+                        <h3><i class="fas fa-user"></i> About Me</h3>
                         <p>${sanitizeHTML(mentor.bio || 'No bio available.')}</p>
                     </div>
 
-                    ${mentor.specializations && mentor.specializations.length > 0 ? `
-                        <div class="profile-section">
-                            <h3>Specializations</h3>
-                            <div class="specialization-list">
-                                ${mentor.specializations.map(spec => `
-                                    <div class="specialization-item">
-                                        <span class="spec-name">${sanitizeHTML(spec.specialization)}</span>
-                                        <span class="spec-level">${spec.proficiency_level}</span>
-                                        <span class="spec-experience">${spec.years_experience} years</span>
+                    <!-- Two Column Layout for Skills and Details -->
+                    <div class="profile-two-columns">
+                        <div class="profile-column">
+                            ${mentor.specializations && mentor.specializations.length > 0 ? `
+                                <div class="profile-section">
+                                    <h3><i class="fas fa-star"></i> Specializations</h3>
+                                    <div class="specialization-list">
+                                        ${mentor.specializations.map(spec => `
+                                            <div class="specialization-item">
+                                                <span class="spec-name">${sanitizeHTML(spec.specialization)}</span>
+                                                <span class="spec-level">${spec.proficiency_level}</span>
+                                                <span class="spec-experience">${spec.years_experience} years</span>
+                                            </div>
+                                        `).join('')}
                                     </div>
-                                `).join('')}
-                            </div>
+                                </div>
+                            ` : ''}
+
+                            ${skills.length > 0 ? `
+                                <div class="profile-section">
+                                    <h3><i class="fas fa-tools"></i> Skills & Expertise</h3>
+                                    <div class="skills-tags">
+                                        ${skills.map(skill => `
+                                            <span class="skill-tag">${sanitizeHTML(skill)}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
                         </div>
-                    ` : ''}
+
+                        <div class="profile-column">
+                            <!-- Industry & Details -->
+                            <div class="profile-section">
+                                <h3><i class="fas fa-info-circle"></i> Professional Details</h3>
+                                <div class="detail-list">
+                                    ${mentor.industry ? `
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="fas fa-building"></i> Industry:</span>
+                                            <span class="detail-value">${sanitizeHTML(mentor.industry)}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${mentor.hourly_rate ? `
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="fas fa-dollar-sign"></i> Hourly Rate:</span>
+                                            <span class="detail-value">$${mentor.hourly_rate}/hour</span>
+                                        </div>
+                                    ` : ''}
+                                    ${mentor.mentoring_style ? `
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="fas fa-chalkboard-teacher"></i> Style:</span>
+                                            <span class="detail-value">${mentor.mentoring_style.replace('_', ' ')}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${languages.length > 0 ? `
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="fas fa-globe"></i> Languages:</span>
+                                            <span class="detail-value">${languages.join(', ')}</span>
+                                        </div>
+                                    ` : ''}
+                                    ${mentor.success_rate ? `
+                                        <div class="detail-item">
+                                            <span class="detail-label"><i class="fas fa-chart-line"></i> Success Rate:</span>
+                                            <span class="detail-value">${mentor.success_rate}%</span>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Social Links -->
+                            ${(mentor.linkedin_url || mentor.github_url || mentor.portfolio_url) ? `
+                                <div class="profile-section">
+                                    <h3><i class="fas fa-link"></i> Connect</h3>
+                                    <div class="social-links">
+                                        ${mentor.linkedin_url ? `
+                                            <a href="${mentor.linkedin_url}" target="_blank" rel="noopener noreferrer" class="social-link linkedin">
+                                                <i class="fab fa-linkedin"></i> LinkedIn
+                                            </a>
+                                        ` : ''}
+                                        ${mentor.github_url ? `
+                                            <a href="${mentor.github_url}" target="_blank" rel="noopener noreferrer" class="social-link github">
+                                                <i class="fab fa-github"></i> GitHub
+                                            </a>
+                                        ` : ''}
+                                        ${mentor.portfolio_url ? `
+                                            <a href="${mentor.portfolio_url}" target="_blank" rel="noopener noreferrer" class="social-link portfolio">
+                                                <i class="fas fa-briefcase"></i> Portfolio
+                                            </a>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
 
                     ${mentor.achievements && mentor.achievements.length > 0 ? `
                         <div class="profile-section">
-                            <h3>Achievements</h3>
+                            <h3><i class="fas fa-trophy"></i> Achievements</h3>
                             <div class="achievements-grid">
                                 ${mentor.achievements.slice(0, 6).map(achievement => `
                                     <div class="achievement-card">
@@ -647,9 +762,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                     ${mentor.reviews && mentor.reviews.length > 0 ? `
                         <div class="profile-section">
-                            <h3>Recent Reviews</h3>
+                            <h3><i class="fas fa-comments"></i> Recent Reviews</h3>
                             <div class="reviews-list">
-                                ${mentor.reviews.map(review => `
+                                ${mentor.reviews.slice(0, 3).map(review => `
                                     <div class="review-card">
                                         <div class="review-header">
                                             <div class="reviewer-info">
@@ -668,6 +783,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </div>
                         </div>
                     ` : ''}
+
+                    <!-- View Full Profile Button -->
+                    <div class="profile-actions">
+                        <a href="mentor-profile.html?id=${mentor.mentor_id}" class="btn-view-full-profile">
+                            <i class="fas fa-user-circle"></i>
+                            View Full Profile
+                        </a>
+                        <button class="btn-send-request-modal" onclick="openRequestModal(${JSON.stringify(mentor).replace(/"/g, '&quot;')})">
+                            <i class="fas fa-paper-plane"></i>
+                            Send Request
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
