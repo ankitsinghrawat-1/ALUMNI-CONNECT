@@ -32,33 +32,53 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function initializePage() {
-        // Check if mentor ID is provided
-        if (!mentorId) {
-            showError('No mentor ID provided');
-            return;
-        }
-
+        // Get mentor ID from URL or fetch current user's mentor ID
+        let targetMentorId = mentorId;
+        
         // Get current user info
         const token = localStorage.getItem('alumniConnectToken');
         if (token) {
             try {
                 const userData = await window.api.get('/auth/me');
                 currentUserId = userData.userId;
+                
+                // If no mentor ID provided, try to fetch current user's mentor profile
+                if (!targetMentorId) {
+                    try {
+                        const statusData = await window.api.get('/mentors/status');
+                        if (statusData.isMentor && statusData.mentorId) {
+                            targetMentorId = statusData.mentorId;
+                        } else {
+                            showError('You are not registered as a mentor');
+                            return;
+                        }
+                    } catch (error) {
+                        showError('Unable to load your mentor profile');
+                        return;
+                    }
+                }
             } catch (error) {
                 console.log('Not logged in');
+                if (!targetMentorId) {
+                    showError('Please sign in to view your profile');
+                    return;
+                }
             }
+        } else if (!targetMentorId) {
+            showError('No mentor ID provided');
+            return;
         }
 
-        // Load mentor profile
-        await loadMentorProfile();
+        // Load mentor profile with the determined ID
+        await loadMentorProfile(targetMentorId);
     }
 
-    async function loadMentorProfile() {
+    async function loadMentorProfile(profileMentorId) {
         showLoading(true);
         
         try {
             // Fetch mentor data
-            currentMentor = await window.api.get(`/mentors/${mentorId}`);
+            currentMentor = await window.api.get(`/mentors/${profileMentorId}`);
             
             // Check if current user is the profile owner
             isOwner = currentUserId && currentUserId === currentMentor.user_id;
