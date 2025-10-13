@@ -37,10 +37,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
+        const submitButton = loginForm.querySelector('button[type="submit"]');
 
         if (!email || !password) {
             showToast('Please enter both email and password.', 'error');
             return;
+        }
+
+        if (submitButton) {
+            submitButton.disabled = true;
+            submitButton.classList.add('loading');
         }
 
         if (messageDiv) {
@@ -58,13 +64,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Store all necessary info in localStorage
                 localStorage.setItem('alumniConnectToken', data.token);
                 localStorage.setItem('loggedInUserEmail', data.email);
                 localStorage.setItem('userRole', data.role);
                 localStorage.setItem('loggedInUserName', data.full_name);
-                localStorage.setItem('loggedInUserId', data.user_id); // UPDATED: Store the user's ID
-
+                localStorage.setItem('loggedInUserId', data.user_id);
 
                 if (messageDiv) {
                     messageDiv.textContent = 'Login successful!';
@@ -88,18 +92,28 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = 'institute-dashboard.html';
                         break;
                     default:
-                        window.location.href = 'dashboard.html'; // Alumni dashboard
+                        window.location.href = 'dashboard.html';
                 }
             } else {
                 if (messageDiv) {
                     messageDiv.textContent = data.message;
                     messageDiv.className = 'form-message error';
                 }
+                
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('loading');
+                }
             }
         } catch (error) {
             if (messageDiv) {
                 messageDiv.textContent = 'An error occurred. Please try again.';
                 messageDiv.className = 'form-message error';
+            }
+            
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.classList.remove('loading');
             }
         }
     });
