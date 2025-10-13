@@ -1,5 +1,4 @@
 // client/js/utils.js
-// client/js/utils.js
 
 /**
  * A universal function to fetch data and render it to a container.
