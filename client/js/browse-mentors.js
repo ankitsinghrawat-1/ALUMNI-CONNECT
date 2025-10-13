@@ -1,4 +1,13 @@
 // Enhanced Browse Mentors JavaScript
+
+// Use global sanitizeHTML if available, otherwise define locally
+const sanitizeHTML = window.sanitizeHTML || function(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
     // DOM Elements
     const searchInput = document.getElementById('mentor-search');
@@ -112,6 +121,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check if user is a mentor
     async function checkMentorStatus() {
         const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+        console.log('checkMentorStatus - loggedInUserEmail:', loggedInUserEmail);
+        
         if (!loggedInUserEmail) {
             mentorActionArea.innerHTML = `
                 <a href="login.html" class="btn btn-primary">
@@ -126,9 +137,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             const data = await window.api.get('/mentors/status');
+            console.log('Mentor status response:', data);
+            console.log('Is mentor?', data.isMentor);
+            console.log('Mentor ID:', data.mentorId);
+            
             if (data.isMentor) {
+                console.log('User IS a mentor - showing Your Mentor Profile button');
                 mentorActionArea.innerHTML = `
-                    <a href="mentor-profile.html" class="btn btn-primary">
+                    <a href="mentor-profile.html?id=${data.mentorId}" class="btn btn-primary">
                         <i class="fas fa-user-tie"></i>
                         Your Mentor Profile
                     </a>
@@ -140,6 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Empty the search bar action area for existing mentors
                 mentorActionAreaSearch.innerHTML = '';
             } else {
+                console.log('User is NOT a mentor - showing Become a Mentor button');
                 // User is not a mentor - show "Become a Mentor" button in main area (permanent spot)
                 mentorActionArea.innerHTML = `
                     <a href="become-mentor.html" class="btn btn-primary">
@@ -162,12 +179,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
-            // On error, show "Become a Mentor" in main area (permanent spot)
+            console.error('Error details:', error.message, error.status);
+            
+            // On error, don't show any button - show error message instead
             mentorActionArea.innerHTML = `
-                <a href="become-mentor.html" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Become a Mentor
-                </a>
+                <div class="error-message" style="color: #ff6b6b; padding: 1rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Unable to check mentor status. Please refresh the page.
+                </div>
             `;
             mentorActionAreaSearch.innerHTML = '';
         }
@@ -407,14 +426,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!e.target.closest('.mentor-btn')) {
                 showMentorProfile(mentor.mentor_id);
                 // Track profile view
-                window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                if (window.mentorFeatures && window.mentorFeatures.trackMentorView) {
+                    window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                }
             }
         });
         card.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 showMentorProfile(mentor.mentor_id);
-                window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                if (window.mentorFeatures && window.mentorFeatures.trackMentorView) {
+                    window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                }
             }
         });
 
@@ -433,6 +456,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load badges for mentor card
     async function loadMentorBadgesForCard(mentorId) {
         try {
+            // Check if mentorFeatures is available
+            if (!window.mentorFeatures || !window.mentorFeatures.loadMentorBadges) {
+                console.warn('Mentor features not loaded, skipping badge loading for mentor:', mentorId);
+                return;
+            }
+            
             const badges = await window.mentorFeatures.loadMentorBadges(mentorId);
             const container = document.getElementById(`badges-${mentorId}`);
             if (container && badges.length > 0) {
@@ -536,11 +565,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showMentorProfile(mentor.mentor_id);
                 break;
             case 'compare':
-                const added = window.mentorFeatures.addToComparison(mentor);
-                if (added) {
-                    button.innerHTML = '<i class="fas fa-check"></i> Added';
-                    button.classList.add('added');
-                    button.disabled = true;
+                if (window.mentorFeatures && window.mentorFeatures.addToComparison) {
+                    const added = window.mentorFeatures.addToComparison(mentor);
+                    if (added) {
+                        button.innerHTML = '<i class="fas fa-check"></i> Added';
+                        button.classList.add('added');
+                        button.disabled = true;
+                    }
+                } else {
+                    showToast('Comparison feature not available', 'error');
                 }
                 break;
         }
@@ -995,13 +1028,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function sanitizeHTML(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    }
-
     function createInitialsAvatar(name) {
         if (!name) return '';
         const initials = name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').substring(0, 2);
@@ -1122,6 +1148,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load and display recommendations
     async function loadAndDisplayRecommendations() {
         try {
+            if (!window.mentorFeatures || !window.mentorFeatures.loadRecommendedMentors) {
+                console.warn('Mentor features not loaded, skipping recommendations');
+                return;
+            }
+            
             const data = await window.mentorFeatures.loadRecommendedMentors();
             if (data.recommendations && data.recommendations.length > 0) {
                 const container = document.getElementById('recommendations-container');
@@ -1135,6 +1166,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load and display trending mentors
     async function loadAndDisplayTrending() {
         try {
+            if (!window.mentorFeatures || !window.mentorFeatures.loadTrendingMentors) {
+                console.warn('Mentor features not loaded, skipping trending mentors');
+                return;
+            }
+            
             const trending = await window.mentorFeatures.loadTrendingMentors(6);
             if (trending && trending.length > 0) {
                 const container = document.getElementById('trending-container');
