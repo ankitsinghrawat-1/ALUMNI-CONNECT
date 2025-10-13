@@ -23,6 +23,34 @@ const verifyToken = (req, res, next) => {
     });
 };
 
+const optionalAuth = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    if (!authHeader) {
+        // No token provided, continue without user
+        req.user = null;
+        return next();
+    }
+
+    // Token format is "Bearer <token>"
+    const token = authHeader.split(' ')[1];
+    if (!token) {
+        // Malformed token, continue without user
+        req.user = null;
+        return next();
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            // Invalid token, continue without user
+            req.user = null;
+        } else {
+            // Valid token, save the decoded user
+            req.user = decoded;
+        }
+        next();
+    });
+};
+
 const isAdmin = (req, res, next) => {
     // This middleware should run AFTER verifyToken
     if (req.user && req.user.role === 'admin') {
@@ -32,4 +60,4 @@ const isAdmin = (req, res, next) => {
     }
 };
 
-module.exports = { verifyToken, isAdmin };
+module.exports = { verifyToken, optionalAuth, isAdmin };

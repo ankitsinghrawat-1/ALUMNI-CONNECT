@@ -9,6 +9,15 @@ const apiFetch = async (endpoint, options = {}) => {
         headers['Authorization'] = `Bearer ${token}`;
     }
 
+    // Handle query parameters
+    let url = `${API_BASE_URL}${endpoint}`;
+    if (options.params) {
+        const queryString = new URLSearchParams(options.params).toString();
+        if (queryString) {
+            url += `?${queryString}`;
+        }
+    }
+
     let body;
     if (options.body instanceof FormData) {
         body = options.body;
@@ -18,7 +27,7 @@ const apiFetch = async (endpoint, options = {}) => {
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+        const response = await fetch(url, {
             ...options,
             headers,
             body,

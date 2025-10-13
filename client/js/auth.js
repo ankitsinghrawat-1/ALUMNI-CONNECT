@@ -127,26 +127,29 @@ document.addEventListener('DOMContentLoaded', async () => {
                 bell.innerHTML += `<span class="notification-badge">${unreadCount}</span>`;
             }
             
-            const userId = loggedInUser.user_id;
-            const socket = io("http://localhost:3000");
+            // Initialize socket.io only if the library is loaded
+            if (typeof io !== 'undefined') {
+                const userId = loggedInUser.user_id;
+                const socket = io("http://localhost:3000");
 
-            socket.on('connect', () => {
-                if (userId) {
-                    socket.emit('addUser', userId);
-                }
-            });
+                socket.on('connect', () => {
+                    if (userId) {
+                        socket.emit('addUser', userId);
+                    }
+                });
 
-            socket.on('getNotification', ({ senderName, message }) => {
-                showToast(`New message from ${senderName}: "${message.substring(0, 30)}..."`, 'info');
-                
-                const messagesLink = document.getElementById('messages-link');
-                let badge = messagesLink.querySelector('.notification-badge');
-                if (!badge) {
-                    badge = document.createElement('span');
-                    badge.className = 'notification-badge';
-                    messagesLink.appendChild(badge);
-                }
-            });
+                socket.on('getNotification', ({ senderName, message }) => {
+                    showToast(`New message from ${senderName}: "${message.substring(0, 30)}..."`, 'info');
+                    
+                    const messagesLink = document.getElementById('messages-link');
+                    let badge = messagesLink.querySelector('.notification-badge');
+                    if (!badge) {
+                        badge = document.createElement('span');
+                        badge.className = 'notification-badge';
+                        messagesLink.appendChild(badge);
+                    }
+                });
+            }
 
         } catch (error) {
             console.error('Could not fetch latest profile data for navbar:', error);
