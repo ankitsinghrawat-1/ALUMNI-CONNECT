@@ -56,6 +56,17 @@
                                 <!-- Action buttons will be loaded here -->
                             </div>
                         </div>
+                        <!-- Profile Completion Indicator (Owner Only) -->
+                        <div id="profile-completion-bar" class="profile-completion-bar" style="display: none;">
+                            <div class="completion-header">
+                                <span class="completion-label">Profile Completion</span>
+                                <span class="completion-percentage" id="completion-percentage">0%</span>
+                            </div>
+                            <div class="completion-progress">
+                                <div class="completion-fill" id="completion-fill" style="width: 0%"></div>
+                            </div>
+                            <p class="completion-tip" id="completion-tip"></p>
+                        </div>
                     </div>
                 </div>
 
@@ -276,6 +287,78 @@
                                 </select>
                             </div>
 
+                            <!-- Availability Schedule -->
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-calendar-alt"></i> Availability Schedule
+                                </label>
+                                <div id="availability-editor" class="availability-editor">
+                                    <div class="availability-day" data-day="monday">
+                                        <label class="availability-checkbox">
+                                            <input type="checkbox" name="availability_monday" value="true">
+                                            <span>Monday</span>
+                                        </label>
+                                        <input type="time" name="monday_start" placeholder="Start" disabled>
+                                        <span>to</span>
+                                        <input type="time" name="monday_end" placeholder="End" disabled>
+                                    </div>
+                                    <div class="availability-day" data-day="tuesday">
+                                        <label class="availability-checkbox">
+                                            <input type="checkbox" name="availability_tuesday" value="true">
+                                            <span>Tuesday</span>
+                                        </label>
+                                        <input type="time" name="tuesday_start" placeholder="Start" disabled>
+                                        <span>to</span>
+                                        <input type="time" name="tuesday_end" placeholder="End" disabled>
+                                    </div>
+                                    <div class="availability-day" data-day="wednesday">
+                                        <label class="availability-checkbox">
+                                            <input type="checkbox" name="availability_wednesday" value="true">
+                                            <span>Wednesday</span>
+                                        </label>
+                                        <input type="time" name="wednesday_start" placeholder="Start" disabled>
+                                        <span>to</span>
+                                        <input type="time" name="wednesday_end" placeholder="End" disabled>
+                                    </div>
+                                    <div class="availability-day" data-day="thursday">
+                                        <label class="availability-checkbox">
+                                            <input type="checkbox" name="availability_thursday" value="true">
+                                            <span>Thursday</span>
+                                        </label>
+                                        <input type="time" name="thursday_start" placeholder="Start" disabled>
+                                        <span>to</span>
+                                        <input type="time" name="thursday_end" placeholder="End" disabled>
+                                    </div>
+                                    <div class="availability-day" data-day="friday">
+                                        <label class="availability-checkbox">
+                                            <input type="checkbox" name="availability_friday" value="true">
+                                            <span>Friday</span>
+                                        </label>
+                                        <input type="time" name="friday_start" placeholder="Start" disabled>
+                                        <span>to</span>
+                                        <input type="time" name="friday_end" placeholder="End" disabled>
+                                    </div>
+                                    <div class="availability-day" data-day="saturday">
+                                        <label class="availability-checkbox">
+                                            <input type="checkbox" name="availability_saturday" value="true">
+                                            <span>Saturday</span>
+                                        </label>
+                                        <input type="time" name="saturday_start" placeholder="Start" disabled>
+                                        <span>to</span>
+                                        <input type="time" name="saturday_end" placeholder="End" disabled>
+                                    </div>
+                                    <div class="availability-day" data-day="sunday">
+                                        <label class="availability-checkbox">
+                                            <input type="checkbox" name="availability_sunday" value="true">
+                                            <span>Sunday</span>
+                                        </label>
+                                        <input type="time" name="sunday_start" placeholder="Start" disabled>
+                                        <span>to</span>
+                                        <input type="time" name="sunday_end" placeholder="End" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
                             <!-- Social Links -->
                             <div class="form-group">
                                 <label for="edit-linkedin-url">
@@ -306,6 +389,9 @@
                                 <button type="button" id="cancel-edit-btn" class="btn btn-secondary">
                                     <i class="fas fa-times"></i> Cancel
                                 </button>
+                                <button type="button" id="preview-changes-btn" class="btn btn-secondary">
+                                    <i class="fas fa-eye"></i> Preview
+                                </button>
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save"></i> Save Changes
                                 </button>
@@ -328,6 +414,57 @@
             </div>
         </div>
     </main>
+
+    <!-- Preview Modal -->
+    <div id="preview-modal" class="modal preview-modal">
+        <div class="modal-content preview-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye"></i> Preview Changes</h3>
+                <button class="close-btn" id="close-preview-modal">&times;</button>
+            </div>
+            <div class="modal-body" id="preview-modal-body">
+                <!-- Preview content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="back-to-edit-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Edit
+                </button>
+                <button class="btn btn-primary" id="confirm-save-btn">
+                    <i class="fas fa-save"></i> Confirm & Save
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Send Request Modal -->
+    <div id="request-modal" class="modal request-modal">
+        <div class="modal-content request-modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-paper-plane"></i> Send Mentorship Request</h3>
+                <button class="close-btn" id="close-request-modal">&times;</button>
+            </div>
+            <form id="request-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="request-message">
+                            <i class="fas fa-comment"></i> Message
+                        </label>
+                        <textarea id="request-message" name="message" rows="6" required
+                            placeholder="Introduce yourself and explain why you'd like mentorship from this mentor..."></textarea>
+                        <small>Share your background, goals, and what you hope to learn.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-request-btn">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-paper-plane"></i> Send Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <footer class="main-footer">
         <div class="container">
