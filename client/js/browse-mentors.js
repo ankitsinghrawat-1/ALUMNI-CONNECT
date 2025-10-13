@@ -1,4 +1,13 @@
 // Enhanced Browse Mentors JavaScript
+
+// Use global sanitizeHTML if available, otherwise define locally
+const sanitizeHTML = window.sanitizeHTML || function(str) {
+    if (!str) return '';
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+};
+
 document.addEventListener('DOMContentLoaded', async () => {
     // DOM Elements
     const searchInput = document.getElementById('mentor-search');
@@ -1018,14 +1027,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             day: 'numeric'
         });
     }
-
-    // Use global sanitizeHTML if available, otherwise define locally
-    const sanitizeHTML = window.sanitizeHTML || function(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    };
 
     function createInitialsAvatar(name) {
         if (!name) return '';
