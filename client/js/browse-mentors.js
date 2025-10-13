@@ -553,7 +553,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         try {
             content.innerHTML = '<div class="loading-container"><div class="loading-spinner"><div class="spinner"></div></div><p>Loading profile...</p></div>';
-            modal.style.display = 'block';
+            modal.classList.add('show');
+            modal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
 
             const mentor = await window.api.get(`/mentors/${mentorId}`);
@@ -932,7 +933,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Modal close handlers
     document.querySelectorAll('.modal .close-btn').forEach(btn => {
         btn.addEventListener('click', function() {
-            this.closest('.modal').style.display = 'none';
+            const modal = this.closest('.modal');
+            modal.style.display = 'none';
+            modal.classList.remove('show');
             document.body.style.overflow = '';
         });
     });
