@@ -1377,6 +1377,46 @@ html.dark-mode .mentor-modal .modal-content {
     padding: 0;
 }
 
+/* Relocate close button to top-left corner to avoid conflict with header action buttons */
+.mentor-modal .close-btn {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: auto;
+    z-index: 10;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(0, 0, 0, 0.05);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    border: 2px solid transparent;
+}
+
+.mentor-modal .close-btn:hover {
+    background: rgba(255, 59, 48, 0.1);
+    color: #ff3b30;
+    transform: rotate(90deg);
+    border-color: #ff3b30;
+}
+
+html.dark-mode .mentor-modal .close-btn {
+    color: var(--text-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+html.dark-mode .mentor-modal .close-btn:hover {
+    background: rgba(255, 59, 48, 0.2);
+    color: #ff3b30;
+}
+
 /* Profile Modal Styles */
 .mentor-profile-full {
     width: 100%;

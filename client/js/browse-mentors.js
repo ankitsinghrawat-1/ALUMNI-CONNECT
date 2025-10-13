@@ -1039,6 +1039,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
+    // Close modal when clicking outside the modal content
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            // Only close if clicking directly on the modal overlay (not the content)
+            if (e.target === this) {
+                this.style.display = 'none';
+                this.classList.remove('show');
+                document.body.style.overflow = '';
+            }
+        });
+    });
+
     // Request form handling
     const requestForm = document.getElementById('request-form');
     if (requestForm) {
