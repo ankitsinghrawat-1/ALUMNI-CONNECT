@@ -552,8 +552,11 @@ module.exports = (pool) => {
     
     router.get('/status', asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
-        const [mentor] = await pool.query('SELECT * FROM mentors WHERE user_id = ?', [user_id]);
-        res.json({ isMentor: mentor.length > 0 });
+        const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
+        res.json({ 
+            isMentor: mentor.length > 0,
+            mentorId: mentor.length > 0 ? mentor[0].mentor_id : null
+        });
     }));
 
     // Update mentor profile

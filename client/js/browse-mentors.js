@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await window.api.get('/mentors/status');
             if (data.isMentor) {
                 mentorActionArea.innerHTML = `
-                    <a href="mentor-profile.html" class="btn btn-primary">
+                    <a href="mentor-profile.html?id=${data.mentorId}" class="btn btn-primary">
                         <i class="fas fa-user-tie"></i>
                         Your Mentor Profile
                     </a>
