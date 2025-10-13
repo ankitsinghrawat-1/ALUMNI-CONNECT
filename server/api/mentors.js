@@ -552,7 +552,14 @@ module.exports = (pool) => {
     
     router.get('/status', asyncHandler(async (req, res) => {
         try {
-            // Note: verifyToken is already applied at router level in server.js
+            // Check if user is authenticated
+            if (!req.user || !req.user.userId) {
+                return res.json({ 
+                    isMentor: false,
+                    mentorId: null
+                });
+            }
+            
             const user_id = req.user.userId;
             const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
             res.json({ 
@@ -561,7 +568,7 @@ module.exports = (pool) => {
             });
         } catch (error) {
             console.error('Error in /mentors/status:', error);
-            // Always return a valid response, never 404
+            // Always return a valid response, never throw/404
             res.json({ 
                 isMentor: false,
                 mentorId: null

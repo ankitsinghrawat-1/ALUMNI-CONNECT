@@ -1019,12 +1019,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    function sanitizeHTML(str) {
+    // Use global sanitizeHTML if available, otherwise define locally
+    const sanitizeHTML = window.sanitizeHTML || function(str) {
         if (!str) return '';
         const div = document.createElement('div');
         div.textContent = str;
         return div.innerHTML;
-    }
+    };
 
     function createInitialsAvatar(name) {
         if (!name) return '';
