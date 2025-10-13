@@ -4,12 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const messageDiv = document.getElementById('message');
 
     if (!loginForm) {
-        console.error("Error: The login form element with ID 'login-form' was not found.");
         return;
-    }
-
-    if (!messageDiv) {
-        console.error("Error: The message element with ID 'message' was not found.");
     }
 
     const token = localStorage.getItem('alumniConnectToken');
@@ -106,7 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageDiv.textContent = 'An error occurred. Please try again.';
                 messageDiv.className = 'form-message error';
             }
-            console.error('Login error:', error);
         }
     });
 });

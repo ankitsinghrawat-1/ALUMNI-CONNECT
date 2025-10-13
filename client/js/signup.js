@@ -82,7 +82,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast(result.message, 'error');
             }
         } catch (error) {
-            console.error('Error:', error);
             showToast('An error occurred. Please try again.', 'error');
         }
     });

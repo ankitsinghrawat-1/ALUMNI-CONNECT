@@ -319,7 +319,6 @@ class StoryModal {
             }
             
         } catch (error) {
-            console.error('Error publishing story:', error);
             this.showNotification(error.message || 'Failed to publish story', 'error');
         } finally {
             publishBtn.disabled = false;

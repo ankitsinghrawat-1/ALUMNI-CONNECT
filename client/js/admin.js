@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('active-groups-stat').textContent = stats.activeGroups || 0;
             document.getElementById('new-blogs-stat').textContent = stats.newBlogsLast7Days || 0;
         } catch (error) {
-            console.error('Error fetching admin stats:', error);
         }
     };
 
@@ -37,7 +36,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </a>
             `;
         } catch (error) {
-            console.error('Error fetching pending requests:', error);
         }
     };
 

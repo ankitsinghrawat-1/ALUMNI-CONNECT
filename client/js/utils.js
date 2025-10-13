@@ -33,7 +33,6 @@ const renderData = async (endpoint, container, itemRenderer, options = {}) => {
             container.innerHTML = emptyMessage;
         }
     } catch (error) {
-        console.error(`Error fetching data from ${endpoint}:`, error);
         container.innerHTML = `<p class="info-message error">Failed to load content. Please try again later.</p>`;
     }
 };

@@ -110,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
             }
         } catch (error) {
-            console.error('Error fetching events:', error);
             eventsListContainer.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">

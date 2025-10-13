@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             attachEventListeners(membership.status);
 
         } catch (error) {
-            console.error('Error fetching group details:', error);
             discussionContainer.innerHTML = '<h1>Error loading discussion</h1><p class="info-message error">The group could not be found or there was a server error.</p>';
         }
     };
@@ -68,7 +67,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 postsContainer.innerHTML = '<p class="info-message card">No posts in this group yet. Be the first to share something!</p>';
             }
         } catch (error) {
-            console.error('Error loading posts:', error);
             postsContainer.innerHTML = '<p class="info-message error card">Could not load posts.</p>';
         }
     };

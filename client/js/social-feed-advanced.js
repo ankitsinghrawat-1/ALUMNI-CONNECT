@@ -133,7 +133,6 @@ function initializeAdvancedReactions() {
                     }
                 }
             } catch (error) {
-                console.error('Error adding reaction:', error);
                 window.SocialFeedUtils.showToast('Failed to add reaction', 'error');
             }
             
@@ -315,7 +314,6 @@ async function showHashtagSuggestions(content, suggestionBox, textarea) {
             });
         }
     } catch (error) {
-        console.error('Error fetching hashtag suggestions:', error);
     }
 }
 
@@ -377,7 +375,6 @@ async function showMentionSuggestions(query, suggestionBox, textarea, content) {
             });
         }
     } catch (error) {
-        console.error('Error fetching mention suggestions:', error);
     }
 }
 
@@ -495,7 +492,6 @@ async function updateViewerCount(threadId, badge) {
             badge.style.opacity = count > 0 ? '1' : '0.5';
         }
     } catch (error) {
-        console.error('Error updating viewer count:', error);
     }
 }
 

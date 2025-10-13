@@ -120,7 +120,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
             }
         } catch (error) {
-            console.error('Error fetching campaigns:', error);
             campaignsGrid.innerHTML = `
                 <div class="empty-state">
                     <div class="empty-icon">

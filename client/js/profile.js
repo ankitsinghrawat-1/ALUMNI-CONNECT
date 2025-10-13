@@ -324,7 +324,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
             }
         } catch (error) {
-            console.error('Error fetching profile completion:', error);
         }
     };
 
@@ -771,7 +770,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             showToast('Profile updated successfully!', 'success');
         } catch (error) {
-            console.error('Error updating profile field:', error);
             showToast('Error updating profile: ' + error.message, 'error');
         }
     };
@@ -849,7 +847,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('is_company_visible').checked = settings.is_company_visible;
             document.getElementById('is_location_visible').checked = settings.is_location_visible;
         } catch (error) {
-            console.error('Error fetching privacy settings:', error);
         }
     };
 
@@ -922,7 +919,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }, 500);
                 
             } catch (error) {
-                console.error('Form submission error:', error);
                 displayMessage(`Error: ${error.message}`);
             } finally {
                 // Reset button state

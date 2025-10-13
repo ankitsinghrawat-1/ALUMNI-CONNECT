@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageDiv.className = 'form-message success';
                 addJobForm.reset();
             } catch (error) {
-                console.error('Error adding job:', error);
                 messageDiv.textContent = `Error: ${error.message}`;
                 messageDiv.className = 'form-message error';
             }

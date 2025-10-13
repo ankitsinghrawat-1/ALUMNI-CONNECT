@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
 
         } catch (error) {
-            console.error('Error fetching campaign details:', error);
             detailsContainer.innerHTML = '<h1>Error loading campaign</h1><p class="info-message error">The campaign could not be found or there was a server error.</p>';
         }
     };

@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const requests = await window.api.get('/admin/verification-requests');
             renderTable(requests);
         } catch (error) {
-            console.error('Error fetching verification requests:', error);
             tableBody.innerHTML = `<tr><td colspan="5" class="text-center error-message">Failed to load items. ${error.message}</td></tr>`;
         }
     };
@@ -62,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (error) {
-            console.error(`Error updating request to ${status}:`, error);
             showToast(`Error: ${error.message}`, 'error');
         }
     };

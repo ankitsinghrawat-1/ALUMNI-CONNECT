@@ -77,7 +77,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 streak: activityStreak
             };
         } catch (error) {
-            console.error('Error fetching user statistics:', error);
             return { posts: 0, engagement: 0, connections: 0, events: 0, likes: 0, comments: 0, views: 0, networkScore: 0, streak: 0 };
         }
     };
@@ -266,7 +265,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             return blogs;
         } catch (error) {
-            console.error('Error fetching user blogs:', error);
             postsContainer.innerHTML = '<p class="info-message error">Could not load blog posts.</p>';
             renderActivityChart([]);
             return [];
@@ -365,7 +363,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 100);
 
         } catch (error) {
-            console.error('Error fetching user profile:', error);
             document.querySelector('.profile-main-view').innerHTML = `<div class="info-message card error">Could not load profile. ${error.message}</div>`;
         }
     };
@@ -387,7 +384,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
                 window.location.href = 'messages.html';
             } catch (error) {
-                console.error('Error starting conversation:', error);
                 showToast('Could not start a conversation.', 'error');
             }
         });

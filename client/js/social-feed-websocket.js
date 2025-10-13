@@ -40,7 +40,6 @@ class SocialFeedWebSocket {
         });
 
         this.socket.on('connect_error', (error) => {
-            console.error('WebSocket connection error:', error);
         });
 
         this.setupEventListeners();

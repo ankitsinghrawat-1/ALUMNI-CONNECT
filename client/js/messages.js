@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 throw new Error('Could not fetch user profile');
             }
         } catch (error) {
-            console.error(error);
             // If the profile can't be fetched, logout
             localStorage.clear();
             window.location.href = 'login.html';
@@ -91,7 +90,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 conversationsList.innerHTML = '<p class="info-message">You have no conversations.</p>';
             }
         } catch (error) {
-            console.error('Failed to load conversations', error);
         }
     };
     
@@ -122,7 +120,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
             messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
         } catch (error) {
-            console.error('Failed to load messages', error);
         }
     };
 
@@ -139,7 +136,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 newConvElement.click();
             }
         } catch (error) {
-            console.error('Error starting conversation:', error);
             showToast('Could not start conversation.', 'error');
         }
     };
@@ -183,7 +179,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             messagesDisplay.scrollTop = messagesDisplay.scrollHeight;
 
         } catch (error) {
-            console.error('Error uploading image:', error);
             showToast('Failed to send image. Please try again.', 'error');
             const tempBubble = document.getElementById(tempId);
             if(tempBubble) tempBubble.remove();
@@ -283,7 +278,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     searchResultsContainer.style.display = 'block';
                 }
             } catch (error) {
-                console.error('Error searching users:', error);
             }
         }, 300);
     });

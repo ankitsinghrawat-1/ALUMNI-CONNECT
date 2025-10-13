@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const jobs = await window.api.get(`/jobs/employer/${userEmail}`);
             renderJobs(jobs);
         } catch (error) {
-            console.error('Error fetching jobs:', error);
             listContainer.innerHTML = '<tr><td colspan="4" class="info-message error">Could not load your jobs. Please try again.</td></tr>';
         }
     };
@@ -45,7 +44,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast('Job posting deleted successfully.', 'success');
                     await loadJobs();
                 } catch (error) {
-                    console.error('Error deleting job:', error);
                     showToast(`Error: ${error.message}`, 'error');
                 }
             }

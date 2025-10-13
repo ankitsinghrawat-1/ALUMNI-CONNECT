@@ -153,7 +153,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             profileContainer.style.display = 'block';
             
         } catch (error) {
-            console.error('Error loading mentor profile:', error);
             showError(error.message || 'Failed to load mentor profile');
         } finally {
             showLoading(false);
@@ -682,7 +681,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             
         } catch (error) {
-            console.error('Error sending request:', error);
             showToast(error.message || 'Failed to send request', 'error');
         }
     }
@@ -729,7 +727,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 2000);
             
         } catch (error) {
-            console.error('Error deleting profile:', error);
             showToast(error.message || 'Failed to delete profile', 'error');
         }
     }
@@ -787,7 +784,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             switchToViewMode();
             
         } catch (error) {
-            console.error('Error updating profile:', error);
             showToast(error.message || 'Failed to update profile', 'error');
         }
     }

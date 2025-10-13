@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const profile = await window.api.get('/mentors/profile');
             expertiseAreasInput.value = profile.expertise_areas;
         } catch (error) {
-            console.error('Error fetching mentor profile:', error);
             showToast('An error occurred while loading your profile.', 'error');
         }
     };
@@ -28,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             setTimeout(() => window.location.href = 'mentors.html', 2000);
         } catch (error) {
             showToast(`Error: ${error.message}`, 'error');
-            console.error('Error updating mentor profile:', error);
         }
     });
 
@@ -40,7 +38,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 setTimeout(() => window.location.href = 'mentors.html', 2000);
             } catch (error) {
                 showToast(`Error: ${error.message}`, 'error');
-                console.error('Error unlisting mentor:', error);
             }
         }
     });

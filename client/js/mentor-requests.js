@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
             }
         } catch (error) {
-            console.error('Error fetching mentorship requests:', error);
             requestsListContainer.innerHTML = '<p class="info-message error">Failed to load requests.</p>';
         }
     };
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast(result.message, 'success');
                 await loadRequests();
             } catch (error) {
-                console.error('Error responding to request:', error);
                 showToast('An error occurred. Please try again.', 'error');
                 target.disabled = false;
             }

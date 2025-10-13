@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? `http://localhost:3000/${userProfile.profile_pic_url}` 
             : createInitialsAvatar(userProfile.full_name);
     } catch (error) {
-        console.error('Error fetching profile picture:', error);
     }
 
     const statsContainer = document.getElementById('stats-grid');
@@ -91,7 +90,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
     } catch (error) {
-        console.error('Error fetching institute data:', error);
         statsContainer.innerHTML = '<p class="info-message error">Could not load statistics.</p>';
     }
 });

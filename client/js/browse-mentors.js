@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             await loadMentors();
             
         } catch (error) {
-            console.error('Error initializing page:', error);
             showError('Failed to load mentors. Please refresh the page.');
         } finally {
             showLoading(false);
@@ -164,13 +163,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         message: req.request_message
                     }));
                 } catch (reqError) {
-                    console.error('Error loading sent requests:', reqError);
                     // Silently fail - button already shown
                 }
             }
         } catch (error) {
-            console.error('Error checking mentor status:', error);
-            console.error('Error details:', error.message, error.status);
             
             // On error, show default "Become a Mentor" button instead of error message
             mentorActionArea.innerHTML = `
@@ -196,7 +192,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             // as the stats/overview endpoint returns industry counts for stats display
             
         } catch (error) {
-            console.error('Error loading mentor stats:', error);
             // Set default values on error
             const defaultStats = {
                 total_mentors: '500+',
@@ -266,7 +261,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } catch (error) {
-            console.error('Error loading mentors:', error);
             showError('Failed to load mentors. Please try again.');
         } finally {
             isLoading = false;
@@ -459,7 +453,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.mentorFeatures.renderMentorBadges(badges.slice(0, 3), container);
             }
         } catch (error) {
-            console.error('Error loading badges for mentor:', mentorId, error);
         }
     }
 
@@ -595,7 +588,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } catch (error) {
-            console.error('Error loading mentor profile:', error);
             content.innerHTML = '<div class="error-state"><h3>Error loading profile</h3><p>Please try again later.</p></div>';
         }
     }
@@ -1150,7 +1142,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.mentorFeatures.renderRecommendationsWidget(data.recommendations, container);
             }
         } catch (error) {
-            console.error('Error loading recommendations:', error);
         }
     }
 
@@ -1168,7 +1159,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.mentorFeatures.renderTrendingMentors(trending, container);
             }
         } catch (error) {
-            console.error('Error loading trending mentors:', error);
         }
     }
 

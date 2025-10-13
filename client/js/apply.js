@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
             messageDiv.className = 'form-message success';
             applyForm.reset();
         } catch (error) {
-            console.error('Application submission error:', error);
             messageDiv.textContent = 'An unexpected error occurred. Please try again.';
             messageDiv.className = 'form-message error';
         }

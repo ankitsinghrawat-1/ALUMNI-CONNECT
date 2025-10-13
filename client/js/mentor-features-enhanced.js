@@ -8,7 +8,6 @@ async function loadMentorBadges(mentorId) {
         const response = await window.api.get(`/mentors/${mentorId}/badges`);
         return response.badges || [];
     } catch (error) {
-        console.error('Error loading mentor badges:', error);
         return [];
     }
 }
@@ -41,7 +40,6 @@ async function loadRecommendedMentors() {
         recommendationsCache = response;
         return response;
     } catch (error) {
-        console.error('Error loading recommendations:', error);
         return { recommendations: [], user_industry: null };
     }
 }
@@ -309,7 +307,6 @@ async function trackMentorView(mentorId) {
     try {
         await window.api.post(`/mentors/${mentorId}/track-view`, {});
     } catch (error) {
-        console.error('Error tracking mentor view:', error);
     }
 }
 
@@ -319,7 +316,6 @@ async function loadTrendingMentors(limit = 6) {
         const response = await window.api.get('/mentors/featured/trending', { params: { limit } });
         return response.trending || [];
     } catch (error) {
-        console.error('Error loading trending mentors:', error);
         return [];
     }
 }

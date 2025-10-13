@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             await loadFeaturedMentors();
             
         } catch (error) {
-            console.error('Error initializing mentors page:', error);
             showError('Failed to load mentors data');
         }
     }
@@ -80,11 +79,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         message: req.request_message
                     }));
                 } catch (error) {
-                    console.error('Error loading sent requests:', error);
                 }
             }
         } catch (error) {
-            console.error('Error checking mentor status:', error);
             mentorActionArea.innerHTML = `
                 <a href="become-mentor.html" class="btn btn-primary">
                     <i class="fas fa-user-plus"></i>
@@ -110,7 +107,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             displayFeaturedMentors(featuredMentors);
             
         } catch (error) {
-            console.error('Error loading featured mentors:', error);
             featuredMentorsContainer.innerHTML = `
                 <div class="error-state">
                     <div class="error-icon">

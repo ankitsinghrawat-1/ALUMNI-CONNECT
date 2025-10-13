@@ -28,7 +28,6 @@ class StoryViewer {
         try {
             this.currentUser = await window.api.get('/users/profile');
         } catch (error) {
-            console.error('Error loading current user:', error);
         }
     }
 
@@ -56,7 +55,6 @@ class StoryViewer {
             emptyState.style.display = 'none';
             
         } catch (error) {
-            console.error('Error loading stories:', error);
             loadingElement.style.display = 'none';
             this.showNotification('Failed to load stories', 'error');
         }
@@ -336,7 +334,6 @@ class StoryViewer {
             this.displayStory();
             
         } catch (error) {
-            console.error('Error voting in poll:', error);
             this.showNotification(error.message || 'Failed to record vote', 'error');
         }
     }
@@ -415,7 +412,6 @@ class StoryViewer {
             document.querySelector('#story-view-count span').textContent = story.view_count;
             
         } catch (error) {
-            console.error('Error marking story as viewed:', error);
         }
     }
 
@@ -435,7 +431,6 @@ class StoryViewer {
             this.showNotification(response.liked ? 'Liked!' : 'Unliked', 'success');
             
         } catch (error) {
-            console.error('Error toggling like:', error);
             this.showNotification('Failed to update like', 'error');
         }
     }
@@ -481,7 +476,6 @@ class StoryViewer {
             this.showNotification('Reply sent!', 'success');
             
         } catch (error) {
-            console.error('Error sending reply:', error);
             this.showNotification('Failed to send reply', 'error');
         }
     }
@@ -493,7 +487,6 @@ class StoryViewer {
             const likes = await window.api.get(`/stories/${story.story_id}/likes`);
             this.renderLikesModal(likes);
         } catch (error) {
-            console.error('Error loading story likes:', error);
             this.showNotification('Failed to load likes', 'error');
         }
     }
@@ -536,7 +529,6 @@ class StoryViewer {
             const viewers = await window.api.get(`/stories/${story.story_id}/viewers`);
             this.renderViewersModal(viewers);
         } catch (error) {
-            console.error('Error loading story viewers:', error);
             this.showNotification('Failed to load viewers', 'error');
         }
     }
@@ -633,7 +625,6 @@ class StoryViewer {
             this.showNotification('Story deleted successfully', 'success');
             
         } catch (error) {
-            console.error('Error deleting story:', error);
             this.showNotification('Failed to delete story', 'error');
         }
     }

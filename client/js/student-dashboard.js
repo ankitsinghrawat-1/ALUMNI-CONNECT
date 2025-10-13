@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? `http://localhost:3000/${userProfile.profile_pic_url}` 
             : createInitialsAvatar(userProfile.full_name);
     } catch (error) {
-        console.error('Error fetching profile picture:', error);
     }
 
     const mentorContainer = document.getElementById('mentor-recommendations');
@@ -77,7 +76,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
     } catch (error) {
-        console.error('Error fetching dashboard data:', error);
         mentorContainer.innerHTML = '<p class="info-message error">Could not load recommendations.</p>';
         jobContainer.innerHTML = '<p class="info-message error">Could not load jobs.</p>';
         eventContainer.innerHTML = '<p class="info-message error">Could not load events.</p>';

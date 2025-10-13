@@ -207,7 +207,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     showToast(`Connection request sent to ${alumnus.full_name}!`, 'success');
                 } catch (error) {
-                    console.error('Error sending connection request:', error);
                     showToast('Failed to send connection request. Please try again.', 'error');
                 }
             });
@@ -271,7 +270,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showEmptyState();
             }
         } catch (error) {
-            console.error('Error fetching alumni:', error);
             
             // Show appropriate error message based on the error type
             if (error.message.includes('server')) {

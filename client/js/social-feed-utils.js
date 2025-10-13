@@ -191,7 +191,6 @@ function initializeReactions(element) {
                     : currentCount - 1;
             }
         } catch (error) {
-            console.error('Error toggling like:', error);
         }
     });
 }
@@ -230,7 +229,6 @@ function initializeBookmarks(element) {
                 );
             }
         } catch (error) {
-            console.error('Error toggling bookmark:', error);
             showToast('Failed to bookmark thread', 'error');
         }
     });

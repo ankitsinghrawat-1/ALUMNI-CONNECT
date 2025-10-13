@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('total-events').textContent = stats.totalEvents || 0;
             document.getElementById('total-jobs').textContent = stats.totalJobs || 0;
         } catch (error) {
-            console.error('Failed to load admin stats:', error);
             showToast('Could not load platform statistics.', 'error');
         }
     };
@@ -41,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 activityList.innerHTML = '<li>No recent activity to show.</li>';
             }
         } catch (error) {
-            console.error('Failed to load recent activity:', error);
             activityList.innerHTML = '<li>Could not load activity.</li>';
         }
     };

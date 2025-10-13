@@ -38,7 +38,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = 'my-blogs.html';
                 }, 2000);
             } catch (error) {
-                console.error('Error adding blog post:', error);
                 showToast(`Error: ${error.message}`, 'error');
                 messageDiv.textContent = `Error: ${error.message}`;
                 messageDiv.className = 'form-message error';

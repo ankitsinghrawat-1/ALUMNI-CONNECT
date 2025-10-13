@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>`;
             }
         } catch (error) {
-            console.error('Error fetching notifications:', error);
             notificationsListContainer.innerHTML = '<p class="info-message error">Failed to load notifications.</p>';
         }
     };
@@ -52,7 +51,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showToast('Notification deleted.', 'success');
                     await loadNotifications();
                 } catch (error) {
-                    console.error('Error deleting notification:', error);
                     showToast('An error occurred.', 'error');
                 }
             }

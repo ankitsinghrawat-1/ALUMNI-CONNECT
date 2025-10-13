@@ -79,7 +79,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
     } catch (error) {
-        console.error('Error fetching event details:', error);
         eventDetailsContainer.innerHTML = '<h1>Error loading event</h1><p class="info-message error">The event could not be found or there was a server error.</p>';
     }
 });

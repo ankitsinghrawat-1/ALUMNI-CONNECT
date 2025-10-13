@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 messageDiv.className = 'form-message success';
                 addEventForm.reset();
             } catch (error) {
-                console.error('Error adding event:', error);
                 messageDiv.textContent = `Error: ${error.message}`;
                 messageDiv.className = 'form-message error';
             }

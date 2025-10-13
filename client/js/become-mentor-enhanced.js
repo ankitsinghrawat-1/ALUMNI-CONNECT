@@ -294,7 +294,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 2000);
 
         } catch (error) {
-            console.error('Error creating mentor profile:', error);
             showToast(error.message || 'Failed to create mentor profile', 'error');
             messageDiv.className = 'form-message error';
             messageDiv.textContent = `Error: ${error.message}`;
@@ -637,7 +636,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 showToast('Draft restored', 'info');
             } catch (error) {
-                console.error('Error loading draft:', error);
             }
         }
     }

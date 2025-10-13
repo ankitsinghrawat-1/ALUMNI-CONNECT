@@ -88,7 +88,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             await loadMentorProfile(mentorId);
             
         } catch (error) {
-            console.error('Error initializing:', error);
             showError('Failed to load your mentor profile');
         }
     }
@@ -107,7 +106,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             editContainer.style.display = 'block';
             
         } catch (error) {
-            console.error('Error loading mentor profile:', error);
             showError(error.message || 'Failed to load mentor profile');
         } finally {
             showLoading(false);
@@ -203,7 +201,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 1500);
             
         } catch (error) {
-            console.error('Error updating profile:', error);
             showToast(error.message || 'Failed to update profile', 'error');
         }
     }

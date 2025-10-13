@@ -186,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (document.getElementById('visibility')) document.getElementById('visibility').value = draft.visibility || 'public';
                 showToast('Draft loaded', 'info');
             } catch (e) {
-                console.error('Error loading draft:', e);
             }
         }
     }
@@ -371,7 +370,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 hashtagSuggestions.style.display = 'none';
             }
         } catch (error) {
-            console.error('Error fetching hashtag suggestions:', error);
         }
     }
 
@@ -473,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 mentionSuggestions.style.display = 'none';
             }
         } catch (error) {
-            console.error('Error fetching mention suggestions:', error);
         }
     }
 
@@ -635,7 +632,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 try {
                     await window.api.postForm('/stories', storyFormData);
                 } catch (storyError) {
-                    console.error('Error creating story:', storyError);
                     // Don't fail the whole operation if story creation fails
                 }
             }
@@ -648,7 +644,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1500);
             
         } catch (error) {
-            console.error('Error creating thread:', error);
             showToast(`Error: ${error.message}`, 'error');
             
             // Re-enable form
@@ -674,7 +669,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (error) {
-            console.error('Error loading user profile:', error);
         }
     };
 

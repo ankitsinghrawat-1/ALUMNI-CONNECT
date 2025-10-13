@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const requests = await window.api.get('/admin/group-join-requests');
             renderTable(requests);
         } catch (error) {
-            console.error('Error fetching group join requests:', error);
             tableBody.innerHTML = `<tr><td colspan="4" class="text-center error-message">Failed to load requests. ${error.message}</td></tr>`;
         }
     };
@@ -60,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (error) {
-            console.error(`Error updating join request to ${status}:`, error);
             showToast(`Error: ${error.message}`, 'error');
         }
     };

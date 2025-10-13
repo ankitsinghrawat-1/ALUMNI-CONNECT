@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
     } catch (error) {
-        console.error('Permission check failed:', error);
         // This redirect will now only happen for legitimate errors, not race conditions.
         showToast('You do not have permission to access this page.', 'error');
         window.location.href = 'groups.html';
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('name').value = groupData.name;
             document.getElementById('description').value = groupData.description;
         } catch (error) {
-            console.error('Error fetching group data:', error);
             showToast('Could not load group data.', 'error');
         }
     };
@@ -98,7 +96,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
             }).join('');
         } catch (error) {
-            console.error('Error fetching members:', error);
         }
     };
 
