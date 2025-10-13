@@ -134,8 +134,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Fetch mentor data
             currentMentor = await window.api.get(`/mentors/${profileMentorId}`);
             
+            console.log('Loaded mentor profile:', currentMentor);
+            console.log('Current user ID:', currentUserId);
+            console.log('Mentor user_id:', currentMentor.user_id);
+            
             // Check if current user is the profile owner
             isOwner = currentUserId && currentUserId === currentMentor.user_id;
+            
+            console.log('isOwner determined as:', isOwner);
             
             // Display profile
             displayProfile(currentMentor);
@@ -218,8 +224,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     function addInlineEditButtons() {
+        console.log('addInlineEditButtons called');
         // Add edit button to each section header
         const sections = document.querySelectorAll('#view-mode .profile-section h2');
+        console.log('Found sections:', sections.length);
         sections.forEach(section => {
             if (!section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
@@ -228,11 +236,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
                 section.appendChild(editBtn);
+                console.log('Added edit button to section:', section.textContent);
             }
         });
         
         // Add edit button to sidebar sections
         const sidebarSections = document.querySelectorAll('#view-mode .sidebar-card h3');
+        console.log('Found sidebar sections:', sidebarSections.length);
         sidebarSections.forEach(section => {
             if (!section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
@@ -241,6 +251,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
                 section.appendChild(editBtn);
+                console.log('Added edit button to sidebar section:', section.textContent);
             }
         });
     }
@@ -379,6 +390,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderProfileActions() {
+        console.log('renderProfileActions called - isOwner:', isOwner);
         if (isOwner) {
             // Show Edit Profile button for owner
             profileActions.innerHTML = `
@@ -388,8 +400,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <a href="mentor-requests.html" class="btn btn-secondary">
                     <i class="fas fa-inbox"></i> View Requests
                 </a>
+                <button id="delete-profile-btn" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Delete Profile
+                </button>
             `;
             document.getElementById('edit-profile-btn').addEventListener('click', switchToEditMode);
+            document.getElementById('delete-profile-btn').addEventListener('click', handleDeleteProfile);
         } else {
             // Show Send Request button for others
             const loggedIn = localStorage.getItem('alumniConnectToken');
@@ -679,6 +695,53 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (error) {
             console.error('Error sending request:', error);
             showToast(error.message || 'Failed to send request', 'error');
+        }
+    }
+
+    // Handle Delete Profile
+    async function handleDeleteProfile() {
+        if (!isOwner) {
+            showToast('You can only delete your own profile', 'error');
+            return;
+        }
+
+        const confirmDelete = confirm(
+            'Are you sure you want to delete your mentor profile?\n\n' +
+            'This will permanently remove:\n' +
+            '• Your mentor profile\n' +
+            '• All your specializations\n' +
+            '• Your availability schedule\n' +
+            '• All mentorship requests\n' +
+            '• Your reviews and ratings\n\n' +
+            'This action cannot be undone!'
+        );
+
+        if (!confirmDelete) {
+            return;
+        }
+
+        // Double confirmation for such a critical action
+        const doubleConfirm = confirm('This is your FINAL WARNING. Delete mentor profile permanently?');
+        
+        if (!doubleConfirm) {
+            return;
+        }
+
+        try {
+            showToast('Deleting profile...', 'info');
+            
+            await window.api.del('/mentors/profile');
+            
+            showToast('Mentor profile deleted successfully!', 'success');
+            
+            // Redirect to browse mentors page after 2 seconds
+            setTimeout(() => {
+                window.location.href = 'browse-mentors.html';
+            }, 2000);
+            
+        } catch (error) {
+            console.error('Error deleting profile:', error);
+            showToast(error.message || 'Failed to delete profile', 'error');
         }
     }
 

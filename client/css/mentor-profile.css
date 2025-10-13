@@ -206,6 +206,17 @@ html.dark-mode .profile-action-buttons .btn-secondary:hover {
     color: white;
 }
 
+.profile-action-buttons .btn-danger {
+    background: var(--mentor-accent);
+    color: white;
+}
+
+.profile-action-buttons .btn-danger:hover {
+    background: #e05555;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+}
+
 .edit-mode-indicator {
     display: inline-flex;
     align-items: center;
