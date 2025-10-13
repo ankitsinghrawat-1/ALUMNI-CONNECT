@@ -112,6 +112,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check if user is a mentor
     async function checkMentorStatus() {
         const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+        console.log('checkMentorStatus - loggedInUserEmail:', loggedInUserEmail);
+        
         if (!loggedInUserEmail) {
             mentorActionArea.innerHTML = `
                 <a href="login.html" class="btn btn-primary">
@@ -126,7 +128,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             const data = await window.api.get('/mentors/status');
+            console.log('Mentor status response:', data);
+            console.log('Is mentor?', data.isMentor);
+            console.log('Mentor ID:', data.mentorId);
+            
             if (data.isMentor) {
+                console.log('User IS a mentor - showing Your Mentor Profile button');
                 mentorActionArea.innerHTML = `
                     <a href="mentor-profile.html?id=${data.mentorId}" class="btn btn-primary">
                         <i class="fas fa-user-tie"></i>
@@ -140,6 +147,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Empty the search bar action area for existing mentors
                 mentorActionAreaSearch.innerHTML = '';
             } else {
+                console.log('User is NOT a mentor - showing Become a Mentor button');
                 // User is not a mentor - show "Become a Mentor" button in main area (permanent spot)
                 mentorActionArea.innerHTML = `
                     <a href="become-mentor.html" class="btn btn-primary">
@@ -162,12 +170,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
-            // On error, show "Become a Mentor" in main area (permanent spot)
+            console.error('Error details:', error.message, error.status);
+            
+            // On error, don't show any button - show error message instead
             mentorActionArea.innerHTML = `
-                <a href="become-mentor.html" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Become a Mentor
-                </a>
+                <div class="error-message" style="color: #ff6b6b; padding: 1rem;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    Unable to check mentor status. Please refresh the page.
+                </div>
             `;
             mentorActionAreaSearch.innerHTML = '';
         }
