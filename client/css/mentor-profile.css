@@ -157,6 +157,55 @@ html.dark-mode .rating-count {
     flex-wrap: wrap;
 }
 
+.profile-action-buttons .btn {
+    padding: 0.875rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: var(--mentor-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+}
+
+.profile-action-buttons .btn-primary {
+    background: var(--mentor-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+}
+
+.profile-action-buttons .btn-primary:hover {
+    background: var(--mentor-primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(74, 144, 226, 0.4);
+}
+
+.profile-action-buttons .btn-secondary {
+    background: var(--mentor-gray-200);
+    color: var(--text-color);
+}
+
+.profile-action-buttons .btn-secondary:hover {
+    background: var(--mentor-gray-300);
+    transform: translateY(-2px);
+}
+
+html.dark-mode .profile-action-buttons .btn-secondary {
+    background: var(--mentor-gray-700);
+}
+
+html.dark-mode .profile-action-buttons .btn-secondary:hover {
+    background: var(--mentor-gray-600);
+}
+
+.profile-action-buttons .btn-success {
+    background: var(--mentor-success);
+    color: white;
+}
+
 .edit-mode-indicator {
     display: inline-flex;
     align-items: center;
@@ -199,6 +248,7 @@ html.dark-mode .profile-section {
 .profile-section h3 {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 0.5rem;
     font-size: 1.25rem;
     margin-bottom: 1rem;
@@ -212,9 +262,40 @@ html.dark-mode .profile-section h3 {
     border-bottom-color: var(--mentor-gray-700);
 }
 
-.profile-section h2 i,
-.profile-section h3 i {
+.profile-section h2 i:first-child,
+.profile-section h3 i:first-child {
     color: var(--mentor-primary);
+}
+
+/* Inline Edit Buttons */
+.edit-section-btn {
+    background: var(--mentor-gray-100);
+    border: 2px solid var(--mentor-gray-300);
+    color: var(--mentor-primary);
+    padding: 0.4rem 0.6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: var(--mentor-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.edit-section-btn:hover {
+    background: var(--mentor-primary);
+    color: white;
+    transform: scale(1.05);
+}
+
+html.dark-mode .edit-section-btn {
+    background: var(--mentor-gray-700);
+    border-color: var(--mentor-gray-600);
+}
+
+html.dark-mode .edit-section-btn:hover {
+    background: var(--mentor-primary);
+    border-color: var(--mentor-primary);
 }
 
 .profile-text {

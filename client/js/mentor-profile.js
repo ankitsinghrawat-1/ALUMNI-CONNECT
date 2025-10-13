@@ -210,6 +210,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Social Links
         displaySocialLinks(mentor);
+        
+        // Add inline edit buttons if owner
+        if (isOwner) {
+            addInlineEditButtons();
+        }
+    }
+    
+    function addInlineEditButtons() {
+        // Add edit button to each section header
+        const sections = document.querySelectorAll('#view-mode .profile-section h2');
+        sections.forEach(section => {
+            if (!section.querySelector('.edit-section-btn')) {
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-section-btn';
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                editBtn.title = 'Edit this section';
+                editBtn.onclick = switchToEditMode;
+                section.appendChild(editBtn);
+            }
+        });
+        
+        // Add edit button to sidebar sections
+        const sidebarSections = document.querySelectorAll('#view-mode .sidebar-card h3');
+        sidebarSections.forEach(section => {
+            if (!section.querySelector('.edit-section-btn')) {
+                const editBtn = document.createElement('button');
+                editBtn.className = 'edit-section-btn';
+                editBtn.innerHTML = '<i class="fas fa-edit"></i>';
+                editBtn.title = 'Edit this section';
+                editBtn.onclick = switchToEditMode;
+                section.appendChild(editBtn);
+            }
+        });
     }
 
     function displaySpecializations(specializations) {
