@@ -417,14 +417,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!e.target.closest('.mentor-btn')) {
                 showMentorProfile(mentor.mentor_id);
                 // Track profile view
-                window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                if (window.mentorFeatures && window.mentorFeatures.trackMentorView) {
+                    window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                }
             }
         });
         card.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
                 showMentorProfile(mentor.mentor_id);
-                window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                if (window.mentorFeatures && window.mentorFeatures.trackMentorView) {
+                    window.mentorFeatures.trackMentorView(mentor.mentor_id);
+                }
             }
         });
 
@@ -443,6 +447,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load badges for mentor card
     async function loadMentorBadgesForCard(mentorId) {
         try {
+            // Check if mentorFeatures is available
+            if (!window.mentorFeatures || !window.mentorFeatures.loadMentorBadges) {
+                console.warn('Mentor features not loaded, skipping badge loading for mentor:', mentorId);
+                return;
+            }
+            
             const badges = await window.mentorFeatures.loadMentorBadges(mentorId);
             const container = document.getElementById(`badges-${mentorId}`);
             if (container && badges.length > 0) {
@@ -546,11 +556,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showMentorProfile(mentor.mentor_id);
                 break;
             case 'compare':
-                const added = window.mentorFeatures.addToComparison(mentor);
-                if (added) {
-                    button.innerHTML = '<i class="fas fa-check"></i> Added';
-                    button.classList.add('added');
-                    button.disabled = true;
+                if (window.mentorFeatures && window.mentorFeatures.addToComparison) {
+                    const added = window.mentorFeatures.addToComparison(mentor);
+                    if (added) {
+                        button.innerHTML = '<i class="fas fa-check"></i> Added';
+                        button.classList.add('added');
+                        button.disabled = true;
+                    }
+                } else {
+                    showToast('Comparison feature not available', 'error');
                 }
                 break;
         }
@@ -1132,6 +1146,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load and display recommendations
     async function loadAndDisplayRecommendations() {
         try {
+            if (!window.mentorFeatures || !window.mentorFeatures.loadRecommendedMentors) {
+                console.warn('Mentor features not loaded, skipping recommendations');
+                return;
+            }
+            
             const data = await window.mentorFeatures.loadRecommendedMentors();
             if (data.recommendations && data.recommendations.length > 0) {
                 const container = document.getElementById('recommendations-container');
@@ -1145,6 +1164,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load and display trending mentors
     async function loadAndDisplayTrending() {
         try {
+            if (!window.mentorFeatures || !window.mentorFeatures.loadTrendingMentors) {
+                console.warn('Mentor features not loaded, skipping trending mentors');
+                return;
+            }
+            
             const trending = await window.mentorFeatures.loadTrendingMentors(6);
             if (trending && trending.length > 0) {
                 const container = document.getElementById('trending-container');
