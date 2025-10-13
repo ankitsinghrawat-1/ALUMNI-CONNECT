@@ -550,13 +550,23 @@ module.exports = (pool) => {
         res.status(200).json({ message: `Request has been ${action}.` });
     }));
     
-    router.get('/status', verifyToken, asyncHandler(async (req, res) => {
-        const user_id = req.user.userId;
-        const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
-        res.json({ 
-            isMentor: mentor.length > 0,
-            mentorId: mentor.length > 0 ? mentor[0].mentor_id : null
-        });
+    router.get('/status', asyncHandler(async (req, res) => {
+        try {
+            // Note: verifyToken is already applied at router level in server.js
+            const user_id = req.user.userId;
+            const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
+            res.json({ 
+                isMentor: mentor.length > 0,
+                mentorId: mentor.length > 0 ? mentor[0].mentor_id : null
+            });
+        } catch (error) {
+            console.error('Error in /mentors/status:', error);
+            // Always return a valid response, never 404
+            res.json({ 
+                isMentor: false,
+                mentorId: null
+            });
+        }
     }));
 
     // Update mentor profile
