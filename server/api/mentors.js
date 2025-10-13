@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const asyncHandler = require('express-async-handler');
-const { verifyToken } = require('../middleware/authMiddleware');
+const { verifyToken, optionalAuth } = require('../middleware/authMiddleware');
 
 module.exports = (pool) => {
 
@@ -378,6 +378,33 @@ module.exports = (pool) => {
         });
     }));
 
+    // Check mentor status - uses optional auth (works for logged in and non-logged in users)
+    router.get('/status', optionalAuth, asyncHandler(async (req, res) => {
+        try {
+            // Check if user is authenticated
+            if (!req.user || !req.user.userId) {
+                return res.json({ 
+                    isMentor: false,
+                    mentorId: null
+                });
+            }
+            
+            const user_id = req.user.userId;
+            const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
+            res.json({ 
+                isMentor: mentor.length > 0,
+                mentorId: mentor.length > 0 ? mentor[0].mentor_id : null
+            });
+        } catch (error) {
+            console.error('Error in /mentors/status:', error);
+            // Always return a valid response, never throw/404
+            res.json({ 
+                isMentor: false,
+                mentorId: null
+            });
+        }
+    }));
+
     // This route is protected by verifyToken
     router.use(verifyToken);
 
@@ -548,32 +575,6 @@ module.exports = (pool) => {
         }
         await pool.query('UPDATE mentor_requests SET status = ? WHERE request_id = ?', [action, requestId]);
         res.status(200).json({ message: `Request has been ${action}.` });
-    }));
-    
-    router.get('/status', asyncHandler(async (req, res) => {
-        try {
-            // Check if user is authenticated
-            if (!req.user || !req.user.userId) {
-                return res.json({ 
-                    isMentor: false,
-                    mentorId: null
-                });
-            }
-            
-            const user_id = req.user.userId;
-            const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
-            res.json({ 
-                isMentor: mentor.length > 0,
-                mentorId: mentor.length > 0 ? mentor[0].mentor_id : null
-            });
-        } catch (error) {
-            console.error('Error in /mentors/status:', error);
-            // Always return a valid response, never throw/404
-            res.json({ 
-                isMentor: false,
-                mentorId: null
-            });
-        }
     }));
 
     // Update mentor profile
