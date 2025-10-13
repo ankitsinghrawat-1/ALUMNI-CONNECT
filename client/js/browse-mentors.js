@@ -115,7 +115,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check if user is a mentor
     async function checkMentorStatus() {
         const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-        console.log('checkMentorStatus - loggedInUserEmail:', loggedInUserEmail);
         
         if (!loggedInUserEmail) {
             mentorActionArea.innerHTML = `
@@ -131,12 +130,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             const data = await window.api.get('/mentors/status');
-            console.log('Mentor status response:', data);
-            console.log('Is mentor?', data.isMentor);
-            console.log('Mentor ID:', data.mentorId);
             
             if (data.isMentor) {
-                console.log('User IS a mentor - showing Your Mentor Profile button');
                 mentorActionArea.innerHTML = `
                     <a href="mentor-profile.html?id=${data.mentorId}" class="btn btn-primary">
                         <i class="fas fa-user-tie"></i>
@@ -150,7 +145,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Empty the search bar action area for existing mentors
                 mentorActionAreaSearch.innerHTML = '';
             } else {
-                console.log('User is NOT a mentor - showing Become a Mentor button');
                 // User is not a mentor - show "Become a Mentor" button in main area (permanent spot)
                 mentorActionArea.innerHTML = `
                     <a href="become-mentor.html" class="btn btn-primary">

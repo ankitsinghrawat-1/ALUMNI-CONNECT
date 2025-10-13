@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
 
             } catch (error) {
-                console.log('Database not connected, showing placeholder text:', error.message);
                 // Show friendly message when database is not connected
                 const fallbackStats = {
                     'alumni-count': 'Coming Soon',

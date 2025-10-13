@@ -281,7 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Profile...';
 
             const formData = collectFormData();
-            console.log('Submitting mentor data:', formData);
 
             const result = await window.api.post('/mentors', formData);
             

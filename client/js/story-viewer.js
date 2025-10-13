@@ -787,7 +787,6 @@ class StoryViewer {
         if (typeof showToast === 'function') {
             showToast(message, type);
         } else {
-            console.log(`${type.toUpperCase()}: ${message}`);
             alert(message);
         }
     }

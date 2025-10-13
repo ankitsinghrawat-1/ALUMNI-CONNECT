@@ -112,7 +112,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
             } catch (error) {
-                console.log('Not logged in');
                 if (!targetMentorId) {
                     showError('Please sign in to view your profile');
                     return;
@@ -134,14 +133,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Fetch mentor data
             currentMentor = await window.api.get(`/mentors/${profileMentorId}`);
             
-            console.log('Loaded mentor profile:', currentMentor);
-            console.log('Current user ID:', currentUserId);
-            console.log('Mentor user_id:', currentMentor.user_id);
             
             // Check if current user is the profile owner
             isOwner = currentUserId && currentUserId === currentMentor.user_id;
             
-            console.log('isOwner determined as:', isOwner);
             
             // Display profile
             displayProfile(currentMentor);
@@ -224,10 +219,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     function addInlineEditButtons() {
-        console.log('addInlineEditButtons called');
         // Add edit button to each section header
         const sections = document.querySelectorAll('#view-mode .profile-section h2');
-        console.log('Found sections:', sections.length);
         sections.forEach(section => {
             if (!section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
@@ -236,13 +229,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
                 section.appendChild(editBtn);
-                console.log('Added edit button to section:', section.textContent);
             }
         });
         
         // Add edit button to sidebar sections
         const sidebarSections = document.querySelectorAll('#view-mode .sidebar-card h3');
-        console.log('Found sidebar sections:', sidebarSections.length);
         sidebarSections.forEach(section => {
             if (!section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
@@ -251,7 +242,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
                 section.appendChild(editBtn);
-                console.log('Added edit button to sidebar section:', section.textContent);
             }
         });
     }
@@ -390,7 +380,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderProfileActions() {
-        console.log('renderProfileActions called - isOwner:', isOwner);
         if (isOwner) {
             // Show Edit Profile button for owner
             profileActions.innerHTML = `

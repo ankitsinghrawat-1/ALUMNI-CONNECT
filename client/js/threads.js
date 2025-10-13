@@ -1922,5 +1922,4 @@ document.addEventListener('DOMContentLoaded', () => {
     //     }
     // }, 60000); // Every minute
 
-    console.log('✅ Enhanced UX features loaded: Auto-hide story bar, infinite scroll, keyboard shortcuts, and more!');
 });

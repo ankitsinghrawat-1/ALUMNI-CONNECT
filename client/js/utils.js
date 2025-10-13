@@ -65,7 +65,6 @@ const showToast = (message, type = 'info') => {
         }).showToast();
     } else {
         // Fallback to console log or simple alert
-        console.log(`Toast: ${type.toUpperCase()} - ${message}`);
         
         // Create a simple custom notification
         const toast = document.createElement('div');

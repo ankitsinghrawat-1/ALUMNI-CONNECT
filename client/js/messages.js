@@ -49,7 +49,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ... rest of the file is large, so I'll provide it in full.
     
     socket.on("connect", () => {
-        console.log("Connected to WebSocket server.");
     });
 
     socket.on("getMessage", (data) => {

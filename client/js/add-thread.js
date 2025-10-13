@@ -688,7 +688,6 @@ document.addEventListener('DOMContentLoaded', () => {
             try {
                 showToast('Please log in to create discussions', 'error');
             } catch (error) {
-                console.log('Please log in to create discussions');
             }
             setTimeout(() => {
                 window.location.href = 'login.html';
@@ -738,7 +737,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 minChars: 1,
                 maxResults: 10,
                 onSelect: (item) => {
-                    console.log('Mention selected:', item);
                 }
             });
         }
@@ -753,7 +751,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 minChars: 1,
                 maxResults: 10,
                 onSelect: (item) => {
-                    console.log('Hashtag selected:', item);
                 }
             });
         }

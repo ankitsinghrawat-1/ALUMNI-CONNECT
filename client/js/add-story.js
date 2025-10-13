@@ -809,12 +809,10 @@ document.addEventListener('DOMContentLoaded', () => {
 class StoryAnalytics {
     static trackStoryCreation(type) {
         // Analytics tracking
-        console.log(`Story created: ${type}`);
     }
 
     static trackTemplateUsage(template) {
         // Template usage analytics
-        console.log(`Template used: ${template}`);
     }
 }
 
@@ -891,7 +889,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 minChars: 1,
                 maxResults: 10,
                 onSelect: (item) => {
-                    console.log('Story mention selected:', item);
                 }
             });
         }

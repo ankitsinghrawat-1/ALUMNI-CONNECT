@@ -481,7 +481,6 @@ function initializeShareButtons() {
             try {
                 await navigator.share({ title, url });
             } catch (error) {
-                console.log('Share cancelled');
             }
         } else {
             // Fallback: copy to clipboard
