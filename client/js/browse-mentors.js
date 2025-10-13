@@ -160,27 +160,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
                 // Empty the search bar action area
                 mentorActionAreaSearch.innerHTML = '';
-            }
-
-            // Load sent requests
-            if (!data.isMentor) {
-                const requestsData = await window.api.get('/mentors/requests/sent');
-                sentRequests = requestsData.map(req => ({
-                    mentor_id: req.mentor_user_id,
-                    status: req.status,
-                    message: req.request_message
-                }));
+                
+                // Load sent requests in background (don't block button display)
+                try {
+                    const requestsData = await window.api.get('/mentors/requests/sent');
+                    sentRequests = requestsData.map(req => ({
+                        mentor_id: req.mentor_user_id,
+                        status: req.status,
+                        message: req.request_message
+                    }));
+                } catch (reqError) {
+                    console.error('Error loading sent requests:', reqError);
+                    // Silently fail - button already shown
+                }
             }
         } catch (error) {
             console.error('Error checking mentor status:', error);
             console.error('Error details:', error.message, error.status);
             
-            // On error, don't show any button - show error message instead
+            // On error, show default "Become a Mentor" button instead of error message
             mentorActionArea.innerHTML = `
-                <div class="error-message" style="color: #ff6b6b; padding: 1rem;">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    Unable to check mentor status. Please refresh the page.
-                </div>
+                <a href="become-mentor.html" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Become a Mentor
+                </a>
             `;
             mentorActionAreaSearch.innerHTML = '';
         }
