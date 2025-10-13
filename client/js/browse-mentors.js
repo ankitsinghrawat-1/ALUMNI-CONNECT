@@ -1,12 +1,6 @@
 // Enhanced Browse Mentors JavaScript
 
-// Use global sanitizeHTML if available, otherwise define locally
-const sanitizeHTML = window.sanitizeHTML || function(str) {
-    if (!str) return '';
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
-};
+// Use global sanitizeHTML from utils.js (no redeclaration needed)
 
 document.addEventListener('DOMContentLoaded', async () => {
     // DOM Elements

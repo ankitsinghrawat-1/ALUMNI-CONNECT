@@ -1,15 +1,6 @@
 // Enhanced Mentor Features - Badges, Recommendations, Comparison, etc.
 
-// Utility function - only declare if not already defined
-if (typeof window.sanitizeHTML === 'undefined') {
-    window.sanitizeHTML = function(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-    };
-}
-const sanitizeHTML = window.sanitizeHTML;
+// Use global sanitizeHTML from utils.js (no redeclaration needed)
 
 // Mentor Badges System
 async function loadMentorBadges(mentorId) {
