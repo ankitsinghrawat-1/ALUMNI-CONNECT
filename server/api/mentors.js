@@ -550,7 +550,7 @@ module.exports = (pool) => {
         res.status(200).json({ message: `Request has been ${action}.` });
     }));
     
-    router.get('/status', asyncHandler(async (req, res) => {
+    router.get('/status', verifyToken, asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
         const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
         res.json({ 
