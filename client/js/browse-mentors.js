@@ -180,9 +180,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <i class="fas fa-user-plus"></i>
                             Become a Mentor
                         </a>
-                        <a href="mentor-profile.html" class="btn btn-secondary">
-                            <i class="fas fa-user-circle"></i>
-                            View Mentor Profile
+                        <a href="mentor-requests.html" class="btn btn-secondary">
+                            <i class="fas fa-inbox"></i>
+                            My Mentor Dashboard
                         </a>
                     </div>
                 </div>
