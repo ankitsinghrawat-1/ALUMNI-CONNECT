@@ -43,7 +43,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (error) {
             // If the server returns an error, log it and show an error toast to the user.
-            console.error('Error requesting group:', error);
             showToast(error.message || 'An unknown error occurred.', 'error');
         } finally {
             submitButton.disabled = false;

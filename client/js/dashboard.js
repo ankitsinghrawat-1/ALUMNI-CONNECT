@@ -95,7 +95,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } catch (error) {
-            console.error('Error fetching dashboard data:', error);
         }
     };
 

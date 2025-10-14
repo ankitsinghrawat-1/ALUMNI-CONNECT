@@ -1,5 +1,4 @@
 // client/js/utils.js
-// client/js/utils.js
 
 /**
  * A universal function to fetch data and render it to a container.
@@ -33,7 +32,6 @@ const renderData = async (endpoint, container, itemRenderer, options = {}) => {
             container.innerHTML = emptyMessage;
         }
     } catch (error) {
-        console.error(`Error fetching data from ${endpoint}:`, error);
         container.innerHTML = `<p class="info-message error">Failed to load content. Please try again later.</p>`;
     }
 };
@@ -65,7 +63,6 @@ const showToast = (message, type = 'info') => {
         }).showToast();
     } else {
         // Fallback to console log or simple alert
-        console.log(`Toast: ${type.toUpperCase()} - ${message}`);
         
         // Create a simple custom notification
         const toast = document.createElement('div');

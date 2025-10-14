@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let isOwnProfile = false;
 
     if (!userId) {
-        console.error('No userId parameter provided');
         showToast('User ID not provided', 'error');
         setTimeout(() => {
             window.location.href = 'threads.html';
@@ -31,7 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     } catch (error) {
-        console.error('Error getting current user:', error);
     }
 
     // Load profile data
@@ -150,7 +148,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } catch (error) {
-            console.error('Error loading profile:', error);
             showToast('Error loading profile', 'error');
         }
     };
@@ -171,7 +168,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 followBtn.classList.add('btn-primary');
             }
         } catch (error) {
-            console.error('Error getting follow status:', error);
         }
     };
 
@@ -203,7 +199,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             await updateFollowButton();
             await loadProfile(); // Refresh stats
         } catch (error) {
-            console.error('Error toggling follow:', error);
             showToast('Error updating follow status', 'error');
         }
     });
@@ -266,7 +261,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             container.innerHTML = data.threads.map(thread => createThreadCard(thread)).join('');
         } catch (error) {
-            console.error('Error loading threads:', error);
             const container = document.getElementById('threads-list');
             container.innerHTML = `
                 <div class="empty-state">
@@ -373,7 +367,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
             }).join('');
         } catch (error) {
-            console.error('Error loading posts:', error);
         }
     };
 
@@ -459,7 +452,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
             }).join('');
         } catch (error) {
-            console.error('Error loading connections:', error);
             list.innerHTML = `
                 <div class="empty-state">
                     <i class="fas fa-exclamation-triangle"></i>
@@ -586,7 +578,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }, 1000);
                 
             } catch (error) {
-                console.error('Error updating profile:', error);
                 showToast('Failed to update profile', 'error');
                 submitBtn.classList.remove('loading');
                 submitBtn.disabled = false;

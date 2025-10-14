@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     const navLinks = document.getElementById('nav-links');
 
     if (!navLinks) {
-        console.error("Error: Navigation element with ID 'nav-links' was not found.");
         return;
     }
 
@@ -152,7 +151,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } catch (error) {
-            console.error('Could not fetch latest profile data for navbar:', error);
         }
 
     } else {
@@ -190,7 +188,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     badge.style.display = 'none';
                 }
             } catch (error) {
-                console.error('Failed to mark notifications as read:', error);
             }
         });
     }

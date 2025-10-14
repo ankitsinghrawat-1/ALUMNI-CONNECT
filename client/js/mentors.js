@@ -21,7 +21,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 mentorActionArea.innerHTML = `<a href="become-mentor.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Become a Mentor</a>`;
             }
         } catch (error) {
-            console.error('Error checking mentor status:', error);
             mentorActionArea.innerHTML = `<a href="become-mentor.html" class="btn btn-primary"><i class="fas fa-user-plus"></i> Become a Mentor</a>`;
         }
     };
@@ -93,7 +92,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 mentorsListContainer.innerHTML = `<div class="empty-state card"><i class="fas fa-users"></i><h3>No Mentors Available</h3><p>Be the first to help guide fellow alumni. Register to become a mentor!</p></div>`;
             }
         } catch (error) {
-            console.error('Error fetching mentors:', error);
             mentorsListContainer.innerHTML = '<p class="info-message error">Failed to load mentors.</p>';
         }
     };

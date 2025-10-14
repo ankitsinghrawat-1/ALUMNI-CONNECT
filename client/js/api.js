@@ -52,8 +52,6 @@ const apiFetch = async (endpoint, options = {}) => {
         return responseData;
     } catch (error) {
         if (error instanceof SyntaxError) {
-            // This happens when the response is not valid JSON (e.g., an HTML error page)
-            console.error("The server returned a non-JSON response. Check the Network tab in your browser's developer tools.");
             throw new Error("Server returned an invalid response.");
         }
         throw error;

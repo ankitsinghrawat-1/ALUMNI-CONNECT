@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast(result.message, 'success');
             setTimeout(() => window.location.href = 'my-blogs.html', 1500);
         } catch (error) {
-            console.error('Error updating blog post:', error);
             showToast(`Error: ${error.message}`, 'error');
         }
     });

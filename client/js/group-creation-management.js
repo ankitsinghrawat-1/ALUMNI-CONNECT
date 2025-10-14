@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const requests = await window.api.get('/admin/group-creation-requests');
             renderTable(requests);
         } catch (error) {
-            console.error('Error fetching group creation requests:', error);
             tableBody.innerHTML = `<tr><td colspan="5" class="text-center error-message">Failed to load requests. ${error.message}</td></tr>`;
         }
     };
@@ -59,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } catch (error) {
-            console.error(`Error updating group request to ${status}:`, error);
             showToast(`Error: ${error.message}`, 'error');
         }
     };

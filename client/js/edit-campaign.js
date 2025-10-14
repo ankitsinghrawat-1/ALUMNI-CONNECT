@@ -39,7 +39,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast(result.message, 'success');
             setTimeout(() => window.location.href = 'campaign-management.html', 1500);
         } catch (error) {
-            console.error('Error updating campaign:', error);
             showToast(`Error: ${error.message}`, 'error');
         }
     });

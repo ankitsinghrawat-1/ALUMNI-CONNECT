@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             ? `http://localhost:3000/${userProfile.profile_pic_url}` 
             : createInitialsAvatar(userProfile.full_name);
     } catch (error) {
-        console.error('Error fetching profile picture:', error);
     }
 
     const blogContainer = document.getElementById('blog-feed');
@@ -38,7 +37,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             blogContainer.innerHTML = '<p>No recent blogs from alumni.</p>';
         }
     } catch (error) {
-        console.error('Error fetching dashboard data:', error);
         blogContainer.innerHTML = '<p class="info-message error">Could not load blog feed.</p>';
     }
 });

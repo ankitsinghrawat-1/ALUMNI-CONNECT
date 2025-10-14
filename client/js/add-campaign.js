@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Campaign submitted for approval!', 'success');
             addCampaignForm.reset();
         } catch (error) {
-            console.error('Error creating campaign:', error);
             showToast(`Error: ${error.message}`, 'error');
         }
     });

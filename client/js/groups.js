@@ -107,7 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>`;
             }
         } catch (error) {
-            console.error('Error fetching groups:', error);
             
             // Show mock data for testing when API is not available
             const mockGroups = [
@@ -319,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
         } catch (error) {
-            console.error('Error loading group details:', error);
             modalContent.innerHTML = `
                 <div class="error-message">
                     <i class="fas fa-exclamation-triangle"></i>

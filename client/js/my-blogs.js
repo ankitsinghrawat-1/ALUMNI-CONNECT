@@ -27,7 +27,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 listContainer.innerHTML = '<tr><td colspan="3" class="info-message">You have not created any blog posts yet. <a href="add-blog.html">Create one now!</a></td></tr>';
             }
         } catch (error) {
-            console.error('Error fetching your blogs:', error);
             listContainer.innerHTML = '<tr><td colspan="3" class="info-message error">Could not load your blogs. Please try again.</td></tr>';
         }
     };
@@ -41,7 +40,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showToast('Blog post deleted successfully.', 'success');
                     await loadMyBlogs();
                 } catch (error) {
-                    console.error('Error deleting blog post:', error);
                     showToast(`Error: ${error.message}`, 'error');
                 }
             }

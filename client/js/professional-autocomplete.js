@@ -112,7 +112,6 @@ class ProfessionalAutocomplete {
             this.results = await this.options.fetchData(query, this.options.type);
             this.render();
         } catch (error) {
-            console.error('Autocomplete search error:', error);
             this.close();
         }
     }

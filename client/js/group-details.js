@@ -78,7 +78,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             attachEventListeners();
             
         } catch (error) {
-            console.error('Error fetching group details:', error);
             groupDetailsContainer.innerHTML = '<h1>Error loading group</h1><p class="info-message error">The group could not be found or there was a server error.</p>';
         }
     };
@@ -114,7 +113,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                  membersList.innerHTML = '<p class="info-message">No members yet.</p>';
             }
         } catch (error) {
-             console.error('Error loading members:', error);
         }
     };
 
@@ -149,7 +147,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 joinRequestsList.innerHTML = '<p class="info-message">No pending join requests.</p>';
             }
         } catch (error) {
-            console.error('Error loading join requests:', error);
             if (joinRequestsList) {
                 joinRequestsList.innerHTML = '<p class="info-message error">Failed to load join requests.</p>';
             }
@@ -165,7 +162,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             loadJoinRequests();
             loadMembers();
         } catch (error) {
-            console.error(`Error ${action}ing join request:`, error);
             showToast(`Failed to ${action} join request: ${error.message}`, 'error');
         }
     };

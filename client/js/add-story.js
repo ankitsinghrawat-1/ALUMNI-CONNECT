@@ -381,7 +381,6 @@ class StoryCreator {
             const response = await window.api.get(`/threads/users/search?q=${encodeURIComponent(query)}`);
             this.showMentionSuggestions(response);
         } catch (error) {
-            console.error('Error fetching mention suggestions:', error);
         }
     }
 
@@ -509,7 +508,6 @@ class StoryCreator {
                 this.loadDraft(parsedDraft);
                 this.showNotification('Draft restored! Continue where you left off', 'info');
             } catch (error) {
-                console.error('Error loading draft:', error);
             }
         }
     }
@@ -645,7 +643,6 @@ class StoryCreator {
             this.showSuccessModal(response);
             
         } catch (error) {
-            console.error('Error publishing story:', error);
             this.showNotification(error.message || 'Failed to publish story', 'error');
         } finally {
             publishBtn.disabled = false;
@@ -809,12 +806,10 @@ document.addEventListener('DOMContentLoaded', () => {
 class StoryAnalytics {
     static trackStoryCreation(type) {
         // Analytics tracking
-        console.log(`Story created: ${type}`);
     }
 
     static trackTemplateUsage(template) {
         // Template usage analytics
-        console.log(`Template used: ${template}`);
     }
 }
 
@@ -891,7 +886,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 minChars: 1,
                 maxResults: 10,
                 onSelect: (item) => {
-                    console.log('Story mention selected:', item);
                 }
             });
         }

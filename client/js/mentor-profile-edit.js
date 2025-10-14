@@ -1,5 +1,9 @@
 // Mentor Profile Edit Page
 document.addEventListener('DOMContentLoaded', async () => {
+    // Get mentor ID from URL parameter (if provided)
+    const urlParams = new URLSearchParams(window.location.search);
+    const mentorIdFromUrl = urlParams.get('id');
+    
     // DOM Elements
     const loadingState = document.getElementById('loading-state');
     const editContainer = document.getElementById('edit-container');
@@ -49,6 +53,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (confirmSaveBtn) {
         confirmSaveBtn.addEventListener('click', confirmAndSave);
     }
+    
+    // Add Achievement button handler
+    const addAchievementBtn = document.getElementById('add-achievement-btn');
+    if (addAchievementBtn) {
+        addAchievementBtn.addEventListener('click', () => addAchievementField());
+    }
 
     // Availability checkbox handlers
     document.querySelectorAll('.availability-checkbox input[type="checkbox"]').forEach(checkbox => {
@@ -75,10 +85,18 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function initializePage() {
         try {
-            // Get current user's mentor status
+            // If mentor ID provided in URL, use it directly
+            if (mentorIdFromUrl) {
+                mentorId = parseInt(mentorIdFromUrl);
+                await loadMentorProfile(mentorId);
+                return;
+            }
+            
+            // Otherwise, get current user's mentor status
             const statusData = await window.api.get('/mentors/status');
             if (!statusData.isMentor || !statusData.mentorId) {
-                showError('You must be a registered mentor to edit your profile');
+                // Redirect to become mentor page instead of showing error
+                window.location.href = 'become-mentor.html';
                 return;
             }
 
@@ -88,8 +106,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             await loadMentorProfile(mentorId);
             
         } catch (error) {
-            console.error('Error initializing:', error);
-            showError('Failed to load your mentor profile');
+            // Try fallback method to get mentor ID
+            try {
+                const currentUser = await window.api.get('/auth/me');
+                const currentUserId = currentUser.userId || currentUser.user_id || localStorage.getItem('loggedInUserId');
+                
+                // Try to find mentor in mentors list
+                const mentorsResponse = await window.api.get('/mentors');
+                const mentors = mentorsResponse.mentors || mentorsResponse;
+                const mentorProfile = mentors.find(m => parseInt(m.user_id) === parseInt(currentUserId));
+                
+                if (mentorProfile && mentorProfile.mentor_id) {
+                    mentorId = mentorProfile.mentor_id;
+                    await loadMentorProfile(mentorId);
+                } else {
+                    // Not a mentor, redirect to become mentor page
+                    window.location.href = 'become-mentor.html';
+                }
+            } catch (fallbackError) {
+                showError('Failed to load your mentor profile', true);
+            }
         }
     }
 
@@ -107,8 +143,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             editContainer.style.display = 'block';
             
         } catch (error) {
-            console.error('Error loading mentor profile:', error);
-            showError(error.message || 'Failed to load mentor profile');
+            showError(error.message || 'Failed to load mentor profile', true);
         } finally {
             showLoading(false);
         }
@@ -126,6 +161,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('edit-linkedin-url').value = mentor.linkedin_url || '';
         document.getElementById('edit-github-url').value = mentor.github_url || '';
         document.getElementById('edit-portfolio-url').value = mentor.portfolio_url || '';
+        
+        // Populate achievements
+        const achievementsEditor = document.getElementById('achievements-editor');
+        if (achievementsEditor) {
+            achievementsEditor.innerHTML = '';
+            if (mentor.achievements && mentor.achievements.length > 0) {
+                mentor.achievements.forEach((achievement, index) => {
+                    addAchievementField(achievement);
+                });
+            }
+        }
         
         // Populate availability
         if (mentor.availability && mentor.availability.length > 0) {
@@ -152,22 +198,92 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function addAchievementField(achievement = null) {
+        const achievementsEditor = document.getElementById('achievements-editor');
+        const achievementIndex = achievementsEditor.children.length;
+        
+        const achievementDiv = document.createElement('div');
+        achievementDiv.className = 'achievement-field-group';
+        achievementDiv.innerHTML = `
+            <div class="achievement-field">
+                <input type="text" name="achievement_title_${achievementIndex}" 
+                    placeholder="Achievement Title (e.g., AWS Certified Solutions Architect)" 
+                    value="${achievement ? sanitizeHTML(achievement.title || '') : ''}" />
+                <textarea name="achievement_description_${achievementIndex}" rows="2" 
+                    placeholder="Description (optional)">${achievement ? sanitizeHTML(achievement.description || '') : ''}</textarea>
+                <input type="text" name="achievement_issuer_${achievementIndex}" 
+                    placeholder="Issuer Organization (optional)" 
+                    value="${achievement ? sanitizeHTML(achievement.issuer_organization || '') : ''}" />
+                <button type="button" class="btn btn-danger btn-sm remove-achievement-btn">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>
+        `;
+        
+        achievementsEditor.appendChild(achievementDiv);
+        
+        // Add remove button listener
+        const removeBtn = achievementDiv.querySelector('.remove-achievement-btn');
+        removeBtn.addEventListener('click', () => {
+            achievementDiv.remove();
+        });
+    }
+    
+    // Helper function for HTML sanitization
+    function sanitizeHTML(str) {
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+    }
+
     async function handleProfileUpdate(e) {
         e.preventDefault();
 
         const formData = new FormData(editProfileForm);
         const updates = {};
         const availability = [];
+        const achievements = [];
 
         // Process regular form fields
         for (const [key, value] of formData.entries()) {
-            // Skip availability fields, we'll process them separately
-            if (key.startsWith('availability_') || key.includes('_start') || key.includes('_end')) {
+            // Skip availability and achievement fields, we'll process them separately
+            if (key.startsWith('availability_') || key.includes('_start') || key.includes('_end') || 
+                key.startsWith('achievement_')) {
                 continue;
             }
             if (value && value.trim()) {
                 updates[key] = value.trim();
             }
+        }
+        
+        // Process achievements
+        const achievementTitles = [];
+        const achievementDescriptions = [];
+        const achievementIssuers = [];
+        
+        for (const [key, value] of formData.entries()) {
+            if (key.startsWith('achievement_title_')) {
+                achievementTitles.push(value.trim());
+            } else if (key.startsWith('achievement_description_')) {
+                achievementDescriptions.push(value.trim());
+            } else if (key.startsWith('achievement_issuer_')) {
+                achievementIssuers.push(value.trim());
+            }
+        }
+        
+        // Combine achievement data
+        for (let i = 0; i < achievementTitles.length; i++) {
+            if (achievementTitles[i]) {
+                achievements.push({
+                    title: achievementTitles[i],
+                    description: achievementDescriptions[i] || '',
+                    issuer_organization: achievementIssuers[i] || ''
+                });
+            }
+        }
+        
+        if (achievements.length > 0) {
+            updates.achievements = achievements;
         }
 
         // Process availability
@@ -203,7 +319,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 1500);
             
         } catch (error) {
-            console.error('Error updating profile:', error);
             showToast(error.message || 'Failed to update profile', 'error');
         }
     }
@@ -290,11 +405,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadingState.style.display = show ? 'flex' : 'none';
     }
 
-    function showError(message) {
+    function showError(message, includeBackButton = false) {
         errorMessage.textContent = message;
         errorState.style.display = 'flex';
         loadingState.style.display = 'none';
         editContainer.style.display = 'none';
+        
+        // Update back button href if we have a mentorId
+        if (includeBackButton) {
+            const backButton = errorState.querySelector('.btn');
+            if (backButton && mentorId) {
+                backButton.href = `mentor-profile.html?id=${mentorId}`;
+            }
+        }
     }
 
     function sanitizeHTML(str) {

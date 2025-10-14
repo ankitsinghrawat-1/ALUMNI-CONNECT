@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTable('pending-campaigns-list', campaigns, renderCampaignRow);
 
         } catch (error) {
-            console.error('Error loading pending items:', error);
         }
     };
 

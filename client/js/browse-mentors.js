@@ -105,7 +105,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             await loadMentors();
             
         } catch (error) {
-            console.error('Error initializing page:', error);
             showError('Failed to load mentors. Please refresh the page.');
         } finally {
             showLoading(false);
@@ -115,7 +114,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Check if user is a mentor
     async function checkMentorStatus() {
         const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-        console.log('checkMentorStatus - loggedInUserEmail:', loggedInUserEmail);
         
         if (!loggedInUserEmail) {
             mentorActionArea.innerHTML = `
@@ -131,16 +129,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         try {
             const data = await window.api.get('/mentors/status');
-            console.log('Mentor status response:', data);
-            console.log('Is mentor?', data.isMentor);
-            console.log('Mentor ID:', data.mentorId);
             
             if (data.isMentor) {
-                console.log('User IS a mentor - showing Your Mentor Profile button');
                 mentorActionArea.innerHTML = `
                     <a href="mentor-profile.html?id=${data.mentorId}" class="btn btn-primary">
-                        <i class="fas fa-user-tie"></i>
-                        Your Mentor Profile
+                        <i class="fas fa-user-circle"></i>
+                        View My Profile
                     </a>
                     <a href="mentor-requests.html" class="btn btn-secondary">
                         <i class="fas fa-inbox"></i>
@@ -150,7 +144,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Empty the search bar action area for existing mentors
                 mentorActionAreaSearch.innerHTML = '';
             } else {
-                console.log('User is NOT a mentor - showing Become a Mentor button');
                 // User is not a mentor - show "Become a Mentor" button in main area (permanent spot)
                 mentorActionArea.innerHTML = `
                     <a href="become-mentor.html" class="btn btn-primary">
@@ -170,15 +163,41 @@ document.addEventListener('DOMContentLoaded', async () => {
                         message: req.request_message
                     }));
                 } catch (reqError) {
-                    console.error('Error loading sent requests:', reqError);
                     // Silently fail - button already shown
                 }
             }
         } catch (error) {
-            console.error('Error checking mentor status:', error);
-            console.error('Error details:', error.message, error.status);
+            // On API error, try alternative method to check mentor status
+            // Check if we can determine status from other available data
+            try {
+                // Try to fetch mentors list and see if current user is in it
+                const userId = localStorage.getItem('loggedInUserId');
+                if (userId) {
+                    const mentorsData = await window.api.get('/mentors', { params: { limit: 1000 } });
+                    const currentUserIsMentor = mentorsData.mentors && mentorsData.mentors.some(m => m.user_id == userId);
+                    
+                    if (currentUserIsMentor) {
+                        // Found user in mentors list - they are a mentor
+                        const mentorData = mentorsData.mentors.find(m => m.user_id == userId);
+                        mentorActionArea.innerHTML = `
+                            <a href="mentor-profile.html?id=${mentorData.mentor_id}" class="btn btn-primary">
+                                <i class="fas fa-user-circle"></i>
+                                View My Profile
+                            </a>
+                            <a href="mentor-requests.html" class="btn btn-secondary">
+                                <i class="fas fa-inbox"></i>
+                                Requests
+                            </a>
+                        `;
+                        mentorActionAreaSearch.innerHTML = '';
+                        return;
+                    }
+                }
+            } catch (fallbackError) {
+                // Fallback also failed, use safe default
+            }
             
-            // On error, show default "Become a Mentor" button instead of error message
+            // Default to "not a mentor" state - safest assumption
             mentorActionArea.innerHTML = `
                 <a href="become-mentor.html" class="btn btn-primary">
                     <i class="fas fa-user-plus"></i>
@@ -202,7 +221,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             // as the stats/overview endpoint returns industry counts for stats display
             
         } catch (error) {
-            console.error('Error loading mentor stats:', error);
             // Set default values on error
             const defaultStats = {
                 total_mentors: '500+',
@@ -272,7 +290,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } catch (error) {
-            console.error('Error loading mentors:', error);
             showError('Failed to load mentors. Please try again.');
         } finally {
             isLoading = false;
@@ -465,7 +482,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.mentorFeatures.renderMentorBadges(badges.slice(0, 3), container);
             }
         } catch (error) {
-            console.error('Error loading badges for mentor:', mentorId, error);
         }
     }
 
@@ -601,7 +617,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
         } catch (error) {
-            console.error('Error loading mentor profile:', error);
             content.innerHTML = '<div class="error-state"><h3>Error loading profile</h3><p>Please try again later.</p></div>';
         }
     }
@@ -1156,7 +1171,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.mentorFeatures.renderRecommendationsWidget(data.recommendations, container);
             }
         } catch (error) {
-            console.error('Error loading recommendations:', error);
         }
     }
 
@@ -1174,7 +1188,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.mentorFeatures.renderTrendingMentors(trending, container);
             }
         } catch (error) {
-            console.error('Error loading trending mentors:', error);
         }
     }
 

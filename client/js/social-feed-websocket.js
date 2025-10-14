@@ -18,7 +18,6 @@ class SocialFeedWebSocket {
      */
     connect() {
         if (this.socket && this.socket.connected) {
-            console.log('WebSocket already connected');
             return;
         }
 
@@ -31,19 +30,16 @@ class SocialFeedWebSocket {
         });
 
         this.socket.on('connect', () => {
-            console.log('WebSocket connected');
             this.isConnected = true;
             this.onConnected();
         });
 
         this.socket.on('disconnect', () => {
-            console.log('WebSocket disconnected');
             this.isConnected = false;
             this.viewingThreads.clear();
         });
 
         this.socket.on('connect_error', (error) => {
-            console.error('WebSocket connection error:', error);
         });
 
         this.setupEventListeners();
@@ -113,7 +109,6 @@ class SocialFeedWebSocket {
             userName: this.currentUserName
         });
 
-        console.log(`Started viewing thread ${threadId}`);
     }
 
     /**
@@ -135,7 +130,6 @@ class SocialFeedWebSocket {
             this.currentThreadId = null;
         }
 
-        console.log(`Stopped viewing thread ${threadId}`);
     }
 
     /**
@@ -223,7 +217,6 @@ class SocialFeedWebSocket {
             }
         }
 
-        console.log(`Thread ${threadId} viewers: ${viewerCount}`);
     }
 
     /**

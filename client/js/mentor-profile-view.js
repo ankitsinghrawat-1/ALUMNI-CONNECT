@@ -94,7 +94,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (token) {
             try {
                 const userData = await window.api.get('/auth/me');
-                currentUserId = userData.userId;
+                currentUserId = userData.userId || userData.user_id;
+                
+                // Fallback: try localStorage if API doesn't return userId
+                if (!currentUserId) {
+                    currentUserId = localStorage.getItem('loggedInUserId');
+                    if (currentUserId) {
+                        currentUserId = parseInt(currentUserId);
+                    }
+                }
                 
                 // If no mentor ID provided, try to fetch current user's mentor profile
                 if (!targetMentorId) {
@@ -112,7 +120,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
             } catch (error) {
-                console.log('Not logged in');
+                // Fallback: try localStorage
+                currentUserId = localStorage.getItem('loggedInUserId');
+                if (currentUserId) {
+                    currentUserId = parseInt(currentUserId);
+                }
+                
                 if (!targetMentorId) {
                     showError('Please sign in to view your profile');
                     return;
@@ -134,14 +147,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Fetch mentor data
             currentMentor = await window.api.get(`/mentors/${profileMentorId}`);
             
-            console.log('Loaded mentor profile:', currentMentor);
-            console.log('Current user ID:', currentUserId);
-            console.log('Mentor user_id:', currentMentor.user_id);
+            // Ensure currentUserId is set (fallback to localStorage if needed)
+            if (!currentUserId) {
+                const storedUserId = localStorage.getItem('loggedInUserId');
+                if (storedUserId) {
+                    currentUserId = parseInt(storedUserId);
+                }
+            }
             
             // Check if current user is the profile owner
-            isOwner = currentUserId && currentUserId === currentMentor.user_id;
+            // Compare both as integers to handle any type mismatches
+            isOwner = currentUserId && parseInt(currentUserId) === parseInt(currentMentor.user_id);
             
-            console.log('isOwner determined as:', isOwner);
             
             // Display profile
             displayProfile(currentMentor);
@@ -158,7 +175,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             profileContainer.style.display = 'block';
             
         } catch (error) {
-            console.error('Error loading mentor profile:', error);
             showError(error.message || 'Failed to load mentor profile');
         } finally {
             showLoading(false);
@@ -224,10 +240,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     function addInlineEditButtons() {
-        console.log('addInlineEditButtons called');
         // Add edit button to each section header
         const sections = document.querySelectorAll('#view-mode .profile-section h2');
-        console.log('Found sections:', sections.length);
         sections.forEach(section => {
             if (!section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
@@ -236,13 +250,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
                 section.appendChild(editBtn);
-                console.log('Added edit button to section:', section.textContent);
             }
         });
         
         // Add edit button to sidebar sections
         const sidebarSections = document.querySelectorAll('#view-mode .sidebar-card h3');
-        console.log('Found sidebar sections:', sidebarSections.length);
         sidebarSections.forEach(section => {
             if (!section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
@@ -251,7 +263,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
                 section.appendChild(editBtn);
-                console.log('Added edit button to sidebar section:', section.textContent);
             }
         });
     }
@@ -390,11 +401,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderProfileActions() {
-        console.log('renderProfileActions called - isOwner:', isOwner);
         if (isOwner) {
-            // Show Edit Profile button for owner - redirects to edit page
+            // Show Edit Profile button for owner - redirects to edit page with mentor ID
             profileActions.innerHTML = `
-                <a href="edit-mentor-profile.html" class="btn btn-primary">
+                <a href="edit-mentor-profile.html?id=${currentMentor.mentor_id}" class="btn btn-primary">
                     <i class="fas fa-edit"></i> Edit Profile
                 </a>
                 <a href="mentor-requests.html" class="btn btn-secondary">
@@ -692,7 +702,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             
         } catch (error) {
-            console.error('Error sending request:', error);
             showToast(error.message || 'Failed to send request', 'error');
         }
     }
@@ -739,7 +748,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, 2000);
             
         } catch (error) {
-            console.error('Error deleting profile:', error);
             showToast(error.message || 'Failed to delete profile', 'error');
         }
     }
@@ -797,7 +805,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             switchToViewMode();
             
         } catch (error) {
-            console.error('Error updating profile:', error);
             showToast(error.message || 'Failed to update profile', 'error');
         }
     }

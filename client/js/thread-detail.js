@@ -54,7 +54,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         currentUser = await window.api.get('/users/profile');
     } catch (error) {
-        console.error('Error getting user profile:', error);
     }
 
     // Update sidebar stats
@@ -327,7 +326,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             initializeQuickActions(thread);
 
         } catch (error) {
-            console.error('Error loading thread:', error);
             contentContainer.innerHTML = createErrorState(
                 'Error loading thread',
                 'The thread could not be loaded. It may have been deleted or you may not have permission to view it.',
@@ -497,7 +495,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         } catch (error) {
-            console.error('Error getting like status:', error);
         }
     };
 
@@ -532,7 +529,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('total-likes').textContent = countSpan.textContent;
             
         } catch (error) {
-            console.error('Error toggling like:', error);
             showToast('Error updating like status', 'error');
         }
     };
@@ -567,7 +563,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 window.location.href = 'threads.html';
             }, 1500);
         } catch (error) {
-            console.error('Error deleting thread:', error);
             showToast('Error deleting thread', 'error');
         }
     };
@@ -732,7 +727,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('char-count').textContent = '0/1000';
                 loadThread(); // Refresh thread with new comment
             } catch (error) {
-                console.error('Error posting comment:', error);
                 showToast('Error posting comment', 'error');
             } finally {
                 submitBtn.innerHTML = originalText;

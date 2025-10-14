@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 commentsList.innerHTML = '<p class="info-message">No comments yet. Be the first to share your thoughts!</p>';
             }
         } catch (error) {
-            console.error('Error fetching comments:', error);
             commentsList.innerHTML = '<p class="info-message error">Could not load comments.</p>';
         }
     };
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             // After fetching the post, fetch the comments
             await fetchComments();
         } catch (error) {
-            console.error('Error fetching post:', error);
             postContainer.innerHTML = '<h1>Error loading post</h1><p class="info-message error">The post could not be found or there was a server error.</p>';
         }
     };

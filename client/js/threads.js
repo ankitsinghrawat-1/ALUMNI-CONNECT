@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             currentUser = await window.api.get('/users/profile');
         } catch (error) {
-            console.error('Error getting user profile:', error);
         }
     };
 
@@ -147,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
             await updateLikeStatuses();
             
         } catch (error) {
-            console.error('Error loading threads:', error);
             threadsFeed.innerHTML = `
                 <div class="error-state">
                     <i class="fas fa-exclamation-triangle"></i>
@@ -257,7 +255,6 @@ document.addEventListener('DOMContentLoaded', () => {
             storiesScroll.innerHTML = storiesHTML + userStoryItems;
             
         } catch (error) {
-            console.error('Error loading stories:', error);
         }
     };
 
@@ -281,7 +278,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             } catch (error) {
-                console.error(`Error getting like status for thread ${thread.thread_id}:`, error);
             }
         }
     };
@@ -312,7 +308,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
         } catch (error) {
-            console.error('Error toggling like:', error);
             showToast('Error updating like status', 'error');
         }
     };
@@ -394,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
             threadModal.style.display = 'block';
             
         } catch (error) {
-            console.error('Error loading thread details:', error);
             showToast('Error loading thread details', 'error');
         }
     };
@@ -439,7 +433,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast('Thread deleted successfully', 'success');
             loadThreads(); // Reload threads
         } catch (error) {
-            console.error('Error deleting thread:', error);
             showToast('Error deleting thread', 'error');
         }
     };
@@ -482,7 +475,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('Comment posted successfully!', 'success');
                 openThreadModal(threadId); // Refresh modal with new comment
             } catch (error) {
-                console.error('Error posting comment:', error);
                 showToast('Error posting comment', 'error');
             }
         }
@@ -541,7 +533,6 @@ document.addEventListener('DOMContentLoaded', () => {
             contributorsContainer.innerHTML = '<div class="no-data">No contributor data available</div>';
 
         } catch (error) {
-            console.error('Error loading sidebar data:', error);
             
             // Fallback content
             document.getElementById('trending-tags').innerHTML = '<div class="no-data">Unable to load trending topics</div>';
@@ -664,7 +655,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         } catch (error) {
-            console.error('Error bookmarking thread:', error);
             showToast('Error bookmarking thread', 'error');
         }
     };
@@ -787,7 +777,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             openStoryViewer(userStories, userName, userData);
         } catch (error) {
-            console.error('Error loading user stories:', error);
             showToast('Error loading stories', 'error');
         }
     };
@@ -1743,7 +1732,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
         } catch (error) {
-            console.error('Error publishing story:', error);
             if (typeof showToast === 'function') {
                 showToast(`Error: ${error.message}`, 'error');
             } else {
@@ -1808,7 +1796,6 @@ document.addEventListener('DOMContentLoaded', () => {
             // Append new threads to feed
             hideInfiniteLoader();
         } catch (error) {
-            console.error('Error loading more threads:', error);
             showToast('Failed to load more threads', 'error');
         } finally {
             isLoading = false;
@@ -1922,5 +1909,4 @@ document.addEventListener('DOMContentLoaded', () => {
     //     }
     // }, 60000); // Every minute
 
-    console.log('✅ Enhanced UX features loaded: Auto-hide story bar, infinite scroll, keyboard shortcuts, and more!');
 });

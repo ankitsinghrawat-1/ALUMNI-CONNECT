@@ -4,7 +4,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const listContainer = document.getElementById('management-list');
 
     if (!pageType || !listContainer) {
-        console.error('Page type or list container not found.');
         return;
     }
 
@@ -110,7 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 listContainer.innerHTML = '<tr><td colspan="5" class="info-message">No items to display.</td></tr>';
             }
         } catch (error) {
-            console.error(`Error fetching ${pageType}:`, error);
             listContainer.innerHTML = `<tr><td colspan="5" class="info-message error">Failed to load items.</td></tr>`;
         }
     };
@@ -132,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     showToast(`${type.charAt(0).toUpperCase() + type.slice(1)} deleted successfully.`, 'success');
                     await loadData();
                 } catch (error) {
-                    console.error(`Error deleting ${type}:`, error);
                     showToast(`An error occurred while deleting the ${type}.`, 'error');
                 }
             }
@@ -145,7 +142,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 showToast('User status updated successfully.', 'success');
                 await loadData();
             } catch (error) {
-                console.error('Error updating user status:', error);
                 showToast('An error occurred.', 'error');
             }
         }
@@ -199,7 +195,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 closeDecisionModal();
                 await loadData();
             } catch (error) {
-                console.error('Error processing application:', error);
                 showToast('An error occurred.', 'error');
             }
         });

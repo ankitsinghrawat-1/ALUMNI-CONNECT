@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
             showToast(result.message, 'success');
             setTimeout(() => window.location.href = `group-details.html?id=${result.groupId}`, 1500);
         } catch (error) {
-            console.error('Error creating group:', error);
             showToast(`Error: ${error.message}`, 'error');
         }
     });

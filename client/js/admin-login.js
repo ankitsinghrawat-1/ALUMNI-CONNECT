@@ -40,7 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } catch (error) {
                 messageContainer.textContent = 'An error occurred. Please try again.';
                 messageContainer.className = 'form-message error';
-                console.error('Admin login error:', error);
             }
         });
     }

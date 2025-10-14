@@ -12,6 +12,8 @@ document.addEventListener('DOMContentLoaded', () => {
         addBlogForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
+            const submitButton = addBlogForm.querySelector('button[type="submit"]');
+            
             const formData = new FormData();
             formData.append('title', document.getElementById('title').value);
             formData.append('content', document.getElementById('content').value);
@@ -26,8 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.classList.add('loading');
+            }
+
             try {
-                // Use postForm for multipart/form-data
                 await window.api.postForm('/blogs', formData); 
                 
                 showToast('Blog post submitted successfully!', 'success');
@@ -38,10 +44,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     window.location.href = 'my-blogs.html';
                 }, 2000);
             } catch (error) {
-                console.error('Error adding blog post:', error);
                 showToast(`Error: ${error.message}`, 'error');
                 messageDiv.textContent = `Error: ${error.message}`;
                 messageDiv.className = 'form-message error';
+                
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('loading');
+                }
             }
         });
     }

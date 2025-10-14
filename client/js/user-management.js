@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderTable(response.data);
             renderPagination(response.total, response.page, response.limit);
         } catch (error) {
-            console.error('Error fetching users:', error);
             tableBody.innerHTML = `<tr><td colspan="6" class="text-center error-message">Failed to load users. ${error.message}</td></tr>`;
         }
     };
@@ -116,7 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('edit-user-role').value = user.role;
             modal.style.display = 'flex';
         } catch (error) {
-            console.error('Error fetching user details for modal:', error);
             showToast(`Failed to load user details: ${error.message}`, 'error');
         }
     };
@@ -136,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
             fetchUsers(currentPage, currentSearch); // Refresh table
         } catch (error) {
-            console.error('Error updating user role:', error);
             showToast(`Error: ${error.message}`, 'error');
         }
     };
@@ -153,7 +150,6 @@ document.addEventListener('DOMContentLoaded', () => {
             closeModal();
             fetchUsers(currentPage, currentSearch); // Refresh table
         } catch (error) {
-            console.error('Error updating verification status:', error);
             showToast(`Error: ${error.message}`, 'error');
         }
     };

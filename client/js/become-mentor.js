@@ -19,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             messageDiv.className = 'form-message error';
             messageDiv.textContent = `Error: ${error.message}`;
-            console.error('Error registering as mentor:', error);
         }
     });
 });
