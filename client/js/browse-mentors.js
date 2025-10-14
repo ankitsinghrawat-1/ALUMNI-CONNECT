@@ -133,8 +133,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (data.isMentor) {
                 mentorActionArea.innerHTML = `
                     <a href="mentor-profile.html?id=${data.mentorId}" class="btn btn-primary">
-                        <i class="fas fa-user-tie"></i>
-                        Your Mentor Profile
+                        <i class="fas fa-user-circle"></i>
+                        View My Profile
                     </a>
                     <a href="mentor-requests.html" class="btn btn-secondary">
                         <i class="fas fa-inbox"></i>
