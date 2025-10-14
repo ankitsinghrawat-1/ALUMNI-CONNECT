@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const getConnectionStatus = async (alumnus) => {
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('alumniConnectToken');
             if (!token) {
                 // If not logged in, show connect button by default
                 return { class: 'not-connected', icon: 'fas fa-user-plus', text: 'Connect' };
