@@ -402,9 +402,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderProfileActions() {
         if (isOwner) {
-            // Show Edit Profile button for owner - redirects to edit page
+            // Show Edit Profile button for owner - redirects to edit page with mentor ID
             profileActions.innerHTML = `
-                <a href="edit-mentor-profile.html" class="btn btn-primary">
+                <a href="edit-mentor-profile.html?id=${currentMentor.mentor_id}" class="btn btn-primary">
                     <i class="fas fa-edit"></i> Edit Profile
                 </a>
                 <a href="mentor-requests.html" class="btn btn-secondary">

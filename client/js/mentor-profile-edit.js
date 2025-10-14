@@ -1,5 +1,9 @@
 // Mentor Profile Edit Page
 document.addEventListener('DOMContentLoaded', async () => {
+    // Get mentor ID from URL parameter (if provided)
+    const urlParams = new URLSearchParams(window.location.search);
+    const mentorIdFromUrl = urlParams.get('id');
+    
     // DOM Elements
     const loadingState = document.getElementById('loading-state');
     const editContainer = document.getElementById('edit-container');
@@ -75,7 +79,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     async function initializePage() {
         try {
-            // Get current user's mentor status
+            // If mentor ID provided in URL, use it directly
+            if (mentorIdFromUrl) {
+                mentorId = parseInt(mentorIdFromUrl);
+                await loadMentorProfile(mentorId);
+                return;
+            }
+            
+            // Otherwise, get current user's mentor status
             const statusData = await window.api.get('/mentors/status');
             if (!statusData.isMentor || !statusData.mentorId) {
                 // Redirect to become mentor page instead of showing error
