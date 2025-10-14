@@ -1801,6 +1801,7 @@ html.dark-mode .social-link.github {
 }
 
 .social-link i {
+    flex-shrink: 0;
     font-size: 1.25rem;
     width: 1.25rem;
     height: 1.25rem;
@@ -1810,12 +1811,16 @@ html.dark-mode .social-link.github {
     background: none !important;
     background-image: none !important;
     background-color: transparent !important;
+    position: static !important;
     vertical-align: middle;
 }
 
 .social-link i::before {
     background: none !important;
     background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
     width: auto !important;
     height: auto !important;
 }
