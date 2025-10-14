@@ -1796,6 +1796,10 @@ html.dark-mode .social-link.github {
     border-left: 3px solid var(--mentor-primary);
 }
 
+.social-link.email {
+    border-left: 3px solid var(--mentor-accent);
+}
+
 .social-link i {
     font-size: 1.25rem;
     width: 1.25rem;
@@ -1830,6 +1834,10 @@ html.dark-mode .social-link.github i {
 
 .social-link.portfolio i {
     color: var(--mentor-primary);
+}
+
+.social-link.email i {
+    color: var(--mentor-accent);
 }
 
 /* Achievements Grid */
