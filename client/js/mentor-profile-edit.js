@@ -78,7 +78,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Get current user's mentor status
             const statusData = await window.api.get('/mentors/status');
             if (!statusData.isMentor || !statusData.mentorId) {
-                showError('You must be a registered mentor to edit your profile');
+                // Redirect to become mentor page instead of showing error
+                window.location.href = 'become-mentor.html';
                 return;
             }
 
@@ -88,7 +89,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             await loadMentorProfile(mentorId);
             
         } catch (error) {
-            showError('Failed to load your mentor profile');
+            // Try fallback method to get mentor ID
+            try {
+                const currentUser = await window.api.get('/auth/me');
+                const currentUserId = currentUser.userId || currentUser.user_id || localStorage.getItem('loggedInUserId');
+                
+                // Try to find mentor in mentors list
+                const mentorsResponse = await window.api.get('/mentors');
+                const mentors = mentorsResponse.mentors || mentorsResponse;
+                const mentorProfile = mentors.find(m => parseInt(m.user_id) === parseInt(currentUserId));
+                
+                if (mentorProfile && mentorProfile.mentor_id) {
+                    mentorId = mentorProfile.mentor_id;
+                    await loadMentorProfile(mentorId);
+                } else {
+                    // Not a mentor, redirect to become mentor page
+                    window.location.href = 'become-mentor.html';
+                }
+            } catch (fallbackError) {
+                showError('Failed to load your mentor profile', true);
+            }
         }
     }
 
@@ -106,7 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             editContainer.style.display = 'block';
             
         } catch (error) {
-            showError(error.message || 'Failed to load mentor profile');
+            showError(error.message || 'Failed to load mentor profile', true);
         } finally {
             showLoading(false);
         }
@@ -287,11 +307,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         loadingState.style.display = show ? 'flex' : 'none';
     }
 
-    function showError(message) {
+    function showError(message, includeBackButton = false) {
         errorMessage.textContent = message;
         errorState.style.display = 'flex';
         loadingState.style.display = 'none';
         editContainer.style.display = 'none';
+        
+        // Update back button href if we have a mentorId
+        if (includeBackButton) {
+            const backButton = errorState.querySelector('.btn');
+            if (backButton && mentorId) {
+                backButton.href = `mentor-profile.html?id=${mentorId}`;
+            }
+        }
     }
 
     function sanitizeHTML(str) {
