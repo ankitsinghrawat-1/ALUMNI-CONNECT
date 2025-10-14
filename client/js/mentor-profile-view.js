@@ -94,7 +94,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (token) {
             try {
                 const userData = await window.api.get('/auth/me');
-                currentUserId = userData.userId;
+                currentUserId = userData.userId || userData.user_id;
+                
+                // Fallback: try localStorage if API doesn't return userId
+                if (!currentUserId) {
+                    currentUserId = localStorage.getItem('loggedInUserId');
+                    if (currentUserId) {
+                        currentUserId = parseInt(currentUserId);
+                    }
+                }
                 
                 // If no mentor ID provided, try to fetch current user's mentor profile
                 if (!targetMentorId) {
@@ -112,6 +120,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
             } catch (error) {
+                // Fallback: try localStorage
+                currentUserId = localStorage.getItem('loggedInUserId');
+                if (currentUserId) {
+                    currentUserId = parseInt(currentUserId);
+                }
+                
                 if (!targetMentorId) {
                     showError('Please sign in to view your profile');
                     return;
@@ -133,9 +147,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Fetch mentor data
             currentMentor = await window.api.get(`/mentors/${profileMentorId}`);
             
+            // Ensure currentUserId is set (fallback to localStorage if needed)
+            if (!currentUserId) {
+                const storedUserId = localStorage.getItem('loggedInUserId');
+                if (storedUserId) {
+                    currentUserId = parseInt(storedUserId);
+                }
+            }
             
             // Check if current user is the profile owner
-            isOwner = currentUserId && currentUserId === currentMentor.user_id;
+            // Compare both as integers to handle any type mismatches
+            isOwner = currentUserId && parseInt(currentUserId) === parseInt(currentMentor.user_id);
             
             
             // Display profile
