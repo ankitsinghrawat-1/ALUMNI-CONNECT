@@ -167,25 +167,42 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         } catch (error) {
-            // On API error, show both options since we can't determine status
-            // This is better than showing the wrong button or just a refresh button
+            // On API error, try alternative method to check mentor status
+            // Check if we can determine status from other available data
+            try {
+                // Try to fetch mentors list and see if current user is in it
+                const userId = localStorage.getItem('loggedInUserId');
+                if (userId) {
+                    const mentorsData = await window.api.get('/mentors', { params: { limit: 1000 } });
+                    const currentUserIsMentor = mentorsData.mentors && mentorsData.mentors.some(m => m.user_id == userId);
+                    
+                    if (currentUserIsMentor) {
+                        // Found user in mentors list - they are a mentor
+                        const mentorData = mentorsData.mentors.find(m => m.user_id == userId);
+                        mentorActionArea.innerHTML = `
+                            <a href="mentor-profile.html?id=${mentorData.mentor_id}" class="btn btn-primary">
+                                <i class="fas fa-user-circle"></i>
+                                View My Profile
+                            </a>
+                            <a href="mentor-requests.html" class="btn btn-secondary">
+                                <i class="fas fa-inbox"></i>
+                                Requests
+                            </a>
+                        `;
+                        mentorActionAreaSearch.innerHTML = '';
+                        return;
+                    }
+                }
+            } catch (fallbackError) {
+                // Fallback also failed, use safe default
+            }
+            
+            // Default to "not a mentor" state - safest assumption
             mentorActionArea.innerHTML = `
-                <div class="mentor-status-unknown">
-                    <p class="status-message">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Unable to verify mentor status
-                    </p>
-                    <div class="action-buttons">
-                        <a href="become-mentor.html" class="btn btn-secondary">
-                            <i class="fas fa-user-plus"></i>
-                            Become a Mentor
-                        </a>
-                        <a href="mentor-requests.html" class="btn btn-secondary">
-                            <i class="fas fa-inbox"></i>
-                            My Mentor Dashboard
-                        </a>
-                    </div>
-                </div>
+                <a href="become-mentor.html" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i>
+                    Become a Mentor
+                </a>
             `;
             mentorActionAreaSearch.innerHTML = '';
         }
