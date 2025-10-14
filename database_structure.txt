@@ -1646,3 +1646,50 @@ ALTER TABLE thread_comments ADD INDEX IF NOT EXISTS idx_comments_thread (thread_
 -- Total tables: 73 (67 original + 6 new Phase 2 tables)
 -- Note: Tables 58 & 59 were modified for Phase 2 compatibility
 -- ====================================================================
+
+
+-- ====================================================================
+-- DIRECTORY FEATURE ENHANCEMENTS - Connection Request System
+-- Added: 2025-10-14
+-- ====================================================================
+
+
+--74. Connection Requests Table (Directory Feature)
+
+
+CREATE TABLE IF NOT EXISTS `connection_requests` (
+  `request_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `from_user_id` INT NOT NULL,
+  `to_user_id` INT NOT NULL,
+  `status` ENUM('pending', 'accepted', 'rejected') DEFAULT 'pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  FOREIGN KEY (`from_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`to_user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_connection_request` (`from_user_id`, `to_user_id`),
+  INDEX `idx_to_user` (`to_user_id`, `status`),
+  INDEX `idx_from_user` (`from_user_id`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+--75. Connections Table (Directory Feature)
+
+
+CREATE TABLE IF NOT EXISTS `connections` (
+  `connection_id` INT AUTO_INCREMENT PRIMARY KEY,
+  `user1_id` INT NOT NULL,
+  `user2_id` INT NOT NULL,
+  `connected_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`user1_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  FOREIGN KEY (`user2_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_connection` (`user1_id`, `user2_id`),
+  INDEX `idx_user1` (`user1_id`),
+  INDEX `idx_user2` (`user2_id`),
+  CHECK (`user1_id` < `user2_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- ====================================================================
+-- END OF DIRECTORY FEATURE ENHANCEMENTS
+-- Total tables: 75 (73 previous + 2 new connection tables)
+-- ====================================================================
