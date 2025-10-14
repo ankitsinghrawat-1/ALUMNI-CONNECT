@@ -54,13 +54,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>`;
     };
 
-    const getConnectionStatus = (alumnus) => {
-        const statuses = [
-            { class: 'connected', icon: 'fas fa-check-circle', text: 'Connected' },
-            { class: 'pending', icon: 'fas fa-clock', text: 'Pending' },
-            { class: 'not-connected', icon: 'fas fa-user-plus', text: 'Connect' }
-        ];
-        return statuses[Math.floor(Math.random() * statuses.length)];
+    const getConnectionStatus = async (alumnus) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // If not logged in, show connect button by default
+                return { class: 'not-connected', icon: 'fas fa-user-plus', text: 'Connect' };
+            }
+            
+            const response = await window.api.get(`/users/connection-status/${encodeURIComponent(alumnus.email)}`);
+            
+            if (response.status === 'connected') {
+                return { class: 'connected', icon: 'fas fa-check-circle', text: 'Connected' };
+            } else if (response.status === 'pending') {
+                return { class: 'pending', icon: 'fas fa-clock', text: 'Pending' };
+            } else if (response.status === 'received') {
+                return { class: 'received', icon: 'fas fa-user-check', text: 'Respond' };
+            } else {
+                return { class: 'not-connected', icon: 'fas fa-user-plus', text: 'Connect' };
+            }
+        } catch (error) {
+            console.error('Error fetching connection status:', error);
+            // Default to not connected on error
+            return { class: 'not-connected', icon: 'fas fa-user-plus', text: 'Connect' };
+        }
     };
 
     const getActionButton = (alumnus, connectionStatus) => {
@@ -74,6 +91,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <i class="fas fa-clock"></i>
                         Request Sent
                     </button>`;
+        } else if (connectionStatus.class === 'received') {
+            return `<button class="btn btn-success btn-sm view-profile-btn">
+                        <i class="fas fa-user-check"></i>
+                        View Request
+                    </button>`;
         } else {
             return `<button class="btn btn-primary btn-sm connect-btn" data-email="${alumnus.email}">
                         <i class="fas fa-user-plus"></i>
@@ -86,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return Math.floor(Math.random() * 30) + 70; // 70-100% match score
     };
 
-    const createEnhancedAlumnusCard = (alumnus) => {
+    const createEnhancedAlumnusCard = async (alumnus) => {
         const alumnusCard = document.createElement('div');
         alumnusCard.classList.add('enhanced-alumnus-card', 'card');
         
@@ -95,7 +117,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             `<span class="skill-tag">${skill.trim()}</span>`
         ).join('');
 
-        const connectionStatus = getConnectionStatus(alumnus);
+        const connectionStatus = await getConnectionStatus(alumnus);
         const actionButton = getActionButton(alumnus, connectionStatus);
 
         alumnusCard.innerHTML = `
@@ -245,7 +267,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (alumni && alumni.length > 0) {
                 resultsTitle.textContent = `${alumni.length} Alumni Found`;
                 
-                alumni.forEach(alumnus => {
+                // Process alumni cards asynchronously
+                for (const alumnus of alumni) {
                     // Map API response to expected format
                     const mappedAlumnus = {
                         full_name: alumnus.full_name,
@@ -263,9 +286,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         verification_status: alumnus.verification_status
                     };
                     
-                    const alumnusCard = createEnhancedAlumnusCard(mappedAlumnus);
+                    const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
                     alumniListContainer.appendChild(alumnusCard);
-                });
+                }
             } else {
                 showEmptyState();
             }
