@@ -299,12 +299,16 @@ html.dark-mode .modern-edit-profile {
     background-color: transparent !important;
     position: static !important;
     vertical-align: middle;
+    transition: none !important;
+    cursor: default !important;
 }
 
 .profile-field:hover label i,
 .profile-field label:hover i,
 .profile-field label i:hover {
     color: var(--primary-blue) !important;
+    transform: none !important;
+    transition: none !important;
 }
 
 .profile-field label i::before {
@@ -439,12 +443,16 @@ html.dark-mode .modern-edit-profile {
     background-color: transparent !important;
     position: static !important;
     vertical-align: middle;
+    transition: none !important;
+    cursor: default !important;
 }
 
 .password-form .input-group:hover label i,
 .password-form .input-group label:hover i,
 .password-form .input-group label i:hover {
     color: var(--primary-blue) !important;
+    transform: none !important;
+    transition: none !important;
 }
 
 .password-form .input-group label i::before {
