@@ -515,6 +515,7 @@
 }
 
 .social-link i {
+    flex-shrink: 0;
     font-size: var(--font-size-lg);
     width: 1.25rem;
     height: 1.25rem;
@@ -524,11 +525,15 @@
     background: none !important;
     background-image: none !important;
     background-color: transparent !important;
+    position: static !important;
 }
 
 .social-link i::before {
     background: none !important;
     background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
     width: auto !important;
     height: auto !important;
 }

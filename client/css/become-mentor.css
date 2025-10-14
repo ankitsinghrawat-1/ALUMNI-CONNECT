@@ -655,10 +655,39 @@
 }
 
 .form-group label i {
-    color: var(--bm-primary);
-    width: 20px;
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
     text-align: center;
     font-size: 1.125rem;
+    color: var(--bm-primary) !important;
+    display: inline-block !important;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    vertical-align: middle;
+    transition: none !important;
+    cursor: default !important;
+}
+
+.form-group:hover label i,
+.form-group label:hover i,
+.form-group label i:hover {
+    color: var(--bm-primary) !important;
+    transform: none !important;
+    transition: none !important;
+}
+
+.form-group label i::before {
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 .form-group input,

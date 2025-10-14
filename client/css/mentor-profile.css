@@ -697,7 +697,18 @@ html.dark-mode .social-link {
 }
 
 .social-link i {
-    font-size: 1.2rem;
+    flex-shrink: 0;
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+    display: inline-block !important;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    vertical-align: middle;
 }
 
 .social-link.linkedin {
@@ -714,6 +725,36 @@ html.dark-mode .social-link {
 
 .social-link.email {
     border-left: 3px solid var(--mentor-accent);
+}
+
+.social-link i::before {
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+.social-link.linkedin i {
+    color: #0077B5;
+}
+
+.social-link.github i {
+    color: #333;
+}
+
+html.dark-mode .social-link.github i {
+    color: #f0f6fc;
+}
+
+.social-link.portfolio i {
+    color: var(--mentor-primary);
+}
+
+.social-link.email i {
+    color: var(--mentor-accent);
 }
 
 /* Edit Form */
@@ -1258,44 +1299,4 @@ html.dark-mode .request-modal small {
 .btn-sm {
     padding: 0.4rem 0.8rem;
     font-size: 0.85rem;
-}
-
-/* Fix for social link icon stability - icons inline with text, NO background */
-.social-link i {
-    flex-shrink: 0;
-    width: 1.25rem;
-    height: 1.25rem;
-    line-height: 1.25rem;
-    text-align: center;
-    display: inline-block !important;
-    margin-right: 0.5rem;
-    background: none !important;
-    background-image: none !important;
-    background-color: transparent !important;
-    position: static !important;
-    font-size: 1.25rem;
-    vertical-align: middle;
-}
-
-.social-link:hover i {
-    transform: none;
-    background: none !important;
-    background-image: none !important;
-}
-
-/* Ensure icons display inline without position issues */
-.social-link {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-}
-
-.social-link i::before {
-    background: none !important;
-    background-image: none !important;
-    background-color: transparent !important;
-    position: static !important;
-    display: inline-block !important;
-    width: auto !important;
-    height: auto !important;
 }

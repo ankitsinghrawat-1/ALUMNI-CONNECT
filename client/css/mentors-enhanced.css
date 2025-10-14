@@ -1796,7 +1796,12 @@ html.dark-mode .social-link.github {
     border-left: 3px solid var(--mentor-primary);
 }
 
+.social-link.email {
+    border-left: 3px solid var(--mentor-accent);
+}
+
 .social-link i {
+    flex-shrink: 0;
     font-size: 1.25rem;
     width: 1.25rem;
     height: 1.25rem;
@@ -1806,12 +1811,16 @@ html.dark-mode .social-link.github {
     background: none !important;
     background-image: none !important;
     background-color: transparent !important;
+    position: static !important;
     vertical-align: middle;
 }
 
 .social-link i::before {
     background: none !important;
     background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
     width: auto !important;
     height: auto !important;
 }
@@ -1830,6 +1839,10 @@ html.dark-mode .social-link.github i {
 
 .social-link.portfolio i {
     color: var(--mentor-primary);
+}
+
+.social-link.email i {
+    color: var(--mentor-accent);
 }
 
 /* Achievements Grid */
