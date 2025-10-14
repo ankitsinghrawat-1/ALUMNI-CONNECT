@@ -167,13 +167,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         } catch (error) {
-            // On error, show a retry button or generic action
-            // Don't assume user is not a mentor - the API might just be down
+            // On API error, show both options since we can't determine status
+            // This is better than showing the wrong button or just a refresh button
             mentorActionArea.innerHTML = `
-                <button class="btn btn-secondary" onclick="location.reload()">
-                    <i class="fas fa-refresh"></i>
-                    Refresh to Load
-                </button>
+                <div class="mentor-status-unknown">
+                    <p class="status-message">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Unable to verify mentor status
+                    </p>
+                    <div class="action-buttons">
+                        <a href="become-mentor.html" class="btn btn-secondary">
+                            <i class="fas fa-user-plus"></i>
+                            Become a Mentor
+                        </a>
+                        <a href="mentor-profile.html" class="btn btn-secondary">
+                            <i class="fas fa-user-circle"></i>
+                            View Mentor Profile
+                        </a>
+                    </div>
+                </div>
             `;
             mentorActionAreaSearch.innerHTML = '';
         }
