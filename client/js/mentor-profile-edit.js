@@ -53,6 +53,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (confirmSaveBtn) {
         confirmSaveBtn.addEventListener('click', confirmAndSave);
     }
+    
+    // Add Achievement button handler
+    const addAchievementBtn = document.getElementById('add-achievement-btn');
+    if (addAchievementBtn) {
+        addAchievementBtn.addEventListener('click', () => addAchievementField());
+    }
 
     // Availability checkbox handlers
     document.querySelectorAll('.availability-checkbox input[type="checkbox"]').forEach(checkbox => {
@@ -156,6 +162,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         document.getElementById('edit-github-url').value = mentor.github_url || '';
         document.getElementById('edit-portfolio-url').value = mentor.portfolio_url || '';
         
+        // Populate achievements
+        const achievementsEditor = document.getElementById('achievements-editor');
+        if (achievementsEditor) {
+            achievementsEditor.innerHTML = '';
+            if (mentor.achievements && mentor.achievements.length > 0) {
+                mentor.achievements.forEach((achievement, index) => {
+                    addAchievementField(achievement);
+                });
+            }
+        }
+        
         // Populate availability
         if (mentor.availability && mentor.availability.length > 0) {
             mentor.availability.forEach(avail => {
@@ -181,22 +198,92 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    function addAchievementField(achievement = null) {
+        const achievementsEditor = document.getElementById('achievements-editor');
+        const achievementIndex = achievementsEditor.children.length;
+        
+        const achievementDiv = document.createElement('div');
+        achievementDiv.className = 'achievement-field-group';
+        achievementDiv.innerHTML = `
+            <div class="achievement-field">
+                <input type="text" name="achievement_title_${achievementIndex}" 
+                    placeholder="Achievement Title (e.g., AWS Certified Solutions Architect)" 
+                    value="${achievement ? sanitizeHTML(achievement.title || '') : ''}" />
+                <textarea name="achievement_description_${achievementIndex}" rows="2" 
+                    placeholder="Description (optional)">${achievement ? sanitizeHTML(achievement.description || '') : ''}</textarea>
+                <input type="text" name="achievement_issuer_${achievementIndex}" 
+                    placeholder="Issuer Organization (optional)" 
+                    value="${achievement ? sanitizeHTML(achievement.issuer_organization || '') : ''}" />
+                <button type="button" class="btn btn-danger btn-sm remove-achievement-btn">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            </div>
+        `;
+        
+        achievementsEditor.appendChild(achievementDiv);
+        
+        // Add remove button listener
+        const removeBtn = achievementDiv.querySelector('.remove-achievement-btn');
+        removeBtn.addEventListener('click', () => {
+            achievementDiv.remove();
+        });
+    }
+    
+    // Helper function for HTML sanitization
+    function sanitizeHTML(str) {
+        const temp = document.createElement('div');
+        temp.textContent = str;
+        return temp.innerHTML;
+    }
+
     async function handleProfileUpdate(e) {
         e.preventDefault();
 
         const formData = new FormData(editProfileForm);
         const updates = {};
         const availability = [];
+        const achievements = [];
 
         // Process regular form fields
         for (const [key, value] of formData.entries()) {
-            // Skip availability fields, we'll process them separately
-            if (key.startsWith('availability_') || key.includes('_start') || key.includes('_end')) {
+            // Skip availability and achievement fields, we'll process them separately
+            if (key.startsWith('availability_') || key.includes('_start') || key.includes('_end') || 
+                key.startsWith('achievement_')) {
                 continue;
             }
             if (value && value.trim()) {
                 updates[key] = value.trim();
             }
+        }
+        
+        // Process achievements
+        const achievementTitles = [];
+        const achievementDescriptions = [];
+        const achievementIssuers = [];
+        
+        for (const [key, value] of formData.entries()) {
+            if (key.startsWith('achievement_title_')) {
+                achievementTitles.push(value.trim());
+            } else if (key.startsWith('achievement_description_')) {
+                achievementDescriptions.push(value.trim());
+            } else if (key.startsWith('achievement_issuer_')) {
+                achievementIssuers.push(value.trim());
+            }
+        }
+        
+        // Combine achievement data
+        for (let i = 0; i < achievementTitles.length; i++) {
+            if (achievementTitles[i]) {
+                achievements.push({
+                    title: achievementTitles[i],
+                    description: achievementDescriptions[i] || '',
+                    issuer_organization: achievementIssuers[i] || ''
+                });
+            }
+        }
+        
+        if (achievements.length > 0) {
+            updates.achievements = achievements;
         }
 
         // Process availability
