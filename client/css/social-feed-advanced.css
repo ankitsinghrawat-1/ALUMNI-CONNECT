@@ -379,7 +379,28 @@
 }
 
 .toolbar-btn i {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
     font-size: 14px;
+    display: inline-block !important;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    vertical-align: middle;
+}
+
+.toolbar-btn i::before {
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 .coauthor-modal {
@@ -503,7 +524,29 @@
 }
 
 .quality-label i {
-    color: #667eea;
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+    font-size: 1.125rem;
+    color: #667eea !important;
+    display: inline-block !important;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    vertical-align: middle;
+}
+
+.quality-label i::before {
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 /* ====================================================================
@@ -534,7 +577,28 @@
 }
 
 .verified-alumni-badge i {
+    flex-shrink: 0;
+    width: 1rem;
+    height: 1rem;
+    line-height: 1rem;
+    text-align: center;
     font-size: 11px;
+    display: inline-block !important;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    vertical-align: middle;
+}
+
+.verified-alumni-badge i::before {
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 /* Career opportunity highlighting */
@@ -549,8 +613,30 @@
 }
 
 .career-highlight i {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+    font-size: 1.125rem;
     margin-right: 8px;
-    color: #f59e0b;
+    color: #f59e0b !important;
+    display: inline-block !important;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    vertical-align: middle;
+}
+
+.career-highlight i::before {
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: auto !important;
 }
 
 /* Enhanced hover effects */
