@@ -1260,19 +1260,23 @@ html.dark-mode .request-modal small {
     font-size: 0.85rem;
 }
 
-/* Fix for social link icon stability - icons inline with text */
+/* Fix for social link icon stability - icons inline with text, NO background */
 .social-link i {
     flex-shrink: 0;
     width: 1.5rem;
     text-align: center;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+    display: inline-block !important;
     margin-right: 0.5rem;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
 }
 
 .social-link:hover i {
     transform: none;
+    background: none !important;
+    background-image: none !important;
 }
 
 /* Ensure icons display inline without position issues */
@@ -1281,6 +1285,9 @@ html.dark-mode .request-modal small {
 }
 
 .social-link i::before {
-    position: relative;
-    display: inline-block;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+    position: static !important;
+    display: inline !important;
 }
