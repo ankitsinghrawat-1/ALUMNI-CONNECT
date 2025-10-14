@@ -1260,13 +1260,27 @@ html.dark-mode .request-modal small {
     font-size: 0.85rem;
 }
 
-/* Fix for social link icon stability */
+/* Fix for social link icon stability - icons inline with text */
 .social-link i {
     flex-shrink: 0;
-    width: 1.2rem;
+    width: 1.5rem;
     text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 0.5rem;
 }
 
 .social-link:hover i {
     transform: none;
+}
+
+/* Ensure icons display inline without position issues */
+.social-link {
+    position: relative;
+}
+
+.social-link i::before {
+    position: relative;
+    display: inline-block;
 }
