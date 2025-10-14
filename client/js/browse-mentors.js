@@ -167,13 +167,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
         } catch (error) {
-            
-            // On error, show default "Become a Mentor" button instead of error message
+            // On error, show a retry button or generic action
+            // Don't assume user is not a mentor - the API might just be down
             mentorActionArea.innerHTML = `
-                <a href="become-mentor.html" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i>
-                    Become a Mentor
-                </a>
+                <button class="btn btn-secondary" onclick="location.reload()">
+                    <i class="fas fa-refresh"></i>
+                    Refresh to Load
+                </button>
             `;
             mentorActionAreaSearch.innerHTML = '';
         }
