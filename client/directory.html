@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumni Directory</title>
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/directory-enhanced.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script>
@@ -33,8 +34,8 @@
                 <p>Find the right connections using our AI-powered search and advanced filters</p>
             </div>
             
-            <!-- Enhanced Search Section -->
-            <div class="search-section">
+            <!-- Enhanced Search Section (Hidden - Using Floating Button) -->
+            <div class="search-section" style="display: none;">
                 <div class="search-tabs">
                     <button class="search-tab active" data-tab="quick">Quick Search</button>
                     <button class="search-tab" data-tab="advanced">Advanced Filters</button>
@@ -209,6 +210,159 @@
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
         </div>
     </footer>
+
+    <!-- Floating Search Button -->
+    <button id="floating-search-btn" class="floating-search-btn" title="Search Alumni">
+        <i class="fas fa-search"></i>
+    </button>
+
+    <!-- Profile Quick View Modal -->
+    <div id="profile-modal" class="profile-modal">
+        <div class="modal-overlay" id="modal-overlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="modal-body">
+                <div class="modal-header-section">
+                    <div class="modal-avatar">
+                        <img id="modal-avatar-img" src="" alt="Profile Picture">
+                        <div class="modal-online-indicator"></div>
+                    </div>
+                    <div class="modal-user-info">
+                        <h2 id="modal-user-name">Loading...</h2>
+                        <p id="modal-user-title" class="modal-subtitle"></p>
+                        <p id="modal-user-company" class="modal-company"></p>
+                    </div>
+                </div>
+                
+                <div class="modal-details-section">
+                    <div class="modal-detail-item">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span id="modal-education"></span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span id="modal-location"></span>
+                    </div>
+                    <div class="modal-detail-item">
+                        <i class="fas fa-industry"></i>
+                        <span id="modal-industry"></span>
+                    </div>
+                </div>
+
+                <div id="modal-skills-section" class="modal-skills-section">
+                    <h4><i class="fas fa-cogs"></i> Skills</h4>
+                    <div id="modal-skills-container" class="modal-skills-container"></div>
+                </div>
+
+                <div id="modal-bio-section" class="modal-bio-section">
+                    <h4><i class="fas fa-user"></i> About</h4>
+                    <p id="modal-bio"></p>
+                </div>
+
+                <div class="modal-actions">
+                    <button id="modal-view-profile-btn" class="btn btn-primary">
+                        <i class="fas fa-user"></i>
+                        View Full Profile
+                    </button>
+                    <button id="modal-message-btn" class="btn btn-outline">
+                        <i class="fas fa-envelope"></i>
+                        Send Message
+                    </button>
+                    <button id="modal-connect-btn" class="btn btn-success">
+                        <i class="fas fa-user-plus"></i>
+                        Connect
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Advanced Search Dialog Modal -->
+    <div id="search-dialog" class="search-dialog">
+        <div class="search-dialog-overlay" id="search-dialog-overlay"></div>
+        <div class="search-dialog-content">
+            <button class="search-dialog-close" id="search-dialog-close">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="search-dialog-header">
+                <h2><i class="fas fa-search"></i> Search Alumni</h2>
+                <p>Find the perfect connections with advanced search</p>
+            </div>
+
+            <div class="search-dialog-body">
+                <!-- Quick Search -->
+                <div class="search-dialog-section">
+                    <h3><i class="fas fa-bolt"></i> Quick Search</h3>
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="dialog-search-input" placeholder="Search by name, company, or skills..." />
+                    </div>
+                    <div class="popular-tags-section">
+                        <span class="tags-label">Popular:</span>
+                        <button class="tag-btn" data-search="Software Engineer">Software Engineer</button>
+                        <button class="tag-btn" data-search="Marketing">Marketing</button>
+                        <button class="tag-btn" data-search="Finance">Finance</button>
+                        <button class="tag-btn" data-search="Startup">Startup</button>
+                    </div>
+                </div>
+
+                <!-- Advanced Filters -->
+                <div class="search-dialog-section">
+                    <h3><i class="fas fa-sliders-h"></i> Advanced Filters</h3>
+                    <div class="filters-grid">
+                        <div class="filter-item">
+                            <label><i class="fas fa-graduation-cap"></i> Major</label>
+                            <input type="text" id="dialog-major-filter" placeholder="e.g., Computer Science">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-calendar"></i> Graduation Year</label>
+                            <div class="year-inputs">
+                                <input type="number" id="dialog-year-from" placeholder="From" min="1950" max="2030">
+                                <span>to</span>
+                                <input type="number" id="dialog-year-to" placeholder="To" min="1950" max="2030">
+                            </div>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-map-marker-alt"></i> Location</label>
+                            <input type="text" id="dialog-city-filter" placeholder="City or region">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-industry"></i> Industry</label>
+                            <input type="text" id="dialog-industry-filter" placeholder="e.g., Technology">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-cogs"></i> Skills</label>
+                            <input type="text" id="dialog-skills-filter" placeholder="e.g., JavaScript, Python">
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-building"></i> Company Size</label>
+                            <select id="dialog-company-size-filter">
+                                <option value="">Any Size</option>
+                                <option value="startup">Startup (1-50)</option>
+                                <option value="small">Small (51-200)</option>
+                                <option value="medium">Medium (201-1000)</option>
+                                <option value="large">Large (1000+)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-dialog-actions">
+                    <button id="dialog-apply-search" class="btn btn-primary btn-lg">
+                        <i class="fas fa-search"></i>
+                        Apply Search
+                    </button>
+                    <button id="dialog-clear-filters" class="btn btn-outline">
+                        <i class="fas fa-redo"></i>
+                        Clear All
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/utils.js"></script>

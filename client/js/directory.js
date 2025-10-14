@@ -182,6 +182,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <i class="fas fa-envelope"></i>
                         Message
                     </button>
+                    <button class="btn btn-primary btn-sm view-full-profile-btn" data-email="${alumnus.email}">
+                        <i class="fas fa-id-card"></i>
+                        View Profile
+                    </button>
                 </div>
                 <div class="match-score" title="Compatibility Score">
                     <i class="fas fa-star"></i>
@@ -189,6 +193,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
             </div>
         `;
+
+        // Add click handler to card for modal
+        alumnusCard.addEventListener('click', (e) => {
+            // Don't open modal if clicking on buttons
+            if (!e.target.closest('button')) {
+                openProfileModal(alumnus);
+            }
+        });
 
         // Add event listeners
         const messageBtn = alumnusCard.querySelector('.message-btn');
@@ -204,6 +216,15 @@ document.addEventListener('DOMContentLoaded', async () => {
         const viewProfileBtn = alumnusCard.querySelector('.view-profile-btn');
         if (viewProfileBtn) {
             viewProfileBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                window.location.href = `view-profile.html?email=${encodeURIComponent(alumnus.email)}`;
+            });
+        }
+
+        const viewFullProfileBtn = alumnusCard.querySelector('.view-full-profile-btn');
+        if (viewFullProfileBtn) {
+            viewFullProfileBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 window.location.href = `view-profile.html?email=${encodeURIComponent(alumnus.email)}`;
@@ -436,6 +457,225 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', applyAdvancedFilters);
     if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearAllFilters);
     if (sortSelect) sortSelect.addEventListener('change', fetchAndRenderAlumni);
+
+    // ==================== Profile Modal Functionality ====================
+    const profileModal = document.getElementById('profile-modal');
+    const modalOverlay = document.getElementById('modal-overlay');
+    const modalClose = document.getElementById('modal-close');
+    const modalViewProfileBtn = document.getElementById('modal-view-profile-btn');
+    const modalMessageBtn = document.getElementById('modal-message-btn');
+    const modalConnectBtn = document.getElementById('modal-connect-btn');
+
+    let currentModalUser = null;
+
+    const openProfileModal = async (alumnus) => {
+        currentModalUser = alumnus;
+        
+        // Set basic info
+        document.getElementById('modal-user-name').textContent = alumnus.full_name;
+        document.getElementById('modal-user-title').textContent = alumnus.current_position || 'Alumni Member';
+        document.getElementById('modal-user-company').textContent = alumnus.current_company || '';
+        
+        // Set avatar
+        const avatarImg = document.getElementById('modal-avatar-img');
+        avatarImg.src = alumnus.profile_pic_url || createInitialsAvatar(alumnus.full_name);
+        
+        // Set details
+        document.getElementById('modal-education').textContent = 
+            `${alumnus.major || 'Not specified'} • Class of ${alumnus.graduation_year || 'N/A'}`;
+        document.getElementById('modal-location').textContent = alumnus.city || 'Location not specified';
+        document.getElementById('modal-industry').textContent = alumnus.industry || 'Industry not specified';
+        
+        // Set skills
+        const skillsSection = document.getElementById('modal-skills-section');
+        const skillsContainer = document.getElementById('modal-skills-container');
+        if (alumnus.skills) {
+            const skills = alumnus.skills.split(',');
+            skillsContainer.innerHTML = skills.map(skill => 
+                `<span class="skill-tag">${skill.trim()}</span>`
+            ).join('');
+            skillsSection.style.display = 'block';
+        } else {
+            skillsSection.style.display = 'none';
+        }
+        
+        // Set bio
+        const bioSection = document.getElementById('modal-bio-section');
+        const bioElement = document.getElementById('modal-bio');
+        if (alumnus.bio) {
+            bioElement.textContent = alumnus.bio;
+            bioSection.style.display = 'block';
+        } else {
+            bioSection.style.display = 'none';
+        }
+        
+        // Get connection status and update button
+        try {
+            const connectionStatus = await getConnectionStatus(alumnus);
+            if (connectionStatus.class === 'connected') {
+                modalConnectBtn.innerHTML = '<i class="fas fa-check-circle"></i> Connected';
+                modalConnectBtn.disabled = true;
+                modalConnectBtn.className = 'btn btn-secondary';
+            } else if (connectionStatus.class === 'pending') {
+                modalConnectBtn.innerHTML = '<i class="fas fa-clock"></i> Request Sent';
+                modalConnectBtn.disabled = true;
+                modalConnectBtn.className = 'btn btn-secondary';
+            } else {
+                modalConnectBtn.innerHTML = '<i class="fas fa-user-plus"></i> Connect';
+                modalConnectBtn.disabled = false;
+                modalConnectBtn.className = 'btn btn-success';
+            }
+        } catch (error) {
+            console.error('Error getting connection status:', error);
+        }
+        
+        // Show modal
+        profileModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    };
+
+    const closeProfileModal = () => {
+        profileModal.classList.remove('active');
+        document.body.style.overflow = '';
+        currentModalUser = null;
+    };
+
+    // Modal event listeners
+    if (modalClose) modalClose.addEventListener('click', closeProfileModal);
+    if (modalOverlay) modalOverlay.addEventListener('click', closeProfileModal);
+    
+    if (modalViewProfileBtn) {
+        modalViewProfileBtn.addEventListener('click', () => {
+            if (currentModalUser) {
+                window.location.href = `view-profile.html?email=${encodeURIComponent(currentModalUser.email)}`;
+            }
+        });
+    }
+    
+    if (modalMessageBtn) {
+        modalMessageBtn.addEventListener('click', () => {
+            if (currentModalUser) {
+                window.location.href = `messages.html?user=${encodeURIComponent(currentModalUser.email)}&name=${encodeURIComponent(currentModalUser.full_name)}`;
+            }
+        });
+    }
+    
+    if (modalConnectBtn) {
+        modalConnectBtn.addEventListener('click', async () => {
+            if (currentModalUser && !modalConnectBtn.disabled) {
+                try {
+                    await window.api.post('/users/connect-request', { 
+                        to_email: currentModalUser.email 
+                    });
+                    
+                    modalConnectBtn.innerHTML = '<i class="fas fa-clock"></i> Request Sent';
+                    modalConnectBtn.disabled = true;
+                    modalConnectBtn.className = 'btn btn-secondary';
+                    
+                    showToast(`Connection request sent to ${currentModalUser.full_name}!`, 'success');
+                } catch (error) {
+                    showToast('Failed to send connection request. Please try again.', 'error');
+                }
+            }
+        });
+    }
+
+    // ==================== Search Dialog Functionality ====================
+    const searchDialog = document.getElementById('search-dialog');
+    const searchDialogOverlay = document.getElementById('search-dialog-overlay');
+    const searchDialogClose = document.getElementById('search-dialog-close');
+    const floatingSearchBtn = document.getElementById('floating-search-btn');
+    const dialogApplySearch = document.getElementById('dialog-apply-search');
+    const dialogClearFilters = document.getElementById('dialog-clear-filters');
+    
+    const dialogSearchInput = document.getElementById('dialog-search-input');
+    const dialogMajorFilter = document.getElementById('dialog-major-filter');
+    const dialogYearFrom = document.getElementById('dialog-year-from');
+    const dialogYearTo = document.getElementById('dialog-year-to');
+    const dialogCityFilter = document.getElementById('dialog-city-filter');
+    const dialogIndustryFilter = document.getElementById('dialog-industry-filter');
+    const dialogSkillsFilter = document.getElementById('dialog-skills-filter');
+    const dialogCompanySizeFilter = document.getElementById('dialog-company-size-filter');
+
+    const openSearchDialog = () => {
+        // Sync values from hidden search section to dialog
+        if (searchInput) dialogSearchInput.value = searchInput.value;
+        if (majorFilter) dialogMajorFilter.value = majorFilter.value;
+        if (yearFromFilter) dialogYearFrom.value = yearFromFilter.value;
+        if (yearToFilter) dialogYearTo.value = yearToFilter.value;
+        if (cityFilter) dialogCityFilter.value = cityFilter.value;
+        if (industryFilter) dialogIndustryFilter.value = industryFilter.value;
+        if (skillsFilter) dialogSkillsFilter.value = skillsFilter.value;
+        if (companySizeFilter) dialogCompanySizeFilter.value = companySizeFilter.value;
+        
+        searchDialog.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        dialogSearchInput.focus();
+    };
+
+    const closeSearchDialog = () => {
+        searchDialog.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    const applyDialogSearch = () => {
+        // Sync values from dialog back to hidden search section
+        if (searchInput) searchInput.value = dialogSearchInput.value;
+        if (majorFilter) majorFilter.value = dialogMajorFilter.value;
+        if (yearFromFilter) yearFromFilter.value = dialogYearFrom.value;
+        if (yearToFilter) yearToFilter.value = dialogYearTo.value;
+        if (cityFilter) cityFilter.value = dialogCityFilter.value;
+        if (industryFilter) industryFilter.value = dialogIndustryFilter.value;
+        if (skillsFilter) skillsFilter.value = dialogSkillsFilter.value;
+        if (companySizeFilter) companySizeFilter.value = dialogCompanySizeFilter.value;
+        
+        closeSearchDialog();
+        fetchAndRenderAlumni();
+    };
+
+    const clearDialogFilters = () => {
+        dialogSearchInput.value = '';
+        dialogMajorFilter.value = '';
+        dialogYearFrom.value = '';
+        dialogYearTo.value = '';
+        dialogCityFilter.value = '';
+        dialogIndustryFilter.value = '';
+        dialogSkillsFilter.value = '';
+        dialogCompanySizeFilter.value = '';
+    };
+
+    // Search dialog event listeners
+    if (floatingSearchBtn) floatingSearchBtn.addEventListener('click', openSearchDialog);
+    if (searchDialogClose) searchDialogClose.addEventListener('click', closeSearchDialog);
+    if (searchDialogOverlay) searchDialogOverlay.addEventListener('click', closeSearchDialog);
+    if (dialogApplySearch) dialogApplySearch.addEventListener('click', applyDialogSearch);
+    if (dialogClearFilters) dialogClearFilters.addEventListener('click', clearDialogFilters);
+    
+    // Popular tags in dialog
+    const dialogTags = document.querySelectorAll('.search-dialog .tag-btn');
+    dialogTags.forEach(tag => {
+        tag.addEventListener('click', () => {
+            dialogSearchInput.value = tag.dataset.search;
+        });
+    });
+    
+    // Enter key in dialog search
+    if (dialogSearchInput) {
+        dialogSearchInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') applyDialogSearch();
+        });
+    }
+
+    // Escape key to close modals
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            closeProfileModal();
+            closeSearchDialog();
+        }
+    });
+
+    // Make modal function available globally
+    window.openProfileModal = openProfileModal;
 
     // Make functions available globally for onclick handlers
     window.clearAllFilters = clearAllFilters;
