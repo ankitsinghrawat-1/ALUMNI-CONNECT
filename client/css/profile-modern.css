@@ -292,13 +292,19 @@ html.dark-mode .modern-edit-profile {
     line-height: 1.25rem;
     text-align: center;
     font-size: 1.125rem;
-    color: var(--primary-blue);
+    color: var(--primary-blue) !important;
     display: inline-block !important;
     background: none !important;
     background-image: none !important;
     background-color: transparent !important;
     position: static !important;
     vertical-align: middle;
+}
+
+.profile-field:hover label i,
+.profile-field label:hover i,
+.profile-field label i:hover {
+    color: var(--primary-blue) !important;
 }
 
 .profile-field label i::before {
@@ -426,13 +432,19 @@ html.dark-mode .modern-edit-profile {
     line-height: 1.25rem;
     text-align: center;
     font-size: 1.125rem;
-    color: var(--primary-blue);
+    color: var(--primary-blue) !important;
     display: inline-block !important;
     background: none !important;
     background-image: none !important;
     background-color: transparent !important;
     position: static !important;
     vertical-align: middle;
+}
+
+.password-form .input-group:hover label i,
+.password-form .input-group label:hover i,
+.password-form .input-group label i:hover {
+    color: var(--primary-blue) !important;
 }
 
 .password-form .input-group label i::before {
