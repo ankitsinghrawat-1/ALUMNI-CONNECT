@@ -53,9 +53,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             try {
                 console.log('🔄 Fetching mentor status from /api/mentors/status...');
-                const mentorStatus = await window.api.get('/mentors/status');
+                const response = await window.api.get('/mentors/status');
                 console.log('✓ Mentor status API response received:');
-                console.log('  └─ Full response:', JSON.stringify(mentorStatus, null, 2));
+                console.log('  └─ Raw response type:', typeof response);
+                console.log('  └─ Raw response:', response);
+                console.log('  └─ Full JSON response:', JSON.stringify(response, null, 2));
+                
+                // Handle both direct response and nested data response
+                const mentorStatus = response.data || response;
+                console.log('  └─ Processed mentorStatus:', mentorStatus);
                 
                 if (mentorStatus) {
                     // Check if response has the expected fields
@@ -63,11 +69,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const hasMentorId = 'mentorId' in mentorStatus;
                     console.log('  └─ Has isMentor field:', hasIsMentor);
                     console.log('  └─ Has mentorId field:', hasMentorId);
+                    console.log('  └─ mentorStatus.isMentor:', mentorStatus.isMentor);
+                    console.log('  └─ mentorStatus.mentorId:', mentorStatus.mentorId);
                     
                     isMentor = mentorStatus.isMentor === true;
                     mentorId = mentorStatus.mentorId;
-                    console.log('  └─ isMentor value:', isMentor);
-                    console.log('  └─ mentorId value:', mentorId);
+                    console.log('  └─ Final isMentor value:', isMentor);
+                    console.log('  └─ Final mentorId value:', mentorId);
                     
                     if (isMentor && mentorId) {
                         mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
@@ -77,10 +85,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     } else {
                         console.log('✗ NOT creating mentor link:');
                         if (!isMentor) {
-                            console.log('  └─ Reason: isMentor is false or missing');
+                            console.log('  └─ Reason: isMentor is', isMentor, '(expected true)');
                         }
                         if (!mentorId) {
-                            console.log('  └─ Reason: mentorId is null/undefined');
+                            console.log('  └─ Reason: mentorId is', mentorId, '(expected a number)');
                         }
                     }
                 } else {
