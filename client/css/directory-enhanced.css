@@ -624,60 +624,150 @@
 /* Card Profile Section - New organized layout */
 .card-profile-section {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: flex-start;
-    padding: 20px;
-    padding-top: 50px; /* Space for top actions */
+    padding: 15px;
+    padding-top: 45px; /* Space for top actions */
     position: relative; /* Establish positioning context */
+}
+
+/* Compact avatar for cards */
+.enhanced-alumnus-card .alumnus-avatar {
+    margin-right: 0;
+}
+
+.enhanced-alumnus-card .alumnus-avatar img,
+.enhanced-alumnus-card .avatar-image {
+    width: 60px;
+    height: 60px;
+    border-width: 2px;
+}
+
+.enhanced-alumnus-card .online-indicator {
+    width: 12px;
+    height: 12px;
+    bottom: 2px;
+    right: 2px;
 }
 
 .alumnus-card-header {
     position: relative;
     overflow: visible; /* Allow dropdowns to extend */
+    padding-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.dark-mode .alumnus-card-header {
+    border-bottom-color: #334155;
 }
 
 .alumnus-card-body {
     overflow: hidden; /* Prevent body content from spilling */
+    padding: 12px 15px;
+}
+
+/* Compact details section */
+.enhanced-alumnus-card .alumnus-details {
+    margin-bottom: 10px;
+}
+
+.enhanced-alumnus-card .detail-item {
+    font-size: 12px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #64748b;
+}
+
+.enhanced-alumnus-card .detail-item i {
+    font-size: 12px;
+    width: 14px;
+    color: #94a3b8;
+}
+
+.dark-mode .enhanced-alumnus-card .detail-item {
+    color: #94a3b8;
+}
+
+.dark-mode .enhanced-alumnus-card .detail-item i {
+    color: #64748b;
 }
 
 .alumnus-card-footer {
     overflow: visible; /* Allow any tooltips/dropdowns in footer */
+    padding: 12px 15px;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.dark-mode .alumnus-card-footer {
+    border-top-color: #334155;
 }
 
 .name-and-role {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 }
 
 .alumnus-name {
     margin: 0;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 700;
     color: #1e293b;
+    line-height: 1.3;
 }
 
 .dark-mode .alumnus-name {
     color: #e2e8f0;
 }
 
+.alumnus-info {
+    flex: 1;
+    min-width: 0; /* Allow text truncation */
+}
+
+.alumnus-title {
+    font-size: 13px;
+    color: #64748b;
+    margin: 2px 0;
+    font-weight: 500;
+}
+
+.alumnus-company {
+    font-size: 12px;
+    color: #94a3b8;
+    margin: 2px 0 8px 0;
+}
+
+.dark-mode .alumnus-title {
+    color: #94a3b8;
+}
+
+.dark-mode .alumnus-company {
+    color: #64748b;
+}
+
 /* Role Badge */
 .role-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 3px 10px;
-    border-radius: 12px;
-    font-size: 11px;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 10px;
     font-weight: 600;
     color: white;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
 }
 
 .role-badge i {
-    font-size: 11px;
+    font-size: 10px;
 }
 
 /* Connection Status Badge - Redesigned */
@@ -685,22 +775,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 8px;
+    gap: 3px;
+    padding: 6px 8px;
     border-radius: 8px;
-    min-width: 60px;
+    min-width: 55px;
     text-align: center;
+    flex-shrink: 0;
 }
 
 .connection-status-badge i {
-    font-size: 18px;
+    font-size: 16px;
 }
 
 .connection-status-badge .status-label {
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
 }
 
 .connection-status-badge.connected {
@@ -747,25 +839,25 @@
 .badges-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 12px;
+    gap: 6px;
+    margin-top: 8px;
 }
 
 /* Card Top Actions (Bookmark & Quick Actions) */
 .card-top-actions {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 8px;
+    right: 8px;
     display: flex;
-    gap: 8px;
-    z-index: 5;
+    gap: 6px;
+    z-index: 10;
 }
 
 .bookmark-btn {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
     color: #64748b;
     cursor: pointer;
@@ -773,7 +865,8 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 13px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .bookmark-btn:hover {
@@ -810,10 +903,10 @@
 }
 
 .quick-actions-btn {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
     color: #64748b;
     cursor: pointer;
@@ -821,7 +914,8 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 13px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
 }
 
 .quick-actions-btn:hover {
@@ -907,69 +1001,70 @@
 .availability-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
+    gap: 5px;
+    padding: 4px 10px;
     color: white;
-    border-radius: 14px;
-    font-size: 11px;
+    border-radius: 12px;
+    font-size: 10px;
     font-weight: 600;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
     cursor: help;
     transition: all 0.3s ease;
 }
 
 .availability-badge:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
 }
 
 .availability-badge i {
-    font-size: 12px;
+    font-size: 11px;
 }
 
 /* Common Interests Badge */
 .common-interests {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 5px 12px;
+    gap: 5px;
+    padding: 4px 10px;
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     color: white;
-    border-radius: 14px;
-    font-size: 11px;
+    border-radius: 12px;
+    font-size: 10px;
     font-weight: 600;
-    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 1px 4px rgba(245, 158, 11, 0.25);
     cursor: help;
     transition: all 0.3s ease;
 }
 
 .common-interests:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
+    transform: translateY(-1px);
+    box-shadow: 0 3px 8px rgba(245, 158, 11, 0.35);
 }
 
 .common-interests i {
-    font-size: 12px;
+    font-size: 11px;
 }
 
 /* Card Actions Buttons - Reorganized */
 .card-actions-buttons {
     display: flex;
-    gap: 8px;
+    gap: 10px;
     flex-wrap: wrap;
     flex: 1;
 }
 
 .card-actions-buttons .btn {
     flex: 1;
-    min-width: 80px;
+    min-width: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 6px;
-    padding: 8px 10px;
+    padding: 9px 12px;
     font-size: 13px;
     white-space: nowrap;
+    transition: all 0.3s ease;
 }
 
 .card-actions-buttons .btn i {
@@ -980,6 +1075,12 @@
     display: inline;
 }
 
+/* Ensure proper spacing between connect and message buttons */
+.card-actions-buttons .connect-btn,
+.card-actions-buttons .btn-secondary {
+    margin-right: 2px;
+}
+
 /* Responsive: Hide button text on smaller cards */
 @media (max-width: 1200px) {
     .card-actions-buttons .btn .btn-text {
@@ -987,8 +1088,12 @@
     }
     
     .card-actions-buttons .btn {
-        min-width: 40px;
-        padding: 8px;
+        min-width: 42px;
+        padding: 9px;
+    }
+    
+    .card-actions-buttons {
+        gap: 8px;
     }
 }
 
