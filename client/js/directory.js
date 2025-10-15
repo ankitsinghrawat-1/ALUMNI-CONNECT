@@ -233,12 +233,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="profile-badges-row">
                             ${availabilityBadge}
                             ${commonInterestsHtml}
+                            <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
+                                <i class="${connectionStatus.icon}"></i>
+                                <span class="status-label">${connectionStatus.text}</span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
-                        <i class="${connectionStatus.icon}"></i>
-                        <span class="status-label">${connectionStatus.text}</span>
                     </div>
                 </div>
             </div>

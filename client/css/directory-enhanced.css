@@ -631,16 +631,16 @@
     z-index: 100;
 }
 
-/* Card Profile Section - Start from left edge */
+/* Card Profile Section - Shifted to left for better alignment */
 .card-profile-section {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: flex-start;
-    padding: 15px;
-    padding-left: 15px;
+    padding: 12px;
+    padding-left: 12px;
     padding-right: 50px; /* Space for top actions */
-    padding-top: 15px;
-    padding-bottom: 12px;
+    padding-top: 12px;
+    padding-bottom: 10px;
     position: relative;
 }
 
@@ -878,25 +878,25 @@
     font-size: 10px;
 }
 
-/* Connection Status Badge - Better proportions */
+/* Connection Status Badge - Inline with other badges */
 .connection-status-badge {
-    display: flex;
-    flex-direction: column;
+    display: inline-flex;
+    flex-direction: row;
     align-items: center;
-    gap: 3px;
-    padding: 6px 8px;
-    border-radius: 8px;
-    min-width: 65px;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: 12px;
     text-align: center;
     flex-shrink: 0;
+    white-space: nowrap;
 }
 
 .connection-status-badge i {
-    font-size: 16px;
+    font-size: 12px;
 }
 
 .connection-status-badge .status-label {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.3px;
@@ -1388,6 +1388,7 @@
     .card-profile-section {
         flex-wrap: wrap;
         padding-top: 15px;
+        padding-left: 12px;
     }
 
     .alumnus-info {
@@ -1396,11 +1397,9 @@
     }
 
     .connection-status-badge {
-        width: 100%;
         flex-direction: row;
         justify-content: center;
-        gap: 8px;
-        min-width: auto;
+        gap: 6px;
     }
 
     .card-actions-buttons .btn .btn-text {
