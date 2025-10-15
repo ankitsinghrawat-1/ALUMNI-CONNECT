@@ -3922,15 +3922,23 @@ body main {
     position: relative;
 }
 
-.profile-submenu > .dropdown-menu {
-    /* Position to the right of parent */
-    left: 100%;
-    right: auto !important; /* Override parent right: 0 */
-    top: 0 !important; /* Override parent top calculation */
-    margin-left: 0.5rem;
-    margin-top: 0;
-    /* Use horizontal transform for sliding from right */
+/* CRITICAL FIX: Use highly specific selector to override ALL parent styles */
+.profile-dropdown .dropdown-menu .profile-submenu > .dropdown-menu {
+    /* Reset all positioning from parent */
+    position: absolute !important;
+    left: 100% !important;
+    right: auto !important;
+    top: 0 !important;
+    bottom: auto !important;
+    margin-left: 0.5rem !important;
+    margin-top: 0 !important;
+    margin-right: 0 !important;
+    margin-bottom: 0 !important;
+    /* Use horizontal transform */
     transform: translateX(10px) !important;
+    /* Ensure visibility properties */
+    visibility: hidden;
+    opacity: 0;
 }
 
 .profile-submenu .fa-chevron-right {
@@ -3949,12 +3957,12 @@ body main {
     justify-content: space-between;
 }
 
-/* Show submenu on hover or when active */
-.profile-submenu:hover > .dropdown-menu,
-.profile-submenu.dropdown-active > .dropdown-menu {
-    visibility: visible;
-    opacity: 1;
-    transform: translateX(0) !important; /* Ensure horizontal transform */
+/* Show submenu with specific selector */
+.profile-dropdown .dropdown-menu .profile-submenu:hover > .dropdown-menu,
+.profile-dropdown .dropdown-menu .profile-submenu.dropdown-active > .dropdown-menu {
+    visibility: visible !important;
+    opacity: 1 !important;
+    transform: translateX(0) !important;
 }
 
 .static-page-main {

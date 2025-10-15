@@ -44,27 +44,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         let isMentor = false;
         let mentorId = null;
         
-        try {
-            const mentorStatus = await window.api.get('/mentors/status');
-            console.log('Mentor status API response:', mentorStatus);
+        // Check if window.api is available
+        if (!window.api) {
+            console.error('✗ window.api is not defined! Make sure api.js is loaded before auth.js');
+        } else {
+            console.log('✓ window.api is available');
             
-            if (mentorStatus) {
-                isMentor = mentorStatus.isMentor === true;
-                mentorId = mentorStatus.mentorId;
-                console.log('isMentor:', isMentor, 'mentorId:', mentorId);
+            try {
+                console.log('Fetching mentor status from /mentors/status...');
+                const mentorStatus = await window.api.get('/mentors/status');
+                console.log('✓ Mentor status API response received:', mentorStatus);
                 
-                if (isMentor && mentorId) {
-                    mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
-                    console.log('✓ Mentor profile link created for mentor ID:', mentorId);
+                if (mentorStatus) {
+                    isMentor = mentorStatus.isMentor === true;
+                    mentorId = mentorStatus.mentorId;
+                    console.log('  └─ isMentor:', isMentor);
+                    console.log('  └─ mentorId:', mentorId);
+                    
+                    if (isMentor && mentorId) {
+                        mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
+                        console.log('✓ Mentor profile link HTML created:', mentorProfileLink);
+                    } else {
+                        console.log('✗ User is not a mentor or missing data');
+                        console.log('  └─ Reason: isMentor=' + isMentor + ', mentorId=' + mentorId);
+                    }
                 } else {
-                    console.log('✗ User is not a mentor. isMentor:', isMentor, 'mentorId:', mentorId);
+                    console.log('✗ API returned null/undefined response');
                 }
-            } else {
-                console.log('✗ No mentor status data received from API');
+            } catch (error) {
+                console.error('✗ Error fetching mentor status:');
+                console.error('  └─ Error name:', error.name);
+                console.error('  └─ Error message:', error.message);
+                console.error('  └─ Full error:', error);
+                if (error.stack) {
+                    console.error('  └─ Stack trace:', error.stack);
+                }
             }
-        } catch (error) {
-            console.error('✗ Error fetching mentor status:', error);
-            console.error('Error details:', error.message, error.stack);
         }
 
         // --- Nav Bar HTML Structure ---
