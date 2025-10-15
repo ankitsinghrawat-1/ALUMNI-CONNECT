@@ -220,17 +220,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     
                     <div class="alumnus-info">
-                        <div class="name-and-role">
-                            <h3 class="alumnus-name">${alumnus.full_name}</h3>
-                            <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
-                                <i class="fas ${userRole.icon}"></i>
-                                <span>${userRole.label}</span>
-                            </div>
-                        </div>
+                        <h3 class="alumnus-name">${alumnus.full_name}</h3>
                         <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
                         <p class="alumnus-company">${alumnus.current_company || ''}</p>
                         
                         <div class="profile-badges-row">
+                            <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
+                                <i class="fas ${userRole.icon}"></i>
+                                <span>${userRole.label}</span>
+                            </div>
                             ${availabilityBadge}
                             ${commonInterestsHtml}
                             <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">

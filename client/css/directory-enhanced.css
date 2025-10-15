@@ -797,16 +797,8 @@
     border-top-color: #334155;
 }
 
-.name-and-role {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: nowrap; /* Keep on single line */
-    margin-bottom: 3px;
-}
-
 .alumnus-name {
-    margin: 0;
+    margin: 0 0 3px 0;
     font-size: 18px;
     font-weight: 700;
     color: #1e293b;
@@ -814,7 +806,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    flex-shrink: 1;
 }
 
 .dark-mode .alumnus-name {
