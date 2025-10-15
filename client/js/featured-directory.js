@@ -104,16 +104,28 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Determine if alumni is "featured" (you can customize this logic)
         const isFeatured = alumnus.verification_status === 'verified' || Math.random() > 0.7;
 
+        // Get default avatar based on user's name initial
+        const getDefaultAvatar = (name) => {
+            const initial = name.charAt(0).toUpperCase();
+            const colors = ['#667eea', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#3b82f6', '#ec4899'];
+            const colorIndex = name.charCodeAt(0) % colors.length;
+            const bgColor = colors[colorIndex];
+            
+            return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Crect width='120' height='120' fill='${encodeURIComponent(bgColor)}'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='Arial, sans-serif' font-size='60' fill='white' font-weight='bold'%3E${initial}%3C/text%3E%3C/svg%3E`;
+        };
+
+        const avatarUrl = alumnus.profile_pic_url || getDefaultAvatar(alumnus.full_name);
+
         return `
             <div class="alumni-card">
                 <div class="card-header">
                     ${isFeatured ? '<div class="featured-badge"><i class="fas fa-star"></i> Featured</div>' : ''}
                 </div>
                 <div class="avatar-container" style="text-align: center;">
-                    <img src="${alumnus.profile_pic_url || 'https://via.placeholder.com/120'}" 
+                    <img src="${avatarUrl}" 
                          alt="${alumnus.full_name}" 
                          class="avatar"
-                         onerror="this.src='https://via.placeholder.com/120'">
+                         onerror="this.src='${getDefaultAvatar(alumnus.full_name)}'">
                 </div>
                 <div class="card-body">
                     <h2>
