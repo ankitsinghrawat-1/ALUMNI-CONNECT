@@ -125,13 +125,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isBookmarked = bookmarkedAlumni.includes(alumnus.email);
         
         // Get user role and format it
-        const role = alumnus.role || 'alumni';
+        const role = (alumnus.role || 'alumni').toLowerCase();
         const roleConfig = {
             alumni: { label: 'Alumni', icon: 'fa-user-graduate', color: '#667eea' },
             student: { label: 'Student', icon: 'fa-graduation-cap', color: '#10b981' },
             faculty: { label: 'Faculty', icon: 'fa-chalkboard-teacher', color: '#f59e0b' },
             employer: { label: 'Employer', icon: 'fa-building', color: '#ef4444' },
-            institute: { label: 'Institute', icon: 'fa-university', color: '#8b5cf6' }
+            institute: { label: 'Institute', icon: 'fa-university', color: '#8b5cf6' },
+            admin: { label: 'Admin', icon: 'fa-user-shield', color: '#dc2626' } // Admin should be filtered but included in config for safety
         };
         const userRole = roleConfig[role] || roleConfig.alumni;
         
@@ -174,38 +175,38 @@ document.addEventListener('DOMContentLoaded', async () => {
         const connectionTooltip = connectionTooltips[connectionStatus.class] || 'Connection status';
 
         alumnusCard.innerHTML = `
-            <div class="alumnus-card-header">
-                <div class="card-top-actions">
-                    <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
-                            data-email="${alumnus.email}" 
-                            title="${isBookmarked ? 'Remove Bookmark' : 'Bookmark'}">
-                        <i class="fas fa-bookmark"></i>
+            <div class="card-top-actions">
+                <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
+                        data-email="${alumnus.email}" 
+                        title="${isBookmarked ? 'Remove Bookmark' : 'Bookmark'}">
+                    <i class="fas fa-bookmark"></i>
+                </button>
+                <div class="quick-actions-dropdown">
+                    <button class="quick-actions-btn" title="Quick Actions">
+                        <i class="fas fa-ellipsis-v"></i>
                     </button>
-                    <div class="quick-actions-dropdown">
-                        <button class="quick-actions-btn" title="Quick Actions">
-                            <i class="fas fa-ellipsis-v"></i>
+                    <div class="quick-actions-menu">
+                        ${alumnus.linkedin_profile ? `
+                            <a href="${alumnus.linkedin_profile}" target="_blank" class="quick-action-item">
+                                <i class="fab fa-linkedin"></i> LinkedIn
+                            </a>
+                        ` : ''}
+                        ${alumnus.website ? `
+                            <a href="${alumnus.website}" target="_blank" class="quick-action-item">
+                                <i class="fas fa-globe"></i> Portfolio
+                            </a>
+                        ` : ''}
+                        <button class="quick-action-item schedule-meeting-btn" data-email="${alumnus.email}">
+                            <i class="fas fa-calendar"></i> Schedule Meeting
                         </button>
-                        <div class="quick-actions-menu">
-                            ${alumnus.linkedin_profile ? `
-                                <a href="${alumnus.linkedin_profile}" target="_blank" class="quick-action-item">
-                                    <i class="fab fa-linkedin"></i> LinkedIn
-                                </a>
-                            ` : ''}
-                            ${alumnus.website ? `
-                                <a href="${alumnus.website}" target="_blank" class="quick-action-item">
-                                    <i class="fas fa-globe"></i> Portfolio
-                                </a>
-                            ` : ''}
-                            <button class="quick-action-item schedule-meeting-btn" data-email="${alumnus.email}">
-                                <i class="fas fa-calendar"></i> Schedule Meeting
-                            </button>
-                            <button class="quick-action-item share-profile-btn" data-email="${alumnus.email}">
-                                <i class="fas fa-share"></i> Share Profile
-                            </button>
-                        </div>
+                        <button class="quick-action-item share-profile-btn" data-email="${alumnus.email}">
+                            <i class="fas fa-share"></i> Share Profile
+                        </button>
                     </div>
                 </div>
-                
+            </div>
+            
+            <div class="alumnus-card-header">
                 <div class="card-profile-section">
                     <div class="alumnus-avatar">
                         <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
@@ -213,53 +214,77 @@ document.addEventListener('DOMContentLoaded', async () => {
                              class="avatar-image"
                              onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
                         <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
+                        <div class="match-score-overlay" title="Compatibility Score based on skills and interests">
+                            <i class="fas fa-star"></i>
+                            <span>${generateMatchScore()}%</span>
+                        </div>
+                        <div class="connection-status-icon ${connectionStatus.class}" title="${connectionTooltip}">
+                            <i class="${connectionStatus.icon}"></i>
+                        </div>
                     </div>
                     
                     <div class="alumnus-info">
-                        <div class="name-and-role">
-                            <h3 class="alumnus-name">${alumnus.full_name}</h3>
+                        <h3 class="alumnus-name">${alumnus.full_name}</h3>
+                        <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
+                        <p class="alumnus-company">${alumnus.current_company || ''}</p>
+                        
+                        <div class="profile-badges-row">
                             <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
                                 <i class="fas ${userRole.icon}"></i>
                                 <span>${userRole.label}</span>
                             </div>
-                        </div>
-                        <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
-                        <p class="alumnus-company">${alumnus.current_company || ''}</p>
-                        
-                        <div class="badges-container">
                             ${availabilityBadge}
                             ${commonInterestsHtml}
                         </div>
-                    </div>
-                    
-                    <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
-                        <i class="${connectionStatus.icon}"></i>
-                        <span class="status-label">${connectionStatus.text}</span>
                     </div>
                 </div>
             </div>
             
             <div class="alumnus-card-body">
-                <div class="alumnus-details">
+                <div class="alumnus-details-grid">
+                    ${alumnus.major || alumnus.graduation_year ? `
                     <div class="detail-item">
                         <i class="fas fa-graduation-cap"></i>
-                        <span>${alumnus.major || 'Not specified'} • Class of ${alumnus.graduation_year || 'N/A'}</span>
+                        <div class="detail-content">
+                            <span class="detail-label">Education</span>
+                            <span class="detail-value">${alumnus.major || 'Not specified'} ${alumnus.graduation_year ? `• Class of ${alumnus.graduation_year}` : ''}</span>
+                        </div>
                     </div>
+                    ` : ''}
+                    ${alumnus.city ? `
                     <div class="detail-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>${alumnus.city || 'Location not specified'}</span>
+                        <div class="detail-content">
+                            <span class="detail-label">Location</span>
+                            <span class="detail-value">${alumnus.city}</span>
+                        </div>
                     </div>
+                    ` : ''}
+                    ${alumnus.industry ? `
                     <div class="detail-item">
                         <i class="fas fa-industry"></i>
-                        <span>${alumnus.industry || 'Industry not specified'}</span>
+                        <div class="detail-content">
+                            <span class="detail-label">Industry</span>
+                            <span class="detail-value">${alumnus.industry}</span>
+                        </div>
                     </div>
+                    ` : ''}
+                    ${alumnus.email ? `
+                    <div class="detail-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Contact</span>
+                            <span class="detail-value">${alumnus.email}</span>
+                        </div>
+                    </div>
+                    ` : ''}
                 </div>
                 
                 ${skills.length > 0 ? `
                     <div class="alumnus-skills">
-                        <div class="skills-label">
+                        <div class="skills-header">
                             <i class="fas fa-cogs"></i>
-                            <span>Skills:</span>
+                            <span>Key Skills</span>
                         </div>
                         <div class="skills-container">
                             ${skillsHtml}
@@ -270,7 +295,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 ${alumnus.bio ? `
                     <div class="alumnus-bio">
-                        <p>${alumnus.bio.substring(0, 120)}${alumnus.bio.length > 120 ? '...' : ''}</p>
+                        <div class="bio-header">
+                            <i class="fas fa-quote-left"></i>
+                            <span>About</span>
+                        </div>
+                        <p>${alumnus.bio.substring(0, 100)}${alumnus.bio.length > 100 ? '...' : ''}</p>
                     </div>
                 ` : ''}
             </div>
@@ -286,10 +315,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <i class="fas fa-id-card"></i>
                         <span class="btn-text">Profile</span>
                     </button>
-                </div>
-                <div class="match-score" title="Compatibility Score based on skills and interests">
-                    <i class="fas fa-star"></i>
-                    <span>${generateMatchScore()}%</span>
                 </div>
             </div>
         `;
@@ -478,10 +503,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             alumniListContainer.innerHTML = '';
 
             if (alumni && alumni.length > 0) {
-                resultsTitle.textContent = `${alumni.length} Alumni Found`;
+                // Filter out admin users from directory
+                const filteredAlumni = alumni.filter(alumnus => {
+                    const userRole = alumnus.role || alumnus.user_type || 'alumni';
+                    return userRole.toLowerCase() !== 'admin';
+                });
+                
+                resultsTitle.textContent = `${filteredAlumni.length} Alumni Found`;
                 
                 // Process alumni cards asynchronously
-                for (const alumnus of alumni) {
+                for (const alumnus of filteredAlumni) {
                     // Map API response to expected format
                     const mappedAlumnus = {
                         full_name: alumnus.full_name,
@@ -496,8 +527,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         bio: '', // API doesn't return bio in public profiles
                         is_online: Math.random() > 0.5, // Random online status for demo
                         profile_pic_url: alumnus.profile_pic_url,
-                        verification_status: alumnus.verification_status
+                        verification_status: alumnus.verification_status,
+                        role: alumnus.role || alumnus.user_type || 'alumni' // Include user role from API (try both field names)
                     };
+                    
+                    // Debug: Log the actual role being used
+                    console.log(`User: ${mappedAlumnus.full_name}, Original role: ${alumnus.role}, user_type: ${alumnus.user_type}, Mapped role: ${mappedAlumnus.role}`);
                     
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
                     alumniListContainer.appendChild(alumnusCard);

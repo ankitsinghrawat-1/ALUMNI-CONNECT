@@ -586,12 +586,13 @@
     font-size: 15px;
 }
 
-/* ==================== Enhanced Cards ==================== */
+/* Enhanced Card - Contain content within bounds */
 .enhanced-alumnus-card {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden; /* Contain all content within card bounds */
+    overflow: hidden;
+    padding: 0; /* Override base card padding */
 }
 
 .enhanced-alumnus-card::before {
@@ -621,28 +622,72 @@
     transition: opacity 0.3s ease;
 }
 
-/* Card Profile Section - Aligned to extreme left */
+/* Card Top Actions - Positioned inside card boundaries */
+.card-top-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+}
+
+/* Card Profile Section - Extreme left alignment with minimal padding */
 .card-profile-section {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: flex-start;
-    padding: 15px;
-    padding-top: 45px; /* Space for top corner actions */
-    padding-left: 15px; /* Aligned to left edge */
+    padding: 12px 45px 10px 4px; /* Reduced left to 4px for extreme left, reduced right to 45px */
     position: relative;
 }
 
-/* Proper sized avatar */
+/* Avatar container with match score overlay */
 .enhanced-alumnus-card .alumnus-avatar {
-    margin-right: 0;
+    position: relative;
+    margin: 0;
     flex-shrink: 0;
+}
+
+/* Match Score Overlay on Avatar */
+.match-score-overlay {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 8px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+    z-index: 10;
+}
+
+.match-score-overlay i {
+    font-size: 9px;
+}
+
+.dark-mode .match-score-overlay {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
 .enhanced-alumnus-card .alumnus-avatar img,
 .enhanced-alumnus-card .avatar-image {
-    width: 70px;
-    height: 70px;
-    border-width: 3px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #e2e8f0;
+    object-fit: cover;
+}
+
+.dark-mode .enhanced-alumnus-card .alumnus-avatar img,
+.dark-mode .enhanced-alumnus-card .avatar-image {
+    border-color: #334155;
 }
 
 .enhanced-alumnus-card .online-indicator {
@@ -655,7 +700,7 @@
 
 .alumnus-card-header {
     position: relative;
-    overflow: visible; /* Keep visible for dropdown menu */
+    overflow: visible; /* Allow dropdown menu to overflow */
     padding-bottom: 12px;
     border-bottom: 1px solid #e2e8f0;
     min-height: 35px;
@@ -667,27 +712,67 @@
 
 .alumnus-card-body {
     overflow: hidden;
-    padding: 10px 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-/* Proper sized details section */
-.enhanced-alumnus-card .alumnus-details {
-    margin-bottom: 10px;
+/* Improved Details Grid */
+.alumnus-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
+/* Enhanced detail items with labels */
 .enhanced-alumnus-card .detail-item {
     font-size: 13px;
-    margin-bottom: 6px;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 10px;
     color: #64748b;
 }
 
 .enhanced-alumnus-card .detail-item i {
-    font-size: 13px;
-    width: 16px;
+    font-size: 14px;
+    width: 18px;
+    color: #667eea;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.detail-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     color: #94a3b8;
+}
+
+.detail-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark-mode .detail-label {
+    color: #64748b;
+}
+
+.dark-mode .detail-value {
+    color: #cbd5e1;
 }
 
 .dark-mode .enhanced-alumnus-card .detail-item {
@@ -704,6 +789,7 @@
     border-top: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
 }
 
@@ -711,16 +797,8 @@
     border-top-color: #334155;
 }
 
-.name-and-role {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-wrap: nowrap; /* Keep on single line */
-    margin-bottom: 3px;
-}
-
 .alumnus-name {
-    margin: 0;
+    margin: 0 0 3px 0;
     font-size: 18px;
     font-weight: 700;
     color: #1e293b;
@@ -728,7 +806,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    flex-shrink: 1;
 }
 
 .dark-mode .alumnus-name {
@@ -738,12 +815,15 @@
 .alumnus-info {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .alumnus-title {
     font-size: 14px;
     color: #64748b;
-    margin: 4px 0;
+    margin: 0;
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
@@ -753,7 +833,7 @@
 .alumnus-company {
     font-size: 13px;
     color: #94a3b8;
-    margin: 4px 0 8px 0;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -786,87 +866,55 @@
     font-size: 10px;
 }
 
-/* Connection Status Badge - Better proportions */
-.connection-status-badge {
+/* Connection Status Icon - Positioned on avatar */
+.connection-status-icon {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 3px;
-    padding: 6px 8px;
-    border-radius: 8px;
-    min-width: 65px;
-    text-align: center;
-    flex-shrink: 0;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 15;
 }
 
-.connection-status-badge i {
-    font-size: 16px;
+.connection-status-icon i {
+    font-size: 12px;
+    color: white;
 }
 
-.connection-status-badge .status-label {
-    font-size: 9px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    line-height: 1.2;
+.connection-status-icon.connected {
+    background: #10b981;
 }
 
-.connection-status-badge.connected {
-    background: #d1fae5;
-    color: #059669;
+.connection-status-icon.pending {
+    background: #f59e0b;
 }
 
-.connection-status-badge.pending {
-    background: #fef3c7;
-    color: #d97706;
+.connection-status-icon.received {
+    background: #3b82f6;
 }
 
-.connection-status-badge.received {
-    background: #dbeafe;
-    color: #2563eb;
+.connection-status-icon.not-connected {
+    background: #64748b;
 }
 
-.connection-status-badge.not-connected {
-    background: #f1f5f9;
-    color: #64748b;
+.dark-mode .connection-status-icon {
+    border-color: #1e293b;
 }
 
-.dark-mode .connection-status-badge.connected {
-    background: rgba(5, 150, 105, 0.2);
-    color: #10b981;
-}
-
-.dark-mode .connection-status-badge.pending {
-    background: rgba(217, 119, 6, 0.2);
-    color: #f59e0b;
-}
-
-.dark-mode .connection-status-badge.received {
-    background: rgba(37, 99, 235, 0.2);
-    color: #3b82f6;
-}
-
-.dark-mode .connection-status-badge.not-connected {
-    background: rgba(100, 116, 139, 0.2);
-    color: #94a3b8;
-}
-
-/* Badges Container - Allow wrapping for better display */
-.badges-container {
+/* Badges Container - For badges in info section */
+.badges-container,
+.info-badges-container,
+.profile-badges-row {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 8px;
-}
-
-/* Card Top Actions (Bookmark & Quick Actions) - Contained within card */
-.card-top-actions {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    display: flex;
-    gap: 6px;
-    z-index: 10;
+    margin-top: 6px;
 }
 
 .bookmark-btn {
@@ -1015,12 +1063,13 @@
     color: #667eea;
 }
 
-/* Availability Badge - Better sizing */
+/* Availability Badge - Fixed to prevent text overflow */
 .availability-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
+    justify-content: center;
+    gap: 4px;
+    padding: 5px 10px;
     color: white;
     border-radius: 12px;
     font-size: 11px;
@@ -1030,6 +1079,8 @@
     transition: all 0.3s ease;
     white-space: nowrap;
     flex-shrink: 0;
+    text-align: center;
+    max-width: fit-content;
 }
 
 .availability-badge:hover {
@@ -1038,7 +1089,13 @@
 }
 
 .availability-badge i {
+    font-size: 10px;
+    flex-shrink: 0;
+}
+
+.availability-badge span {
     font-size: 11px;
+    line-height: 1.2;
 }
 
 /* Common Interests Badge - Better sizing */
@@ -1071,26 +1128,29 @@
 /* Card Actions Buttons - Proper spacing and sizing */
 .card-actions-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: nowrap;
-    flex: 1;
+    width: 100%;
+    justify-content: center;
 }
 
 .card-actions-buttons .btn {
     flex: 1;
-    min-width: 90px;
+    min-width: 80px;
+    max-width: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 9px 14px;
+    gap: 5px;
+    padding: 10px 12px;
     font-size: 13px;
     white-space: nowrap;
     transition: all 0.3s ease;
+    border-radius: 8px;
 }
 
 .card-actions-buttons .btn i {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .card-actions-buttons .btn .btn-text {
@@ -1103,20 +1163,115 @@
     margin-right: 0;
 }
 
-/* Responsive: Hide button text on smaller cards */
-@media (max-width: 1200px) {
-    .card-actions-buttons .btn .btn-text {
-        display: none;
-    }
-    
-    .card-actions-buttons .btn {
-        min-width: 40px;
-        padding: 9px;
-    }
-    
-    .card-actions-buttons {
-        gap: 8px;
-    }
+/* Skills Section Styling */
+.alumnus-skills {
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border-left: 3px solid #667eea;
+}
+
+.dark-mode .alumnus-skills {
+    background: rgba(100, 116, 139, 0.1);
+}
+
+.skills-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #667eea;
+}
+
+.skills-header i {
+    font-size: 12px;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: white;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+.dark-mode .skill-tag {
+    background: #1e293b;
+    color: #cbd5e1;
+    border-color: #334155;
+}
+
+.dark-mode .skill-tag:hover {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+.more-skills {
+    font-size: 11px;
+    color: #667eea;
+    font-weight: 600;
+    padding: 4px 8px;
+}
+
+/* Bio Section Styling */
+.alumnus-bio {
+    padding: 10px;
+    background: #fefce8;
+    border-radius: 10px;
+    border-left: 3px solid #f59e0b;
+}
+
+.dark-mode .alumnus-bio {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.bio-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #d97706;
+}
+
+.bio-header i {
+    font-size: 10px;
+}
+
+.alumnus-bio p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #475569;
+    font-style: italic;
+}
+
+.dark-mode .alumnus-bio p {
+    color: #cbd5e1;
 }
 
 /* Add View Profile button to each card */
@@ -1191,5 +1346,44 @@
 
     .search-dialog-actions {
         flex-direction: column;
+    }
+
+    /* Responsive Card Layout */
+    .card-profile-section {
+        flex-wrap: wrap;
+        padding: 15px 45px 10px 4px; /* Maintain extreme left alignment on mobile */
+    }
+
+    .alumnus-info {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .card-actions-buttons .btn .btn-text {
+        display: none;
+    }
+
+    .card-actions-buttons .btn {
+        min-width: 44px;
+        padding: 10px;
+    }
+
+    .card-actions-buttons {
+        gap: 6px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .card-actions-buttons .btn .btn-text {
+        display: none;
+    }
+    
+    .card-actions-buttons .btn {
+        min-width: 44px;
+        padding: 10px;
+    }
+    
+    .card-actions-buttons {
+        gap: 6px;
     }
 }
