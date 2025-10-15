@@ -59,10 +59,15 @@
         }
 
         if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
-            // Scrolling DOWN - Hide navbar immediately
+            // Scrolling DOWN - Hide navbar progressively at the same rate as scroll
             scrollUpAccumulator = 0; // Reset scroll up counter
             
-            header.style.transform = `translateY(-${navbarHeight}px)`;
+            const hideAmount = Math.min(scrollTop - lastScrollTop, navbarHeight);
+            const currentTransform = header.style.transform || 'translateY(0px)';
+            const currentY = parseInt(currentTransform.match(/-?\d+/) || [0])[0];
+            const newY = Math.max(-navbarHeight, currentY - hideAmount);
+            
+            header.style.transform = `translateY(${newY}px)`;
             header.classList.add('navbar-hidden');
         } else if (scrollTop < lastScrollTop) {
             // Scrolling UP - Accumulate scroll distance before showing
@@ -74,8 +79,8 @@
                 const currentTransform = header.style.transform || 'translateY(0px)';
                 const currentY = parseInt(currentTransform.match(/-?\d+/) || [0])[0];
                 
-                // Show navbar progressively with smooth animation
-                const showAmount = Math.min(scrollUpAmount * 2, navbarHeight); // 2x speed for smoother reveal
+                // Show navbar progressively at the same rate as scroll (matching hide behavior)
+                const showAmount = Math.min(scrollUpAmount, navbarHeight);
                 const newY = Math.min(0, currentY + showAmount);
                 
                 header.style.transform = `translateY(${newY}px)`;
