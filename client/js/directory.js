@@ -174,6 +174,37 @@ document.addEventListener('DOMContentLoaded', async () => {
         const connectionTooltip = connectionTooltips[connectionStatus.class] || 'Connection status';
 
         alumnusCard.innerHTML = `
+            <div class="card-top-actions">
+                <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
+                        data-email="${alumnus.email}" 
+                        title="${isBookmarked ? 'Remove Bookmark' : 'Bookmark'}">
+                    <i class="fas fa-bookmark"></i>
+                </button>
+                <div class="quick-actions-dropdown">
+                    <button class="quick-actions-btn" title="Quick Actions">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="quick-actions-menu">
+                        ${alumnus.linkedin_profile ? `
+                            <a href="${alumnus.linkedin_profile}" target="_blank" class="quick-action-item">
+                                <i class="fab fa-linkedin"></i> LinkedIn
+                            </a>
+                        ` : ''}
+                        ${alumnus.website ? `
+                            <a href="${alumnus.website}" target="_blank" class="quick-action-item">
+                                <i class="fas fa-globe"></i> Portfolio
+                            </a>
+                        ` : ''}
+                        <button class="quick-action-item schedule-meeting-btn" data-email="${alumnus.email}">
+                            <i class="fas fa-calendar"></i> Schedule Meeting
+                        </button>
+                        <button class="quick-action-item share-profile-btn" data-email="${alumnus.email}">
+                            <i class="fas fa-share"></i> Share Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="alumnus-card-header">
                 <div class="card-profile-section">
                     <div class="alumnus-avatar">
@@ -208,37 +239,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
                         <i class="${connectionStatus.icon}"></i>
                         <span class="status-label">${connectionStatus.text}</span>
-                    </div>
-                </div>
-                
-                <div class="card-top-actions">
-                    <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
-                            data-email="${alumnus.email}" 
-                            title="${isBookmarked ? 'Remove Bookmark' : 'Bookmark'}">
-                        <i class="fas fa-bookmark"></i>
-                    </button>
-                    <div class="quick-actions-dropdown">
-                        <button class="quick-actions-btn" title="Quick Actions">
-                            <i class="fas fa-ellipsis-v"></i>
-                        </button>
-                        <div class="quick-actions-menu">
-                            ${alumnus.linkedin_profile ? `
-                                <a href="${alumnus.linkedin_profile}" target="_blank" class="quick-action-item">
-                                    <i class="fab fa-linkedin"></i> LinkedIn
-                                </a>
-                            ` : ''}
-                            ${alumnus.website ? `
-                                <a href="${alumnus.website}" target="_blank" class="quick-action-item">
-                                    <i class="fas fa-globe"></i> Portfolio
-                                </a>
-                            ` : ''}
-                            <button class="quick-action-item schedule-meeting-btn" data-email="${alumnus.email}">
-                                <i class="fas fa-calendar"></i> Schedule Meeting
-                            </button>
-                            <button class="quick-action-item share-profile-btn" data-email="${alumnus.email}">
-                                <i class="fas fa-share"></i> Share Profile
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>

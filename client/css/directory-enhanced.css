@@ -586,12 +586,12 @@
     font-size: 15px;
 }
 
-/* ==================== Enhanced Cards ==================== */
+/* Enhanced Card - Position relative for absolute children */
 .enhanced-alumnus-card {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden; /* Contain all content within card bounds */
+    overflow: visible;
 }
 
 .enhanced-alumnus-card::before {
@@ -621,12 +621,25 @@
     transition: opacity 0.3s ease;
 }
 
-/* Card Profile Section - Simplified layout */
+/* Card Top Actions - Positioned relative to entire card at top-right */
+.card-top-actions {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+}
+
+/* Card Profile Section - Start from left edge */
 .card-profile-section {
     display: flex;
     gap: 15px;
     align-items: flex-start;
     padding: 15px;
+    padding-left: 15px;
+    padding-right: 50px; /* Space for top actions */
+    padding-top: 15px;
     padding-bottom: 12px;
     position: relative;
 }
@@ -938,16 +951,6 @@
     flex-wrap: wrap;
     gap: 6px;
     margin-top: 6px;
-}
-
-/* Card Top Actions (Bookmark & Quick Actions) - Extreme right top corner */
-.card-top-actions {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    display: flex;
-    gap: 6px;
-    z-index: 10;
 }
 
 .bookmark-btn {
