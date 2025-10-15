@@ -247,26 +247,41 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             
             <div class="alumnus-card-body">
-                <div class="alumnus-details">
+                <div class="alumnus-details-grid">
+                    ${alumnus.major || alumnus.graduation_year ? `
                     <div class="detail-item">
                         <i class="fas fa-graduation-cap"></i>
-                        <span>${alumnus.major || 'Not specified'} • Class of ${alumnus.graduation_year || 'N/A'}</span>
+                        <div class="detail-content">
+                            <span class="detail-label">Education</span>
+                            <span class="detail-value">${alumnus.major || 'Not specified'} ${alumnus.graduation_year ? `• '${String(alumnus.graduation_year).slice(-2)}` : ''}</span>
+                        </div>
                     </div>
+                    ` : ''}
+                    ${alumnus.city ? `
                     <div class="detail-item">
                         <i class="fas fa-map-marker-alt"></i>
-                        <span>${alumnus.city || 'Location not specified'}</span>
+                        <div class="detail-content">
+                            <span class="detail-label">Location</span>
+                            <span class="detail-value">${alumnus.city}</span>
+                        </div>
                     </div>
+                    ` : ''}
+                    ${alumnus.industry ? `
                     <div class="detail-item">
                         <i class="fas fa-industry"></i>
-                        <span>${alumnus.industry || 'Industry not specified'}</span>
+                        <div class="detail-content">
+                            <span class="detail-label">Industry</span>
+                            <span class="detail-value">${alumnus.industry}</span>
+                        </div>
                     </div>
+                    ` : ''}
                 </div>
                 
                 ${skills.length > 0 ? `
                     <div class="alumnus-skills">
-                        <div class="skills-label">
+                        <div class="skills-header">
                             <i class="fas fa-cogs"></i>
-                            <span>Skills:</span>
+                            <span>Key Skills</span>
                         </div>
                         <div class="skills-container">
                             ${skillsHtml}
@@ -277,7 +292,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 
                 ${alumnus.bio ? `
                     <div class="alumnus-bio">
-                        <p>${alumnus.bio.substring(0, 120)}${alumnus.bio.length > 120 ? '...' : ''}</p>
+                        <div class="bio-header">
+                            <i class="fas fa-quote-left"></i>
+                            <span>About</span>
+                        </div>
+                        <p>${alumnus.bio.substring(0, 100)}${alumnus.bio.length > 100 ? '...' : ''}</p>
                     </div>
                 ` : ''}
             </div>

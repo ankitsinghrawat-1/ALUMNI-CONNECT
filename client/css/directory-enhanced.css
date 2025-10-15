@@ -692,27 +692,67 @@
 
 .alumnus-card-body {
     overflow: hidden;
-    padding: 10px 15px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-/* Proper sized details section */
-.enhanced-alumnus-card .alumnus-details {
-    margin-bottom: 10px;
+/* Improved Details Grid */
+.alumnus-details-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
+/* Enhanced detail items with labels */
 .enhanced-alumnus-card .detail-item {
     font-size: 13px;
-    margin-bottom: 6px;
     display: flex;
-    align-items: center;
-    gap: 8px;
+    align-items: flex-start;
+    gap: 10px;
     color: #64748b;
 }
 
 .enhanced-alumnus-card .detail-item i {
-    font-size: 13px;
-    width: 16px;
+    font-size: 14px;
+    width: 18px;
+    color: #667eea;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.detail-label {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     color: #94a3b8;
+}
+
+.detail-value {
+    font-size: 13px;
+    font-weight: 500;
+    color: #475569;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark-mode .detail-label {
+    color: #64748b;
+}
+
+.dark-mode .detail-value {
+    color: #cbd5e1;
 }
 
 .dark-mode .enhanced-alumnus-card .detail-item {
@@ -1106,26 +1146,27 @@
 /* Card Actions Buttons - Proper spacing and sizing */
 .card-actions-buttons {
     display: flex;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: nowrap;
     flex: 1;
 }
 
 .card-actions-buttons .btn {
     flex: 1;
-    min-width: 90px;
+    min-width: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 9px 14px;
+    gap: 5px;
+    padding: 10px 12px;
     font-size: 13px;
     white-space: nowrap;
     transition: all 0.3s ease;
+    border-radius: 8px;
 }
 
 .card-actions-buttons .btn i {
-    font-size: 14px;
+    font-size: 13px;
 }
 
 .card-actions-buttons .btn .btn-text {
@@ -1138,20 +1179,115 @@
     margin-right: 0;
 }
 
-/* Responsive: Hide button text on smaller cards */
-@media (max-width: 1200px) {
-    .card-actions-buttons .btn .btn-text {
-        display: none;
-    }
-    
-    .card-actions-buttons .btn {
-        min-width: 40px;
-        padding: 9px;
-    }
-    
-    .card-actions-buttons {
-        gap: 8px;
-    }
+/* Skills Section Styling */
+.alumnus-skills {
+    padding: 10px;
+    background: #f8fafc;
+    border-radius: 10px;
+    border-left: 3px solid #667eea;
+}
+
+.dark-mode .alumnus-skills {
+    background: rgba(100, 116, 139, 0.1);
+}
+
+.skills-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #667eea;
+}
+
+.skills-header i {
+    font-size: 12px;
+}
+
+.skills-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.skill-tag {
+    display: inline-block;
+    padding: 4px 10px;
+    background: white;
+    color: #475569;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.skill-tag:hover {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+    transform: translateY(-1px);
+}
+
+.dark-mode .skill-tag {
+    background: #1e293b;
+    color: #cbd5e1;
+    border-color: #334155;
+}
+
+.dark-mode .skill-tag:hover {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+.more-skills {
+    font-size: 11px;
+    color: #667eea;
+    font-weight: 600;
+    padding: 4px 8px;
+}
+
+/* Bio Section Styling */
+.alumnus-bio {
+    padding: 10px;
+    background: #fefce8;
+    border-radius: 10px;
+    border-left: 3px solid #f59e0b;
+}
+
+.dark-mode .alumnus-bio {
+    background: rgba(245, 158, 11, 0.1);
+}
+
+.bio-header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #d97706;
+}
+
+.bio-header i {
+    font-size: 10px;
+}
+
+.alumnus-bio p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #475569;
+    font-style: italic;
+}
+
+.dark-mode .alumnus-bio p {
+    color: #cbd5e1;
 }
 
 /* Add View Profile button to each card */
@@ -1226,5 +1362,65 @@
 
     .search-dialog-actions {
         flex-direction: column;
+    }
+
+    /* Responsive Card Layout */
+    .card-profile-section {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px;
+        padding-top: 50px;
+    }
+
+    .profile-left-section {
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        gap: 12px;
+    }
+
+    .profile-left-badges {
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-width: none;
+        flex: 1;
+    }
+
+    .connection-status-badge {
+        position: absolute;
+        top: 50px;
+        right: 12px;
+    }
+
+    .alumnus-info {
+        width: 100%;
+    }
+
+    .card-actions-buttons .btn .btn-text {
+        display: none;
+    }
+
+    .card-actions-buttons .btn {
+        min-width: 44px;
+        padding: 10px;
+    }
+
+    .card-actions-buttons {
+        gap: 6px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1200px) {
+    .card-actions-buttons .btn .btn-text {
+        display: none;
+    }
+    
+    .card-actions-buttons .btn {
+        min-width: 44px;
+        padding: 10px;
+    }
+    
+    .card-actions-buttons {
+        gap: 6px;
     }
 }
