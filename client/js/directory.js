@@ -124,15 +124,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         const bookmarkedAlumni = JSON.parse(localStorage.getItem('bookmarkedAlumni') || '[]');
         const isBookmarked = bookmarkedAlumni.includes(alumnus.email);
         
-        // Generate availability status
-        const availabilityStatuses = ['Open to Mentor', 'Hiring', 'Available for Chat', null];
+        // Get user role and format it
+        const role = alumnus.role || 'alumni';
+        const roleConfig = {
+            alumni: { label: 'Alumni', icon: 'fa-user-graduate', color: '#667eea' },
+            student: { label: 'Student', icon: 'fa-graduation-cap', color: '#10b981' },
+            faculty: { label: 'Faculty', icon: 'fa-chalkboard-teacher', color: '#f59e0b' },
+            employer: { label: 'Employer', icon: 'fa-building', color: '#ef4444' },
+            institute: { label: 'Institute', icon: 'fa-university', color: '#8b5cf6' }
+        };
+        const userRole = roleConfig[role] || roleConfig.alumni;
+        
+        // Generate availability status (from user profile or default)
+        // In production, this would come from alumnus.availability_status
+        const availabilityStatuses = [
+            { text: 'Open to Mentor', icon: 'fa-chalkboard-teacher', tooltip: 'Available to mentor students and juniors', color: '#10b981' },
+            { text: 'Hiring', icon: 'fa-briefcase', tooltip: 'Currently hiring for open positions', color: '#3b82f6' },
+            { text: 'Available for Chat', icon: 'fa-comments', tooltip: 'Open for networking and casual conversations', color: '#8b5cf6' },
+            null
+        ];
         const availabilityStatus = availabilityStatuses[Math.floor(Math.random() * availabilityStatuses.length)];
         const availabilityBadge = availabilityStatus ? `
-            <div class="availability-badge" title="${availabilityStatus}">
-                <i class="fas ${availabilityStatus === 'Open to Mentor' ? 'fa-chalkboard-teacher' : 
-                               availabilityStatus === 'Hiring' ? 'fa-briefcase' : 
-                               'fa-comments'}"></i>
-                <span>${availabilityStatus}</span>
+            <div class="availability-badge" title="${availabilityStatus.tooltip}" style="background: ${availabilityStatus.color};">
+                <i class="fas ${availabilityStatus.icon}"></i>
+                <span>${availabilityStatus.text}</span>
             </div>
         ` : '';
         
@@ -143,11 +158,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             alumnusSkills.includes(skill.toLowerCase())
         );
         const commonInterestsHtml = commonSkills.length > 0 ? `
-            <div class="common-interests">
+            <div class="common-interests" title="You both have these skills: ${commonSkills.join(', ')}">
                 <i class="fas fa-handshake"></i>
                 <span>${commonSkills.length} common ${commonSkills.length === 1 ? 'skill' : 'skills'}</span>
             </div>
         ` : '';
+        
+        // Connection status tooltip
+        const connectionTooltips = {
+            connected: 'You are connected with this user',
+            pending: 'Connection request sent - waiting for response',
+            received: 'This user wants to connect with you',
+            'not-connected': 'Send a connection request'
+        };
+        const connectionTooltip = connectionTooltips[connectionStatus.class] || 'Connection status';
 
         alumnusCard.innerHTML = `
             <div class="alumnus-card-header">
@@ -181,22 +205,37 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
                 </div>
-                <div class="alumnus-avatar">
-                    <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
-                         alt="${alumnus.full_name}" 
-                         class="avatar-image"
-                         onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
-                    <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
-                </div>
-                <div class="alumnus-info">
-                    <h3 class="alumnus-name">${alumnus.full_name}</h3>
-                    <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
-                    <p class="alumnus-company">${alumnus.current_company || ''}</p>
-                    ${availabilityBadge}
-                    ${commonInterestsHtml}
-                </div>
-                <div class="connection-badge ${connectionStatus.class}">
-                    <i class="${connectionStatus.icon}"></i>
+                
+                <div class="card-profile-section">
+                    <div class="alumnus-avatar">
+                        <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
+                             alt="${alumnus.full_name}" 
+                             class="avatar-image"
+                             onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
+                        <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
+                    </div>
+                    
+                    <div class="alumnus-info">
+                        <div class="name-and-role">
+                            <h3 class="alumnus-name">${alumnus.full_name}</h3>
+                            <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
+                                <i class="fas ${userRole.icon}"></i>
+                                <span>${userRole.label}</span>
+                            </div>
+                        </div>
+                        <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
+                        <p class="alumnus-company">${alumnus.current_company || ''}</p>
+                        
+                        <div class="badges-container">
+                            ${availabilityBadge}
+                            ${commonInterestsHtml}
+                        </div>
+                    </div>
+                    
+                    <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
+                        <i class="${connectionStatus.icon}"></i>
+                        <span class="status-label">${connectionStatus.text}</span>
+                    </div>
                 </div>
             </div>
             
@@ -237,18 +276,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             </div>
             
             <div class="alumnus-card-footer">
-                <div class="card-actions">
+                <div class="card-actions-buttons">
                     ${actionButton}
-                    <button class="btn btn-outline btn-sm message-btn" data-email="${alumnus.email}">
+                    <button class="btn btn-outline btn-sm message-btn" data-email="${alumnus.email}" title="Send a message">
                         <i class="fas fa-envelope"></i>
-                        Message
+                        <span class="btn-text">Message</span>
                     </button>
-                    <button class="btn btn-primary btn-sm view-full-profile-btn" data-email="${alumnus.email}">
+                    <button class="btn btn-primary btn-sm view-full-profile-btn" data-email="${alumnus.email}" title="View full profile">
                         <i class="fas fa-id-card"></i>
-                        View Profile
+                        <span class="btn-text">Profile</span>
                     </button>
                 </div>
-                <div class="match-score" title="Compatibility Score">
+                <div class="match-score" title="Compatibility Score based on skills and interests">
                     <i class="fas fa-star"></i>
                     <span>${generateMatchScore()}%</span>
                 </div>

@@ -615,9 +615,125 @@
     transform: scaleX(1);
 }
 
-.enhanced-alumnus-card .card-actions {
+.enhanced-alumnus-card .card-actions-buttons {
     opacity: 1;
     transition: opacity 0.3s ease;
+}
+
+/* Card Profile Section - New organized layout */
+.card-profile-section {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    padding: 20px;
+    padding-top: 50px; /* Space for top actions */
+}
+
+.name-and-role {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+
+.alumnus-name {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.dark-mode .alumnus-name {
+    color: #e2e8f0;
+}
+
+/* Role Badge */
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.role-badge i {
+    font-size: 11px;
+}
+
+/* Connection Status Badge - Redesigned */
+.connection-status-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px;
+    border-radius: 8px;
+    min-width: 60px;
+    text-align: center;
+}
+
+.connection-status-badge i {
+    font-size: 18px;
+}
+
+.connection-status-badge .status-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.connection-status-badge.connected {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.connection-status-badge.pending {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.connection-status-badge.received {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.connection-status-badge.not-connected {
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.dark-mode .connection-status-badge.connected {
+    background: rgba(5, 150, 105, 0.2);
+    color: #10b981;
+}
+
+.dark-mode .connection-status-badge.pending {
+    background: rgba(217, 119, 6, 0.2);
+    color: #f59e0b;
+}
+
+.dark-mode .connection-status-badge.received {
+    background: rgba(37, 99, 235, 0.2);
+    color: #3b82f6;
+}
+
+.dark-mode .connection-status-badge.not-connected {
+    background: rgba(100, 116, 139, 0.2);
+    color: #94a3b8;
+}
+
+/* Badges Container */
+.badges-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
 }
 
 /* Card Top Actions (Bookmark & Quick Actions) */
@@ -772,19 +888,24 @@
     color: #667eea;
 }
 
-/* Availability Badge */
+/* Availability Badge - Enhanced with dynamic colors */
 .availability-badge {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 10px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    padding: 5px 12px;
     color: white;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 11px;
     font-weight: 600;
-    margin-top: 8px;
-    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    cursor: help;
+    transition: all 0.3s ease;
+}
+
+.availability-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
 }
 
 .availability-badge i {
@@ -796,38 +917,73 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    padding: 4px 10px;
+    padding: 5px 12px;
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     color: white;
-    border-radius: 12px;
+    border-radius: 14px;
     font-size: 11px;
     font-weight: 600;
-    margin-top: 8px;
-    margin-left: 8px;
     box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+    cursor: help;
+    transition: all 0.3s ease;
+}
+
+.common-interests:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(245, 158, 11, 0.4);
 }
 
 .common-interests i {
     font-size: 12px;
 }
 
-/* Add View Profile button to each card */
-.card-actions .view-full-profile-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 14px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
+/* Card Actions Buttons - Reorganized */
+.card-actions-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    flex: 1;
 }
 
-.card-actions .view-full-profile-btn:hover {
+.card-actions-buttons .btn {
+    flex: 1;
+    min-width: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 10px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.card-actions-buttons .btn i {
+    font-size: 14px;
+}
+
+.card-actions-buttons .btn .btn-text {
+    display: inline;
+}
+
+/* Responsive: Hide button text on smaller cards */
+@media (max-width: 1200px) {
+    .card-actions-buttons .btn .btn-text {
+        display: none;
+    }
+    
+    .card-actions-buttons .btn {
+        min-width: 40px;
+        padding: 8px;
+    }
+}
+
+/* Add View Profile button to each card */
+.card-actions-buttons .view-full-profile-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+}
+
+.card-actions-buttons .view-full-profile-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
