@@ -125,13 +125,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const isBookmarked = bookmarkedAlumni.includes(alumnus.email);
         
         // Get user role and format it
-        const role = alumnus.role || 'alumni';
+        const role = (alumnus.role || 'alumni').toLowerCase();
         const roleConfig = {
             alumni: { label: 'Alumni', icon: 'fa-user-graduate', color: '#667eea' },
             student: { label: 'Student', icon: 'fa-graduation-cap', color: '#10b981' },
             faculty: { label: 'Faculty', icon: 'fa-chalkboard-teacher', color: '#f59e0b' },
             employer: { label: 'Employer', icon: 'fa-building', color: '#ef4444' },
-            institute: { label: 'Institute', icon: 'fa-university', color: '#8b5cf6' }
+            institute: { label: 'Institute', icon: 'fa-university', color: '#8b5cf6' },
+            admin: { label: 'Admin', icon: 'fa-user-shield', color: '#dc2626' } // Admin should be filtered but included in config for safety
         };
         const userRole = roleConfig[role] || roleConfig.alumni;
         
@@ -502,10 +503,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             alumniListContainer.innerHTML = '';
 
             if (alumni && alumni.length > 0) {
-                resultsTitle.textContent = `${alumni.length} Alumni Found`;
+                // Filter out admin users from directory
+                const filteredAlumni = alumni.filter(alumnus => {
+                    const userRole = alumnus.role || alumnus.user_type || 'alumni';
+                    return userRole.toLowerCase() !== 'admin';
+                });
+                
+                resultsTitle.textContent = `${filteredAlumni.length} Alumni Found`;
                 
                 // Process alumni cards asynchronously
-                for (const alumnus of alumni) {
+                for (const alumnus of filteredAlumni) {
                     // Map API response to expected format
                     const mappedAlumnus = {
                         full_name: alumnus.full_name,
@@ -521,7 +528,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         is_online: Math.random() > 0.5, // Random online status for demo
                         profile_pic_url: alumnus.profile_pic_url,
                         verification_status: alumnus.verification_status,
-                        role: alumnus.role || 'alumni' // Include user role from API
+                        role: alumnus.role || alumnus.user_type || 'alumni' // Include user role from API (try both field names)
                     };
                     
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
