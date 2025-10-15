@@ -520,7 +520,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         bio: '', // API doesn't return bio in public profiles
                         is_online: Math.random() > 0.5, // Random online status for demo
                         profile_pic_url: alumnus.profile_pic_url,
-                        verification_status: alumnus.verification_status
+                        verification_status: alumnus.verification_status,
+                        role: alumnus.role || 'alumni' // Include user role from API
                     };
                     
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
