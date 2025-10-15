@@ -846,11 +846,12 @@
 /* Card Top Actions (Bookmark & Quick Actions) */
 .card-top-actions {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 0;
+    right: 0;
     display: flex;
     gap: 6px;
     z-index: 10;
+    padding: 4px; /* Add small padding to prevent touching edges */
 }
 
 .bookmark-btn {
