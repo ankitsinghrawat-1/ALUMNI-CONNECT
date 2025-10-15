@@ -14,6 +14,13 @@
             if (theme === 'dark-mode') {
                 document.documentElement.classList.add('dark-mode');
             }
+            
+            // Redirect to featured directory on first load
+            const hasVisitedDirectory = sessionStorage.getItem('hasVisitedDirectory');
+            if (!hasVisitedDirectory) {
+                sessionStorage.setItem('hasVisitedDirectory', 'true');
+                window.location.href = 'featured-directory.html';
+            }
         })();
     </script>
 </head>
@@ -117,6 +124,20 @@
                                 <label for="skills-filter"><i class="fas fa-cogs"></i> Skills & Expertise</label>
                                 <input type="text" id="skills-filter" placeholder="e.g., Python, Project Management, Sales">
                             </div>
+                            <div class="filter-group">
+                                <label for="company-filter"><i class="fas fa-briefcase"></i> Company</label>
+                                <input type="text" id="company-filter" placeholder="e.g., Google, Microsoft, Startup">
+                            </div>
+                            <div class="filter-group">
+                                <label for="availability-filter"><i class="fas fa-user-check"></i> Availability</label>
+                                <select id="availability-filter">
+                                    <option value="">Any Availability</option>
+                                    <option value="open_to_mentor">Open to Mentor</option>
+                                    <option value="hiring">Hiring</option>
+                                    <option value="available_for_chat">Available for Chat</option>
+                                    <option value="seeking_opportunities">Seeking Opportunities</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="filter-actions">
                             <button id="apply-filters-btn" class="btn btn-primary">
@@ -178,6 +199,18 @@
                 <div class="results-header">
                     <h3 id="results-title">Featured Alumni</h3>
                     <div class="results-actions">
+                        <a href="featured-directory.html" class="btn btn-outline btn-sm" title="Featured Alumni">
+                            <i class="fas fa-star"></i>
+                            <span>Featured</span>
+                        </a>
+                        <a href="bookmarks.html" class="btn btn-outline btn-sm" title="View Bookmarks">
+                            <i class="fas fa-bookmark"></i>
+                            <span>Bookmarks</span>
+                        </a>
+                        <button id="export-directory-btn" class="btn btn-outline btn-sm" title="Export to CSV">
+                            <i class="fas fa-download"></i>
+                            <span>Export</span>
+                        </button>
                         <div class="view-toggle">
                             <button class="view-btn active" data-view="grid">
                                 <i class="fas fa-th-large"></i>
@@ -338,6 +371,10 @@
                             <input type="text" id="dialog-skills-filter" placeholder="e.g., JavaScript, Python">
                         </div>
                         <div class="filter-item">
+                            <label><i class="fas fa-briefcase"></i> Company</label>
+                            <input type="text" id="dialog-company-filter" placeholder="e.g., Google, Microsoft">
+                        </div>
+                        <div class="filter-item">
                             <label><i class="fas fa-building"></i> Company Size</label>
                             <select id="dialog-company-size-filter">
                                 <option value="">Any Size</option>
@@ -345,6 +382,16 @@
                                 <option value="small">Small (51-200)</option>
                                 <option value="medium">Medium (201-1000)</option>
                                 <option value="large">Large (1000+)</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-user-check"></i> Availability</label>
+                            <select id="dialog-availability-filter">
+                                <option value="">Any Availability</option>
+                                <option value="open_to_mentor">Open to Mentor</option>
+                                <option value="hiring">Hiring</option>
+                                <option value="available_for_chat">Available for Chat</option>
+                                <option value="seeking_opportunities">Seeking Opportunities</option>
                             </select>
                         </div>
                     </div>
@@ -367,6 +414,7 @@
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/auto-hide-navbar.js"></script>
     <script src="js/api.js"></script>
     <script src="js/directory.js"></script>
 </body>

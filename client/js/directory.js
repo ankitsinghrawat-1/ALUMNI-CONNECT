@@ -10,10 +10,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     const industryFilter = document.getElementById('industry-filter');
     const companySizeFilter = document.getElementById('company-size-filter');
     const skillsFilter = document.getElementById('skills-filter');
+    const companyFilter = document.getElementById('company-filter');
+    const availabilityFilter = document.getElementById('availability-filter');
     const searchButton = document.getElementById('directory-search-button');
     const applyFiltersBtn = document.getElementById('apply-filters-btn');
     const clearFiltersBtn = document.getElementById('clear-filters-btn');
     const resultsTitle = document.getElementById('results-title');
+    
+    // Pagination state
+    let currentPage = 1;
+    const itemsPerPage = 12;
+    let totalPages = 1;
+    let paginationInfo = null;
     
     // Tab System
     const searchTabs = document.querySelectorAll('.search-tab');
@@ -136,15 +144,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         const userRole = roleConfig[role] || roleConfig.alumni;
         
-        // Generate availability status (from user profile or default)
-        // In production, this would come from alumnus.availability_status
-        const availabilityStatuses = [
-            { text: 'Open to Mentor', icon: 'fa-chalkboard-teacher', tooltip: 'Available to mentor students and juniors', color: '#10b981' },
-            { text: 'Hiring', icon: 'fa-briefcase', tooltip: 'Currently hiring for open positions', color: '#3b82f6' },
-            { text: 'Available for Chat', icon: 'fa-comments', tooltip: 'Open for networking and casual conversations', color: '#8b5cf6' },
-            null
-        ];
-        const availabilityStatus = availabilityStatuses[Math.floor(Math.random() * availabilityStatuses.length)];
+        // Get availability status from user data
+        const availabilityConfig = {
+            'open_to_mentor': { text: 'Open to Mentor', icon: 'fa-chalkboard-teacher', tooltip: 'Available to mentor students and juniors', color: '#10b981' },
+            'hiring': { text: 'Hiring', icon: 'fa-briefcase', tooltip: 'Currently hiring for open positions', color: '#3b82f6' },
+            'available_for_chat': { text: 'Available for Chat', icon: 'fa-comments', tooltip: 'Open for networking and casual conversations', color: '#8b5cf6' },
+            'seeking_opportunities': { text: 'Seeking Opportunities', icon: 'fa-search', tooltip: 'Looking for new career opportunities', color: '#f59e0b' }
+        };
+        const availabilityStatus = alumnus.availability_status ? availabilityConfig[alumnus.availability_status] : null;
         const availabilityBadge = availabilityStatus ? `
             <div class="availability-badge" title="${availabilityStatus.tooltip}" style="background: ${availabilityStatus.color};">
                 <i class="fas ${availabilityStatus.icon}"></i>
@@ -224,9 +231,16 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     
                     <div class="alumnus-info">
-                        <h3 class="alumnus-name">${alumnus.full_name}</h3>
+                        <h3 class="alumnus-name">
+                            ${alumnus.full_name}
+                            ${alumnus.verification_status === 'verified' ? '<i class="fas fa-check-circle verification-badge" title="Verified Profile"></i>' : ''}
+                        </h3>
                         <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
-                        <p class="alumnus-company">${alumnus.current_company || ''}</p>
+                        <p class="alumnus-company ${alumnus.current_company && alumnus.current_company !== 'N/A' ? 'clickable-company' : ''}" 
+                           data-company="${alumnus.current_company || ''}"
+                           title="${alumnus.current_company && alumnus.current_company !== 'N/A' ? 'Click to filter by ' + alumnus.current_company : ''}">
+                            ${alumnus.current_company || ''}
+                        </p>
                         
                         <div class="profile-badges-row">
                             <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
@@ -408,6 +422,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // Clickable company name functionality
+        const companyElement = alumnusCard.querySelector('.clickable-company');
+        if (companyElement) {
+            companyElement.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const companyName = companyElement.dataset.company;
+                if (companyName && companyName !== 'N/A') {
+                    if (companyFilter) companyFilter.value = companyName;
+                    resultsTitle.textContent = `Alumni at ${companyName}`;
+                    fetchAndRenderAlumni();
+                    showToast(`Filtering by ${companyName}`, 'info');
+                }
+            });
+        }
+
         // Quick actions dropdown functionality
         const quickActionsBtn = alumnusCard.querySelector('.quick-actions-btn');
         const quickActionsMenu = alumnusCard.querySelector('.quick-actions-menu');
@@ -475,9 +506,187 @@ document.addEventListener('DOMContentLoaded', async () => {
         return alumnusCard;
     };
 
+    // Export directory to CSV
+    const exportDirectoryToCSV = async () => {
+        try {
+            // Get current search parameters
+            const query = searchInput ? searchInput.value.trim() : '';
+            const major = majorFilter ? majorFilter.value : '';
+            const graduation_year = yearFromFilter ? yearFromFilter.value : '';
+            const city = cityFilter ? cityFilter.value : '';
+            const industry = industryFilter ? industryFilter.value : '';
+            const skills = skillsFilter ? skillsFilter.value : '';
+            const company = companyFilter ? companyFilter.value : '';
+            const availability = availabilityFilter ? availabilityFilter.value : '';
+
+            // Build query parameters (no pagination for export - get all)
+            const params = new URLSearchParams();
+            if (query) params.append('query', query);
+            if (major) params.append('major', major);
+            if (graduation_year) params.append('graduation_year', graduation_year);
+            if (city) params.append('city', city);
+            if (industry) params.append('industry', industry);
+            if (skills) params.append('skills', skills);
+            if (company) params.append('company', company);
+            if (availability) params.append('availability', availability);
+            params.append('limit', 1000); // Get more records for export
+
+            // Fetch alumni data
+            const response = await window.api.get(`/users/directory?${params.toString()}`);
+            const alumni = response.data || response; // Handle both formats
+            
+            if (!alumni || alumni.length === 0) {
+                showToast('No alumni data to export', 'info');
+                return;
+            }
+
+            // Prepare CSV content
+            const headers = ['Name', 'Role', 'Email', 'Position', 'Company', 'Major', 'Graduation Year', 'Verified', 'Availability'];
+            const csvRows = [headers.join(',')];
+
+            alumni.forEach(alumnus => {
+                const row = [
+                    `"${alumnus.full_name || ''}"`,
+                    `"${alumnus.role || 'alumni'}"`,
+                    `"${alumnus.email || 'N/A'}"`,
+                    `"${alumnus.job_title || 'N/A'}"`,
+                    `"${alumnus.current_company || 'N/A'}"`,
+                    `"${alumnus.major || 'N/A'}"`,
+                    `"${alumnus.graduation_year || 'N/A'}"`,
+                    `"${alumnus.verification_status || 'unverified'}"`,
+                    `"${alumnus.availability_status || 'N/A'}"`
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            const csvContent = csvRows.join('\n');
+            
+            // Create and trigger download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `alumni-directory-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast(`Exported ${alumni.length} alumni records to CSV`, 'success');
+        } catch (error) {
+            console.error('Export error:', error);
+            showToast('Failed to export directory. Please try again.', 'error');
+        }
+    };
+
+    // Render pagination controls
+    const renderPaginationControls = () => {
+        // Remove existing pagination if any
+        const existingPagination = document.querySelector('.pagination-controls');
+        if (existingPagination) {
+            existingPagination.remove();
+        }
+
+        const paginationContainer = document.createElement('div');
+        paginationContainer.className = 'pagination-controls';
+        paginationContainer.style.cssText = `
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+        `;
+
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Previous';
+        prevBtn.className = 'pagination-btn';
+        prevBtn.disabled = !paginationInfo.hasPrevPage;
+        prevBtn.style.cssText = `
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #667eea;
+            background: ${paginationInfo.hasPrevPage ? 'white' : '#f5f5f5'};
+            color: ${paginationInfo.hasPrevPage ? '#667eea' : '#999'};
+            border-radius: 8px;
+            cursor: ${paginationInfo.hasPrevPage ? 'pointer' : 'not-allowed'};
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        `;
+        if (paginationInfo.hasPrevPage) {
+            prevBtn.addEventListener('click', () => fetchAndRenderAlumni(currentPage - 1));
+            prevBtn.addEventListener('mouseenter', () => {
+                prevBtn.style.background = '#667eea';
+                prevBtn.style.color = 'white';
+            });
+            prevBtn.addEventListener('mouseleave', () => {
+                prevBtn.style.background = 'white';
+                prevBtn.style.color = '#667eea';
+            });
+        }
+
+        // Page info
+        const pageInfo = document.createElement('div');
+        pageInfo.style.cssText = `
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        `;
+        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+        nextBtn.className = 'pagination-btn';
+        nextBtn.disabled = !paginationInfo.hasNextPage;
+        nextBtn.style.cssText = `
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #667eea;
+            background: ${paginationInfo.hasNextPage ? 'white' : '#f5f5f5'};
+            color: ${paginationInfo.hasNextPage ? '#667eea' : '#999'};
+            border-radius: 8px;
+            cursor: ${paginationInfo.hasNextPage ? 'pointer' : 'not-allowed'};
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        `;
+        if (paginationInfo.hasNextPage) {
+            nextBtn.addEventListener('click', () => fetchAndRenderAlumni(currentPage + 1));
+            nextBtn.addEventListener('mouseenter', () => {
+                nextBtn.style.background = '#667eea';
+                nextBtn.style.color = 'white';
+            });
+            nextBtn.addEventListener('mouseleave', () => {
+                nextBtn.style.background = 'white';
+                nextBtn.style.color = '#667eea';
+            });
+        }
+
+        paginationContainer.appendChild(prevBtn);
+        paginationContainer.appendChild(pageInfo);
+        paginationContainer.appendChild(nextBtn);
+
+        // Insert after directory list
+        alumniListContainer.parentNode.insertBefore(paginationContainer, alumniListContainer.nextSibling);
+
+        // Scroll to top when changing pages
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     // Core functionality
-    const fetchAndRenderAlumni = async () => {
+    const fetchAndRenderAlumni = async (page = 1) => {
         showLoading();
+        currentPage = page;
 
         try {
             // Get search parameters
@@ -487,6 +696,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const city = cityFilter ? cityFilter.value : '';
             const industry = industryFilter ? industryFilter.value : '';
             const skills = skillsFilter ? skillsFilter.value : '';
+            const company = companyFilter ? companyFilter.value : '';
+            const availability = availabilityFilter ? availabilityFilter.value : '';
 
             // Build query parameters
             const params = new URLSearchParams();
@@ -496,23 +707,34 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (city) params.append('city', city);
             if (industry) params.append('industry', industry);
             if (skills) params.append('skills', skills);
+            if (company) params.append('company', company);
+            if (availability) params.append('availability', availability);
+            params.append('page', page);
+            params.append('limit', itemsPerPage);
 
             // Fetch real data from API
-            const alumni = await window.api.get(`/users/directory?${params.toString()}`);
+            const response = await window.api.get(`/users/directory?${params.toString()}`);
+            
+            // Handle both old format (array) and new format (object with pagination)
+            const alumni = response.data || response;
+            paginationInfo = response.pagination || null;
+            
+            if (paginationInfo) {
+                totalPages = paginationInfo.totalPages;
+            }
             
             alumniListContainer.innerHTML = '';
 
             if (alumni && alumni.length > 0) {
-                // Filter out admin users from directory
-                const filteredAlumni = alumni.filter(alumnus => {
-                    const userRole = alumnus.role || alumnus.user_type || 'alumni';
-                    return userRole.toLowerCase() !== 'admin';
-                });
-                
-                resultsTitle.textContent = `${filteredAlumni.length} Alumni Found`;
+                // Admin users are already filtered out by the server
+                if (paginationInfo) {
+                    resultsTitle.textContent = `${paginationInfo.totalItems} Alumni Found (Page ${page} of ${totalPages})`;
+                } else {
+                    resultsTitle.textContent = `${alumni.length} Alumni Found`;
+                }
                 
                 // Process alumni cards asynchronously
-                for (const alumnus of filteredAlumni) {
+                for (const alumnus of alumni) {
                     // Map API response to expected format
                     const mappedAlumnus = {
                         full_name: alumnus.full_name,
@@ -528,14 +750,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                         is_online: Math.random() > 0.5, // Random online status for demo
                         profile_pic_url: alumnus.profile_pic_url,
                         verification_status: alumnus.verification_status,
-                        role: alumnus.role || alumnus.user_type || 'alumni' // Include user role from API (try both field names)
+                        role: alumnus.role || 'alumni', // Use role from API response
+                        availability_status: alumnus.availability_status // Availability status from API
                     };
-                    
-                    // Debug: Log the actual role being used
-                    console.log(`User: ${mappedAlumnus.full_name}, Original role: ${alumnus.role}, user_type: ${alumnus.user_type}, Mapped role: ${mappedAlumnus.role}`);
                     
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
                     alumniListContainer.appendChild(alumnusCard);
+                }
+                
+                // Add pagination controls if enabled
+                if (paginationInfo) {
+                    renderPaginationControls();
                 }
             } else {
                 showEmptyState();
@@ -609,6 +834,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (industryFilter) industryFilter.value = '';
         if (companySizeFilter) companySizeFilter.value = '';
         if (skillsFilter) skillsFilter.value = '';
+        if (companyFilter) companyFilter.value = '';
+        if (availabilityFilter) availabilityFilter.value = '';
         
         resultsTitle.textContent = 'All Alumni';
         fetchAndRenderAlumni();
@@ -684,6 +911,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', applyAdvancedFilters);
     if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearAllFilters);
     if (sortSelect) sortSelect.addEventListener('change', fetchAndRenderAlumni);
+
+    // Export button
+    const exportBtn = document.getElementById('export-directory-btn');
+    if (exportBtn) exportBtn.addEventListener('click', exportDirectoryToCSV);
 
     // ==================== Profile Modal Functionality ====================
     const profileModal = document.getElementById('profile-modal');
@@ -822,7 +1053,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dialogCityFilter = document.getElementById('dialog-city-filter');
     const dialogIndustryFilter = document.getElementById('dialog-industry-filter');
     const dialogSkillsFilter = document.getElementById('dialog-skills-filter');
+    const dialogCompanyFilter = document.getElementById('dialog-company-filter');
     const dialogCompanySizeFilter = document.getElementById('dialog-company-size-filter');
+    const dialogAvailabilityFilter = document.getElementById('dialog-availability-filter');
 
     const openSearchDialog = () => {
         // Sync values from hidden search section to dialog
@@ -833,7 +1066,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (cityFilter) dialogCityFilter.value = cityFilter.value;
         if (industryFilter) dialogIndustryFilter.value = industryFilter.value;
         if (skillsFilter) dialogSkillsFilter.value = skillsFilter.value;
+        if (companyFilter) dialogCompanyFilter.value = companyFilter.value;
         if (companySizeFilter) dialogCompanySizeFilter.value = companySizeFilter.value;
+        if (availabilityFilter) dialogAvailabilityFilter.value = availabilityFilter.value;
         
         searchDialog.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -854,7 +1089,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (cityFilter) cityFilter.value = dialogCityFilter.value;
         if (industryFilter) industryFilter.value = dialogIndustryFilter.value;
         if (skillsFilter) skillsFilter.value = dialogSkillsFilter.value;
+        if (companyFilter) companyFilter.value = dialogCompanyFilter.value;
         if (companySizeFilter) companySizeFilter.value = dialogCompanySizeFilter.value;
+        if (availabilityFilter) availabilityFilter.value = dialogAvailabilityFilter.value;
         
         closeSearchDialog();
         fetchAndRenderAlumni();
@@ -868,7 +1105,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         dialogCityFilter.value = '';
         dialogIndustryFilter.value = '';
         dialogSkillsFilter.value = '';
+        dialogCompanyFilter.value = '';
         dialogCompanySizeFilter.value = '';
+        dialogAvailabilityFilter.value = '';
     };
 
     // Search dialog event listeners

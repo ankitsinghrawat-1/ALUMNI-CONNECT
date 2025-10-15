@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <li class="nav-dropdown">
                 <a href="#" class="dropdown-toggle">Connect <i class="fas fa-chevron-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="directory.html">Directory</a></li>
+                    <li><a href="featured-directory.html">Directory</a></li>
                     <li><a href="mentors.html">Mentors</a></li>
                     <li><a href="events.html">Events</a></li>
                     <li><a href="groups.html">Groups</a></li>
