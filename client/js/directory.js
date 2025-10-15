@@ -230,7 +230,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ${alumnus.verification_status === 'verified' ? '<i class="fas fa-check-circle verification-badge" title="Verified Profile"></i>' : ''}
                         </h3>
                         <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
-                        <p class="alumnus-company">${alumnus.current_company || ''}</p>
+                        <p class="alumnus-company ${alumnus.current_company && alumnus.current_company !== 'N/A' ? 'clickable-company' : ''}" 
+                           data-company="${alumnus.current_company || ''}"
+                           title="${alumnus.current_company && alumnus.current_company !== 'N/A' ? 'Click to filter by ' + alumnus.current_company : ''}">
+                            ${alumnus.current_company || ''}
+                        </p>
                         
                         <div class="profile-badges-row">
                             <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
@@ -412,6 +416,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
+        // Clickable company name functionality
+        const companyElement = alumnusCard.querySelector('.clickable-company');
+        if (companyElement) {
+            companyElement.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const companyName = companyElement.dataset.company;
+                if (companyName && companyName !== 'N/A') {
+                    if (companyFilter) companyFilter.value = companyName;
+                    resultsTitle.textContent = `Alumni at ${companyName}`;
+                    fetchAndRenderAlumni();
+                    showToast(`Filtering by ${companyName}`, 'info');
+                }
+            });
+        }
+
         // Quick actions dropdown functionality
         const quickActionsBtn = alumnusCard.querySelector('.quick-actions-btn');
         const quickActionsMenu = alumnusCard.querySelector('.quick-actions-menu');
@@ -477,6 +498,76 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         return alumnusCard;
+    };
+
+    // Export directory to CSV
+    const exportDirectoryToCSV = async () => {
+        try {
+            // Get current search parameters
+            const query = searchInput ? searchInput.value.trim() : '';
+            const major = majorFilter ? majorFilter.value : '';
+            const graduation_year = yearFromFilter ? yearFromFilter.value : '';
+            const city = cityFilter ? cityFilter.value : '';
+            const industry = industryFilter ? industryFilter.value : '';
+            const skills = skillsFilter ? skillsFilter.value : '';
+            const company = companyFilter ? companyFilter.value : '';
+
+            // Build query parameters
+            const params = new URLSearchParams();
+            if (query) params.append('query', query);
+            if (major) params.append('major', major);
+            if (graduation_year) params.append('graduation_year', graduation_year);
+            if (city) params.append('city', city);
+            if (industry) params.append('industry', industry);
+            if (skills) params.append('skills', skills);
+            if (company) params.append('company', company);
+
+            // Fetch alumni data
+            const alumni = await window.api.get(`/users/directory?${params.toString()}`);
+            
+            if (!alumni || alumni.length === 0) {
+                showToast('No alumni data to export', 'info');
+                return;
+            }
+
+            // Prepare CSV content
+            const headers = ['Name', 'Role', 'Email', 'Position', 'Company', 'Major', 'Graduation Year', 'Verified'];
+            const csvRows = [headers.join(',')];
+
+            alumni.forEach(alumnus => {
+                const row = [
+                    `"${alumnus.full_name || ''}"`,
+                    `"${alumnus.role || 'alumni'}"`,
+                    `"${alumnus.email || 'N/A'}"`,
+                    `"${alumnus.job_title || 'N/A'}"`,
+                    `"${alumnus.current_company || 'N/A'}"`,
+                    `"${alumnus.major || 'N/A'}"`,
+                    `"${alumnus.graduation_year || 'N/A'}"`,
+                    `"${alumnus.verification_status || 'unverified'}"`
+                ];
+                csvRows.push(row.join(','));
+            });
+
+            const csvContent = csvRows.join('\n');
+            
+            // Create and trigger download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `alumni-directory-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showToast(`Exported ${alumni.length} alumni records to CSV`, 'success');
+        } catch (error) {
+            console.error('Export error:', error);
+            showToast('Failed to export directory. Please try again.', 'error');
+        }
     };
 
     // Core functionality
@@ -683,6 +774,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (applyFiltersBtn) applyFiltersBtn.addEventListener('click', applyAdvancedFilters);
     if (clearFiltersBtn) clearFiltersBtn.addEventListener('click', clearAllFilters);
     if (sortSelect) sortSelect.addEventListener('change', fetchAndRenderAlumni);
+
+    // Export button
+    const exportBtn = document.getElementById('export-directory-btn');
+    if (exportBtn) exportBtn.addEventListener('click', exportDirectoryToCSV);
 
     // ==================== Profile Modal Functionality ====================
     const profileModal = document.getElementById('profile-modal');
