@@ -3927,6 +3927,8 @@ body main {
     right: auto;
     top: 0;
     margin-left: 0.5rem;
+    /* Override parent positioning */
+    transform: translateX(10px);
 }
 
 .profile-submenu .fa-chevron-right {
@@ -3950,7 +3952,7 @@ body main {
 .profile-submenu.dropdown-active > .dropdown-menu {
     visibility: visible;
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
 }
 
 .static-page-main {
