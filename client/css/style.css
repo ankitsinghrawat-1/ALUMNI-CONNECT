@@ -267,9 +267,8 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--surface-color);
     box-shadow: var(--box-shadow-subtle);
     padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    position: relative;
+    z-index: 100;
 }
 
 .main-nav {
@@ -3852,7 +3851,7 @@ body main {
     visibility: hidden;
     opacity: 0;
     transform: translateY(10px);
-    transition: all 0.3s ease;
+    transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .nav-dropdown:not(.profile-dropdown) .dropdown-menu {
@@ -3869,7 +3868,7 @@ body main {
 
 .nav-dropdown .fa-chevron-down {
     font-size: 0.7rem;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .nav-dropdown.dropdown-active .fa-chevron-down {
