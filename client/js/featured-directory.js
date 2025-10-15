@@ -31,8 +31,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Load alumni data
     const loadFeaturedAlumni = async (searchQuery = '') => {
         try {
-            // Fetch alumni data
-            let alumni = await window.api.get('/users/directory');
+            // Fetch alumni data (get more for featured)
+            const response = await window.api.get('/users/directory?limit=50');
+            let alumni = response.data || response; // Handle both formats
             
             // Filter for featured or select top alumni (you can modify criteria)
             // For now, we'll show all alumni but you can add a 'featured' field in database

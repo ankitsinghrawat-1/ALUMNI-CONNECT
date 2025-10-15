@@ -101,7 +101,12 @@ module.exports = (pool, upload) => {
     }));
 
     router.get('/directory', asyncHandler(async (req, res) => {
-        const { query, major, graduation_year, city, industry, skills, company, availability } = req.query;
+        const { query, major, graduation_year, city, industry, skills, company, availability, page, limit } = req.query;
+        
+        // Pagination parameters
+        const currentPage = parseInt(page) || 1;
+        const itemsPerPage = parseInt(limit) || 12; // Default 12 items per page
+        const offset = (currentPage - 1) * itemsPerPage;
         
         let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, role, availability_status, is_email_visible, is_company_visible, is_location_visible 
                    FROM users WHERE is_profile_public = TRUE AND role != 'admin'`;
@@ -140,6 +145,16 @@ module.exports = (pool, upload) => {
             params.push(availability);
         }
 
+        // Get total count for pagination
+        const countSql = sql.replace('SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, role, availability_status, is_email_visible, is_company_visible, is_location_visible', 'SELECT COUNT(*) as total');
+        const [countResult] = await pool.query(countSql, params);
+        const totalItems = countResult[0].total;
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        // Add pagination to query
+        sql += ' ORDER BY user_id DESC LIMIT ? OFFSET ?';
+        params.push(itemsPerPage, offset);
+
         const [rows] = await pool.query(sql, params);
         
         const publicProfiles = rows.map(user => ({
@@ -155,7 +170,18 @@ module.exports = (pool, upload) => {
             role: user.role, // Include role for badge display
             availability_status: user.availability_status, // Include availability status
         }));
-        res.json(publicProfiles);
+        
+        res.json({
+            data: publicProfiles,
+            pagination: {
+                currentPage,
+                totalPages,
+                totalItems,
+                itemsPerPage,
+                hasNextPage: currentPage < totalPages,
+                hasPrevPage: currentPage > 1
+            }
+        });
     }));
 
     router.get('/profile/:email', asyncHandler(async (req, res) => {

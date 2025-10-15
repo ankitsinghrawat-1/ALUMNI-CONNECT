@@ -46,8 +46,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             bookmarksContainer.style.display = 'grid';
             emptyState.style.display = 'none';
 
-            // Fetch all alumni data
-            const alumni = await window.api.get('/users/directory');
+            // Fetch all alumni data (no pagination for bookmarks)
+            const response = await window.api.get('/users/directory?limit=1000');
+            const alumni = response.data || response; // Handle both old and new formats
             
             // Filter bookmarked alumni
             const bookmarkedAlumni = alumni.filter(alumnus => 
@@ -161,8 +162,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Fetch all alumni data
-            const alumni = await window.api.get('/users/directory');
+            // Fetch all alumni data (no pagination)
+            const response = await window.api.get('/users/directory?limit=1000');
+            const alumni = response.data || response; // Handle both formats
             const bookmarkedAlumni = alumni.filter(alumnus => 
                 bookmarkedEmails.includes(alumnus.email)
             );

@@ -17,6 +17,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     const clearFiltersBtn = document.getElementById('clear-filters-btn');
     const resultsTitle = document.getElementById('results-title');
     
+    // Pagination state
+    let currentPage = 1;
+    const itemsPerPage = 12;
+    let totalPages = 1;
+    let paginationInfo = null;
+    
     // Tab System
     const searchTabs = document.querySelectorAll('.search-tab');
     const searchTabContents = document.querySelectorAll('.search-tab-content');
@@ -513,7 +519,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const company = companyFilter ? companyFilter.value : '';
             const availability = availabilityFilter ? availabilityFilter.value : '';
 
-            // Build query parameters
+            // Build query parameters (no pagination for export - get all)
             const params = new URLSearchParams();
             if (query) params.append('query', query);
             if (major) params.append('major', major);
@@ -523,9 +529,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (skills) params.append('skills', skills);
             if (company) params.append('company', company);
             if (availability) params.append('availability', availability);
+            params.append('limit', 1000); // Get more records for export
 
             // Fetch alumni data
-            const alumni = await window.api.get(`/users/directory?${params.toString()}`);
+            const response = await window.api.get(`/users/directory?${params.toString()}`);
+            const alumni = response.data || response; // Handle both formats
             
             if (!alumni || alumni.length === 0) {
                 showToast('No alumni data to export', 'info');
@@ -573,9 +581,112 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
+    // Render pagination controls
+    const renderPaginationControls = () => {
+        // Remove existing pagination if any
+        const existingPagination = document.querySelector('.pagination-controls');
+        if (existingPagination) {
+            existingPagination.remove();
+        }
+
+        const paginationContainer = document.createElement('div');
+        paginationContainer.className = 'pagination-controls';
+        paginationContainer.style.cssText = `
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+        `;
+
+        // Previous button
+        const prevBtn = document.createElement('button');
+        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Previous';
+        prevBtn.className = 'pagination-btn';
+        prevBtn.disabled = !paginationInfo.hasPrevPage;
+        prevBtn.style.cssText = `
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #667eea;
+            background: ${paginationInfo.hasPrevPage ? 'white' : '#f5f5f5'};
+            color: ${paginationInfo.hasPrevPage ? '#667eea' : '#999'};
+            border-radius: 8px;
+            cursor: ${paginationInfo.hasPrevPage ? 'pointer' : 'not-allowed'};
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        `;
+        if (paginationInfo.hasPrevPage) {
+            prevBtn.addEventListener('click', () => fetchAndRenderAlumni(currentPage - 1));
+            prevBtn.addEventListener('mouseenter', () => {
+                prevBtn.style.background = '#667eea';
+                prevBtn.style.color = 'white';
+            });
+            prevBtn.addEventListener('mouseleave', () => {
+                prevBtn.style.background = 'white';
+                prevBtn.style.color = '#667eea';
+            });
+        }
+
+        // Page info
+        const pageInfo = document.createElement('div');
+        pageInfo.style.cssText = `
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            color: #333;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        `;
+        pageInfo.textContent = `Page ${currentPage} of ${totalPages}`;
+
+        // Next button
+        const nextBtn = document.createElement('button');
+        nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+        nextBtn.className = 'pagination-btn';
+        nextBtn.disabled = !paginationInfo.hasNextPage;
+        nextBtn.style.cssText = `
+            padding: 0.75rem 1.5rem;
+            border: 2px solid #667eea;
+            background: ${paginationInfo.hasNextPage ? 'white' : '#f5f5f5'};
+            color: ${paginationInfo.hasNextPage ? '#667eea' : '#999'};
+            border-radius: 8px;
+            cursor: ${paginationInfo.hasNextPage ? 'pointer' : 'not-allowed'};
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        `;
+        if (paginationInfo.hasNextPage) {
+            nextBtn.addEventListener('click', () => fetchAndRenderAlumni(currentPage + 1));
+            nextBtn.addEventListener('mouseenter', () => {
+                nextBtn.style.background = '#667eea';
+                nextBtn.style.color = 'white';
+            });
+            nextBtn.addEventListener('mouseleave', () => {
+                nextBtn.style.background = 'white';
+                nextBtn.style.color = '#667eea';
+            });
+        }
+
+        paginationContainer.appendChild(prevBtn);
+        paginationContainer.appendChild(pageInfo);
+        paginationContainer.appendChild(nextBtn);
+
+        // Insert after directory list
+        alumniListContainer.parentNode.insertBefore(paginationContainer, alumniListContainer.nextSibling);
+
+        // Scroll to top when changing pages
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     // Core functionality
-    const fetchAndRenderAlumni = async () => {
+    const fetchAndRenderAlumni = async (page = 1) => {
         showLoading();
+        currentPage = page;
 
         try {
             // Get search parameters
@@ -598,15 +709,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (skills) params.append('skills', skills);
             if (company) params.append('company', company);
             if (availability) params.append('availability', availability);
+            params.append('page', page);
+            params.append('limit', itemsPerPage);
 
             // Fetch real data from API
-            const alumni = await window.api.get(`/users/directory?${params.toString()}`);
+            const response = await window.api.get(`/users/directory?${params.toString()}`);
+            
+            // Handle both old format (array) and new format (object with pagination)
+            const alumni = response.data || response;
+            paginationInfo = response.pagination || null;
+            
+            if (paginationInfo) {
+                totalPages = paginationInfo.totalPages;
+            }
             
             alumniListContainer.innerHTML = '';
 
             if (alumni && alumni.length > 0) {
                 // Admin users are already filtered out by the server
-                resultsTitle.textContent = `${alumni.length} Alumni Found`;
+                if (paginationInfo) {
+                    resultsTitle.textContent = `${paginationInfo.totalItems} Alumni Found (Page ${page} of ${totalPages})`;
+                } else {
+                    resultsTitle.textContent = `${alumni.length} Alumni Found`;
+                }
                 
                 // Process alumni cards asynchronously
                 for (const alumnus of alumni) {
@@ -631,6 +756,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
                     alumniListContainer.appendChild(alumnusCard);
+                }
+                
+                // Add pagination controls if enabled
+                if (paginationInfo) {
+                    renderPaginationControls();
                 }
             } else {
                 showEmptyState();
