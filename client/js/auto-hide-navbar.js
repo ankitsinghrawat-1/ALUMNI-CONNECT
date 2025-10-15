@@ -42,6 +42,15 @@
 
     // Show navbar overlay on hover
     function showNavbar() {
+        // Only show overlay if page has scrolled down by at least navbar height
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const navbarHeight = getNavbarHeight();
+        
+        // Don't show overlay if we're at the top of the page
+        if (scrollTop < navbarHeight) {
+            return;
+        }
+        
         isHovering = true;
         navbarClone.style.display = 'block';
         
