@@ -17,6 +17,8 @@
     // Scroll tracking variables
     let lastScrollTop = 0;
     let scrollThreshold = 5; // Minimum scroll difference to trigger
+    let scrollUpThreshold = 100; // Amount user must scroll up before navbar shows
+    let scrollUpAccumulator = 0; // Tracks accumulated scroll up distance
     let ticking = false;
     let hoverTimer = null;
     let isHovering = false;
@@ -36,6 +38,7 @@
         if (scrollTop <= 0) {
             header.style.transform = 'translateY(0)';
             header.classList.remove('navbar-hidden');
+            scrollUpAccumulator = 0;
             lastScrollTop = 0;
             return;
         }
@@ -56,25 +59,31 @@
         }
 
         if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
-            // Scrolling DOWN - Hide navbar progressively
-            const hideAmount = Math.min(scrollTop - lastScrollTop, navbarHeight);
-            const currentTransform = header.style.transform || 'translateY(0px)';
-            const currentY = parseInt(currentTransform.match(/-?\d+/) || [0])[0];
-            const newY = Math.max(-navbarHeight, currentY - hideAmount);
+            // Scrolling DOWN - Hide navbar immediately
+            scrollUpAccumulator = 0; // Reset scroll up counter
             
-            header.style.transform = `translateY(${newY}px)`;
+            header.style.transform = `translateY(-${navbarHeight}px)`;
             header.classList.add('navbar-hidden');
         } else if (scrollTop < lastScrollTop) {
-            // Scrolling UP - Show navbar progressively
-            const showAmount = Math.min(lastScrollTop - scrollTop, navbarHeight);
-            const currentTransform = header.style.transform || 'translateY(0px)';
-            const currentY = parseInt(currentTransform.match(/-?\d+/) || [0])[0];
-            const newY = Math.min(0, currentY + showAmount);
+            // Scrolling UP - Accumulate scroll distance before showing
+            const scrollUpAmount = lastScrollTop - scrollTop;
+            scrollUpAccumulator += scrollUpAmount;
             
-            header.style.transform = `translateY(${newY}px)`;
-            
-            if (newY === 0) {
-                header.classList.remove('navbar-hidden');
+            // Only show navbar after scrolling up the threshold distance
+            if (scrollUpAccumulator >= scrollUpThreshold) {
+                const currentTransform = header.style.transform || 'translateY(0px)';
+                const currentY = parseInt(currentTransform.match(/-?\d+/) || [0])[0];
+                
+                // Show navbar progressively with smooth animation
+                const showAmount = Math.min(scrollUpAmount * 2, navbarHeight); // 2x speed for smoother reveal
+                const newY = Math.min(0, currentY + showAmount);
+                
+                header.style.transform = `translateY(${newY}px)`;
+                
+                if (newY === 0) {
+                    header.classList.remove('navbar-hidden');
+                    scrollUpAccumulator = 0; // Reset after fully shown
+                }
             }
         }
 
@@ -168,16 +177,18 @@
             left: 0;
             right: 0;
             z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             will-change: transform;
         }
 
         .auto-hide-navbar.navbar-hidden {
             box-shadow: none;
+            transition: transform 0.25s cubic-bezier(0.4, 0, 1, 1);
         }
 
         .auto-hide-navbar.navbar-hover-visible {
             transform: translateY(0) !important;
+            transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         /* Ensure body has proper padding to account for fixed navbar */
@@ -185,9 +196,9 @@
             padding-top: var(--navbar-height, 70px);
         }
 
-        /* Smooth transitions for all states */
+        /* Smooth transitions for navbar contents */
         .auto-hide-navbar * {
-            transition: opacity 0.3s ease;
+            transition: opacity 0.2s ease;
         }
 
         /* Hover area styling (invisible but functional) */
@@ -203,6 +214,22 @@
         /* Dark mode adjustments */
         .dark-mode .auto-hide-navbar:not(.navbar-hidden) {
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Smooth reveal animation when showing */
+        .auto-hide-navbar:not(.navbar-hidden):not(.navbar-hover-visible) {
+            animation: navbar-slide-in 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        @keyframes navbar-slide-in {
+            from {
+                transform: translateY(-100%);
+                opacity: 0.8;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
     `;
     document.head.appendChild(style);
