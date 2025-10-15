@@ -407,5 +407,202 @@ module.exports = (pool, upload) => {
         res.json(announcements);
     }));
 
+    // Connection request endpoints for directory feature
+    router.post('/connect-request', asyncHandler(async (req, res) => {
+        const fromUserId = req.user.userId;
+        const { to_email } = req.body;
+
+        if (!to_email) {
+            return res.status(400).json({ message: 'to_email is required' });
+        }
+
+        // Get the to_user_id from email
+        const [toUserRows] = await pool.query('SELECT user_id FROM users WHERE email = ?', [to_email]);
+        if (toUserRows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const toUserId = toUserRows[0].user_id;
+
+        // Prevent users from connecting to themselves
+        if (fromUserId === toUserId) {
+            return res.status(400).json({ message: 'Cannot send connection request to yourself' });
+        }
+
+        // Check if connection already exists
+        const minId = Math.min(fromUserId, toUserId);
+        const maxId = Math.max(fromUserId, toUserId);
+        const [existingConnection] = await pool.query(
+            'SELECT * FROM connections WHERE user1_id = ? AND user2_id = ?',
+            [minId, maxId]
+        );
+        if (existingConnection.length > 0) {
+            return res.status(400).json({ message: 'Already connected' });
+        }
+
+        // Check if request already exists
+        const [existingRequest] = await pool.query(
+            'SELECT * FROM connection_requests WHERE from_user_id = ? AND to_user_id = ?',
+            [fromUserId, toUserId]
+        );
+        if (existingRequest.length > 0) {
+            if (existingRequest[0].status === 'pending') {
+                return res.status(400).json({ message: 'Connection request already sent' });
+            } else if (existingRequest[0].status === 'rejected') {
+                // Update the rejected request to pending
+                await pool.query(
+                    'UPDATE connection_requests SET status = ?, updated_at = NOW() WHERE from_user_id = ? AND to_user_id = ?',
+                    ['pending', fromUserId, toUserId]
+                );
+                return res.status(200).json({ message: 'Connection request sent successfully' });
+            }
+        }
+
+        // Check for reverse request (if they sent us a request, auto-accept and create connection)
+        const [reverseRequest] = await pool.query(
+            'SELECT * FROM connection_requests WHERE from_user_id = ? AND to_user_id = ? AND status = ?',
+            [toUserId, fromUserId, 'pending']
+        );
+        
+        if (reverseRequest.length > 0) {
+            // Auto-accept the reverse request and create connection
+            await pool.query(
+                'UPDATE connection_requests SET status = ?, updated_at = NOW() WHERE request_id = ?',
+                ['accepted', reverseRequest[0].request_id]
+            );
+            await pool.query(
+                'INSERT INTO connections (user1_id, user2_id) VALUES (?, ?)',
+                [minId, maxId]
+            );
+            
+            // Create notification for the other user
+            await pool.query(
+                'INSERT INTO notifications (user_id, actor_user_id, notification_type, message, link) VALUES (?, ?, ?, ?, ?)',
+                [toUserId, fromUserId, 'connection_accepted', 'accepted your connection request', `/view-profile.html?email=${req.user.email}`]
+            );
+            
+            return res.status(200).json({ message: 'Connection created successfully', status: 'connected' });
+        }
+
+        // Create new connection request
+        await pool.query(
+            'INSERT INTO connection_requests (from_user_id, to_user_id, status) VALUES (?, ?, ?)',
+            [fromUserId, toUserId, 'pending']
+        );
+
+        // Create notification for the recipient
+        await pool.query(
+            'INSERT INTO notifications (user_id, actor_user_id, notification_type, message, link) VALUES (?, ?, ?, ?, ?)',
+            [toUserId, fromUserId, 'connection_request', 'sent you a connection request', `/view-profile.html?email=${req.user.email}`]
+        );
+
+        res.status(201).json({ message: 'Connection request sent successfully' });
+    }));
+
+    // Get connection status with another user
+    router.get('/connection-status/:email', asyncHandler(async (req, res) => {
+        const currentUserId = req.user.userId;
+        const { email } = req.params;
+
+        // Get the other user's ID
+        const [otherUserRows] = await pool.query('SELECT user_id FROM users WHERE email = ?', [email]);
+        if (otherUserRows.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const otherUserId = otherUserRows[0].user_id;
+
+        // Check if connected
+        const minId = Math.min(currentUserId, otherUserId);
+        const maxId = Math.max(currentUserId, otherUserId);
+        const [connection] = await pool.query(
+            'SELECT * FROM connections WHERE user1_id = ? AND user2_id = ?',
+            [minId, maxId]
+        );
+        if (connection.length > 0) {
+            return res.json({ status: 'connected' });
+        }
+
+        // Check for pending request (from current user)
+        const [sentRequest] = await pool.query(
+            'SELECT * FROM connection_requests WHERE from_user_id = ? AND to_user_id = ? AND status = ?',
+            [currentUserId, otherUserId, 'pending']
+        );
+        if (sentRequest.length > 0) {
+            return res.json({ status: 'pending' });
+        }
+
+        // Check for pending request (from other user)
+        const [receivedRequest] = await pool.query(
+            'SELECT * FROM connection_requests WHERE from_user_id = ? AND to_user_id = ? AND status = ?',
+            [otherUserId, currentUserId, 'pending']
+        );
+        if (receivedRequest.length > 0) {
+            return res.json({ status: 'received' });
+        }
+
+        res.json({ status: 'not_connected' });
+    }));
+
+    // Accept connection request
+    router.post('/accept-connection/:requestId', asyncHandler(async (req, res) => {
+        const currentUserId = req.user.userId;
+        const { requestId } = req.params;
+
+        // Get the request
+        const [requestRows] = await pool.query(
+            'SELECT * FROM connection_requests WHERE request_id = ? AND to_user_id = ? AND status = ?',
+            [requestId, currentUserId, 'pending']
+        );
+        if (requestRows.length === 0) {
+            return res.status(404).json({ message: 'Connection request not found' });
+        }
+
+        const request = requestRows[0];
+        const minId = Math.min(request.from_user_id, request.to_user_id);
+        const maxId = Math.max(request.from_user_id, request.to_user_id);
+
+        // Update request status
+        await pool.query(
+            'UPDATE connection_requests SET status = ?, updated_at = NOW() WHERE request_id = ?',
+            ['accepted', requestId]
+        );
+
+        // Create connection
+        await pool.query(
+            'INSERT INTO connections (user1_id, user2_id) VALUES (?, ?)',
+            [minId, maxId]
+        );
+
+        // Create notification for the requester
+        await pool.query(
+            'INSERT INTO notifications (user_id, actor_user_id, notification_type, message, link) VALUES (?, ?, ?, ?, ?)',
+            [request.from_user_id, currentUserId, 'connection_accepted', 'accepted your connection request', `/view-profile.html?email=${req.user.email}`]
+        );
+
+        res.json({ message: 'Connection request accepted' });
+    }));
+
+    // Reject connection request
+    router.post('/reject-connection/:requestId', asyncHandler(async (req, res) => {
+        const currentUserId = req.user.userId;
+        const { requestId } = req.params;
+
+        // Get the request
+        const [requestRows] = await pool.query(
+            'SELECT * FROM connection_requests WHERE request_id = ? AND to_user_id = ? AND status = ?',
+            [requestId, currentUserId, 'pending']
+        );
+        if (requestRows.length === 0) {
+            return res.status(404).json({ message: 'Connection request not found' });
+        }
+
+        // Update request status
+        await pool.query(
+            'UPDATE connection_requests SET status = ?, updated_at = NOW() WHERE request_id = ?',
+            ['rejected', requestId]
+        );
+
+        res.json({ message: 'Connection request rejected' });
+    }));
+
     return router;
 };
