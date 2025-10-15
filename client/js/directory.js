@@ -602,7 +602,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Previous button
         const prevBtn = document.createElement('button');
-        prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i> Previous';
+        prevBtn.textContent = '← Previous';
         prevBtn.className = 'pagination-btn';
         prevBtn.disabled = !paginationInfo.hasPrevPage;
         prevBtn.style.cssText = `
@@ -644,7 +644,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Next button
         const nextBtn = document.createElement('button');
-        nextBtn.innerHTML = 'Next <i class="fas fa-chevron-right"></i>';
+        nextBtn.textContent = 'Next →';
         nextBtn.className = 'pagination-btn';
         nextBtn.disabled = !paginationInfo.hasNextPage;
         nextBtn.style.cssText = `
@@ -728,9 +728,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (alumni && alumni.length > 0) {
                 // Admin users are already filtered out by the server
                 if (paginationInfo) {
-                    resultsTitle.textContent = `${paginationInfo.totalItems} Alumni Found (Page ${page} of ${totalPages})`;
+                    resultsTitle.textContent = `${paginationInfo.totalItems} Alumni - Page ${page} of ${totalPages}`;
                 } else {
-                    resultsTitle.textContent = `${alumni.length} Alumni Found`;
+                    resultsTitle.textContent = `${alumni.length} Alumni`;
                 }
                 
                 // Process alumni cards asynchronously
