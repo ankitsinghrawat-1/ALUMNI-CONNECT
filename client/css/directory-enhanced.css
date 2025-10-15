@@ -621,17 +621,17 @@
     transition: opacity 0.3s ease;
 }
 
-/* Card Profile Section - Horizontal compact layout */
+/* Card Profile Section - Spacious and well-aligned layout */
 .card-profile-section {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     align-items: flex-start;
-    padding: 8px 10px;
-    padding-top: 28px; /* Reduced space for top actions - tighter */
+    padding: 12px 18px;
+    padding-top: 40px; /* Space for top corner actions */
     position: relative;
 }
 
-/* Smaller, more compact avatar */
+/* Proper sized avatar */
 .enhanced-alumnus-card .alumnus-avatar {
     margin-right: 0;
     flex-shrink: 0;
@@ -639,24 +639,25 @@
 
 .enhanced-alumnus-card .alumnus-avatar img,
 .enhanced-alumnus-card .avatar-image {
-    width: 50px;
-    height: 50px;
-    border-width: 2px;
+    width: 70px;
+    height: 70px;
+    border-width: 3px;
 }
 
 .enhanced-alumnus-card .online-indicator {
-    width: 10px;
-    height: 10px;
-    bottom: 1px;
-    right: 1px;
+    width: 12px;
+    height: 12px;
+    bottom: 2px;
+    right: 2px;
+    border-width: 2px;
 }
 
 .alumnus-card-header {
     position: relative;
     overflow: visible;
-    padding-bottom: 6px;
+    padding-bottom: 12px;
     border-bottom: 1px solid #e2e8f0;
-    min-height: 28px; /* Ensure minimum height for top actions */
+    min-height: 35px;
 }
 
 .dark-mode .alumnus-card-header {
@@ -665,26 +666,26 @@
 
 .alumnus-card-body {
     overflow: hidden;
-    padding: 6px 10px;
+    padding: 12px 18px;
 }
 
-/* Compact details section */
+/* Proper sized details section */
 .enhanced-alumnus-card .alumnus-details {
-    margin-bottom: 6px;
+    margin-bottom: 10px;
 }
 
 .enhanced-alumnus-card .detail-item {
-    font-size: 11px;
-    margin-bottom: 4px;
+    font-size: 13px;
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     color: #64748b;
 }
 
 .enhanced-alumnus-card .detail-item i {
-    font-size: 11px;
-    width: 12px;
+    font-size: 13px;
+    width: 16px;
     color: #94a3b8;
 }
 
@@ -698,11 +699,11 @@
 
 .alumnus-card-footer {
     overflow: visible;
-    padding: 6px 10px;
+    padding: 12px 18px;
     border-top: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .dark-mode .alumnus-card-footer {
@@ -719,11 +720,11 @@
 
 .alumnus-name {
     margin: 0;
-    font-size: 15px;
+    font-size: 18px;
     font-weight: 700;
     color: #1e293b;
-    line-height: 1.2;
-    white-space: nowrap; /* Prevent name wrapping */
+    line-height: 1.3;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     flex-shrink: 1;
@@ -739,19 +740,19 @@
 }
 
 .alumnus-title {
-    font-size: 12px;
+    font-size: 14px;
     color: #64748b;
-    margin: 2px 0;
+    margin: 4px 0;
     font-weight: 500;
-    white-space: nowrap; /* Single line designation */
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
 .alumnus-company {
-    font-size: 11px;
+    font-size: 13px;
     color: #94a3b8;
-    margin: 2px 0 6px 0;
+    margin: 4px 0 8px 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -765,14 +766,14 @@
     color: #64748b;
 }
 
-/* Role Badge */
+/* Role Badge - Better sizing */
 .role-badge {
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    padding: 2px 6px;
-    border-radius: 8px;
-    font-size: 9px;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 11px;
     font-weight: 600;
     color: white;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
@@ -781,32 +782,32 @@
 }
 
 .role-badge i {
-    font-size: 9px;
+    font-size: 10px;
 }
 
-/* Connection Status Badge - More compact */
+/* Connection Status Badge - Better proportions */
 .connection-status-badge {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 2px;
-    padding: 5px 6px;
-    border-radius: 6px;
-    min-width: 50px;
+    gap: 3px;
+    padding: 6px 8px;
+    border-radius: 8px;
+    min-width: 65px;
     text-align: center;
     flex-shrink: 0;
 }
 
 .connection-status-badge i {
-    font-size: 14px;
+    font-size: 16px;
 }
 
 .connection-status-badge .status-label {
-    font-size: 8px;
+    font-size: 9px;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.2px;
-    line-height: 1.1;
+    letter-spacing: 0.3px;
+    line-height: 1.2;
 }
 
 .connection-status-badge.connected {
@@ -849,34 +850,27 @@
     color: #94a3b8;
 }
 
-/* Badges Container */
+/* Badges Container - Allow wrapping for better display */
 .badges-container {
     display: flex;
-    flex-wrap: nowrap; /* Keep all badges on single line */
-    gap: 4px;
-    margin-top: 6px;
-    overflow-x: auto; /* Allow horizontal scroll if needed */
-    scrollbar-width: none; /* Hide scrollbar Firefox */
-}
-
-.badges-container::-webkit-scrollbar {
-    display: none; /* Hide scrollbar Chrome/Safari */
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
 }
 
 /* Card Top Actions (Bookmark & Quick Actions) */
 .card-top-actions {
     position: absolute;
-    top: 2px;
-    right: 2px;
+    top: 8px;
+    right: 8px;
     display: flex;
-    gap: 4px;
+    gap: 6px;
     z-index: 10;
-    padding: 2px; /* Minimal padding, keeps within bounds */
 }
 
 .bookmark-btn {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
@@ -886,15 +880,15 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 12px;
+    font-size: 14px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
 }
 
 .bookmark-btn:hover {
     background: white;
     color: #667eea;
-    transform: scale(1.05); /* Reduced from 1.1 to prevent overflow */
+    transform: scale(1.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -925,8 +919,8 @@
 }
 
 .quick-actions-btn {
-    width: 26px;
-    height: 26px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
@@ -936,15 +930,15 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 12px;
+    font-size: 14px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
-    flex-shrink: 0; /* Prevent shrinking */
+    flex-shrink: 0;
 }
 
 .quick-actions-btn:hover {
     background: white;
     color: #667eea;
-    transform: scale(1.05); /* Reduced from 1.1 to prevent overflow */
+    transform: scale(1.1);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -1020,15 +1014,15 @@
     color: #667eea;
 }
 
-/* Availability Badge - Compact version */
+/* Availability Badge - Better sizing */
 .availability-badge {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
+    gap: 5px;
+    padding: 4px 10px;
     color: white;
-    border-radius: 10px;
-    font-size: 9px;
+    border-radius: 12px;
+    font-size: 11px;
     font-weight: 600;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     cursor: help;
@@ -1043,19 +1037,19 @@
 }
 
 .availability-badge i {
-    font-size: 10px;
+    font-size: 11px;
 }
 
-/* Common Interests Badge - Compact */
+/* Common Interests Badge - Better sizing */
 .common-interests {
     display: inline-flex;
     align-items: center;
-    gap: 4px;
-    padding: 3px 8px;
+    gap: 5px;
+    padding: 4px 10px;
     background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
     color: white;
-    border-radius: 10px;
-    font-size: 9px;
+    border-radius: 12px;
+    font-size: 11px;
     font-weight: 600;
     box-shadow: 0 1px 3px rgba(245, 158, 11, 0.2);
     cursor: help;
@@ -1070,39 +1064,39 @@
 }
 
 .common-interests i {
-    font-size: 10px;
+    font-size: 11px;
 }
 
-/* Card Actions Buttons - More compact */
+/* Card Actions Buttons - Proper spacing and sizing */
 .card-actions-buttons {
     display: flex;
-    gap: 8px;
-    flex-wrap: nowrap; /* Keep buttons on single line */
+    gap: 10px;
+    flex-wrap: nowrap;
     flex: 1;
 }
 
 .card-actions-buttons .btn {
     flex: 1;
-    min-width: 80px;
+    min-width: 90px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 5px;
-    padding: 7px 10px;
-    font-size: 12px;
+    gap: 6px;
+    padding: 9px 14px;
+    font-size: 13px;
     white-space: nowrap;
     transition: all 0.3s ease;
 }
 
 .card-actions-buttons .btn i {
-    font-size: 13px;
+    font-size: 14px;
 }
 
 .card-actions-buttons .btn .btn-text {
     display: inline;
 }
 
-/* Ensure proper spacing between connect and message buttons */
+/* Ensure proper spacing between buttons */
 .card-actions-buttons .connect-btn,
 .card-actions-buttons .btn-secondary {
     margin-right: 0;
@@ -1115,12 +1109,12 @@
     }
     
     .card-actions-buttons .btn {
-        min-width: 38px;
-        padding: 7px;
+        min-width: 40px;
+        padding: 9px;
     }
     
     .card-actions-buttons {
-        gap: 6px;
+        gap: 8px;
     }
 }
 
