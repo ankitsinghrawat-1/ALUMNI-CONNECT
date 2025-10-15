@@ -586,12 +586,13 @@
     font-size: 15px;
 }
 
-/* Enhanced Card - Position relative for absolute children */
+/* Enhanced Card - Contain content within bounds */
 .enhanced-alumnus-card {
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
+    padding: 0; /* Override base card padding */
 }
 
 .enhanced-alumnus-card::before {
@@ -621,7 +622,7 @@
     transition: opacity 0.3s ease;
 }
 
-/* Card Top Actions - Positioned relative to entire card at top-right */
+/* Card Top Actions - Positioned inside card boundaries */
 .card-top-actions {
     position: absolute;
     top: 8px;
@@ -631,12 +632,12 @@
     z-index: 100;
 }
 
-/* Card Profile Section - Extreme left alignment */
+/* Card Profile Section - Extreme left alignment with minimal padding */
 .card-profile-section {
     display: flex;
     gap: 12px;
     align-items: flex-start;
-    padding: 12px 50px 10px 8px; /* Minimal left padding for extreme left alignment */
+    padding: 12px 45px 10px 4px; /* Reduced left to 4px for extreme left, reduced right to 45px */
     position: relative;
 }
 
@@ -699,7 +700,7 @@
 
 .alumnus-card-header {
     position: relative;
-    overflow: visible; /* Keep visible for dropdown menu */
+    overflow: visible; /* Allow dropdown menu to overflow */
     padding-bottom: 12px;
     border-bottom: 1px solid #e2e8f0;
     min-height: 35px;
@@ -1383,7 +1384,7 @@
     /* Responsive Card Layout */
     .card-profile-section {
         flex-wrap: wrap;
-        padding: 15px 50px 10px 8px; /* Maintain extreme left alignment on mobile */
+        padding: 15px 45px 10px 4px; /* Maintain extreme left alignment on mobile */
     }
 
     .alumnus-info {
