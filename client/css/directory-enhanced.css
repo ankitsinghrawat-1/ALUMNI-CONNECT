@@ -626,8 +626,8 @@
     display: flex;
     gap: 10px;
     align-items: flex-start;
-    padding: 10px;
-    padding-top: 38px; /* Space for top actions */
+    padding: 8px 10px;
+    padding-top: 28px; /* Reduced space for top actions - tighter */
     position: relative;
 }
 
@@ -654,8 +654,9 @@
 .alumnus-card-header {
     position: relative;
     overflow: visible;
-    padding-bottom: 8px;
+    padding-bottom: 6px;
     border-bottom: 1px solid #e2e8f0;
+    min-height: 28px; /* Ensure minimum height for top actions */
 }
 
 .dark-mode .alumnus-card-header {
@@ -664,7 +665,7 @@
 
 .alumnus-card-body {
     overflow: hidden;
-    padding: 8px 10px;
+    padding: 6px 10px;
 }
 
 /* Compact details section */
@@ -697,7 +698,7 @@
 
 .alumnus-card-footer {
     overflow: visible;
-    padding: 8px 10px;
+    padding: 6px 10px;
     border-top: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
@@ -865,17 +866,17 @@
 /* Card Top Actions (Bookmark & Quick Actions) */
 .card-top-actions {
     position: absolute;
-    top: 0;
-    right: 0;
+    top: 2px;
+    right: 2px;
     display: flex;
-    gap: 6px;
+    gap: 4px;
     z-index: 10;
-    padding: 4px; /* Add small padding to prevent touching edges */
+    padding: 2px; /* Minimal padding, keeps within bounds */
 }
 
 .bookmark-btn {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
@@ -885,14 +886,15 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 13px;
+    font-size: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .bookmark-btn:hover {
     background: white;
     color: #667eea;
-    transform: scale(1.1);
+    transform: scale(1.05); /* Reduced from 1.1 to prevent overflow */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -923,8 +925,8 @@
 }
 
 .quick-actions-btn {
-    width: 30px;
-    height: 30px;
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
@@ -934,14 +936,15 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 13px;
+    font-size: 12px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+    flex-shrink: 0; /* Prevent shrinking */
 }
 
 .quick-actions-btn:hover {
     background: white;
     color: #667eea;
-    transform: scale(1.1);
+    transform: scale(1.05); /* Reduced from 1.1 to prevent overflow */
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
