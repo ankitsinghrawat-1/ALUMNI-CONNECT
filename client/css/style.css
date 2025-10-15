@@ -3922,33 +3922,33 @@ body main {
     position: relative;
 }
 
-/* CRITICAL FIX: Use highly specific selector to override ALL parent styles */
+/* Position submenu to the LEFT side of parent */
 .profile-dropdown .dropdown-menu .profile-submenu > .dropdown-menu {
     /* Reset all positioning from parent */
     position: absolute !important;
-    left: 100% !important;
-    right: auto !important;
+    right: 100% !important; /* Position to LEFT side */
+    left: auto !important;
     top: 0 !important;
     bottom: auto !important;
-    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important; /* Space from parent on left */
+    margin-left: 0 !important;
     margin-top: 0 !important;
-    margin-right: 0 !important;
     margin-bottom: 0 !important;
-    /* Use horizontal transform */
-    transform: translateX(10px) !important;
+    /* Use horizontal transform sliding from LEFT */
+    transform: translateX(-10px) !important;
     /* Ensure visibility properties */
     visibility: hidden;
     opacity: 0;
 }
 
-.profile-submenu .fa-chevron-right {
-    margin-left: auto;
+.profile-submenu .fa-chevron-left {
+    margin-right: auto;
     font-size: 0.7rem;
     transition: transform 0.3s ease;
 }
 
-.profile-submenu.dropdown-active .fa-chevron-right {
-    transform: translateX(3px);
+.profile-submenu.dropdown-active .fa-chevron-left {
+    transform: translateX(-3px);
 }
 
 .profile-submenu > a {
@@ -3962,7 +3962,8 @@ body main {
 .profile-dropdown .dropdown-menu .profile-submenu.dropdown-active > .dropdown-menu {
     visibility: visible !important;
     opacity: 1 !important;
-    transform: translateX(0) !important;
+    transform: translateX(0) !important; /* Slide into position */
+}
 }
 
 .static-page-main {

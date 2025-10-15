@@ -49,33 +49,49 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.error('✗ window.api is not defined! Make sure api.js is loaded before auth.js');
         } else {
             console.log('✓ window.api is available');
+            console.log('Auth token present:', !!token);
             
             try {
-                console.log('Fetching mentor status from /mentors/status...');
+                console.log('🔄 Fetching mentor status from /api/mentors/status...');
                 const mentorStatus = await window.api.get('/mentors/status');
-                console.log('✓ Mentor status API response received:', mentorStatus);
+                console.log('✓ Mentor status API response received:');
+                console.log('  └─ Full response:', JSON.stringify(mentorStatus, null, 2));
                 
                 if (mentorStatus) {
+                    // Check if response has the expected fields
+                    const hasIsMentor = 'isMentor' in mentorStatus;
+                    const hasMentorId = 'mentorId' in mentorStatus;
+                    console.log('  └─ Has isMentor field:', hasIsMentor);
+                    console.log('  └─ Has mentorId field:', hasMentorId);
+                    
                     isMentor = mentorStatus.isMentor === true;
                     mentorId = mentorStatus.mentorId;
-                    console.log('  └─ isMentor:', isMentor);
-                    console.log('  └─ mentorId:', mentorId);
+                    console.log('  └─ isMentor value:', isMentor);
+                    console.log('  └─ mentorId value:', mentorId);
                     
                     if (isMentor && mentorId) {
                         mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
-                        console.log('✓ Mentor profile link HTML created:', mentorProfileLink);
+                        console.log('✓ SUCCESS: Mentor profile link created!');
+                        console.log('  └─ Mentor ID:', mentorId);
+                        console.log('  └─ Link HTML:', mentorProfileLink.substring(0, 80) + '...');
                     } else {
-                        console.log('✗ User is not a mentor or missing data');
-                        console.log('  └─ Reason: isMentor=' + isMentor + ', mentorId=' + mentorId);
+                        console.log('✗ NOT creating mentor link:');
+                        if (!isMentor) {
+                            console.log('  └─ Reason: isMentor is false or missing');
+                        }
+                        if (!mentorId) {
+                            console.log('  └─ Reason: mentorId is null/undefined');
+                        }
                     }
                 } else {
-                    console.log('✗ API returned null/undefined response');
+                    console.log('✗ API returned null/undefined/empty response');
                 }
             } catch (error) {
-                console.error('✗ Error fetching mentor status:');
+                console.error('✗ ERROR fetching mentor status:');
+                console.error('  └─ Error type:', error.constructor.name);
                 console.error('  └─ Error name:', error.name);
                 console.error('  └─ Error message:', error.message);
-                console.error('  └─ Full error:', error);
+                console.error('  └─ Full error object:', error);
                 if (error.stack) {
                     console.error('  └─ Stack trace:', error.stack);
                 }
@@ -121,7 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <ul class="dropdown-menu">
                     <li><a href="${getDashboardUrl(userRole)}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
                     <li class="nav-dropdown profile-submenu">
-                        <a href="#" class="dropdown-toggle"><i class="fas fa-user"></i> My Profiles <i class="fas fa-chevron-right"></i></a>
+                        <a href="#" class="dropdown-toggle"><i class="fas fa-user"></i> My Profiles <i class="fas fa-chevron-left"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="view-profile.html?email=${loggedInUserEmail}"><i class="fas fa-user"></i> Main Profile</a></li>
                             <li><a href="social-profile.html?userId=${userId}"><i class="fas fa-id-card"></i> Social Profile</a></li>
