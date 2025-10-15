@@ -591,7 +591,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: visible; /* Changed from hidden to allow dropdowns */
+    overflow: hidden; /* Contain all content within card bounds */
 }
 
 .enhanced-alumnus-card::before {
@@ -621,13 +621,14 @@
     transition: opacity 0.3s ease;
 }
 
-/* Card Profile Section - Spacious and well-aligned layout */
+/* Card Profile Section - Aligned to extreme left */
 .card-profile-section {
     display: flex;
     gap: 15px;
     align-items: flex-start;
-    padding: 12px 18px;
-    padding-top: 40px; /* Space for top corner actions */
+    padding: 15px;
+    padding-top: 45px; /* Space for top corner actions */
+    padding-left: 15px; /* Aligned to left edge */
     position: relative;
 }
 
@@ -654,7 +655,7 @@
 
 .alumnus-card-header {
     position: relative;
-    overflow: visible;
+    overflow: visible; /* Keep visible for dropdown menu */
     padding-bottom: 12px;
     border-bottom: 1px solid #e2e8f0;
     min-height: 35px;
@@ -666,7 +667,7 @@
 
 .alumnus-card-body {
     overflow: hidden;
-    padding: 12px 18px;
+    padding: 10px 15px;
 }
 
 /* Proper sized details section */
@@ -699,7 +700,7 @@
 
 .alumnus-card-footer {
     overflow: visible;
-    padding: 12px 18px;
+    padding: 12px 15px;
     border-top: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
@@ -858,19 +859,19 @@
     margin-top: 8px;
 }
 
-/* Card Top Actions (Bookmark & Quick Actions) */
+/* Card Top Actions (Bookmark & Quick Actions) - Contained within card */
 .card-top-actions {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 10px;
+    right: 10px;
     display: flex;
     gap: 6px;
     z-index: 10;
 }
 
 .bookmark-btn {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
@@ -880,7 +881,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 13px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
 }
@@ -888,7 +889,7 @@
 .bookmark-btn:hover {
     background: white;
     color: #667eea;
-    transform: scale(1.1);
+    transform: scale(1.08);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -919,8 +920,8 @@
 }
 
 .quick-actions-btn {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #e2e8f0;
@@ -930,7 +931,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 13px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     flex-shrink: 0;
 }
@@ -938,7 +939,7 @@
 .quick-actions-btn:hover {
     background: white;
     color: #667eea;
-    transform: scale(1.1);
+    transform: scale(1.08);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
