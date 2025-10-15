@@ -378,33 +378,36 @@ module.exports = (pool) => {
         });
     }));
 
-    // Check mentor status - uses optional auth (works for logged in and non-logged in users)
-    router.get('/status', optionalAuth, asyncHandler(async (req, res) => {
+    // Check mentor status - uses REQUIRED auth (user must be logged in)
+    router.get('/status', verifyToken, asyncHandler(async (req, res) => {
         try {
-            // Check if user is authenticated
-            if (!req.user || !req.user.userId) {
-                return res.json({ 
-                    isMentor: false,
-                    mentorId: null
-                });
-            }
-            
             const user_id = req.user.userId;
+            
+            console.log('=== MENTOR STATUS CHECK ===');
+            console.log('User ID from token:', user_id);
             
             // Fetch is_mentor from users table (more efficient - no join needed)
             const [users] = await pool.query(
-                'SELECT is_mentor FROM users WHERE user_id = ?', 
+                'SELECT user_id, email, is_mentor FROM users WHERE user_id = ?', 
                 [user_id]
             );
             
+            console.log('Query result:', users);
+            
             if (users.length === 0) {
+                console.error('User not found in database!');
                 return res.json({ 
                     isMentor: false,
-                    mentorId: null
+                    mentorId: null,
+                    error: 'User not found'
                 });
             }
             
-            const isMentor = users[0].is_mentor === 1 || users[0].is_mentor === true;
+            const user = users[0];
+            const isMentor = user.is_mentor === 1 || user.is_mentor === true;
+            
+            console.log('is_mentor column value:', user.is_mentor);
+            console.log('isMentor boolean:', isMentor);
             
             // Only fetch mentorId if user is a mentor
             let mentorId = null;
@@ -414,7 +417,10 @@ module.exports = (pool) => {
                     [user_id]
                 );
                 mentorId = mentor.length > 0 ? mentor[0].mentor_id : null;
+                console.log('Mentor ID:', mentorId);
             }
+            
+            console.log('=== END MENTOR STATUS CHECK ===');
             
             res.json({ 
                 isMentor: isMentor,
@@ -422,10 +428,11 @@ module.exports = (pool) => {
             });
         } catch (error) {
             console.error('Error in /mentors/status:', error);
-            // Always return a valid response, never throw/404
-            res.json({ 
+            // Return error details for debugging
+            res.status(500).json({ 
                 isMentor: false,
-                mentorId: null
+                mentorId: null,
+                error: error.message
             });
         }
     }));
