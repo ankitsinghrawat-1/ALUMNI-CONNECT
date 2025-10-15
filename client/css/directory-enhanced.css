@@ -624,25 +624,50 @@
 /* Card Profile Section - Aligned to extreme left */
 .card-profile-section {
     display: flex;
-    gap: 15px;
+    gap: 12px;
     align-items: flex-start;
-    padding: 15px;
+    padding: 12px;
     padding-top: 45px; /* Space for top corner actions */
-    padding-left: 15px; /* Aligned to left edge */
     position: relative;
+}
+
+/* Profile Left Section - Avatar + Badges below */
+.profile-left-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
 }
 
 /* Proper sized avatar */
 .enhanced-alumnus-card .alumnus-avatar {
-    margin-right: 0;
+    margin: 0;
     flex-shrink: 0;
+}
+
+/* Profile Left Badges - Below avatar */
+.profile-left-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    align-items: stretch;
+    width: 100%;
+    max-width: 90px;
 }
 
 .enhanced-alumnus-card .alumnus-avatar img,
 .enhanced-alumnus-card .avatar-image {
-    width: 70px;
-    height: 70px;
-    border-width: 3px;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #e2e8f0;
+    object-fit: cover;
+}
+
+.dark-mode .enhanced-alumnus-card .alumnus-avatar img,
+.dark-mode .enhanced-alumnus-card .avatar-image {
+    border-color: #334155;
 }
 
 .enhanced-alumnus-card .online-indicator {
@@ -738,12 +763,15 @@
 .alumnus-info {
     flex: 1;
     min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .alumnus-title {
     font-size: 14px;
     color: #64748b;
-    margin: 4px 0;
+    margin: 0;
     font-weight: 500;
     white-space: nowrap;
     overflow: hidden;
@@ -753,7 +781,7 @@
 .alumnus-company {
     font-size: 13px;
     color: #94a3b8;
-    margin: 4px 0 8px 0;
+    margin: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -851,12 +879,13 @@
     color: #94a3b8;
 }
 
-/* Badges Container - Allow wrapping for better display */
-.badges-container {
+/* Badges Container - For info section badges */
+.badges-container,
+.info-badges-container {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
-    margin-top: 8px;
+    margin-top: 6px;
 }
 
 /* Card Top Actions (Bookmark & Quick Actions) - Contained within card */
@@ -1015,21 +1044,23 @@
     color: #667eea;
 }
 
-/* Availability Badge - Better sizing */
+/* Availability Badge - Better sizing for left column */
 .availability-badge {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 4px 10px;
+    justify-content: center;
+    gap: 4px;
+    padding: 6px 8px;
     color: white;
-    border-radius: 12px;
-    font-size: 11px;
+    border-radius: 8px;
+    font-size: 10px;
     font-weight: 600;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     cursor: help;
     transition: all 0.3s ease;
     white-space: nowrap;
     flex-shrink: 0;
+    text-align: center;
 }
 
 .availability-badge:hover {
@@ -1038,7 +1069,11 @@
 }
 
 .availability-badge i {
-    font-size: 11px;
+    font-size: 10px;
+}
+
+.availability-badge span {
+    font-size: 9px;
 }
 
 /* Common Interests Badge - Better sizing */

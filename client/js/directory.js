@@ -207,12 +207,18 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </div>
                 
                 <div class="card-profile-section">
-                    <div class="alumnus-avatar">
-                        <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
-                             alt="${alumnus.full_name}" 
-                             class="avatar-image"
-                             onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
-                        <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
+                    <div class="profile-left-section">
+                        <div class="alumnus-avatar">
+                            <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
+                                 alt="${alumnus.full_name}" 
+                                 class="avatar-image"
+                                 onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
+                            <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
+                        </div>
+                        
+                        <div class="profile-left-badges">
+                            ${availabilityBadge}
+                        </div>
                     </div>
                     
                     <div class="alumnus-info">
@@ -226,10 +232,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
                         <p class="alumnus-company">${alumnus.current_company || ''}</p>
                         
-                        <div class="badges-container">
-                            ${availabilityBadge}
+                        ${commonInterestsHtml ? `
+                        <div class="info-badges-container">
                             ${commonInterestsHtml}
                         </div>
+                        ` : ''}
                     </div>
                     
                     <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
