@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <li class="nav-dropdown profile-submenu">
                         <a href="#" class="dropdown-toggle"><i class="fas fa-user"></i> My Profiles <i class="fas fa-chevron-right"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="profile.html"><i class="fas fa-user-edit"></i> Main Profile</a></li>
+                            <li><a href="view-profile.html?email=${loggedInUserEmail}"><i class="fas fa-user"></i> Main Profile</a></li>
                             <li><a href="social-profile.html?userId=${userId}"><i class="fas fa-id-card"></i> Social Profile</a></li>
                             ${mentorProfileLink}
                         </ul>
