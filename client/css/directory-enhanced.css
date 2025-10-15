@@ -620,6 +620,197 @@
     transition: opacity 0.3s ease;
 }
 
+/* Card Top Actions (Bookmark & Quick Actions) */
+.card-top-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 8px;
+    z-index: 5;
+}
+
+.bookmark-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.bookmark-btn:hover {
+    background: white;
+    color: #667eea;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.bookmark-btn.bookmarked {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
+}
+
+.bookmark-btn.bookmarked:hover {
+    background: #764ba2;
+    border-color: #764ba2;
+}
+
+.dark-mode .bookmark-btn {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+.dark-mode .bookmark-btn:hover {
+    background: #1e293b;
+}
+
+/* Quick Actions Dropdown */
+.quick-actions-dropdown {
+    position: relative;
+}
+
+.quick-actions-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid #e2e8f0;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.quick-actions-btn:hover {
+    background: white;
+    color: #667eea;
+    transform: scale(1.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .quick-actions-btn {
+    background: rgba(30, 41, 59, 0.9);
+    border-color: #334155;
+    color: #cbd5e1;
+}
+
+.dark-mode .quick-actions-btn:hover {
+    background: #1e293b;
+}
+
+.quick-actions-menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    z-index: 100;
+    overflow: hidden;
+}
+
+.quick-actions-menu.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dark-mode .quick-actions-menu {
+    background: #1e293b;
+    border: 1px solid #334155;
+}
+
+.quick-action-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    color: #475569;
+    text-decoration: none;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.quick-action-item:hover {
+    background: #f8fafc;
+    color: #667eea;
+}
+
+.quick-action-item i {
+    width: 18px;
+    font-size: 16px;
+}
+
+.dark-mode .quick-action-item {
+    color: #cbd5e1;
+}
+
+.dark-mode .quick-action-item:hover {
+    background: #0f172a;
+    color: #667eea;
+}
+
+/* Availability Badge */
+.availability-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 8px;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+.availability-badge i {
+    font-size: 12px;
+}
+
+/* Common Interests Badge */
+.common-interests {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 8px;
+    margin-left: 8px;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+.common-interests i {
+    font-size: 12px;
+}
+
 /* Add View Profile button to each card */
 .card-actions .view-full-profile-btn {
     display: inline-flex;

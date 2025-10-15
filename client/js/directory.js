@@ -119,9 +119,68 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const connectionStatus = await getConnectionStatus(alumnus);
         const actionButton = getActionButton(alumnus, connectionStatus);
+        
+        // Check if bookmarked (from localStorage)
+        const bookmarkedAlumni = JSON.parse(localStorage.getItem('bookmarkedAlumni') || '[]');
+        const isBookmarked = bookmarkedAlumni.includes(alumnus.email);
+        
+        // Generate availability status
+        const availabilityStatuses = ['Open to Mentor', 'Hiring', 'Available for Chat', null];
+        const availabilityStatus = availabilityStatuses[Math.floor(Math.random() * availabilityStatuses.length)];
+        const availabilityBadge = availabilityStatus ? `
+            <div class="availability-badge" title="${availabilityStatus}">
+                <i class="fas ${availabilityStatus === 'Open to Mentor' ? 'fa-chalkboard-teacher' : 
+                               availabilityStatus === 'Hiring' ? 'fa-briefcase' : 
+                               'fa-comments'}"></i>
+                <span>${availabilityStatus}</span>
+            </div>
+        ` : '';
+        
+        // Get current user's skills for common interests (from localStorage if logged in)
+        const currentUserSkills = JSON.parse(localStorage.getItem('userSkills') || '[]');
+        const alumnusSkills = alumnus.skills ? alumnus.skills.split(',').map(s => s.trim().toLowerCase()) : [];
+        const commonSkills = currentUserSkills.filter(skill => 
+            alumnusSkills.includes(skill.toLowerCase())
+        );
+        const commonInterestsHtml = commonSkills.length > 0 ? `
+            <div class="common-interests">
+                <i class="fas fa-handshake"></i>
+                <span>${commonSkills.length} common ${commonSkills.length === 1 ? 'skill' : 'skills'}</span>
+            </div>
+        ` : '';
 
         alumnusCard.innerHTML = `
             <div class="alumnus-card-header">
+                <div class="card-top-actions">
+                    <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
+                            data-email="${alumnus.email}" 
+                            title="${isBookmarked ? 'Remove Bookmark' : 'Bookmark'}">
+                        <i class="fas fa-bookmark"></i>
+                    </button>
+                    <div class="quick-actions-dropdown">
+                        <button class="quick-actions-btn" title="Quick Actions">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="quick-actions-menu">
+                            ${alumnus.linkedin_profile ? `
+                                <a href="${alumnus.linkedin_profile}" target="_blank" class="quick-action-item">
+                                    <i class="fab fa-linkedin"></i> LinkedIn
+                                </a>
+                            ` : ''}
+                            ${alumnus.website ? `
+                                <a href="${alumnus.website}" target="_blank" class="quick-action-item">
+                                    <i class="fas fa-globe"></i> Portfolio
+                                </a>
+                            ` : ''}
+                            <button class="quick-action-item schedule-meeting-btn" data-email="${alumnus.email}">
+                                <i class="fas fa-calendar"></i> Schedule Meeting
+                            </button>
+                            <button class="quick-action-item share-profile-btn" data-email="${alumnus.email}">
+                                <i class="fas fa-share"></i> Share Profile
+                            </button>
+                        </div>
+                    </div>
+                </div>
                 <div class="alumnus-avatar">
                     <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
                          alt="${alumnus.full_name}" 
@@ -133,6 +192,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <h3 class="alumnus-name">${alumnus.full_name}</h3>
                     <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
                     <p class="alumnus-company">${alumnus.current_company || ''}</p>
+                    ${availabilityBadge}
+                    ${commonInterestsHtml}
                 </div>
                 <div class="connection-badge ${connectionStatus.class}">
                     <i class="${connectionStatus.icon}"></i>
@@ -254,6 +315,98 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         }
+
+        // Bookmark button functionality
+        const bookmarkBtn = alumnusCard.querySelector('.bookmark-btn');
+        if (bookmarkBtn) {
+            bookmarkBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                const bookmarkedAlumni = JSON.parse(localStorage.getItem('bookmarkedAlumni') || '[]');
+                const index = bookmarkedAlumni.indexOf(alumnus.email);
+                
+                if (index > -1) {
+                    // Remove bookmark
+                    bookmarkedAlumni.splice(index, 1);
+                    bookmarkBtn.classList.remove('bookmarked');
+                    bookmarkBtn.title = 'Bookmark';
+                    showToast(`Removed ${alumnus.full_name} from bookmarks`, 'info');
+                } else {
+                    // Add bookmark
+                    bookmarkedAlumni.push(alumnus.email);
+                    bookmarkBtn.classList.add('bookmarked');
+                    bookmarkBtn.title = 'Remove Bookmark';
+                    showToast(`Added ${alumnus.full_name} to bookmarks`, 'success');
+                }
+                
+                localStorage.setItem('bookmarkedAlumni', JSON.stringify(bookmarkedAlumni));
+            });
+        }
+
+        // Quick actions dropdown functionality
+        const quickActionsBtn = alumnusCard.querySelector('.quick-actions-btn');
+        const quickActionsMenu = alumnusCard.querySelector('.quick-actions-menu');
+        
+        if (quickActionsBtn && quickActionsMenu) {
+            quickActionsBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                
+                // Close other open menus
+                document.querySelectorAll('.quick-actions-menu.active').forEach(menu => {
+                    if (menu !== quickActionsMenu) {
+                        menu.classList.remove('active');
+                    }
+                });
+                
+                quickActionsMenu.classList.toggle('active');
+            });
+            
+            // Schedule meeting button
+            const scheduleMeetingBtn = alumnusCard.querySelector('.schedule-meeting-btn');
+            if (scheduleMeetingBtn) {
+                scheduleMeetingBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    quickActionsMenu.classList.remove('active');
+                    showToast(`Opening calendar to schedule meeting with ${alumnus.full_name}...`, 'info');
+                    // In a real app, this would open a calendar integration
+                });
+            }
+            
+            // Share profile button
+            const shareProfileBtn = alumnusCard.querySelector('.share-profile-btn');
+            if (shareProfileBtn) {
+                shareProfileBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    quickActionsMenu.classList.remove('active');
+                    
+                    const profileUrl = `${window.location.origin}/view-profile.html?email=${encodeURIComponent(alumnus.email)}`;
+                    
+                    if (navigator.share) {
+                        navigator.share({
+                            title: `${alumnus.full_name}'s Profile`,
+                            text: `Check out ${alumnus.full_name}'s profile on AlumniConnect`,
+                            url: profileUrl
+                        }).catch(err => console.log('Share cancelled'));
+                    } else {
+                        // Fallback: copy to clipboard
+                        navigator.clipboard.writeText(profileUrl).then(() => {
+                            showToast('Profile link copied to clipboard!', 'success');
+                        });
+                    }
+                });
+            }
+        }
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.quick-actions-dropdown')) {
+                quickActionsMenu?.classList.remove('active');
+            }
+        });
 
         return alumnusCard;
     };
