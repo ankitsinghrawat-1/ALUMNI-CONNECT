@@ -631,16 +631,12 @@
     z-index: 100;
 }
 
-/* Card Profile Section - Shifted to left for better alignment */
+/* Card Profile Section - Extreme left alignment */
 .card-profile-section {
     display: flex;
     gap: 12px;
     align-items: flex-start;
-    padding: 12px;
-    padding-left: 12px;
-    padding-right: 50px; /* Space for top actions */
-    padding-top: 12px;
-    padding-bottom: 10px;
+    padding: 12px 50px 10px 8px; /* Minimal left padding for extreme left alignment */
     position: relative;
 }
 
@@ -1387,8 +1383,7 @@
     /* Responsive Card Layout */
     .card-profile-section {
         flex-wrap: wrap;
-        padding-top: 15px;
-        padding-left: 12px;
+        padding: 15px 50px 10px 8px; /* Maintain extreme left alignment on mobile */
     }
 
     .alumnus-info {
