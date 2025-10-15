@@ -642,6 +642,7 @@
 
 /* Proper sized avatar */
 .enhanced-alumnus-card .alumnus-avatar {
+    position: relative;
     margin: 0;
     flex-shrink: 0;
 }
@@ -769,11 +770,36 @@
     border-top: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 10px;
 }
 
 .dark-mode .alumnus-card-footer {
     border-top-color: #334155;
+}
+
+/* Match Score Badge */
+.match-score {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 6px 12px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+.match-score i {
+    font-size: 11px;
+}
+
+.dark-mode .match-score {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
 .name-and-role {
