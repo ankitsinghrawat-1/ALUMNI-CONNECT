@@ -103,8 +103,8 @@ module.exports = (pool, upload) => {
     router.get('/directory', asyncHandler(async (req, res) => {
         const { query, major, graduation_year, city, industry, skills } = req.query;
         
-        let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, is_email_visible, is_company_visible, is_location_visible 
-                   FROM users WHERE is_profile_public = TRUE`;
+        let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, role, is_email_visible, is_company_visible, is_location_visible 
+                   FROM users WHERE is_profile_public = TRUE AND role != 'admin'`;
         const params = [];
 
         if (query) {
@@ -144,6 +144,7 @@ module.exports = (pool, upload) => {
             major: user.major,
             graduation_year: user.graduation_year,
             email: user.is_email_visible ? user.email : null,
+            role: user.role, // Include role for badge display
         }));
         res.json(publicProfiles);
     }));

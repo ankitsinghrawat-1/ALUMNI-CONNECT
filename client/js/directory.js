@@ -503,16 +503,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             alumniListContainer.innerHTML = '';
 
             if (alumni && alumni.length > 0) {
-                // Filter out admin users from directory
-                const filteredAlumni = alumni.filter(alumnus => {
-                    const userRole = alumnus.role || alumnus.user_type || 'alumni';
-                    return userRole.toLowerCase() !== 'admin';
-                });
-                
-                resultsTitle.textContent = `${filteredAlumni.length} Alumni Found`;
+                // Admin users are already filtered out by the server
+                resultsTitle.textContent = `${alumni.length} Alumni Found`;
                 
                 // Process alumni cards asynchronously
-                for (const alumnus of filteredAlumni) {
+                for (const alumnus of alumni) {
                     // Map API response to expected format
                     const mappedAlumnus = {
                         full_name: alumnus.full_name,
@@ -528,11 +523,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         is_online: Math.random() > 0.5, // Random online status for demo
                         profile_pic_url: alumnus.profile_pic_url,
                         verification_status: alumnus.verification_status,
-                        role: alumnus.role || alumnus.user_type || 'alumni' // Include user role from API (try both field names)
+                        role: alumnus.role || 'alumni' // Use role from API response
                     };
-                    
-                    // Debug: Log the actual role being used
-                    console.log(`User: ${mappedAlumnus.full_name}, Original role: ${alumnus.role}, user_type: ${alumnus.user_type}, Mapped role: ${mappedAlumnus.role}`);
                     
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
                     alumniListContainer.appendChild(alumnusCard);
