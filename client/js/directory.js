@@ -175,6 +175,42 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         alumnusCard.innerHTML = `
             <div class="alumnus-card-header">
+                <div class="card-profile-section">
+                    <div class="alumnus-avatar">
+                        <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
+                             alt="${alumnus.full_name}" 
+                             class="avatar-image"
+                             onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
+                        <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
+                        <div class="match-score-overlay" title="Compatibility Score based on skills and interests">
+                            <i class="fas fa-star"></i>
+                            <span>${generateMatchScore()}%</span>
+                        </div>
+                    </div>
+                    
+                    <div class="alumnus-info">
+                        <div class="name-and-role">
+                            <h3 class="alumnus-name">${alumnus.full_name}</h3>
+                            <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
+                                <i class="fas ${userRole.icon}"></i>
+                                <span>${userRole.label}</span>
+                            </div>
+                        </div>
+                        <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
+                        <p class="alumnus-company">${alumnus.current_company || ''}</p>
+                        
+                        <div class="profile-badges-row">
+                            ${availabilityBadge}
+                            ${commonInterestsHtml}
+                        </div>
+                    </div>
+                    
+                    <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
+                        <i class="${connectionStatus.icon}"></i>
+                        <span class="status-label">${connectionStatus.text}</span>
+                    </div>
+                </div>
+                
                 <div class="card-top-actions">
                     <button class="bookmark-btn ${isBookmarked ? 'bookmarked' : ''}" 
                             data-email="${alumnus.email}" 
@@ -205,45 +241,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         </div>
                     </div>
                 </div>
-                
-                <div class="card-profile-section">
-                    <div class="profile-left-section">
-                        <div class="alumnus-avatar">
-                            <img src="${alumnus.profile_pic_url ? alumnus.profile_pic_url : createInitialsAvatar(alumnus.full_name)}" 
-                                 alt="${alumnus.full_name}" 
-                                 class="avatar-image"
-                                 onerror="this.src='${createInitialsAvatar(alumnus.full_name)}'">
-                            <div class="online-indicator ${alumnus.is_online ? 'online' : ''}"></div>
-                        </div>
-                        
-                        <div class="profile-left-badges">
-                            ${availabilityBadge}
-                        </div>
-                    </div>
-                    
-                    <div class="alumnus-info">
-                        <div class="name-and-role">
-                            <h3 class="alumnus-name">${alumnus.full_name}</h3>
-                            <div class="role-badge" style="background: ${userRole.color};" title="${userRole.label}">
-                                <i class="fas ${userRole.icon}"></i>
-                                <span>${userRole.label}</span>
-                            </div>
-                        </div>
-                        <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
-                        <p class="alumnus-company">${alumnus.current_company || ''}</p>
-                        
-                        ${commonInterestsHtml ? `
-                        <div class="info-badges-container">
-                            ${commonInterestsHtml}
-                        </div>
-                        ` : ''}
-                    </div>
-                    
-                    <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
-                        <i class="${connectionStatus.icon}"></i>
-                        <span class="status-label">${connectionStatus.text}</span>
-                    </div>
-                </div>
             </div>
             
             <div class="alumnus-card-body">
@@ -253,7 +250,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <i class="fas fa-graduation-cap"></i>
                         <div class="detail-content">
                             <span class="detail-label">Education</span>
-                            <span class="detail-value">${alumnus.major || 'Not specified'} ${alumnus.graduation_year ? `• '${String(alumnus.graduation_year).slice(-2)}` : ''}</span>
+                            <span class="detail-value">${alumnus.major || 'Not specified'} ${alumnus.graduation_year ? `• Class of ${alumnus.graduation_year}` : ''}</span>
                         </div>
                     </div>
                     ` : ''}
@@ -272,6 +269,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <div class="detail-content">
                             <span class="detail-label">Industry</span>
                             <span class="detail-value">${alumnus.industry}</span>
+                        </div>
+                    </div>
+                    ` : ''}
+                    ${alumnus.email ? `
+                    <div class="detail-item">
+                        <i class="fas fa-envelope"></i>
+                        <div class="detail-content">
+                            <span class="detail-label">Contact</span>
+                            <span class="detail-value">${alumnus.email}</span>
                         </div>
                     </div>
                     ` : ''}
@@ -312,10 +318,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <i class="fas fa-id-card"></i>
                         <span class="btn-text">Profile</span>
                     </button>
-                </div>
-                <div class="match-score" title="Compatibility Score based on skills and interests">
-                    <i class="fas fa-star"></i>
-                    <span>${generateMatchScore()}%</span>
                 </div>
             </div>
         `;

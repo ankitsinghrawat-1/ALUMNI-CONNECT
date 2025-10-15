@@ -621,40 +621,49 @@
     transition: opacity 0.3s ease;
 }
 
-/* Card Profile Section - Aligned to extreme left */
+/* Card Profile Section - Simplified layout */
 .card-profile-section {
     display: flex;
-    gap: 12px;
+    gap: 15px;
     align-items: flex-start;
-    padding: 12px;
-    padding-top: 45px; /* Space for top corner actions */
+    padding: 15px;
+    padding-bottom: 12px;
     position: relative;
 }
 
-/* Profile Left Section - Avatar + Badges below */
-.profile-left-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-/* Proper sized avatar */
+/* Avatar container with match score overlay */
 .enhanced-alumnus-card .alumnus-avatar {
     position: relative;
     margin: 0;
     flex-shrink: 0;
 }
 
-/* Profile Left Badges - Below avatar */
-.profile-left-badges {
+/* Match Score Overlay on Avatar */
+.match-score-overlay {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    align-items: stretch;
-    width: 100%;
-    max-width: 90px;
+    align-items: center;
+    gap: 3px;
+    padding: 4px 8px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    color: white;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 700;
+    white-space: nowrap;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.4);
+    z-index: 10;
+}
+
+.match-score-overlay i {
+    font-size: 9px;
+}
+
+.dark-mode .match-score-overlay {
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
 .enhanced-alumnus-card .alumnus-avatar img,
@@ -770,36 +779,12 @@
     border-top: 1px solid #e2e8f0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center;
     gap: 10px;
 }
 
 .dark-mode .alumnus-card-footer {
     border-top-color: #334155;
-}
-
-/* Match Score Badge */
-.match-score {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    padding: 6px 12px;
-    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-    color: white;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
-    white-space: nowrap;
-    flex-shrink: 0;
-    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
-}
-
-.match-score i {
-    font-size: 11px;
-}
-
-.dark-mode .match-score {
-    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
 }
 
 .name-and-role {
@@ -945,20 +930,21 @@
     color: #94a3b8;
 }
 
-/* Badges Container - For info section badges */
+/* Badges Container - For badges in info section */
 .badges-container,
-.info-badges-container {
+.info-badges-container,
+.profile-badges-row {
     display: flex;
     flex-wrap: wrap;
     gap: 6px;
     margin-top: 6px;
 }
 
-/* Card Top Actions (Bookmark & Quick Actions) - Contained within card */
+/* Card Top Actions (Bookmark & Quick Actions) - Extreme right top corner */
 .card-top-actions {
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 12px;
+    right: 12px;
     display: flex;
     gap: 6px;
     z-index: 10;
@@ -1110,16 +1096,16 @@
     color: #667eea;
 }
 
-/* Availability Badge - Better sizing for left column */
+/* Availability Badge - Fixed to prevent text overflow */
 .availability-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 4px;
-    padding: 6px 8px;
+    padding: 5px 10px;
     color: white;
-    border-radius: 8px;
-    font-size: 10px;
+    border-radius: 12px;
+    font-size: 11px;
     font-weight: 600;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
     cursor: help;
@@ -1127,6 +1113,7 @@
     white-space: nowrap;
     flex-shrink: 0;
     text-align: center;
+    max-width: fit-content;
 }
 
 .availability-badge:hover {
@@ -1136,10 +1123,12 @@
 
 .availability-badge i {
     font-size: 10px;
+    flex-shrink: 0;
 }
 
 .availability-badge span {
-    font-size: 9px;
+    font-size: 11px;
+    line-height: 1.2;
 }
 
 /* Common Interests Badge - Better sizing */
@@ -1174,12 +1163,14 @@
     display: flex;
     gap: 8px;
     flex-wrap: nowrap;
-    flex: 1;
+    width: 100%;
+    justify-content: center;
 }
 
 .card-actions-buttons .btn {
     flex: 1;
     min-width: 80px;
+    max-width: 150px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1392,34 +1383,21 @@
 
     /* Responsive Card Layout */
     .card-profile-section {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 12px;
-        padding-top: 50px;
-    }
-
-    .profile-left-section {
-        flex-direction: row;
-        align-items: center;
-        width: 100%;
-        gap: 12px;
-    }
-
-    .profile-left-badges {
-        flex-direction: row;
         flex-wrap: wrap;
-        max-width: none;
-        flex: 1;
-    }
-
-    .connection-status-badge {
-        position: absolute;
-        top: 50px;
-        right: 12px;
+        padding-top: 15px;
     }
 
     .alumnus-info {
+        flex: 1;
+        min-width: 200px;
+    }
+
+    .connection-status-badge {
         width: 100%;
+        flex-direction: row;
+        justify-content: center;
+        gap: 8px;
+        min-width: auto;
     }
 
     .card-actions-buttons .btn .btn-text {
