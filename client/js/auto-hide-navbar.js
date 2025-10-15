@@ -32,6 +32,14 @@
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const navbarHeight = getNavbarHeight();
         
+        // If we're at the top of the page, ensure navbar is fully visible
+        if (scrollTop <= 0) {
+            header.style.transform = 'translateY(0)';
+            header.classList.remove('navbar-hidden');
+            lastScrollTop = 0;
+            return;
+        }
+        
         // Calculate scroll difference
         const scrollDiff = scrollTop - lastScrollTop;
         
@@ -48,7 +56,7 @@
         }
 
         if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
-            // Scrolling DOWN - Hide navbar
+            // Scrolling DOWN - Hide navbar progressively
             const hideAmount = Math.min(scrollTop - lastScrollTop, navbarHeight);
             const currentTransform = header.style.transform || 'translateY(0px)';
             const currentY = parseInt(currentTransform.match(/-?\d+/) || [0])[0];
@@ -57,7 +65,7 @@
             header.style.transform = `translateY(${newY}px)`;
             header.classList.add('navbar-hidden');
         } else if (scrollTop < lastScrollTop) {
-            // Scrolling UP - Show navbar
+            // Scrolling UP - Show navbar progressively
             const showAmount = Math.min(lastScrollTop - scrollTop, navbarHeight);
             const currentTransform = header.style.transform || 'translateY(0px)';
             const currentY = parseInt(currentTransform.match(/-?\d+/) || [0])[0];
@@ -70,7 +78,7 @@
             }
         }
 
-        lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+        lastScrollTop = scrollTop;
     }
 
     // Optimized scroll listener using requestAnimationFrame
