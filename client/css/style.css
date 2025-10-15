@@ -3923,12 +3923,14 @@ body main {
 }
 
 .profile-submenu > .dropdown-menu {
+    /* Position to the right of parent */
     left: 100%;
-    right: auto;
-    top: 0;
+    right: auto !important; /* Override parent right: 0 */
+    top: 0 !important; /* Override parent top calculation */
     margin-left: 0.5rem;
-    /* Override parent positioning */
-    transform: translateX(10px);
+    margin-top: 0;
+    /* Use horizontal transform for sliding from right */
+    transform: translateX(10px) !important;
 }
 
 .profile-submenu .fa-chevron-right {
@@ -3952,7 +3954,7 @@ body main {
 .profile-submenu.dropdown-active > .dropdown-menu {
     visibility: visible;
     opacity: 1;
-    transform: translateX(0);
+    transform: translateX(0) !important; /* Ensure horizontal transform */
 }
 
 .static-page-main {

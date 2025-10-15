@@ -41,17 +41,30 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // Fetch mentor status to determine if mentor profile link should be shown
         let mentorProfileLink = '';
+        let isMentor = false;
+        let mentorId = null;
+        
         try {
             const mentorStatus = await window.api.get('/mentors/status');
-            console.log('Mentor status response:', mentorStatus);
-            if (mentorStatus && mentorStatus.isMentor && mentorStatus.mentorId) {
-                mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorStatus.mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
-                console.log('Mentor profile link created for mentor ID:', mentorStatus.mentorId);
+            console.log('Mentor status API response:', mentorStatus);
+            
+            if (mentorStatus) {
+                isMentor = mentorStatus.isMentor === true;
+                mentorId = mentorStatus.mentorId;
+                console.log('isMentor:', isMentor, 'mentorId:', mentorId);
+                
+                if (isMentor && mentorId) {
+                    mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
+                    console.log('✓ Mentor profile link created for mentor ID:', mentorId);
+                } else {
+                    console.log('✗ User is not a mentor. isMentor:', isMentor, 'mentorId:', mentorId);
+                }
             } else {
-                console.log('User is not a mentor or missing mentor data');
+                console.log('✗ No mentor status data received from API');
             }
         } catch (error) {
-            console.error('Error fetching mentor status:', error);
+            console.error('✗ Error fetching mentor status:', error);
+            console.error('Error details:', error.message, error.stack);
         }
 
         // --- Nav Bar HTML Structure ---
