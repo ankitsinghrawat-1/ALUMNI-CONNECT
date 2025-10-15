@@ -383,8 +383,14 @@ module.exports = (pool) => {
         try {
             const user_id = req.user.userId;
             
-            console.log('=== MENTOR STATUS CHECK ===');
+            console.log('\n========================================');
+            console.log('🔍 MENTOR STATUS API CALLED');
+            console.log('========================================');
             console.log('User ID from token:', user_id);
+            console.log('Request headers:', {
+                authorization: req.headers.authorization ? 'Present' : 'Missing',
+                'content-type': req.headers['content-type']
+            });
             
             // Fetch is_mentor from users table (more efficient - no join needed)
             const [users] = await pool.query(
@@ -392,10 +398,11 @@ module.exports = (pool) => {
                 [user_id]
             );
             
-            console.log('Query result:', users);
+            console.log('Database query result:', JSON.stringify(users, null, 2));
             
             if (users.length === 0) {
-                console.error('User not found in database!');
+                console.error('❌ ERROR: User not found in database!');
+                console.log('========================================\n');
                 return res.json({ 
                     isMentor: false,
                     mentorId: null,
@@ -406,8 +413,12 @@ module.exports = (pool) => {
             const user = users[0];
             const isMentor = user.is_mentor === 1 || user.is_mentor === true;
             
-            console.log('is_mentor column value:', user.is_mentor);
-            console.log('isMentor boolean:', isMentor);
+            console.log('📊 Database Values:');
+            console.log('  - user_id:', user.user_id);
+            console.log('  - email:', user.email);
+            console.log('  - is_mentor (raw):', user.is_mentor);
+            console.log('  - is_mentor (type):', typeof user.is_mentor);
+            console.log('  - isMentor (boolean):', isMentor);
             
             // Only fetch mentorId if user is a mentor
             let mentorId = null;
@@ -417,17 +428,29 @@ module.exports = (pool) => {
                     [user_id]
                 );
                 mentorId = mentor.length > 0 ? mentor[0].mentor_id : null;
-                console.log('Mentor ID:', mentorId);
+                console.log('✓ Mentor ID found:', mentorId);
+            } else {
+                console.log('✗ User is NOT a mentor (is_mentor =', user.is_mentor, ')');
             }
             
-            console.log('=== END MENTOR STATUS CHECK ===');
-            
-            res.json({ 
+            const responseData = { 
                 isMentor: isMentor,
                 mentorId: mentorId
-            });
+            };
+            
+            console.log('📤 Sending response:', JSON.stringify(responseData, null, 2));
+            console.log('========================================\n');
+            
+            res.json(responseData);
         } catch (error) {
-            console.error('Error in /mentors/status:', error);
+            console.error('\n========================================');
+            console.error('❌ ERROR in /mentors/status');
+            console.error('========================================');
+            console.error('Error name:', error.name);
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
+            console.error('========================================\n');
+            
             // Return error details for debugging
             res.status(500).json({ 
                 isMentor: false,
