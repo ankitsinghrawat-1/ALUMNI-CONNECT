@@ -531,6 +531,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         role: alumnus.role || alumnus.user_type || 'alumni' // Include user role from API (try both field names)
                     };
                     
+                    // Debug: Log the actual role being used
+                    console.log(`User: ${mappedAlumnus.full_name}, Original role: ${alumnus.role}, user_type: ${alumnus.user_type}, Mapped role: ${mappedAlumnus.role}`);
+                    
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
                     alumniListContainer.appendChild(alumnusCard);
                 }
