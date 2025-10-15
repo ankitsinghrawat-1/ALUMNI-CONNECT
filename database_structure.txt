@@ -9,6 +9,7 @@ USE alumni_db;
 
 
 -- 1. Users Table: The central table for all user roles
+-- NOTE: is_mentor column added for performance optimization - eliminates need for joins when checking mentor status
 
 
 CREATE TABLE `users` (
@@ -17,6 +18,7 @@ CREATE TABLE `users` (
   `email` VARCHAR(255) NOT NULL UNIQUE,
   `password_hash` VARCHAR(255) NOT NULL,
   `role` ENUM('admin', 'alumni', 'student', 'institute', 'faculty', 'employer') DEFAULT 'alumni' NOT NULL,
+  `is_mentor` BOOLEAN DEFAULT FALSE NOT NULL,
   `profile_pic_url` VARCHAR(255) NULL,
   `verification_status` ENUM('unverified', 'pending', 'verified') DEFAULT 'unverified',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -1639,6 +1641,9 @@ MODIFY COLUMN reaction_type ENUM('like', 'love', 'insightful', 'celebrate', 'sup
 ALTER TABLE threads ADD INDEX IF NOT EXISTS idx_threads_created (created_at DESC);
 ALTER TABLE threads ADD INDEX IF NOT EXISTS idx_threads_user (user_id, created_at DESC);
 ALTER TABLE thread_comments ADD INDEX IF NOT EXISTS idx_comments_thread (thread_id, created_at DESC);
+
+-- Add index for mentor status checks (performance optimization)
+ALTER TABLE users ADD INDEX IF NOT EXISTS idx_users_is_mentor (is_mentor);
 
 
 -- ====================================================================
