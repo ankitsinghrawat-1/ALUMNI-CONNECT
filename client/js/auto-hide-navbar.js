@@ -22,9 +22,27 @@
         right: 0;
         height: 80px;
         z-index: 999;
-        pointer-events: auto;
+        pointer-events: none;
     `;
     document.body.appendChild(hoverArea);
+
+    // Update pointer events based on scroll position
+    function updateHoverAreaPointerEvents() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const navbarHeight = getNavbarHeight();
+        
+        // Enable pointer events only when scrolled down (navbar is hidden)
+        // Disable when at top to allow clicks on original navbar
+        if (scrollTop >= navbarHeight) {
+            hoverArea.style.pointerEvents = 'auto';
+        } else {
+            hoverArea.style.pointerEvents = 'none';
+        }
+    }
+
+    // Call on scroll to update pointer events
+    window.addEventListener('scroll', updateHoverAreaPointerEvents, { passive: true });
+    updateHoverAreaPointerEvents(); // Initial call
 
     // Create clone of navbar that appears on hover
     const navbarClone = header.cloneNode(true);
