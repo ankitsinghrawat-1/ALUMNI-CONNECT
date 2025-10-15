@@ -101,7 +101,7 @@ module.exports = (pool, upload) => {
     }));
 
     router.get('/directory', asyncHandler(async (req, res) => {
-        const { query, major, graduation_year, city, industry, skills } = req.query;
+        const { query, major, graduation_year, city, industry, skills, company } = req.query;
         
         let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, role, is_email_visible, is_company_visible, is_location_visible 
                    FROM users WHERE is_profile_public = TRUE AND role != 'admin'`;
@@ -130,6 +130,10 @@ module.exports = (pool, upload) => {
         if (skills) {
             sql += ' AND skills LIKE ?';
             params.push(`%${skills}%`);
+        }
+        if (company) {
+            sql += ' AND company LIKE ?';
+            params.push(`%${company}%`);
         }
 
         const [rows] = await pool.query(sql, params);

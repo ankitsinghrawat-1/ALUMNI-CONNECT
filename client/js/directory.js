@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const industryFilter = document.getElementById('industry-filter');
     const companySizeFilter = document.getElementById('company-size-filter');
     const skillsFilter = document.getElementById('skills-filter');
+    const companyFilter = document.getElementById('company-filter');
     const searchButton = document.getElementById('directory-search-button');
     const applyFiltersBtn = document.getElementById('apply-filters-btn');
     const clearFiltersBtn = document.getElementById('clear-filters-btn');
@@ -224,7 +225,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     
                     <div class="alumnus-info">
-                        <h3 class="alumnus-name">${alumnus.full_name}</h3>
+                        <h3 class="alumnus-name">
+                            ${alumnus.full_name}
+                            ${alumnus.verification_status === 'verified' ? '<i class="fas fa-check-circle verification-badge" title="Verified Profile"></i>' : ''}
+                        </h3>
                         <p class="alumnus-title">${alumnus.current_position || 'Alumni Member'}</p>
                         <p class="alumnus-company">${alumnus.current_company || ''}</p>
                         
@@ -487,6 +491,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const city = cityFilter ? cityFilter.value : '';
             const industry = industryFilter ? industryFilter.value : '';
             const skills = skillsFilter ? skillsFilter.value : '';
+            const company = companyFilter ? companyFilter.value : '';
 
             // Build query parameters
             const params = new URLSearchParams();
@@ -496,6 +501,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (city) params.append('city', city);
             if (industry) params.append('industry', industry);
             if (skills) params.append('skills', skills);
+            if (company) params.append('company', company);
 
             // Fetch real data from API
             const alumni = await window.api.get(`/users/directory?${params.toString()}`);
@@ -601,6 +607,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (industryFilter) industryFilter.value = '';
         if (companySizeFilter) companySizeFilter.value = '';
         if (skillsFilter) skillsFilter.value = '';
+        if (companyFilter) companyFilter.value = '';
         
         resultsTitle.textContent = 'All Alumni';
         fetchAndRenderAlumni();
@@ -814,6 +821,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dialogCityFilter = document.getElementById('dialog-city-filter');
     const dialogIndustryFilter = document.getElementById('dialog-industry-filter');
     const dialogSkillsFilter = document.getElementById('dialog-skills-filter');
+    const dialogCompanyFilter = document.getElementById('dialog-company-filter');
     const dialogCompanySizeFilter = document.getElementById('dialog-company-size-filter');
 
     const openSearchDialog = () => {
@@ -825,6 +833,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (cityFilter) dialogCityFilter.value = cityFilter.value;
         if (industryFilter) dialogIndustryFilter.value = industryFilter.value;
         if (skillsFilter) dialogSkillsFilter.value = skillsFilter.value;
+        if (companyFilter) dialogCompanyFilter.value = companyFilter.value;
         if (companySizeFilter) dialogCompanySizeFilter.value = companySizeFilter.value;
         
         searchDialog.classList.add('active');
@@ -846,6 +855,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (cityFilter) cityFilter.value = dialogCityFilter.value;
         if (industryFilter) industryFilter.value = dialogIndustryFilter.value;
         if (skillsFilter) skillsFilter.value = dialogSkillsFilter.value;
+        if (companyFilter) companyFilter.value = dialogCompanyFilter.value;
         if (companySizeFilter) companySizeFilter.value = dialogCompanySizeFilter.value;
         
         closeSearchDialog();
@@ -860,6 +870,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         dialogCityFilter.value = '';
         dialogIndustryFilter.value = '';
         dialogSkillsFilter.value = '';
+        dialogCompanyFilter.value = '';
         dialogCompanySizeFilter.value = '';
     };
 
