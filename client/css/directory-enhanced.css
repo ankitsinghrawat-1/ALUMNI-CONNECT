@@ -866,69 +866,45 @@
     font-size: 10px;
 }
 
-/* Connection Status Badge - Inline with other badges */
-.connection-status-badge {
-    display: inline-flex;
-    flex-direction: row;
+/* Connection Status Icon - Positioned on avatar */
+.connection-status-icon {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    border-radius: 12px;
-    text-align: center;
-    flex-shrink: 0;
-    white-space: nowrap;
+    justify-content: center;
+    border: 2px solid white;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 15;
 }
 
-.connection-status-badge i {
+.connection-status-icon i {
     font-size: 12px;
+    color: white;
 }
 
-.connection-status-badge .status-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-    line-height: 1.2;
+.connection-status-icon.connected {
+    background: #10b981;
 }
 
-.connection-status-badge.connected {
-    background: #d1fae5;
-    color: #059669;
+.connection-status-icon.pending {
+    background: #f59e0b;
 }
 
-.connection-status-badge.pending {
-    background: #fef3c7;
-    color: #d97706;
+.connection-status-icon.received {
+    background: #3b82f6;
 }
 
-.connection-status-badge.received {
-    background: #dbeafe;
-    color: #2563eb;
+.connection-status-icon.not-connected {
+    background: #64748b;
 }
 
-.connection-status-badge.not-connected {
-    background: #f1f5f9;
-    color: #64748b;
-}
-
-.dark-mode .connection-status-badge.connected {
-    background: rgba(5, 150, 105, 0.2);
-    color: #10b981;
-}
-
-.dark-mode .connection-status-badge.pending {
-    background: rgba(217, 119, 6, 0.2);
-    color: #f59e0b;
-}
-
-.dark-mode .connection-status-badge.received {
-    background: rgba(37, 99, 235, 0.2);
-    color: #3b82f6;
-}
-
-.dark-mode .connection-status-badge.not-connected {
-    background: rgba(100, 116, 139, 0.2);
-    color: #94a3b8;
+.dark-mode .connection-status-icon {
+    border-color: #1e293b;
 }
 
 /* Badges Container - For badges in info section */
@@ -1381,12 +1357,6 @@
     .alumnus-info {
         flex: 1;
         min-width: 200px;
-    }
-
-    .connection-status-badge {
-        flex-direction: row;
-        justify-content: center;
-        gap: 6px;
     }
 
     .card-actions-buttons .btn .btn-text {

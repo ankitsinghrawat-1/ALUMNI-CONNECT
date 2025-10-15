@@ -217,6 +217,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                             <i class="fas fa-star"></i>
                             <span>${generateMatchScore()}%</span>
                         </div>
+                        <div class="connection-status-icon ${connectionStatus.class}" title="${connectionTooltip}">
+                            <i class="${connectionStatus.icon}"></i>
+                        </div>
                     </div>
                     
                     <div class="alumnus-info">
@@ -231,10 +234,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             </div>
                             ${availabilityBadge}
                             ${commonInterestsHtml}
-                            <div class="connection-status-badge ${connectionStatus.class}" title="${connectionTooltip}">
-                                <i class="${connectionStatus.icon}"></i>
-                                <span class="status-label">${connectionStatus.text}</span>
-                            </div>
                         </div>
                     </div>
                 </div>
