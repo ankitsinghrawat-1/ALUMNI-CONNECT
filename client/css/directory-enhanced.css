@@ -591,7 +591,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to allow dropdowns */
 }
 
 .enhanced-alumnus-card::before {
@@ -604,6 +604,7 @@
     background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
     transform: scaleX(0);
     transition: transform 0.3s ease;
+    z-index: 1;
 }
 
 .enhanced-alumnus-card:hover {
@@ -627,6 +628,20 @@
     align-items: flex-start;
     padding: 20px;
     padding-top: 50px; /* Space for top actions */
+    position: relative; /* Establish positioning context */
+}
+
+.alumnus-card-header {
+    position: relative;
+    overflow: visible; /* Allow dropdowns to extend */
+}
+
+.alumnus-card-body {
+    overflow: hidden; /* Prevent body content from spilling */
+}
+
+.alumnus-card-footer {
+    overflow: visible; /* Allow any tooltips/dropdowns in footer */
 }
 
 .name-and-role {
@@ -838,7 +853,7 @@
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 100;
+    z-index: 1000; /* Increased z-index to appear above other cards */
     overflow: hidden;
 }
 
