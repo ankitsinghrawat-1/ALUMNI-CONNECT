@@ -267,9 +267,8 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--surface-color);
     box-shadow: var(--box-shadow-subtle);
     padding: 1rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
+    position: relative;
+    z-index: 100;
 }
 
 .main-nav {

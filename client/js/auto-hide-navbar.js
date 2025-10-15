@@ -1,5 +1,5 @@
-// Auto-Hide Navbar with Smooth Scroll Transitions
-// This script handles auto-hiding navigation on all pages except homepage
+// Auto-Hide Navbar with Hover Detection
+// This script handles navbar hover behavior on all pages except homepage
 
 (function() {
     // Check if we're on the homepage
@@ -14,95 +14,112 @@
     const header = document.querySelector('.main-header');
     if (!header) return;
 
-    // Scroll tracking variables
-    let lastScrollTop = 0;
-    let scrollThreshold = 10; // Minimum scroll difference to trigger
-    let scrollUpThreshold = 100; // Amount user must scroll up before navbar shows
-    let scrollUpAccumulator = 0; // Tracks accumulated scroll up distance
-    let ticking = false;
+    let hideTimer = null;
+    let isHovering = false;
 
-    // Add auto-hide class to header for styling
-    header.classList.add('auto-hide-navbar');
-
-    // Calculate navbar height for precise transitions
+    // Calculate navbar height
     const getNavbarHeight = () => header.offsetHeight;
 
-    // Smooth scroll handler
-    function handleScroll() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const navbarHeight = getNavbarHeight();
+    // Create a hover detection area at the top of the viewport
+    const hoverArea = document.createElement('div');
+    hoverArea.className = 'navbar-hover-trigger';
+    hoverArea.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 80px;
+        z-index: 999;
+        pointer-events: auto;
+    `;
+    document.body.appendChild(hoverArea);
+
+    // Create clone of navbar that appears on hover
+    const navbarClone = header.cloneNode(true);
+    navbarClone.className = header.className + ' navbar-hover-overlay';
+    navbarClone.style.display = 'none';
+    document.body.appendChild(navbarClone);
+
+    // Show navbar overlay on hover
+    function showNavbar() {
+        isHovering = true;
+        navbarClone.style.display = 'block';
         
-        // If we're at the top of the page, ensure navbar is fully visible
-        if (scrollTop <= 0) {
-            header.classList.remove('navbar-hidden');
-            scrollUpAccumulator = 0;
-            lastScrollTop = 0;
-            return;
-        }
-        
-        // Calculate scroll difference
-        const scrollDiff = scrollTop - lastScrollTop;
-        
-        // Only proceed if scroll difference is significant
-        if (Math.abs(scrollDiff) < scrollThreshold) {
-            return;
+        // Clear any existing timer
+        if (hideTimer) {
+            clearTimeout(hideTimer);
+            hideTimer = null;
         }
 
-        if (scrollTop > lastScrollTop && scrollTop > navbarHeight) {
-            // Scrolling DOWN - Hide navbar with smooth transition
-            scrollUpAccumulator = 0; // Reset scroll up counter
-            header.classList.add('navbar-hidden');
-        } else if (scrollTop < lastScrollTop) {
-            // Scrolling UP - Accumulate scroll distance before showing
-            const scrollUpAmount = lastScrollTop - scrollTop;
-            scrollUpAccumulator += scrollUpAmount;
-            
-            // Only show navbar after scrolling up the threshold distance
-            if (scrollUpAccumulator >= scrollUpThreshold) {
-                header.classList.remove('navbar-hidden');
-                scrollUpAccumulator = 0; // Reset after showing
-            }
+        // Re-populate navigation links in clone (in case they were loaded dynamically)
+        const originalLinks = header.querySelector('#nav-links');
+        const cloneLinks = navbarClone.querySelector('#nav-links');
+        if (originalLinks && cloneLinks) {
+            cloneLinks.innerHTML = originalLinks.innerHTML;
         }
-
-        lastScrollTop = scrollTop;
     }
 
-    // Optimized scroll listener using requestAnimationFrame
-    window.addEventListener('scroll', () => {
-        if (!ticking) {
-            window.requestAnimationFrame(() => {
-                handleScroll();
-                ticking = false;
-            });
-            ticking = true;
-        }
-    }, { passive: true });
+    // Hide navbar overlay after delay
+    function hideNavbar() {
+        isHovering = false;
+        
+        // Set timer to hide after 3 seconds
+        hideTimer = setTimeout(() => {
+            if (!isHovering) {
+                navbarClone.style.display = 'none';
+            }
+        }, 3000);
+    }
 
-    // Add CSS for smooth transitions
+    // Hover area events
+    hoverArea.addEventListener('mouseenter', showNavbar);
+    hoverArea.addEventListener('mouseleave', hideNavbar);
+
+    // Navbar clone events
+    navbarClone.addEventListener('mouseenter', () => {
+        isHovering = true;
+        if (hideTimer) {
+            clearTimeout(hideTimer);
+            hideTimer = null;
+        }
+    });
+
+    navbarClone.addEventListener('mouseleave', hideNavbar);
+
+    // Add CSS for the overlay navbar
     const style = document.createElement('style');
     style.textContent = `
-        .auto-hide-navbar {
-            position: fixed;
+        /* Original navbar scrolls naturally with page */
+        .main-header {
+            position: relative;
+            z-index: 100;
+        }
+
+        /* Hover overlay navbar */
+        .navbar-hover-overlay {
+            position: fixed !important;
             top: 0;
             left: 0;
             right: 0;
             z-index: 1000;
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            will-change: transform;
+            animation: slideDown 0.3s ease-out;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
 
-        .auto-hide-navbar.navbar-hidden {
-            transform: translateY(-100%);
-        }
-
-        /* Add subtle shadow when navbar is visible */
-        .auto-hide-navbar:not(.navbar-hidden) {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
         }
 
         /* Dark mode adjustments */
-        .dark-mode .auto-hide-navbar:not(.navbar-hidden) {
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        .dark-mode .navbar-hover-overlay {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
     `;
     document.head.appendChild(style);
