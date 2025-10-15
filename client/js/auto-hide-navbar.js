@@ -1,15 +1,7 @@
 // Auto-Hide Navbar with Hover Detection
-// This script handles navbar hover behavior on all pages except homepage
+// This script handles navbar hover behavior on all pages
 
 (function() {
-    // Check if we're on the homepage
-    const isHomepage = window.location.pathname.endsWith('index.html') || window.location.pathname === '/';
-    
-    // Don't apply auto-hide on homepage
-    if (isHomepage) {
-        return;
-    }
-
     // Get the header element
     const header = document.querySelector('.main-header');
     if (!header) return;
