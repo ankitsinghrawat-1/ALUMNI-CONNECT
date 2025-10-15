@@ -101,9 +101,9 @@ module.exports = (pool, upload) => {
     }));
 
     router.get('/directory', asyncHandler(async (req, res) => {
-        const { query, major, graduation_year, city, industry, skills, company } = req.query;
+        const { query, major, graduation_year, city, industry, skills, company, availability } = req.query;
         
-        let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, role, is_email_visible, is_company_visible, is_location_visible 
+        let sql = `SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, major, graduation_year, city, role, availability_status, is_email_visible, is_company_visible, is_location_visible 
                    FROM users WHERE is_profile_public = TRUE AND role != 'admin'`;
         const params = [];
 
@@ -135,6 +135,10 @@ module.exports = (pool, upload) => {
             sql += ' AND company LIKE ?';
             params.push(`%${company}%`);
         }
+        if (availability) {
+            sql += ' AND availability_status = ?';
+            params.push(availability);
+        }
 
         const [rows] = await pool.query(sql, params);
         
@@ -149,6 +153,7 @@ module.exports = (pool, upload) => {
             graduation_year: user.graduation_year,
             email: user.is_email_visible ? user.email : null,
             role: user.role, // Include role for badge display
+            availability_status: user.availability_status, // Include availability status
         }));
         res.json(publicProfiles);
     }));

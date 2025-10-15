@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const companySizeFilter = document.getElementById('company-size-filter');
     const skillsFilter = document.getElementById('skills-filter');
     const companyFilter = document.getElementById('company-filter');
+    const availabilityFilter = document.getElementById('availability-filter');
     const searchButton = document.getElementById('directory-search-button');
     const applyFiltersBtn = document.getElementById('apply-filters-btn');
     const clearFiltersBtn = document.getElementById('clear-filters-btn');
@@ -137,15 +138,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
         const userRole = roleConfig[role] || roleConfig.alumni;
         
-        // Generate availability status (from user profile or default)
-        // In production, this would come from alumnus.availability_status
-        const availabilityStatuses = [
-            { text: 'Open to Mentor', icon: 'fa-chalkboard-teacher', tooltip: 'Available to mentor students and juniors', color: '#10b981' },
-            { text: 'Hiring', icon: 'fa-briefcase', tooltip: 'Currently hiring for open positions', color: '#3b82f6' },
-            { text: 'Available for Chat', icon: 'fa-comments', tooltip: 'Open for networking and casual conversations', color: '#8b5cf6' },
-            null
-        ];
-        const availabilityStatus = availabilityStatuses[Math.floor(Math.random() * availabilityStatuses.length)];
+        // Get availability status from user data
+        const availabilityConfig = {
+            'open_to_mentor': { text: 'Open to Mentor', icon: 'fa-chalkboard-teacher', tooltip: 'Available to mentor students and juniors', color: '#10b981' },
+            'hiring': { text: 'Hiring', icon: 'fa-briefcase', tooltip: 'Currently hiring for open positions', color: '#3b82f6' },
+            'available_for_chat': { text: 'Available for Chat', icon: 'fa-comments', tooltip: 'Open for networking and casual conversations', color: '#8b5cf6' },
+            'seeking_opportunities': { text: 'Seeking Opportunities', icon: 'fa-search', tooltip: 'Looking for new career opportunities', color: '#f59e0b' }
+        };
+        const availabilityStatus = alumnus.availability_status ? availabilityConfig[alumnus.availability_status] : null;
         const availabilityBadge = availabilityStatus ? `
             <div class="availability-badge" title="${availabilityStatus.tooltip}" style="background: ${availabilityStatus.color};">
                 <i class="fas ${availabilityStatus.icon}"></i>
@@ -511,6 +511,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const industry = industryFilter ? industryFilter.value : '';
             const skills = skillsFilter ? skillsFilter.value : '';
             const company = companyFilter ? companyFilter.value : '';
+            const availability = availabilityFilter ? availabilityFilter.value : '';
 
             // Build query parameters
             const params = new URLSearchParams();
@@ -521,6 +522,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (industry) params.append('industry', industry);
             if (skills) params.append('skills', skills);
             if (company) params.append('company', company);
+            if (availability) params.append('availability', availability);
 
             // Fetch alumni data
             const alumni = await window.api.get(`/users/directory?${params.toString()}`);
@@ -531,7 +533,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             // Prepare CSV content
-            const headers = ['Name', 'Role', 'Email', 'Position', 'Company', 'Major', 'Graduation Year', 'Verified'];
+            const headers = ['Name', 'Role', 'Email', 'Position', 'Company', 'Major', 'Graduation Year', 'Verified', 'Availability'];
             const csvRows = [headers.join(',')];
 
             alumni.forEach(alumnus => {
@@ -543,7 +545,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     `"${alumnus.current_company || 'N/A'}"`,
                     `"${alumnus.major || 'N/A'}"`,
                     `"${alumnus.graduation_year || 'N/A'}"`,
-                    `"${alumnus.verification_status || 'unverified'}"`
+                    `"${alumnus.verification_status || 'unverified'}"`,
+                    `"${alumnus.availability_status || 'N/A'}"`
                 ];
                 csvRows.push(row.join(','));
             });
@@ -583,6 +586,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const industry = industryFilter ? industryFilter.value : '';
             const skills = skillsFilter ? skillsFilter.value : '';
             const company = companyFilter ? companyFilter.value : '';
+            const availability = availabilityFilter ? availabilityFilter.value : '';
 
             // Build query parameters
             const params = new URLSearchParams();
@@ -593,6 +597,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (industry) params.append('industry', industry);
             if (skills) params.append('skills', skills);
             if (company) params.append('company', company);
+            if (availability) params.append('availability', availability);
 
             // Fetch real data from API
             const alumni = await window.api.get(`/users/directory?${params.toString()}`);
@@ -620,7 +625,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                         is_online: Math.random() > 0.5, // Random online status for demo
                         profile_pic_url: alumnus.profile_pic_url,
                         verification_status: alumnus.verification_status,
-                        role: alumnus.role || 'alumni' // Use role from API response
+                        role: alumnus.role || 'alumni', // Use role from API response
+                        availability_status: alumnus.availability_status // Availability status from API
                     };
                     
                     const alumnusCard = await createEnhancedAlumnusCard(mappedAlumnus);
@@ -699,6 +705,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (companySizeFilter) companySizeFilter.value = '';
         if (skillsFilter) skillsFilter.value = '';
         if (companyFilter) companyFilter.value = '';
+        if (availabilityFilter) availabilityFilter.value = '';
         
         resultsTitle.textContent = 'All Alumni';
         fetchAndRenderAlumni();
@@ -918,6 +925,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dialogSkillsFilter = document.getElementById('dialog-skills-filter');
     const dialogCompanyFilter = document.getElementById('dialog-company-filter');
     const dialogCompanySizeFilter = document.getElementById('dialog-company-size-filter');
+    const dialogAvailabilityFilter = document.getElementById('dialog-availability-filter');
 
     const openSearchDialog = () => {
         // Sync values from hidden search section to dialog
@@ -930,6 +938,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (skillsFilter) dialogSkillsFilter.value = skillsFilter.value;
         if (companyFilter) dialogCompanyFilter.value = companyFilter.value;
         if (companySizeFilter) dialogCompanySizeFilter.value = companySizeFilter.value;
+        if (availabilityFilter) dialogAvailabilityFilter.value = availabilityFilter.value;
         
         searchDialog.classList.add('active');
         document.body.style.overflow = 'hidden';
@@ -952,6 +961,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (skillsFilter) skillsFilter.value = dialogSkillsFilter.value;
         if (companyFilter) companyFilter.value = dialogCompanyFilter.value;
         if (companySizeFilter) companySizeFilter.value = dialogCompanySizeFilter.value;
+        if (availabilityFilter) availabilityFilter.value = dialogAvailabilityFilter.value;
         
         closeSearchDialog();
         fetchAndRenderAlumni();
@@ -967,6 +977,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         dialogSkillsFilter.value = '';
         dialogCompanyFilter.value = '';
         dialogCompanySizeFilter.value = '';
+        dialogAvailabilityFilter.value = '';
     };
 
     // Search dialog event listeners

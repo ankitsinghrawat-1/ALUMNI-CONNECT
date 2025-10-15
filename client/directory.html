@@ -121,6 +121,16 @@
                                 <label for="company-filter"><i class="fas fa-briefcase"></i> Company</label>
                                 <input type="text" id="company-filter" placeholder="e.g., Google, Microsoft, Startup">
                             </div>
+                            <div class="filter-group">
+                                <label for="availability-filter"><i class="fas fa-user-check"></i> Availability</label>
+                                <select id="availability-filter">
+                                    <option value="">Any Availability</option>
+                                    <option value="open_to_mentor">Open to Mentor</option>
+                                    <option value="hiring">Hiring</option>
+                                    <option value="available_for_chat">Available for Chat</option>
+                                    <option value="seeking_opportunities">Seeking Opportunities</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="filter-actions">
                             <button id="apply-filters-btn" class="btn btn-primary">
@@ -357,6 +367,16 @@
                                 <option value="small">Small (51-200)</option>
                                 <option value="medium">Medium (201-1000)</option>
                                 <option value="large">Large (1000+)</option>
+                            </select>
+                        </div>
+                        <div class="filter-item">
+                            <label><i class="fas fa-user-check"></i> Availability</label>
+                            <select id="dialog-availability-filter">
+                                <option value="">Any Availability</option>
+                                <option value="open_to_mentor">Open to Mentor</option>
+                                <option value="hiring">Hiring</option>
+                                <option value="available_for_chat">Available for Chat</option>
+                                <option value="seeking_opportunities">Seeking Opportunities</option>
                             </select>
                         </div>
                     </div>
