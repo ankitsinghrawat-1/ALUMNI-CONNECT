@@ -37,6 +37,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         let profilePicUrl = '';
         let unreadCount = 0;
         let userName = localStorage.getItem('loggedInUserName') || 'Alumni';
+        let userId = localStorage.getItem('loggedInUserId');
+        
+        // Fetch mentor status to determine if mentor profile link should be shown
+        let mentorProfileLink = '';
+        try {
+            const mentorStatus = await window.api.get('/mentors/status');
+            if (mentorStatus.isMentor && mentorStatus.mentorId) {
+                mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorStatus.mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
+            }
+        } catch (error) {
+            console.log('Could not fetch mentor status');
+        }
 
         // --- Nav Bar HTML Structure ---
         navItems.innerHTML = `
@@ -76,7 +88,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="${getDashboardUrl(userRole)}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li class="nav-dropdown profile-submenu">
+                        <a href="#" class="dropdown-toggle"><i class="fas fa-user"></i> My Profiles <i class="fas fa-chevron-right"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="profile.html"><i class="fas fa-user-edit"></i> Main Profile</a></li>
+                            <li><a href="social-profile.html?userId=${userId}"><i class="fas fa-id-card"></i> Social Profile</a></li>
+                            ${mentorProfileLink}
+                        </ul>
+                    </li>
                     <li><a href="my-blogs.html"><i class="fas fa-feather-alt"></i> My Blogs</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button id="theme-toggle-btn" class="theme-toggle-button"><i class="fas fa-moon"></i><span>Toggle Theme</span></button></li>
@@ -198,13 +217,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.stopPropagation();
             const parentDropdown = e.currentTarget.closest('.nav-dropdown');
             
-            document.querySelectorAll('.nav-dropdown').forEach(dd => {
-                if (dd !== parentDropdown) {
-                    dd.classList.remove('dropdown-active');
-                }
-            });
-
-            parentDropdown.classList.toggle('dropdown-active');
+            // Handle nested dropdowns (profile submenu)
+            if (parentDropdown.classList.contains('profile-submenu')) {
+                // Toggle only this submenu
+                parentDropdown.classList.toggle('dropdown-active');
+            } else {
+                // Close all other main dropdowns
+                document.querySelectorAll('.nav-dropdown').forEach(dd => {
+                    if (dd !== parentDropdown && !dd.classList.contains('profile-submenu')) {
+                        dd.classList.remove('dropdown-active');
+                    }
+                });
+                
+                parentDropdown.classList.toggle('dropdown-active');
+            }
         });
     });
     

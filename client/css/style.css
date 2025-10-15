@@ -3917,6 +3917,42 @@ body main {
     margin: 0.5rem 0;
 }
 
+/* Nested dropdown styles for profile submenu */
+.profile-submenu {
+    position: relative;
+}
+
+.profile-submenu > .dropdown-menu {
+    left: 100%;
+    right: auto;
+    top: 0;
+    margin-left: 0.5rem;
+}
+
+.profile-submenu .fa-chevron-right {
+    margin-left: auto;
+    font-size: 0.7rem;
+    transition: transform 0.3s ease;
+}
+
+.profile-submenu.dropdown-active .fa-chevron-right {
+    transform: translateX(3px);
+}
+
+.profile-submenu > a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Show submenu on hover or when active */
+.profile-submenu:hover > .dropdown-menu,
+.profile-submenu.dropdown-active > .dropdown-menu {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+}
+
 .static-page-main {
     padding: 3rem 0;
 }
