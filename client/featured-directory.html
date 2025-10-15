@@ -21,25 +21,6 @@
             min-height: 100vh;
         }
 
-        .featured-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 3rem 2rem;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-        }
-
-        .featured-header h1 {
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            font-weight: 700;
-        }
-
-        .featured-header p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-        }
-
         .search-bar-container {
             max-width: 600px;
             margin: -2rem auto 3rem;
@@ -325,10 +306,6 @@
         }
 
         @media (max-width: 768px) {
-            .featured-header h1 {
-                font-size: 2rem;
-            }
-
             .details {
                 flex-direction: column;
                 gap: 0.75rem;
@@ -344,39 +321,43 @@
         </nav>
     </header>
 
-    <div class="featured-header">
-        <h1><i class="fas fa-star"></i> Featured Alumni</h1>
-        <p>Meet our exceptional alumni making a difference</p>
-    </div>
+    <main class="directory-main">
+        <div class="directory-container">
+            <div class="directory-header">
+                <h2><i class="fas fa-star"></i> Featured Alumni</h2>
+                <p>Meet our exceptional alumni making a difference</p>
+            </div>
 
-    <div class="search-bar-container">
-        <i class="fas fa-search search-icon"></i>
-        <input type="text" id="search-input" class="search-bar" placeholder="Search by name, company, or field...">
-    </div>
+            <div class="search-bar-container">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" class="search-bar" placeholder="Search by name, company, or field...">
+            </div>
 
-    <div class="container">
-        <div class="nav-buttons">
-            <a href="directory.html" class="btn btn-secondary">
-                <i class="fas fa-th"></i>
-                All Alumni
-            </a>
-            <a href="bookmarks.html" class="btn btn-secondary">
-                <i class="fas fa-bookmark"></i>
-                My Bookmarks
-            </a>
-        </div>
-
-        <div class="carousel-container">
-            <div class="swiper">
-                <div class="swiper-wrapper" id="alumni-carousel">
-                    <!-- Cards will be loaded here -->
+            <div class="container">
+                <div class="nav-buttons">
+                    <a href="directory.html" class="btn btn-secondary">
+                        <i class="fas fa-th"></i>
+                        All Alumni
+                    </a>
+                    <a href="bookmarks.html" class="btn btn-secondary">
+                        <i class="fas fa-bookmark"></i>
+                        My Bookmarks
+                    </a>
                 </div>
-                <div class="swiper-pagination"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-button-next"></div>
+
+                <div class="carousel-container">
+                    <div class="swiper">
+                        <div class="swiper-wrapper" id="alumni-carousel">
+                            <!-- Cards will be loaded here -->
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
