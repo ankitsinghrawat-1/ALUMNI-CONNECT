@@ -1,4 +1,5 @@
 // client/js/view-profile.js
+// Version: Icon-only buttons with tooltips (Updated 2025-10-16)
 document.addEventListener('DOMContentLoaded', async () => {
     const urlParams = new URLSearchParams(window.location.search);
     const userEmail = urlParams.get('email');

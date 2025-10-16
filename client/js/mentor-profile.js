@@ -1,4 +1,5 @@
 // Mentor Profile Page - Combined View/Edit Mode
+// Version: Icon-only buttons with tooltips (Updated 2025-10-16)
 document.addEventListener('DOMContentLoaded', async () => {
     // Get mentor ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
