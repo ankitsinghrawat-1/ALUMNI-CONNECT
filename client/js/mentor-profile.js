@@ -423,30 +423,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderProfileActions() {
         if (isOwner) {
-            // Show modern Edit Profile button for owner
+            // Show icon-only buttons for owner with tooltips
             profileActions.innerHTML = `
-                <button id="edit-profile-btn" class="action-btn-modern action-btn-primary">
-                    <i class="fas fa-edit"></i> Edit Profile
+                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile">
+                    <i class="fas fa-edit"></i>
                 </button>
-                <a href="mentor-requests.html" class="action-btn-modern action-btn-secondary">
-                    <i class="fas fa-inbox"></i> Requests
+                <a href="mentor-requests.html" class="action-icon-btn action-icon-secondary" data-tooltip="View Requests">
+                    <i class="fas fa-inbox"></i>
                 </a>
-                <button id="delete-profile-btn" class="action-btn-modern action-btn-danger">
-                    <i class="fas fa-trash-alt"></i> Delete
+                <button id="delete-profile-btn" class="action-icon-btn action-icon-danger" data-tooltip="Delete Profile">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
             `;
             document.getElementById('edit-profile-btn').addEventListener('click', switchToEditMode);
             document.getElementById('delete-profile-btn').addEventListener('click', handleDeleteProfile);
         } else {
-            // Show Send Request button for others
+            // Show icon-only buttons for visitors
             const loggedIn = localStorage.getItem('alumniConnectToken');
             if (loggedIn) {
                 profileActions.innerHTML = `
-                    <button id="send-request-btn" class="action-btn-modern action-btn-primary">
-                        <i class="fas fa-paper-plane"></i> Send Request
+                    <button id="send-request-btn" class="action-icon-btn action-icon-primary" data-tooltip="Send Request">
+                        <i class="fas fa-paper-plane"></i>
                     </button>
-                    <button id="message-btn" class="action-btn-modern action-btn-secondary">
-                        <i class="fas fa-comments"></i> Message
+                    <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Send Message">
+                        <i class="fas fa-comments"></i>
                     </button>
                 `;
                 // Add event listeners for these buttons
@@ -456,8 +456,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             } else {
                 profileActions.innerHTML = `
-                    <a href="login.html" class="action-btn-modern action-btn-primary">
-                        <i class="fas fa-sign-in-alt"></i> Sign In to Connect
+                    <a href="login.html" class="action-icon-btn action-icon-primary" data-tooltip="Sign In to Connect">
+                        <i class="fas fa-sign-in-alt"></i>
                     </a>
                 `;
             }

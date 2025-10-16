@@ -145,6 +145,87 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Icon-only action buttons with tooltip */
+.action-icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.action-icon-btn i {
+    transition: transform 0.2s ease;
+}
+
+.action-icon-btn:hover {
+    transform: translateY(-2px);
+}
+
+.action-icon-btn:hover i {
+    transform: scale(1.1);
+}
+
+.action-icon-btn:active {
+    transform: translateY(0);
+}
+
+/* Tooltip for icon buttons */
+.action-icon-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-5px);
+    background: rgba(0, 0, 0, 0.9);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+.action-icon-btn::before {
+    content: '';
+    position: absolute;
+    bottom: calc(100% + 2px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1000;
+}
+
+.action-icon-btn:hover::after,
+.action-icon-btn:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+html.dark-mode .action-icon-btn::after {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a252f;
+}
+
+html.dark-mode .action-icon-btn::before {
+    border-top-color: rgba(255, 255, 255, 0.95);
+}
+
 .action-btn-primary {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-color) 100%);
     color: white;
@@ -186,6 +267,54 @@ html.dark-mode .action-btn-secondary {
 
 .action-btn-success:hover {
     background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+/* Icon button color variants */
+.action-icon-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-color) 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+}
+
+.action-icon-primary:hover {
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+}
+
+.action-icon-secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+html.dark-mode .action-icon-secondary {
+    background: var(--surface-color);
+}
+
+.action-icon-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+}
+
+.action-icon-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.action-icon-danger:hover {
+    box-shadow: 0 4px 16px rgba(231, 76, 60, 0.4);
+}
+
+.action-icon-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+.action-icon-success:hover {
+    box-shadow: 0 4px 16px rgba(46, 204, 113, 0.4);
 }
 
 /* Icon-only action buttons (for inline editing, etc.) */
