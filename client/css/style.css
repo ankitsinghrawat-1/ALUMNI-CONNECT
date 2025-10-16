@@ -1643,6 +1643,12 @@ main {
     gap: 0.5rem;
 }
 
+.skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 .skill-tag {
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
@@ -1650,6 +1656,20 @@ main {
     border-radius: 15px;
     font-size: 0.8rem;
     font-weight: 500;
+}
+
+.expertise-tag {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #333;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.expertise-section,
+.skills-section {
+    margin-bottom: 0.5rem;
 }
 
 .more-skills {
