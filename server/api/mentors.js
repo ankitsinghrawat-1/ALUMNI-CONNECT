@@ -212,6 +212,89 @@ module.exports = (pool) => {
         });
     }));
 
+    // Check mentor status - requires authentication
+    // IMPORTANT: This route must come BEFORE /:mentorId to avoid route parameter conflict
+    router.get('/status', verifyToken, asyncHandler(async (req, res) => {
+        try {
+            const user_id = req.user.userId;
+            
+            console.log('\n========================================');
+            console.log('🔍 MENTOR STATUS API CALLED');
+            console.log('========================================');
+            console.log('User ID from token:', user_id);
+            console.log('Request headers:', {
+                authorization: req.headers.authorization ? 'Present' : 'Missing',
+                'content-type': req.headers['content-type']
+            });
+            
+            // Fetch is_mentor from users table (more efficient - no join needed)
+            const [users] = await pool.query(
+                'SELECT user_id, email, is_mentor FROM users WHERE user_id = ?', 
+                [user_id]
+            );
+            
+            console.log('Database query result:', JSON.stringify(users, null, 2));
+            
+            if (users.length === 0) {
+                console.error('❌ ERROR: User not found in database!');
+                console.log('========================================\n');
+                return res.json({ 
+                    isMentor: false,
+                    mentorId: null,
+                    error: 'User not found'
+                });
+            }
+            
+            const user = users[0];
+            const isMentor = user.is_mentor === 1 || user.is_mentor === true;
+            
+            console.log('📊 Database Values:');
+            console.log('  - user_id:', user.user_id);
+            console.log('  - email:', user.email);
+            console.log('  - is_mentor (raw):', user.is_mentor);
+            console.log('  - is_mentor (type):', typeof user.is_mentor);
+            console.log('  - isMentor (boolean):', isMentor);
+            
+            // Only fetch mentorId if user is a mentor
+            let mentorId = null;
+            if (isMentor) {
+                const [mentor] = await pool.query(
+                    'SELECT mentor_id FROM mentors WHERE user_id = ?', 
+                    [user_id]
+                );
+                mentorId = mentor.length > 0 ? mentor[0].mentor_id : null;
+                console.log('✓ Mentor ID found:', mentorId);
+            } else {
+                console.log('✗ User is NOT a mentor (is_mentor =', user.is_mentor, ')');
+            }
+            
+            const responseData = { 
+                isMentor: isMentor,
+                mentorId: mentorId
+            };
+            
+            console.log('📤 Sending response:', JSON.stringify(responseData, null, 2));
+            console.log('========================================\n');
+            
+            res.json(responseData);
+        } catch (error) {
+            console.error('\n========================================');
+            console.error('❌ ERROR in /mentors/status');
+            console.error('========================================');
+            console.error('Error name:', error.name);
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
+            console.error('========================================\n');
+            
+            // Return error details for debugging
+            res.status(500).json({ 
+                isMentor: false,
+                mentorId: null,
+                error: error.message
+            });
+        }
+    }));
+
     // Get mentor details with comprehensive profile data
     router.get('/:mentorId', asyncHandler(async (req, res) => {
         const { mentorId } = req.params;
@@ -376,88 +459,6 @@ module.exports = (pool) => {
             top_industries: industries,
             top_specializations: specializations
         });
-    }));
-
-    // Check mentor status - requires authentication
-    router.get('/status', verifyToken, asyncHandler(async (req, res) => {
-        try {
-            const user_id = req.user.userId;
-            
-            console.log('\n========================================');
-            console.log('🔍 MENTOR STATUS API CALLED');
-            console.log('========================================');
-            console.log('User ID from token:', user_id);
-            console.log('Request headers:', {
-                authorization: req.headers.authorization ? 'Present' : 'Missing',
-                'content-type': req.headers['content-type']
-            });
-            
-            // Fetch is_mentor from users table (more efficient - no join needed)
-            const [users] = await pool.query(
-                'SELECT user_id, email, is_mentor FROM users WHERE user_id = ?', 
-                [user_id]
-            );
-            
-            console.log('Database query result:', JSON.stringify(users, null, 2));
-            
-            if (users.length === 0) {
-                console.error('❌ ERROR: User not found in database!');
-                console.log('========================================\n');
-                return res.json({ 
-                    isMentor: false,
-                    mentorId: null,
-                    error: 'User not found'
-                });
-            }
-            
-            const user = users[0];
-            const isMentor = user.is_mentor === 1 || user.is_mentor === true;
-            
-            console.log('📊 Database Values:');
-            console.log('  - user_id:', user.user_id);
-            console.log('  - email:', user.email);
-            console.log('  - is_mentor (raw):', user.is_mentor);
-            console.log('  - is_mentor (type):', typeof user.is_mentor);
-            console.log('  - isMentor (boolean):', isMentor);
-            
-            // Only fetch mentorId if user is a mentor
-            let mentorId = null;
-            if (isMentor) {
-                const [mentor] = await pool.query(
-                    'SELECT mentor_id FROM mentors WHERE user_id = ?', 
-                    [user_id]
-                );
-                mentorId = mentor.length > 0 ? mentor[0].mentor_id : null;
-                console.log('✓ Mentor ID found:', mentorId);
-            } else {
-                console.log('✗ User is NOT a mentor (is_mentor =', user.is_mentor, ')');
-            }
-            
-            const responseData = { 
-                isMentor: isMentor,
-                mentorId: mentorId
-            };
-            
-            console.log('📤 Sending response:', JSON.stringify(responseData, null, 2));
-            console.log('========================================\n');
-            
-            res.json(responseData);
-        } catch (error) {
-            console.error('\n========================================');
-            console.error('❌ ERROR in /mentors/status');
-            console.error('========================================');
-            console.error('Error name:', error.name);
-            console.error('Error message:', error.message);
-            console.error('Error stack:', error.stack);
-            console.error('========================================\n');
-            
-            // Return error details for debugging
-            res.status(500).json({ 
-                isMentor: false,
-                mentorId: null,
-                error: error.message
-            });
-        }
     }));
 
     // This route is protected by verifyToken
