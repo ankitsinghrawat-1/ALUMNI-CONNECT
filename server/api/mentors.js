@@ -378,8 +378,8 @@ module.exports = (pool) => {
         });
     }));
 
-    // Check mentor status - uses REQUIRED auth (user must be logged in)
-    router.get('/status', verifyToken, asyncHandler(async (req, res) => {
+    // Check mentor status - uses OPTIONAL auth (works for logged in and non-logged in users)
+    router.get('/status', optionalAuth, asyncHandler(async (req, res) => {
         try {
             const user_id = req.user.userId;
             
