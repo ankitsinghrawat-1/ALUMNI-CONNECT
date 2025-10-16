@@ -115,6 +115,117 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: var(--box-shadow-subtle);
 }
 
+/* Modern Icon-Based Action Buttons */
+.action-btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn-modern i {
+    font-size: 0.875rem;
+}
+
+.action-btn-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn-modern:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-color) 100%);
+    color: white;
+}
+
+.action-btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark-color) 0%, var(--primary-color) 100%);
+}
+
+.action-btn-secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 1.5px solid var(--primary-color);
+}
+
+html.dark-mode .action-btn-secondary {
+    background: var(--surface-color);
+    border-color: var(--primary-color);
+}
+
+.action-btn-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.action-btn-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.action-btn-danger:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+}
+
+.action-btn-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+}
+
+.action-btn-success:hover {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+/* Icon-only action buttons (for inline editing, etc.) */
+.icon-btn-modern {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(74, 144, 226, 0.1);
+    color: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.icon-btn-modern:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.icon-btn-modern:active {
+    transform: scale(0.95);
+}
+
+html.dark-mode .icon-btn-modern {
+    background: rgba(93, 169, 240, 0.15);
+}
+
+/* Profile action buttons container */
+.profile-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .btn-logout {
     background-color: var(--error-color);
     color: #fff;

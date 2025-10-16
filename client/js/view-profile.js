@@ -311,13 +311,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const profileActions = document.querySelector('.profile-actions');
             if (isOwnProfile && profileActions) {
                 profileActions.innerHTML = `
-                    <a href="profile.html" class="btn btn-primary">
+                    <a href="profile.html" class="action-btn-modern action-btn-primary">
                         <i class="fas fa-user-edit"></i>
                         <span>Edit Profile</span>
                     </a>
-                    <a id="social-profile-link" href="social-profile.html?userId=${user.user_id}" class="btn btn-secondary">
+                    <a id="social-profile-link" href="social-profile.html?userId=${user.user_id}" class="action-btn-modern action-btn-secondary">
                         <i class="fas fa-users"></i>
-                        <span>View Social Profile</span>
+                        <span>Social Profile</span>
                     </a>
                 `;
             }
