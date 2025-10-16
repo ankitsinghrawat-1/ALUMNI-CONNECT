@@ -197,9 +197,9 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 10000;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
     letter-spacing: 0.3px;
-    line-height: 1.2;
-    display: inline-block;
-    width: auto;
+    line-height: 1.4;
+    text-align: center;
+    width: max-content;
     max-width: 200px;
 }
 
