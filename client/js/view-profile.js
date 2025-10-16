@@ -217,27 +217,55 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
-    // Render Skills
+    // Render Skills and Expertise
     const renderSkills = (user) => {
         const skillsContainer = document.getElementById('skills-view');
         if (!skillsContainer) return;
 
         let skills = [];
+        let specializations = [];
         
         // Parse skills from user data
         if (user.skills && user.skills.length > 0) {
-            skills = Array.isArray(user.skills) ? user.skills : user.skills.split(',').map(s => s.trim());
+            skills = Array.isArray(user.skills) ? user.skills : user.skills.split(',').map(s => s.trim()).filter(s => s);
+        }
+
+        // Parse specialization/expertise from user data
+        if (user.specialization && user.specialization.length > 0) {
+            specializations = Array.isArray(user.specialization) ? user.specialization : user.specialization.split(',').map(s => s.trim()).filter(s => s);
+        }
+
+        let html = '';
+
+        if (specializations.length > 0) {
+            html += '<div class="expertise-section"><h4 style="color: var(--primary-color); margin-bottom: 0.75rem; font-size: 0.95rem;"><i class="fas fa-star"></i> Expertise</h4><div class="skills-grid">';
+            html += specializations.map(spec => `
+                <div class="skill-tag expertise-tag">
+                    <i class="fas fa-certificate"></i>
+                    <span>${sanitizeHTML(spec)}</span>
+                </div>
+            `).join('');
+            html += '</div></div>';
         }
 
         if (skills.length > 0) {
-            skillsContainer.innerHTML = skills.map(skill => `
+            if (specializations.length > 0) {
+                html += '<div style="margin-top: 1.5rem;"></div>';
+            }
+            html += '<div class="skills-section"><h4 style="color: var(--primary-color); margin-bottom: 0.75rem; font-size: 0.95rem;"><i class="fas fa-tools"></i> Skills</h4><div class="skills-grid">';
+            html += skills.map(skill => `
                 <div class="skill-tag">
                     <i class="fas fa-check-circle"></i>
                     <span>${sanitizeHTML(skill)}</span>
                 </div>
             `).join('');
+            html += '</div></div>';
+        }
+
+        if (html) {
+            skillsContainer.innerHTML = html;
         } else {
-            skillsContainer.innerHTML = '<p style="color: var(--text-secondary);">No skills listed yet.</p>';
+            skillsContainer.innerHTML = '<p style="color: var(--text-secondary);">No skills or expertise listed yet.</p>';
         }
     };
 

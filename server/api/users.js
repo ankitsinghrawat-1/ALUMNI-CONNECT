@@ -186,7 +186,7 @@ module.exports = (pool, upload) => {
 
     router.get('/profile/:email', asyncHandler(async (req, res) => {
          const { email } = req.params;
-         const [rows] = await pool.query('SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, city, bio, linkedin_profile, institute_name, major, graduation_year, department, is_profile_public, is_email_visible, is_company_visible, is_location_visible FROM users WHERE email = ?', [email]);
+         const [rows] = await pool.query('SELECT user_id, full_name, email, profile_pic_url, verification_status, job_title, company, city, bio, linkedin_profile, institute_name, major, graduation_year, department, skills, specialization, industry, experience_years, created_at, is_profile_public, is_email_visible, is_company_visible, is_location_visible FROM users WHERE email = ?', [email]);
          if (rows.length === 0) {
              return res.status(404).json({ message: 'Profile not found' });
          }
@@ -202,6 +202,7 @@ module.exports = (pool, upload) => {
          }
          
          const publicProfile = {
+            user_id: user.user_id,
             full_name: user.full_name,
             profile_pic_url: user.profile_pic_url,
             verification_status: user.verification_status,
@@ -215,6 +216,11 @@ module.exports = (pool, upload) => {
             graduation_year: user.graduation_year,
             degree: user.department,
             email: user.is_email_visible ? user.email : null,
+            skills: user.skills,
+            specialization: user.specialization,
+            industry: user.industry,
+            experience_years: user.experience_years,
+            created_at: user.created_at
          };
          res.json(publicProfile);
     }));
