@@ -181,9 +181,9 @@ h1, h2, h3, h4, h5, h6 {
 .action-icon-btn::after {
     content: attr(data-tooltip);
     position: absolute;
-    bottom: calc(100% + 10px);
+    top: calc(100% + 10px);
     left: 50%;
-    transform: translateX(-50%) translateY(-5px);
+    transform: translateX(-50%) translateY(5px);
     background: #2c3e50;
     color: #ffffff;
     padding: 0.5rem 0.875rem;
@@ -206,11 +206,11 @@ h1, h2, h3, h4, h5, h6 {
 .action-icon-btn::before {
     content: '';
     position: absolute;
-    bottom: calc(100% + 4px);
+    top: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
     border: 6px solid transparent;
-    border-top-color: #2c3e50;
+    border-bottom-color: #2c3e50;
     opacity: 0;
     pointer-events: none;
     transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -231,7 +231,7 @@ html.dark-mode .action-icon-btn::after {
 }
 
 html.dark-mode .action-icon-btn::before {
-    border-top-color: #f8f9fa;
+    border-bottom-color: #f8f9fa;
 }
 
 .action-btn-primary {
