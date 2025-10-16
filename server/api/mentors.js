@@ -378,29 +378,84 @@ module.exports = (pool) => {
         });
     }));
 
-    // Check mentor status - uses optional auth (works for logged in and non-logged in users)
+    // Check mentor status - uses OPTIONAL auth (works for logged in and non-logged in users)
     router.get('/status', optionalAuth, asyncHandler(async (req, res) => {
         try {
-            // Check if user is authenticated
-            if (!req.user || !req.user.userId) {
+            const user_id = req.user.userId;
+            
+            console.log('\n========================================');
+            console.log('🔍 MENTOR STATUS API CALLED');
+            console.log('========================================');
+            console.log('User ID from token:', user_id);
+            console.log('Request headers:', {
+                authorization: req.headers.authorization ? 'Present' : 'Missing',
+                'content-type': req.headers['content-type']
+            });
+            
+            // Fetch is_mentor from users table (more efficient - no join needed)
+            const [users] = await pool.query(
+                'SELECT user_id, email, is_mentor FROM users WHERE user_id = ?', 
+                [user_id]
+            );
+            
+            console.log('Database query result:', JSON.stringify(users, null, 2));
+            
+            if (users.length === 0) {
+                console.error('❌ ERROR: User not found in database!');
+                console.log('========================================\n');
                 return res.json({ 
                     isMentor: false,
-                    mentorId: null
+                    mentorId: null,
+                    error: 'User not found'
                 });
             }
             
-            const user_id = req.user.userId;
-            const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
-            res.json({ 
-                isMentor: mentor.length > 0,
-                mentorId: mentor.length > 0 ? mentor[0].mentor_id : null
-            });
+            const user = users[0];
+            const isMentor = user.is_mentor === 1 || user.is_mentor === true;
+            
+            console.log('📊 Database Values:');
+            console.log('  - user_id:', user.user_id);
+            console.log('  - email:', user.email);
+            console.log('  - is_mentor (raw):', user.is_mentor);
+            console.log('  - is_mentor (type):', typeof user.is_mentor);
+            console.log('  - isMentor (boolean):', isMentor);
+            
+            // Only fetch mentorId if user is a mentor
+            let mentorId = null;
+            if (isMentor) {
+                const [mentor] = await pool.query(
+                    'SELECT mentor_id FROM mentors WHERE user_id = ?', 
+                    [user_id]
+                );
+                mentorId = mentor.length > 0 ? mentor[0].mentor_id : null;
+                console.log('✓ Mentor ID found:', mentorId);
+            } else {
+                console.log('✗ User is NOT a mentor (is_mentor =', user.is_mentor, ')');
+            }
+            
+            const responseData = { 
+                isMentor: isMentor,
+                mentorId: mentorId
+            };
+            
+            console.log('📤 Sending response:', JSON.stringify(responseData, null, 2));
+            console.log('========================================\n');
+            
+            res.json(responseData);
         } catch (error) {
-            console.error('Error in /mentors/status:', error);
-            // Always return a valid response, never throw/404
-            res.json({ 
+            console.error('\n========================================');
+            console.error('❌ ERROR in /mentors/status');
+            console.error('========================================');
+            console.error('Error name:', error.name);
+            console.error('Error message:', error.message);
+            console.error('Error stack:', error.stack);
+            console.error('========================================\n');
+            
+            // Return error details for debugging
+            res.status(500).json({ 
                 isMentor: false,
-                mentorId: null
+                mentorId: null,
+                error: error.message
             });
         }
     }));
@@ -481,6 +536,11 @@ module.exports = (pool) => {
             await connection.query(`
                 INSERT INTO mentor_preferences (mentor_id) VALUES (?)
             `, [mentorId]);
+
+            // Update user's is_mentor flag
+            await connection.query(`
+                UPDATE users SET is_mentor = TRUE WHERE user_id = ?
+            `, [user_id]);
 
             await connection.commit();
             res.status(201).json({ 
@@ -839,14 +899,30 @@ module.exports = (pool) => {
     router.delete('/profile', asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
         
-        // This will cascade delete all related mentor data due to foreign key constraints
-        const [result] = await pool.query('DELETE FROM mentors WHERE user_id = ?', [user_id]);
+        const connection = await pool.getConnection();
         
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: 'Mentor profile not found' });
+        try {
+            await connection.beginTransaction();
+            
+            // This will cascade delete all related mentor data due to foreign key constraints
+            const [result] = await connection.query('DELETE FROM mentors WHERE user_id = ?', [user_id]);
+            
+            if (result.affectedRows === 0) {
+                await connection.rollback();
+                return res.status(404).json({ message: 'Mentor profile not found' });
+            }
+            
+            // Update user's is_mentor flag to FALSE
+            await connection.query('UPDATE users SET is_mentor = FALSE WHERE user_id = ?', [user_id]);
+            
+            await connection.commit();
+            res.status(200).json({ message: 'Mentor profile deleted successfully' });
+        } catch (error) {
+            await connection.rollback();
+            throw error;
+        } finally {
+            connection.release();
         }
-        
-        res.status(200).json({ message: 'Mentor profile deleted successfully' });
     }));
 
     // Get mentor statistics (for dashboard/analytics)

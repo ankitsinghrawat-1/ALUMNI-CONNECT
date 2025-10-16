@@ -37,6 +37,74 @@ document.addEventListener('DOMContentLoaded', async () => {
         let profilePicUrl = '';
         let unreadCount = 0;
         let userName = localStorage.getItem('loggedInUserName') || 'Alumni';
+        let userId = localStorage.getItem('loggedInUserId');
+        
+        // Fetch mentor status to determine if mentor profile link should be shown
+        let mentorProfileLink = '';
+        let isMentor = false;
+        let mentorId = null;
+        
+        // Check if window.api is available
+        if (!window.api) {
+            console.error('✗ window.api is not defined! Make sure api.js is loaded before auth.js');
+        } else {
+            console.log('✓ window.api is available');
+            console.log('Auth token present:', !!token);
+            
+            try {
+                console.log('🔄 Fetching mentor status from /api/mentors/status...');
+                const response = await window.api.get('/mentors/status');
+                console.log('✓ Mentor status API response received:');
+                console.log('  └─ Raw response type:', typeof response);
+                console.log('  └─ Raw response:', response);
+                console.log('  └─ Full JSON response:', JSON.stringify(response, null, 2));
+                
+                // Handle both direct response and nested data response
+                const mentorStatus = response.data || response;
+                console.log('  └─ Processed mentorStatus:', mentorStatus);
+                
+                if (mentorStatus) {
+                    // Check if response has the expected fields
+                    const hasIsMentor = 'isMentor' in mentorStatus;
+                    const hasMentorId = 'mentorId' in mentorStatus;
+                    console.log('  └─ Has isMentor field:', hasIsMentor);
+                    console.log('  └─ Has mentorId field:', hasMentorId);
+                    console.log('  └─ mentorStatus.isMentor:', mentorStatus.isMentor);
+                    console.log('  └─ mentorStatus.mentorId:', mentorStatus.mentorId);
+                    
+                    isMentor = mentorStatus.isMentor === true;
+                    mentorId = mentorStatus.mentorId;
+                    console.log('  └─ Final isMentor value:', isMentor);
+                    console.log('  └─ Final mentorId value:', mentorId);
+                    
+                    if (isMentor && mentorId) {
+                        mentorProfileLink = `<li><a href="mentor-profile.html?id=${mentorId}"><i class="fas fa-chalkboard-teacher"></i> Mentor Profile</a></li>`;
+                        console.log('✓ SUCCESS: Mentor profile link created!');
+                        console.log('  └─ Mentor ID:', mentorId);
+                        console.log('  └─ Link HTML:', mentorProfileLink.substring(0, 80) + '...');
+                    } else {
+                        console.log('✗ NOT creating mentor link:');
+                        if (!isMentor) {
+                            console.log('  └─ Reason: isMentor is', isMentor, '(expected true)');
+                        }
+                        if (!mentorId) {
+                            console.log('  └─ Reason: mentorId is', mentorId, '(expected a number)');
+                        }
+                    }
+                } else {
+                    console.log('✗ API returned null/undefined/empty response');
+                }
+            } catch (error) {
+                console.error('✗ ERROR fetching mentor status:');
+                console.error('  └─ Error type:', error.constructor.name);
+                console.error('  └─ Error name:', error.name);
+                console.error('  └─ Error message:', error.message);
+                console.error('  └─ Full error object:', error);
+                if (error.stack) {
+                    console.error('  └─ Stack trace:', error.stack);
+                }
+            }
+        }
 
         // --- Nav Bar HTML Structure ---
         navItems.innerHTML = `
@@ -76,7 +144,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </a>
                 <ul class="dropdown-menu">
                     <li><a href="${getDashboardUrl(userRole)}"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-                    <li><a href="profile.html"><i class="fas fa-user-edit"></i> Edit Profile</a></li>
+                    <li class="nav-dropdown profile-submenu">
+                        <a href="#" class="dropdown-toggle"><i class="fas fa-user"></i> My Profiles <i class="fas fa-chevron-left"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="view-profile.html?email=${loggedInUserEmail}"><i class="fas fa-user"></i> Main Profile</a></li>
+                            <li><a href="social-profile.html?userId=${userId}"><i class="fas fa-id-card"></i> Social Profile</a></li>
+                            ${mentorProfileLink}
+                        </ul>
+                    </li>
                     <li><a href="my-blogs.html"><i class="fas fa-feather-alt"></i> My Blogs</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button id="theme-toggle-btn" class="theme-toggle-button"><i class="fas fa-moon"></i><span>Toggle Theme</span></button></li>
@@ -198,13 +273,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.stopPropagation();
             const parentDropdown = e.currentTarget.closest('.nav-dropdown');
             
-            document.querySelectorAll('.nav-dropdown').forEach(dd => {
-                if (dd !== parentDropdown) {
-                    dd.classList.remove('dropdown-active');
-                }
-            });
-
-            parentDropdown.classList.toggle('dropdown-active');
+            // Handle nested dropdowns (profile submenu)
+            if (parentDropdown.classList.contains('profile-submenu')) {
+                // Toggle only this submenu
+                parentDropdown.classList.toggle('dropdown-active');
+            } else {
+                // Close all other main dropdowns
+                document.querySelectorAll('.nav-dropdown').forEach(dd => {
+                    if (dd !== parentDropdown && !dd.classList.contains('profile-submenu')) {
+                        dd.classList.remove('dropdown-active');
+                    }
+                });
+                
+                parentDropdown.classList.toggle('dropdown-active');
+            }
         });
     });
     

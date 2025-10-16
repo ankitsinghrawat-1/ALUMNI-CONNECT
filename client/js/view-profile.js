@@ -275,6 +275,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         try {
             const user = await window.api.get(`/users/profile/${email}`);
             
+            // Check if viewing own profile
+            const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+            const isOwnProfile = loggedInUserEmail && loggedInUserEmail === email;
+            
+            // Update action buttons based on whether it's own profile
+            const profileActions = document.querySelector('.profile-actions');
+            if (isOwnProfile && profileActions) {
+                profileActions.innerHTML = `
+                    <a href="profile.html" class="btn btn-primary">
+                        <i class="fas fa-user-edit"></i>
+                        <span>Edit Profile</span>
+                    </a>
+                    <a id="social-profile-link" href="social-profile.html?userId=${user.user_id}" class="btn btn-secondary">
+                        <i class="fas fa-users"></i>
+                        <span>View Social Profile</span>
+                    </a>
+                `;
+            }
+            
             // Always update social profile link with user_id if available
             const socialProfileLink = document.getElementById('social-profile-link');
             if (socialProfileLink && user.user_id) {
