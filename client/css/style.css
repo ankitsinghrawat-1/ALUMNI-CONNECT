@@ -186,17 +186,24 @@ h1, h2, h3, h4, h5, h6 {
     width: 40px;
     height: 40px;
     min-width: 40px;
+    padding-left: 0;
+    padding-right: 0;
     overflow: hidden;
     white-space: nowrap;
     border-radius: 8px; /* Rounded rectangle, not circle */
-    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Slower: 0.7s for smooth effect */
+    transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                padding 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                border-radius 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Explicit transitions for smooth collapse */
 }
 
 .action-icon-btn i {
     min-width: 20px;
     text-align: center;
     flex-shrink: 0;
-    transition: margin 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Slower */
+    transition: margin 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth icon transitions */
 }
 
 .action-icon-btn .btn-text {
@@ -207,7 +214,9 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 0;
     overflow: hidden;
     transform: translateX(-10px);
-    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Slower */
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                max-width 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth text transitions */
 }
 
 /* Expand button on hover to show text */
