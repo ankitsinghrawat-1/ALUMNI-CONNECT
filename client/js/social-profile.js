@@ -23,18 +23,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isOwnProfile) {
             const followBtn = document.getElementById('follow-btn');
             if (followBtn) {
-                followBtn.classList.add('hidden-own-profile');
                 followBtn.style.display = 'none';
-                followBtn.style.visibility = 'hidden';
-                followBtn.disabled = true;
             }
             
             // Hide message button for own profile (can't message yourself)
             const messageBtn = document.getElementById('message-btn');
             if (messageBtn) {
                 messageBtn.style.display = 'none';
-                messageBtn.style.visibility = 'hidden';
-                messageBtn.disabled = true;
             }
         }
     } catch (error) {
