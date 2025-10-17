@@ -2108,3 +2108,26 @@ button:focus-visible,
     justify-content: center !important;
 }
 
+
+/* ====================================================================
+   REMOVE BUTTON CONTAINER BACKGROUND
+   ==================================================================== */
+
+/* Remove any background from button groups */
+.profile-actions-regular,
+.profile-actions-create {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Ensure buttons have clean margins */
+.profile-actions-regular {
+    margin-top: 1rem;
+}
+
+.profile-actions-create {
+    margin-top: 0.5rem;
+}
+
