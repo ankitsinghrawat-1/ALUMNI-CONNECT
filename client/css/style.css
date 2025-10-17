@@ -177,59 +177,64 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(0);
 }
 
-/* Tooltip for icon buttons */
-.action-icon-btn::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    top: calc(100% + 10px);
-    left: 50%;
-    transform: translateX(-50%) translateY(5px);
-    background: #2c3e50;
-    color: #ffffff;
-    padding: 0.625rem 1rem;
-    border-radius: 6px;
-    font-size: 0.813rem;
-    font-weight: 600;
+/* Magic Expanding Buttons - Icon expands to show text on hover */
+.action-icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden;
     white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
-    letter-spacing: 0.4px;
-    line-height: 1.5;
+    border-radius: 8px; /* Rounded rectangle, not circle */
+    transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                padding 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                border-radius 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Explicit transitions for smooth collapse */
+}
+
+.action-icon-btn i {
+    min-width: 20px;
     text-align: center;
+    flex-shrink: 0;
+    transition: margin 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth icon transitions */
 }
 
-.action-icon-btn::before {
-    content: '';
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-bottom-color: #2c3e50;
+.action-icon-btn .btn-text {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
     opacity: 0;
-    pointer-events: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    max-width: 0;
+    overflow: hidden;
+    transform: translateX(-10px);
+    transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                max-width 0.7s cubic-bezier(0.4, 0, 0.2, 1), 
+                transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); /* Smooth text transitions */
 }
 
-.action-icon-btn:hover::after,
-.action-icon-btn:hover::before {
+/* Expand button on hover to show text */
+.action-icon-btn:hover {
+    width: auto;
+    padding-left: 0.75rem;
+    padding-right: 1rem;
+    border-radius: 8px; /* Maintain rounded rectangle shape when expanded */
+}
+
+.action-icon-btn:hover .btn-text {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    max-width: 200px;
+    transform: translateX(0);
 }
 
-html.dark-mode .action-icon-btn::after {
-    background: #f8f9fa;
-    color: #1a252f;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.1);
-}
-
-html.dark-mode .action-icon-btn::before {
-    border-bottom-color: #f8f9fa;
+.action-icon-btn:hover i {
+    margin-right: 0;
 }
 
 .action-btn-primary {
@@ -4690,33 +4695,53 @@ html.dark-mode .management-table tbody tr:hover {
     color: var(--primary-color);
 }
 
-.verified-badge {
-    background-color: #3498db;
-    color: #fff;
-    padding: 0.3rem 0.8rem;
-    border-radius: 20px;
-    font-size: 1rem;
-    font-weight: 600;
-    margin-left: 0.75rem;
+/* Standardized Verified Badge - Same across all pages */
+.verified-badge,
+.verification-badge {
     display: inline-flex;
     align-items: center;
-    gap: 0.4rem;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    background-color: #1d9bf0;
+    color: #fff;
+    border-radius: 50%;
+    font-size: 0.75rem;
+    margin-left: 0.5rem;
     vertical-align: middle;
+    flex-shrink: 0;
+}
+
+.verified-badge i,
+.verification-badge i {
+    font-size: 0.7rem;
+}
+
+/* Larger verified badge for special contexts */
+.verified-badge-lg {
+    width: 24px;
+    height: 24px;
+    font-size: 0.875rem;
+}
+
+.verified-badge-lg i {
+    font-size: 0.8rem;
 }
 
 .verified-badge-sm {
-    color: #3498db;
+    color: #1d9bf0;
     font-size: 1rem;
     margin-left: 0.5rem;
     vertical-align: middle;
 }
 
-html.dark-mode .verified-badge {
-    background-color: var(--accent-color);
+html.dark-mode .verified-badge,
+html.dark-mode .verification-badge {
+    background-color: #1d9bf0;
 }
 
 html.dark-mode .verified-badge-sm {
-    color: var(--accent-color);
+    color: #1d9bf0;
 }
 
 .dashboard-name-container {

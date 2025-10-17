@@ -434,6 +434,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
     }
+
+    // Share profile button handler
+    const shareProfileBtn = document.getElementById('share-profile-btn');
+    if (shareProfileBtn) {
+        shareProfileBtn.addEventListener('click', () => {
+            const profileUrl = window.location.href;
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Alumni Profile',
+                    url: profileUrl
+                }).catch(() => {});
+            } else {
+                navigator.clipboard.writeText(profileUrl);
+                showToast('Profile link copied to clipboard!', 'success');
+            }
+        });
+    }
     
     await fetchUserProfile(userEmail);
 });

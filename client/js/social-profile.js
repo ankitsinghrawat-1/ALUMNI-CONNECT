@@ -19,14 +19,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentUser = await window.api.get('/users/profile');
         isOwnProfile = currentUser.user_id === parseInt(userId);
         
-        // Immediately hide follow button if viewing own profile
+        // Immediately hide follow button and message button if viewing own profile
         if (isOwnProfile) {
             const followBtn = document.getElementById('follow-btn');
             if (followBtn) {
-                followBtn.classList.add('hidden-own-profile');
                 followBtn.style.display = 'none';
-                followBtn.style.visibility = 'hidden';
-                followBtn.disabled = true;
+            }
+            
+            // Hide message button for own profile (can't message yourself)
+            const messageBtn = document.getElementById('message-btn');
+            if (messageBtn) {
+                messageBtn.style.display = 'none';
             }
         }
     } catch (error) {

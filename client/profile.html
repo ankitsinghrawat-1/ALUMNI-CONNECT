@@ -68,8 +68,34 @@
                 <!-- Edit Profile Section -->
                 <div id="edit-profile" class="profile-page active">
                     <div class="page-header">
-                        <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
-                        <p class="page-subtitle">Update your profile information and preferences</p>
+                        <div class="page-header-content">
+                            <div class="page-title-section">
+                                <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
+                                <p class="page-subtitle">Update your profile information and preferences</p>
+                            </div>
+                            <div class="page-header-actions">
+                                <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                                    <i class="fas fa-th-large"></i>
+                                    <span class="btn-text">Dashboard</span>
+                                </a>
+                                <a href="social-profile.html" id="social-profile-link-header" class="action-icon-btn action-icon-secondary" data-tooltip="Social Profile">
+                                    <i class="fas fa-users"></i>
+                                    <span class="btn-text">Social Profile</span>
+                                </a>
+                                <a href="mentor-profile.html" id="mentor-profile-link-header" class="action-icon-btn action-icon-secondary" data-tooltip="Mentor Profile">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <span class="btn-text">Mentor Profile</span>
+                                </a>
+                                <button id="profile-message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="btn-text">Message</span>
+                                </button>
+                                <button id="profile-share-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span class="btn-text">Share Profile</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     
                     <div id="verification-status-section" class="form-section">
