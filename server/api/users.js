@@ -310,7 +310,7 @@ module.exports = (pool, upload) => {
         
         // Only add fields that are present in req.body
         for (const field of allowedFields) {
-            if (req.body.hasOwnProperty(field)) {
+            if (field in req.body) {
                 updateFields[field] = req.body[field];
             }
         }
