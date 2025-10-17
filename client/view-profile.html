@@ -47,28 +47,43 @@
                         <div class="avatar-ring"></div>
                     </div>
                     <div class="profile-info">
-                        <div class="profile-name-wrapper">
-                            <h2 id="profile-name-view"></h2>
-                            <div id="verified-badge-container"></div>
+                        <div class="profile-info-left">
+                            <div class="profile-name-wrapper">
+                                <h2 id="profile-name-view"></h2>
+                                <div id="verified-badge-container"></div>
+                            </div>
+                            <p id="profile-subheader" class="profile-subheader"></p>
+                            <p id="profile-bio-inline" class="profile-bio-inline"></p>
                         </div>
-                        <p id="profile-subheader" class="profile-subheader"></p>
-                        <div class="profile-actions">
-                            <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
-                                <i class="fas fa-th-large"></i>
-                                <span class="btn-text">Dashboard</span>
-                            </a>
-                            <button id="send-message-btn" class="action-icon-btn action-icon-primary" data-tooltip="Message">
-                                <i class="fas fa-envelope"></i>
-                                <span class="btn-text">Message</span>
-                            </button>
-                            <a id="social-profile-link" href="social-profile.html" class="action-icon-btn action-icon-secondary" data-tooltip="Social Profile">
-                                <i class="fas fa-users"></i>
-                                <span class="btn-text">Social Profile</span>
-                            </a>
-                            <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
-                                <i class="fas fa-share-alt"></i>
-                                <span class="btn-text">Share Profile</span>
-                            </button>
+                        
+                        <div class="profile-info-right">
+                            <!-- View Profile Action Buttons -->
+                            <div class="profile-actions profile-actions-regular">
+                                <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                                    <i class="fas fa-th-large"></i>
+                                    <span class="btn-text">Dashboard</span>
+                                </a>
+                                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
+                                    <i class="fas fa-edit"></i>
+                                    <span class="btn-text">Edit Profile</span>
+                                </button>
+                                <button id="send-message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message" style="display: none;">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="btn-text">Message</span>
+                                </button>
+                                <a id="social-profile-link" href="social-profile.html" class="action-icon-btn action-icon-secondary" data-tooltip="Social Profile">
+                                    <i class="fas fa-users"></i>
+                                    <span class="btn-text">Social Profile</span>
+                                </a>
+                                <a id="mentor-profile-link" href="mentor-profile.html" class="action-icon-btn action-icon-secondary" data-tooltip="Mentor Profile" style="display: none;">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <span class="btn-text">Mentor Profile</span>
+                                </a>
+                                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span class="btn-text">Share</span>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -260,30 +260,30 @@ html.dark-mode .social-profile-main .tab-content {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: var(--spacing-xl);
-    padding: var(--spacing-lg) 0;
+    margin-bottom: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
     position: relative;
     z-index: var(--z-base);
 }
 
 .profile-action-btns {
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
     align-items: center;
 }
 
 .profile-action-btns .btn {
-    padding: 0.625rem 1.5rem !important;
-    font-size: 0.9375rem !important;
+    padding: 0.5rem 1rem !important;
+    font-size: 0.875rem !important;
     font-weight: 600 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
 .profile-action-btns .btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 /* ====================================================================
@@ -294,7 +294,7 @@ html.dark-mode .social-profile-main .tab-content {
     border: 1px solid var(--border-light);
     border-radius: 0;
     overflow: hidden;
-    margin-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
     margin-left: calc(-1 * var(--spacing-xl));
     margin-right: calc(-1 * var(--spacing-xl));
     width: calc(100% + 2 * var(--spacing-xl));
@@ -302,7 +302,7 @@ html.dark-mode .social-profile-main .tab-content {
 
 /* Cover Photo */
 .profile-cover {
-    height: 240px;
+    height: 200px;
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
     position: relative;
     overflow: hidden;
@@ -341,22 +341,22 @@ html.dark-mode .social-profile-main .tab-content {
 
 /* Profile Info Wrapper */
 .profile-info-wrapper {
-    padding: 0 var(--spacing-2xl) var(--spacing-2xl);
+    padding: 0 var(--spacing-2xl) var(--spacing-lg);
     position: relative;
 }
 
 /* Profile Avatar */
 .profile-avatar-container {
     position: relative;
-    margin-top: -80px;
-    margin-bottom: var(--spacing-lg);
+    margin-top: -70px;
+    margin-bottom: var(--spacing-md);
 }
 
 .profile-avatar {
-    width: 160px;
-    height: 160px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
-    border: 6px solid var(--bg-primary);
+    border: 5px solid var(--bg-primary);
     object-fit: cover;
     box-shadow: var(--shadow-lg);
 }
@@ -387,33 +387,33 @@ html.dark-mode .social-profile-main .tab-content {
 .profile-main-info {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-sm);
 }
 
 .profile-name-section {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-md);
     flex-wrap: wrap;
 }
 
 .profile-name-wrapper {
     display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-sm);
+    align-items: center;
+    gap: var(--spacing-xs);
     flex: 1;
     min-width: 0;
 }
 
 .profile-name-section h1 {
-    font-size: var(--font-size-3xl);
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--text-primary);
     margin: 0;
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
 }
 
 .verification-badge,
@@ -427,7 +427,6 @@ html.dark-mode .social-profile-main .tab-content {
     justify-content: center;
     color: white;
     font-size: 0.7rem;
-    margin-left: 0.5rem;
     flex-shrink: 0;
 }
 
@@ -452,37 +451,42 @@ html.dark-mode .social-profile-main .tab-content {
 }
 
 .profile-title {
-    font-size: var(--font-size-lg);
+    font-size: 0.9375rem;
     color: var(--text-secondary);
     margin: var(--spacing-xs) 0;
     font-weight: 500;
 }
 
 .profile-bio {
-    font-size: var(--font-size-base);
-    line-height: 1.6;
+    font-size: 0.9375rem;
+    line-height: 1.5;
     color: var(--text-primary);
-    margin: var(--spacing-md) 0;
+    margin: var(--spacing-xs) 0;
     max-width: 600px;
 }
 
-.profile-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--spacing-lg);
-    margin: var(--spacing-md) 0;
+.profile-details-compact {
+    margin: var(--spacing-sm) 0;
 }
 
+.detail-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-md);
+}
+
+.profile-details,
 .detail-item {
     display: flex;
     align-items: center;
     gap: var(--spacing-xs);
-    font-size: var(--font-size-sm);
+    font-size: 0.875rem;
     color: var(--text-secondary);
 }
 
 .detail-item i {
     color: var(--text-tertiary);
+    font-size: 0.875rem;
 }
 
 .detail-item a {
@@ -494,54 +498,79 @@ html.dark-mode .social-profile-main .tab-content {
     text-decoration: underline;
 }
 
-/* Extended Profile Info */
-.profile-extended-info {
-    display: flex;
-    flex-direction: column;
+/* Extended Profile Info - Compact Grid */
+.profile-extended-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: var(--spacing-sm);
     margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
 }
 
-.extended-item {
+.profile-extended-info-grid .extended-item {
     display: flex;
     align-items: flex-start;
     gap: var(--spacing-sm);
-    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm);
+    background: var(--bg-primary);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-light);
+    font-size: 0.875rem;
 }
 
-.extended-item i {
+.extended-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-tertiary);
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.extended-icon i {
     color: var(--primary-blue);
-    margin-top: 2px;
-    font-size: var(--font-size-base);
+    font-size: 0.875rem;
 }
 
 .extended-content {
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: 2px;
+    min-width: 0;
 }
 
 .extended-label {
     font-weight: 600;
     color: var(--text-primary);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.extended-content span:not(.extended-label) {
+.extended-value {
     color: var(--text-secondary);
+    font-size: 0.875rem;
+    line-height: 1.4;
+    word-break: break-word;
 }
 
-.mentor-badge {
+.extended-item-badge {
+    background: linear-gradient(135deg, rgba(10, 102, 194, 0.1) 0%, rgba(29, 155, 240, 0.05) 100%);
+    border-color: var(--primary-blue);
+}
+
+.mentor-badge-text {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-xs);
-    padding: var(--spacing-xs) var(--spacing-md);
-    background: linear-gradient(135deg, var(--primary-blue-bg) 0%, rgba(120, 119, 198, 0.1) 100%);
-    border: 1px solid var(--primary-blue);
-    border-radius: var(--radius-full);
     color: var(--primary-blue);
     font-weight: 600;
-    font-size: var(--font-size-xs);
+    font-size: 0.875rem;
 }
 
 /* Social Links */
@@ -597,66 +626,82 @@ html.dark-mode .social-profile-main .tab-content {
 /* Profile Actions */
 .profile-actions {
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-end;
-    margin-top: var(--spacing-lg);
-    padding: var(--spacing-md);
-    background: var(--bg-secondary);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
 
-.profile-actions .btn {
-    padding: 0.5rem 1rem !important;
+.profile-actions-regular {
+    justify-content: flex-start;
+}
+
+.profile-actions-create {
+    justify-content: flex-start;
+    margin-top: var(--spacing-xs);
+}
+
+.profile-name-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.profile-actions .btn,
+.action-icon-btn {
+    padding: 0.5rem 0.875rem !important;
     border-radius: var(--radius-full) !important;
-    font-size: var(--font-size-xs) !important;
+    font-size: 0.875rem !important;
     font-weight: 600 !important;
     cursor: pointer !important;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
-    transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1) !important;
-    transition: all var(--transition-base) !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     display: inline-flex !important;
     align-items: center !important;
     gap: var(--spacing-xs) !important;
     white-space: nowrap !important;
     border: 1px solid transparent !important;
+    text-decoration: none !important;
+    background: transparent;
 }
 
-.profile-actions .btn-edit-profile {
+.action-icon-btn .btn-text {
+    font-size: 0.875rem;
+}
+
+.profile-actions .action-icon-primary {
     background: var(--primary-blue) !important;
     color: white !important;
     border-color: var(--primary-blue) !important;
 }
 
-.profile-actions .btn-edit-profile:hover {
+.profile-actions .action-icon-primary:hover {
     background: var(--primary-blue-hover) !important;
     border-color: var(--primary-blue-hover) !important;
-    box-shadow: var(--shadow-sm) !important;
+    box-shadow: 0 2px 6px rgba(10, 102, 194, 0.3) !important;
 }
 
-.profile-actions .btn-primary {
-    background: var(--primary-blue) !important;
-    color: white !important;
-    border-color: var(--primary-blue) !important;
-}
-
-.profile-actions .btn-primary:hover {
-    background: var(--primary-blue-hover) !important;
-    border-color: var(--primary-blue-hover) !important;
-    box-shadow: var(--shadow-sm) !important;
-}
-
-.profile-actions .btn-secondary {
+.profile-actions .action-icon-secondary {
     background: transparent !important;
     color: var(--text-primary) !important;
     border: 1px solid var(--border-medium) !important;
 }
 
-.profile-actions .btn-secondary:hover {
+.profile-actions .action-icon-secondary:hover {
     background: var(--bg-hover) !important;
     border-color: var(--border-dark) !important;
+}
+
+.profile-actions .action-icon-accent {
+    background: transparent !important;
+    color: var(--accent-blue) !important;
+    border: 1px solid var(--accent-blue) !important;
+}
+
+.profile-actions .action-icon-accent:hover {
+    background: rgba(29, 155, 240, 0.1) !important;
+    border-color: var(--accent-blue-hover) !important;
 }
 
 /* Hide follow button on own profile */
@@ -687,33 +732,33 @@ html.dark-mode .social-profile-main .tab-content {
 /* Profile Stats */
 .profile-stats {
     display: flex;
-    gap: var(--spacing-2xl);
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-xl);
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
     border-top: 1px solid var(--border-light);
 }
 
 .stat-item {
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: 2px;
     cursor: pointer;
     transition: all var(--transition-fast);
 }
 
-.stat-item:hover .stat-number {
+.stat-item:hover .stat-value {
     color: var(--primary-blue);
 }
 
-.stat-number {
-    font-size: var(--font-size-2xl);
+.stat-value {
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
     transition: color var(--transition-fast);
 }
 
 .stat-label {
-    font-size: var(--font-size-sm);
+    font-size: 0.875rem;
     color: var(--text-secondary);
 }
 
@@ -803,27 +848,27 @@ html.dark-mode .social-profile-main .tab-content {
 .profile-tabs {
     background: var(--bg-primary);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
-    margin-bottom: var(--spacing-xl);
-    padding: var(--spacing-md);
+    border-radius: var(--radius-lg);
+    margin-bottom: var(--spacing-lg);
+    padding: var(--spacing-xs);
     display: flex;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     overflow-x: auto;
 }
 
 .tab-btn {
-    padding: var(--spacing-md) var(--spacing-xl);
+    padding: var(--spacing-sm) var(--spacing-lg);
     background: transparent;
     border: none;
     border-radius: var(--radius-full);
-    font-size: var(--font-size-sm);
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--text-secondary);
     cursor: pointer;
     transition: all var(--transition-fast);
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-xs);
     white-space: nowrap;
 }
 
@@ -1164,20 +1209,21 @@ html.dark-mode .social-profile-main .tab-content {
     }
     
     .profile-cover {
-        height: 180px;
+        height: 150px;
     }
     
     .profile-info-wrapper {
-        padding: 0 var(--spacing-lg) var(--spacing-xl);
+        padding: 0 var(--spacing-lg) var(--spacing-lg);
     }
     
     .profile-avatar-container {
-        margin-top: -60px;
+        margin-top: -50px;
     }
     
     .profile-avatar {
-        width: 120px;
-        height: 120px;
+        width: 100px;
+        height: 100px;
+        border-width: 4px;
     }
     
     .profile-main-info {
@@ -1185,37 +1231,51 @@ html.dark-mode .social-profile-main .tab-content {
     }
     
     .profile-name-section h1 {
-        font-size: var(--font-size-2xl);
+        font-size: 1.5rem;
     }
     
     .profile-name-section {
         flex-direction: column;
         align-items: stretch;
+        gap: var(--spacing-sm);
     }
     
     .profile-actions {
         justify-content: flex-start;
         width: 100%;
+        gap: var(--spacing-xs);
     }
     
-    .profile-actions .btn {
-        flex: 1;
-        justify-content: center;
-        min-width: 100px;
+    .profile-actions-regular {
+        justify-content: flex-start;
     }
     
-    .profile-action-buttons {
-        width: 100%;
+    .profile-actions-create {
+        justify-content: flex-start;
+        margin-top: var(--spacing-xs);
     }
     
-    .profile-action-btn {
-        flex: 1;
-        justify-content: center;
+    .profile-actions .btn,
+    .action-icon-btn {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.8125rem !important;
+    }
+    
+    .action-icon-btn .btn-text {
+        display: none;
+    }
+    
+    .profile-extended-info-grid {
+        grid-template-columns: 1fr;
     }
     
     .profile-stats {
-        gap: var(--spacing-lg);
+        gap: var(--spacing-md);
         overflow-x: auto;
+    }
+    
+    .stat-value {
+        font-size: 1.25rem;
     }
     
     .profile-highlights-section,
@@ -1841,4 +1901,347 @@ button:focus-visible,
     }
 }
 
+
+
+/* ====================================================================
+   VIEW PROFILE LAYOUT COMPATIBILITY
+   ==================================================================== */
+
+/* Social links in card layout */
+.profile-card .profile-social-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.profile-card .social-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.profile-card .social-link:hover {
+    background: var(--primary-blue);
+    color: white;
+    transform: translateX(4px);
+}
+
+.profile-card .social-link i {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* Info grid styles */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.info-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.info-label i {
+    color: var(--primary-blue);
+}
+
+.info-value {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.info-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.info-link:hover {
+    text-decoration: underline;
+}
+
+.mentor-badge-text {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+/* Card icons */
+.card-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.25rem;
+}
+
+.about-icon {
+    background: rgba(10, 102, 194, 0.1);
+    color: var(--primary-blue);
+}
+
+.contact-icon {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.skills-icon {
+    background: rgba(255, 152, 0, 0.1);
+    color: #FF9800;
+}
+
+.social-icon {
+    background: rgba(156, 39, 176, 0.1);
+    color: #9C27B0;
+}
+
+/* Bio text */
+.bio-text {
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+/* Ensure profile content view has proper spacing */
+.profile-content-view {
+    padding: 0 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-content-view .profile-card {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Stats section override for social profile */
+.social-profile-main .profile-stats-section {
+    margin: var(--spacing-xl) 0;
+}
+
+.social-profile-main .stat-box {
+    cursor: pointer;
+}
+
+.social-profile-main .stat-box:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Make followers and following stats clickable */
+#followers-stat,
+#following-stat {
+    cursor: pointer;
+}
+
+
+/* ====================================================================
+   INLINE BIO AND BUTTON CONTAINER STYLES
+   ==================================================================== */
+
+/* Inline bio below name and title */
+.profile-bio-inline {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin: 0.75rem 0 1rem 0;
+    max-width: 700px;
+}
+
+/* Reduced width button container */
+.profile-actions-container {
+    max-width: 600px;
+    margin-top: 1rem;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.profile-actions-regular {
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.profile-actions-create {
+    justify-content: flex-start;
+}
+
+
+/* ====================================================================
+   IMPROVED BUTTON ICON CENTERING
+   ==================================================================== */
+
+.action-icon-btn i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.action-icon-btn {
+    justify-content: center !important;
+}
+
+
+/* ====================================================================
+   REMOVE BUTTON CONTAINER BACKGROUND
+   ==================================================================== */
+
+/* Remove any background from button groups */
+.profile-actions-regular,
+.profile-actions-create {
+    background: transparent !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Ensure buttons have clean margins and stay within header */
+.profile-actions-regular {
+    margin-top: 0.75rem;
+}
+
+.profile-actions-create {
+    margin-top: 0.5rem;
+}
+
+
+/* ====================================================================
+   IMPROVED BUTTON SPACING, TRANSITIONS, AND ICON CENTERING
+   ==================================================================== */
+
+/* Increase gap between icon and text in buttons */
+.action-icon-btn {
+    gap: 0.625rem !important;  /* Increased from 0.5rem */
+}
+
+/* Slower transition for better UX - applies to both hover and unhover */
+.action-icon-btn {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;  /* Increased from 0.3s to 0.5s */
+}
+
+/* Perfect icon centering within button */
+.action-icon-btn i {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    font-size: 1rem !important;
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+/* Ensure text aligns properly with centered icons */
+.action-icon-btn .btn-text {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
+/* ====================================================================
+   FIX BUTTON GROUP SPACING TO PREVENT OVERLAP
+   ==================================================================== */
+
+/* Add proper margin to prevent overlap during scroll */
+.profile-actions-regular {
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.75rem !important;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-actions-create {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0 !important;
+    position: relative;
+    z-index: 1;
+    clear: both;
+}
+
+/* ====================================================================
+   FIX BUTTON POSITIONING TO STAY INSIDE HEADER CONTAINER
+   ==================================================================== */
+
+/* Ensure profile header content has enough padding for buttons to fit within */
+.social-profile-main .profile-header-content {
+    padding-bottom: 1.75rem !important;  /* Increased to accommodate both button rows */
+}
+
+/* Split profile-info into left (name/bio) and right (buttons) */
+.social-profile-main .profile-info {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 2rem !important;
+    width: 100% !important;
+}
+
+.social-profile-main .profile-info-left {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.social-profile-main .profile-info-right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 0.5rem !important;
+}
+
+/* Buttons on the right side */
+.social-profile-main .profile-actions-regular {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    justify-content: flex-end !important;
+}
+
+.social-profile-main .profile-actions-create {
+    margin-top: -50px !important;
+    margin-bottom: 15px !important;
+    justify-content: flex-end !important;
+}
+
+/* Mobile responsive - stack buttons below name/bio */
+@media (max-width: 768px) {
+    .social-profile-main .profile-info {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .social-profile-main .profile-info-right {
+        align-items: stretch !important;
+    }
+    
+    .social-profile-main .profile-actions-regular,
+    .social-profile-main .profile-actions-create {
+        justify-content: flex-start !important;
+    }
+}
 

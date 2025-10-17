@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('profile-name').textContent = profileUser.full_name;
             
             if (profileUser.verification_status === 'verified') {
-                document.getElementById('verification-badge').style.display = 'inline';
+                document.getElementById('verification-badge').style.display = 'inline-flex';
             }
 
             const titleParts = [];
@@ -78,24 +78,93 @@ document.addEventListener('DOMContentLoaded', async () => {
             const viewProfileBtn = document.getElementById('view-full-profile-btn');
             viewProfileBtn.href = `view-profile.html?email=${profileUser.email}`;
             
+            // Update profile details
+            if (profileUser.location) {
+                document.getElementById('location-detail').style.display = 'flex';
+                document.getElementById('profile-location').textContent = profileUser.location;
+            }
+            
+            if (profileUser.website) {
+                document.getElementById('website-detail').style.display = 'flex';
+                const websiteLink = document.getElementById('profile-website');
+                websiteLink.href = profileUser.website;
+                websiteLink.textContent = profileUser.website.replace(/^https?:\/\//, '');
+            }
+            
+            if (profileUser.created_at) {
+                const joinedDate = new Date(profileUser.created_at);
+                const monthNames = ["January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
+                ];
+                document.getElementById('profile-joined').textContent = 
+                    `${monthNames[joinedDate.getMonth()]} ${joinedDate.getFullYear()}`;
+            }
+            
+            // Additional profile details
+            if (profileUser.email) {
+                document.getElementById('email-detail').style.display = 'flex';
+                document.getElementById('profile-email').textContent = profileUser.email;
+            }
+            
+            if (profileUser.phone) {
+                document.getElementById('phone-detail').style.display = 'flex';
+                document.getElementById('profile-phone').textContent = profileUser.phone;
+            }
+            
+            if (profileUser.department) {
+                document.getElementById('department-detail').style.display = 'flex';
+                document.getElementById('profile-department').textContent = profileUser.department;
+            }
+            
             // Update extended profile info
+            let hasExtendedInfo = false;
             if (profileUser.skills) {
                 document.getElementById('profile-skills').textContent = profileUser.skills;
                 document.getElementById('skills-detail').style.display = 'flex';
+                hasExtendedInfo = true;
             }
             
             if (profileUser.interests) {
                 document.getElementById('profile-interests').textContent = profileUser.interests;
                 document.getElementById('interests-detail').style.display = 'flex';
+                hasExtendedInfo = true;
             }
             
             if (profileUser.current_project) {
                 document.getElementById('profile-project').textContent = profileUser.current_project;
                 document.getElementById('project-detail').style.display = 'flex';
+                hasExtendedInfo = true;
+            }
+            
+            // Additional professional info
+            if (profileUser.experience || profileUser.years_experience) {
+                const experience = profileUser.experience || profileUser.years_experience;
+                document.getElementById('profile-experience').textContent = experience;
+                document.getElementById('experience-detail').style.display = 'flex';
+                hasExtendedInfo = true;
+            }
+            
+            if (profileUser.education || profileUser.degree) {
+                const education = profileUser.education || profileUser.degree;
+                document.getElementById('profile-education').textContent = education;
+                document.getElementById('education-detail').style.display = 'flex';
+                hasExtendedInfo = true;
+            }
+            
+            if (profileUser.languages) {
+                document.getElementById('profile-languages').textContent = profileUser.languages;
+                document.getElementById('languages-detail').style.display = 'flex';
+                hasExtendedInfo = true;
             }
             
             if (profileUser.available_mentor) {
                 document.getElementById('mentor-badge').style.display = 'flex';
+                hasExtendedInfo = true;
+            }
+            
+            // Show/hide extended info card
+            if (hasExtendedInfo) {
+                document.getElementById('profile-extended-card').style.display = 'block';
             }
             
             // Update social links
@@ -126,7 +195,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             
             if (hasSocialLinks) {
-                document.getElementById('profile-social-links').style.display = 'flex';
+                document.getElementById('social-links-card').style.display = 'block';
             }
 
             // Setup follow button - only show if viewing someone else's profile
@@ -398,14 +467,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     });
 
-    // View followers/following
-    document.getElementById('followers-stat').addEventListener('click', () => {
-        showConnectionsModal('followers');
-    });
-
-    document.getElementById('following-stat').addEventListener('click', () => {
-        showConnectionsModal('following');
-    });
+    // View followers/following - using stat-box structure
+    const followersStatBox = document.querySelector('.stat-box:nth-child(2)');
+    const followingStatBox = document.querySelector('.stat-box:nth-child(3)');
+    
+    if (followersStatBox) {
+        followersStatBox.addEventListener('click', () => {
+            showConnectionsModal('followers');
+        });
+    }
+    
+    if (followingStatBox) {
+        followingStatBox.addEventListener('click', () => {
+            showConnectionsModal('following');
+        });
+    }
 
     // Show connections modal
     const showConnectionsModal = async (type) => {
@@ -644,38 +720,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     };
 
-    // Enhanced profile details display
-    const displayProfileDetails = () => {
-        if (profileUser.location) {
-            document.getElementById('location-detail').style.display = 'flex';
-            document.getElementById('profile-location').textContent = profileUser.location;
-        }
-        
-        if (profileUser.website) {
-            document.getElementById('website-detail').style.display = 'flex';
-            const websiteLink = document.getElementById('profile-website');
-            websiteLink.href = profileUser.website;
-            websiteLink.textContent = profileUser.website.replace(/^https?:\/\//, '');
-        }
-        
-        if (profileUser.created_at) {
-            const joinedDate = new Date(profileUser.created_at);
-            const monthNames = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"
-            ];
-            document.getElementById('profile-joined').textContent = 
-                `${monthNames[joinedDate.getMonth()]} ${joinedDate.getFullYear()}`;
-        }
-    };
-
     // Show edit button for own profile
     const setupEditButton = () => {
         const editBtn = document.getElementById('edit-profile-btn');
         const followBtn = document.getElementById('follow-btn');
+        const createActionsDiv = document.querySelector('.profile-actions-create');
         
         if (editBtn && isOwnProfile) {
             editBtn.style.display = 'inline-flex';
             editBtn.addEventListener('click', openEditProfileModal);
+            
+            // Show the entire create actions section only on own profile
+            if (createActionsDiv) {
+                createActionsDiv.style.display = 'flex';
+            }
             
             // Extra safeguard: Ensure follow button is hidden for own profile
             if (followBtn) {
@@ -711,7 +769,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize
     await loadProfile();
     await loadPostsGrid();
-    displayProfileDetails();
     setupEditButton();
     
     // Animate stats after a small delay
