@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <article class="blog-post-full card">
                     ${imageUrl ? `<img src="${imageUrl}" alt="${sanitizeHTML(post.title)}" class="blog-post-image">` : ''}
                     <h1>${sanitizeHTML(post.title)}</h1>
-                    <p class="post-meta">By <a href="view-profile.html?email=${post.author_email}">${sanitizeHTML(post.author)}</a> on ${postDate}</p>
+                    <p class="post-meta">By <a href="profile.html?email=${post.author_email}">${sanitizeHTML(post.author)}</a> on ${postDate}</p>
                     <div class="post-content">${sanitizeHTML(post.content).replace(/\n/g, '<br>')}</div>
                 </article>
             `;

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Profile</title>
+    <title>Alumni Profile</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/profile-modern.css">
+    <link rel="stylesheet" href="css/view-profile-modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script>
@@ -16,490 +16,375 @@
             }
         })();
     </script>
+    <script src="js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     
     <header class="main-header">
         <nav class="main-nav container">
             <a href="index.html" class="logo">AlumniConnect</a>
-            <ul id="nav-links" class="nav-links"></ul>
+            <ul id="nav-links" class="nav-links">
+                </ul>
         </nav>
     </header>
 
-    <main class="profile-main modern-edit-profile">
-        <div class="profile-container">
-            <!-- Sidebar Navigation -->
-            <div class="profile-sidebar">
-                <div class="sidebar-header">
-                    <h3><i class="fas fa-cog"></i> Settings</h3>
-                </div>
-                <nav class="profile-nav">
-                    <ul>
-                        <li>
-                            <a href="#" class="profile-link active" data-tab="edit-profile">
-                                <i class="fas fa-user-edit"></i>
-                                <span>Edit Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="profile-link" id="social-profile-nav-link">
-                                <i class="fas fa-share-alt"></i>
-                                <span>Social Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="profile-link" id="mentor-profile-nav-link" style="display: none;">
-                                <i class="fas fa-chalkboard-teacher"></i>
-                                <span>Mentor Profile</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="my-blogs.html" class="profile-link">
-                                <i class="fas fa-blog"></i>
-                                <span>My Blogs</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="profile-link" data-tab="change-password">
-                                <i class="fas fa-key"></i>
-                                <span>Change Password</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="profile-link" data-tab="privacy-settings">
-                                <i class="fas fa-shield-alt"></i>
-                                <span>Privacy Settings</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
+    <main class="profile-main-view modern-profile">
+        <div class="profile-container-view">
+            <!-- Profile Cover Section -->
+            <div class="profile-cover-section">
+                <div class="profile-cover-gradient"></div>
+                <button onclick="history.back()" class="back-btn-modern">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
             </div>
 
-            <!-- Main Content Area -->
-            <div class="profile-content">
-                <!-- Edit Profile Section -->
-                <div id="edit-profile" class="profile-page active">
-                    <div class="page-header">
-                        <div class="page-header-content">
-                            <div class="page-title-section">
-                                <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
-                                <p class="page-subtitle">Update your profile information and preferences</p>
+            <!-- Profile Header Section -->
+            <div class="profile-header-view">
+                <div class="profile-header-content">
+                    <div class="profile-avatar-wrapper">
+                        <img id="profile-pic-view" class="profile-pic-view" src="" alt="Profile Picture" onerror="this.src=createInitialsAvatar('User')">
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-left">
+                            <div class="profile-name-wrapper">
+                                <h2 id="profile-name-view"></h2>
+                                <div id="verified-badge-container"></div>
                             </div>
-                            <div class="page-header-actions">
-                                <button onclick="history.back()" class="action-icon-btn action-icon-secondary" data-tooltip="Back">
-                                    <i class="fas fa-arrow-left"></i>
-                                    <span class="btn-text">Back</span>
+                            <p id="profile-subheader" class="profile-subheader"></p>
+                            <p id="profile-bio-inline" class="profile-bio-inline"></p>
+                        </div>
+                        
+                        <div class="profile-info-right">
+                            <!-- View Profile Action Buttons -->
+                            <div class="profile-actions profile-actions-regular">
+                                <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                                    <i class="fas fa-th-large"></i>
+                                    <span class="btn-text">Dashboard</span>
+                                </a>
+                                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
+                                    <i class="fas fa-edit"></i>
+                                    <span class="btn-text">Edit Profile</span>
+                                </button>
+                                <button id="send-message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message" style="display: none;">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="btn-text">Message</span>
+                                </button>
+                                <a id="social-profile-link" href="social-profile.html" class="action-icon-btn action-icon-secondary" data-tooltip="Social Profile">
+                                    <i class="fas fa-users"></i>
+                                    <span class="btn-text">Social Profile</span>
+                                </a>
+                                <a id="mentor-profile-link" href="mentor-profile.html" class="action-icon-btn action-icon-secondary" data-tooltip="Mentor Profile" style="display: none;">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <span class="btn-text">Mentor Profile</span>
+                                </a>
+                                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span class="btn-text">Share</span>
                                 </button>
                             </div>
                         </div>
                     </div>
-                    
-                    <div id="verification-status-section" class="form-section">
+                </div>
+            </div>
+            
+            <!-- Profile Statistics -->
+            <div class="profile-stats-section">
+                <div class="stats-grid">
+                    <div class="stat-box" data-aos="fade-up">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="connections-count">0</h4>
+                            <p>Connections</p>
+                        </div>
                     </div>
-
-                    <form id="profile-form">
-                        <!-- Profile Picture Section -->
-                        <div class="profile-pic-section">
-                            <div class="pic-wrapper">
-                                <img id="profile-pic" class="profile-pic" src="" alt="Profile Picture" onerror="this.src=createInitialsAvatar('User')">
-                                <div class="pic-overlay">
-                                    <i class="fas fa-camera"></i>
-                                </div>
-                            </div>
-                            <div class="profile-pic-actions">
-                                <label for="profile_picture" class="btn btn-primary" id="upload-btn">
-                                    <i class="fas fa-upload"></i>
-                                    Upload New Picture
-                                </label>
-                                <input type="file" id="profile_picture" name="profile_picture" accept="image/*" style="display:none;">
-                                <p class="upload-hint">JPG, PNG or GIF. Max size 2MB</p>
-                            </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon">
+                            <i class="fas fa-blog"></i>
                         </div>
-
-                        <!-- Profile Section Tabs -->
-                        <div class="profile-section-tabs">
-                            <button class="profile-section-tab active" data-section="basic">
-                                <i class="fas fa-user"></i>
-                                <span>Basic Information</span>
-                            </button>
-                            <button class="profile-section-tab" data-section="professional">
-                                <i class="fas fa-briefcase"></i>
-                                <span>Professional</span>
-                            </button>
-                            <button class="profile-section-tab" data-section="academic">
-                                <i class="fas fa-graduation-cap"></i>
-                                <span>Academic</span>
-                            </button>
+                        <div class="stat-content">
+                            <h4 id="posts-count">0</h4>
+                            <p>Blog Posts</p>
                         </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="engagement-count">0</h4>
+                            <p>Engagement</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="events-count">0</h4>
+                            <p>Events Attended</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                        <!-- Basic Information Tab -->
-                        <div class="profile-section-content active" id="basic-info">
-                            <div class="form-section">
-                                <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label id="full_name_label"><i class="fas fa-user"></i> Full Name</label>
-                                    <div class="profile-display-field">
-                                        <span id="full_name" class="display-field" data-field="full_name"></span>
-                                        <span id="profile-verified-badge"></span>
-                                    </div>
-                                    <input type="text" id="full_name_input" name="full_name" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label><i class="fas fa-envelope"></i> Email Address</label>
-                                    <span class="display-field" id="email"></span>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label><i class="fas fa-phone"></i> Phone Number</label>
-                                    <span class="display-field" data-field="phone_number"></span>
-                                    <input type="tel" id="phone_number_input" name="phone_number" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label><i class="fas fa-map-marker-alt"></i> Address</label>
-                                    <span class="display-field" data-field="address"></span>
-                                    <textarea id="address_input" name="address" class="edit-field" style="display:none;" rows="3" placeholder="Your complete address"></textarea>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label><i class="fas fa-flag"></i> Country</label>
-                                    <span class="display-field" data-field="country"></span>
-                                    <input type="text" id="country_input" name="country" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                 <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label><i class="fas fa-info-circle"></i> Bio</label>
-                                    <span class="display-field" data-field="bio"></span>
-                                    <textarea id="bio_input" name="bio" class="edit-field" style="display:none;" rows="4"></textarea>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty">
-                                    <label><i class="fab fa-linkedin"></i> LinkedIn Profile URL</label>
-                                    <span class="display-field" data-field="linkedin_profile"></span>
-                                    <input type="url" id="linkedin_profile_input" name="linkedin_profile" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty">
-                                    <label><i class="fab fa-twitter"></i> Twitter Handle</label>
-                                    <span class="display-field" data-field="twitter_profile"></span>
-                                    <input type="text" id="twitter_profile_input" name="twitter_profile" class="edit-field" style="display:none;" placeholder="@username">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty">
-                                    <label><i class="fab fa-github"></i> GitHub Profile</label>
-                                    <span class="display-field" data-field="github_profile"></span>
-                                    <input type="url" id="github_profile_input" name="github_profile" class="edit-field" style="display:none;" placeholder="https://github.com/username">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty">
-                                    <label><i class="fas fa-signal"></i> Availability Status</label>
-                                    <span class="display-field" data-field="availability_status"></span>
-                                    <select id="availability_status_input" name="availability_status" class="edit-field" style="display:none;">
-                                        <option value="">Select Status</option>
-                                        <option value="available">Available for opportunities</option>
-                                        <option value="open_to_offers">Open to offers</option>
-                                        <option value="not_looking">Not currently looking</option>
-                                        <option value="busy">Busy - limited availability</option>
-                                    </select>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                 <div class="profile-field" data-role="employer institute">
-                                    <label><i class="fas fa-globe"></i> Website</label>
-                                    <span class="display-field" data-field="website"></span>
-                                    <input type="url" id="website_input" name="website" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label><i class="fas fa-map-marker-alt"></i> City</label>
-                                    <span class="display-field" data-field="city"></span>
-                                    <input type="text" id="city_input" name="city" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
+            <!-- Profile Content Cards -->
+            <div class="profile-content-view">
+                <!-- About Section -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon about-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h3>About Me</h3>
+                    </div>
+                    <div class="card-body">
+                        <p id="bio-view" class="bio-text"></p>
+                    </div>
+                </div>
+                
+                <!-- Academic Details Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon academic-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Academic Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">University</span>
+                                <span id="university-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Graduation Year</span>
+                                <span id="graduation-year-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Degree</span>
+                                <span id="degree-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Major</span>
+                                <span id="major-view" class="info-value"></span>
                             </div>
                         </div>
-
-                        <!-- Professional Details Tab -->
-                        <div class="profile-section-content" id="professional-info">
-                            <div class="form-section">
-                                <div class="profile-field" data-role="alumni faculty employer">
-                                    <label><i class="fas fa-building"></i> Company / Institution</label>
-                                    <span class="display-field" data-field="company"></span>
-                                    <input type="text" id="company_input" name="company" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni faculty">
-                                    <label><i class="fas fa-briefcase"></i> Job Title</label>
-                                    <span class="display-field" data-field="job_title"></span>
-                                    <input type="text" id="job_title_input" name="job_title" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="faculty">
-                                    <label><i class="fas fa-graduation-cap"></i> Current Position</label>
-                                    <span class="display-field" data-field="current_position"></span>
-                                    <input type="text" id="current_position_input" name="current_position" class="edit-field" style="display:none;" placeholder="e.g. Associate Professor, Lecturer">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                 <div class="profile-field" data-role="alumni faculty employer">
-                                    <label><i class="fas fa-industry"></i> Industry</label>
-                                    <span class="display-field" data-field="industry"></span>
-                                    <input type="text" id="industry_input" name="industry" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni faculty">
-                                    <label><i class="fas fa-clock"></i> Years of Experience</label>
-                                    <span class="display-field" data-field="experience_years"></span>
-                                    <input type="number" id="experience_years_input" name="experience_years" class="edit-field" style="display:none;" min="0" max="50">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni faculty">
-                                    <label><i class="fas fa-star"></i> Specialization</label>
-                                    <span class="display-field" data-field="specialization"></span>
-                                    <input type="text" id="specialization_input" name="specialization" class="edit-field" style="display:none;" placeholder="e.g. Data Science, Marketing Strategy">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                 <div class="profile-field" data-role="alumni student faculty">
-                                    <label><i class="fas fa-cogs"></i> Skills</label>
-                                    <span class="display-field" data-field="skills"></span>
-                                    <textarea id="skills_input" name="skills" class="edit-field" style="display:none;" rows="3" placeholder="e.g. JavaScript, Python, Marketing"></textarea>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni faculty">
-                                    <label><i class="fas fa-certificate"></i> Certifications</label>
-                                    <span class="display-field" data-field="certifications"></span>
-                                    <textarea id="certifications_input" name="certifications" class="edit-field" style="display:none;" rows="3" placeholder="e.g. PMP, AWS Certified, Google Analytics"></textarea>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni faculty">
-                                    <label><i class="fas fa-trophy"></i> Key Achievements</label>
-                                    <span class="display-field" data-field="achievements"></span>
-                                    <textarea id="achievements_input" name="achievements" class="edit-field" style="display:none;" rows="3" placeholder="Notable accomplishments, awards, recognitions"></textarea>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="employer">
-                                    <label><i class="fas fa-users"></i> Company Size</label>
-                                    <span class="display-field" data-field="company_size"></span>
-                                    <select id="company_size_input" name="company_size" class="edit-field" style="display:none;">
-                                        <option value="">Select Size</option>
-                                        <option value="startup">Startup (1-50)</option>
-                                        <option value="small">Small (51-200)</option>
-                                        <option value="medium">Medium (201-1000)</option>
-                                        <option value="large">Large (1001-5000)</option>
-                                        <option value="enterprise">Enterprise (5000+)</option>
-                                    </select>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="employer institute">
-                                    <label><i class="fas fa-calendar-alt"></i> Founded Year</label>
-                                    <span class="display-field" data-field="founded_year"></span>
-                                    <input type="number" id="founded_year_input" name="founded_year" class="edit-field" style="display:none;" min="1800" max="2025">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="institute">
-                                    <label><i class="fas fa-user-graduate"></i> Student Count</label>
-                                    <span class="display-field" data-field="student_count"></span>
-                                    <input type="number" id="student_count_input" name="student_count" class="edit-field" style="display:none;" min="0">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty employer institute">
-                                    <label><i class="fas fa-language"></i> Languages</label>
-                                    <span class="display-field" data-field="languages"></span>
-                                    <input type="text" id="languages_input" name="languages" class="edit-field" style="display:none;" placeholder="e.g. English, Hindi, Spanish">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Academic Details Tab -->
-                        <div class="profile-section-content" id="academic-info">
-                            <div class="form-section">
-                                <div class="profile-field" data-role="alumni student">
-                                    <label><i class="fas fa-university"></i> Institute Name</label>
-                                    <span class="display-field" data-field="institute_name"></span>
-                                    <input type="text" id="institute_name_input" name="institute_name" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student">
-                                    <label><i class="fas fa-calendar-alt"></i> Graduation Year</label>
-                                    <span class="display-field" data-field="graduation_year"></span>
-                                    <input type="number" id="graduation_year_input" name="graduation_year" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="student">
-                                    <label><i class="fas fa-calendar-check"></i> Expected Graduation</label>
-                                    <span class="display-field" data-field="expected_graduation"></span>
-                                    <input type="number" id="expected_graduation_input" name="expected_graduation" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="student">
-                                    <label><i class="fas fa-layer-group"></i> Current Year</label>
-                                    <span class="display-field" data-field="current_year"></span>
-                                    <select id="current_year_input" name="current_year" class="edit-field" style="display:none;">
-                                        <option value="">Select Year</option>
-                                        <option value="1">1st Year</option>
-                                        <option value="2">2nd Year</option>
-                                        <option value="3">3rd Year</option>
-                                        <option value="4">4th Year</option>
-                                        <option value="5">5th Year</option>
-                                        <option value="6">Graduate</option>
-                                    </select>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student faculty">
-                                    <label><i class="fas fa-graduation-cap"></i> Department</label>
-                                    <span class="display-field" data-field="department"></span>
-                                    <input type="text" id="department_input" name="department" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="alumni student">
-                                    <label><i class="fas fa-book"></i> Major</label>
-                                    <span class="display-field" data-field="major"></span>
-                                    <input type="text" id="major_input" name="major" class="edit-field" style="display:none;">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="student">
-                                    <label><i class="fas fa-chart-line"></i> GPA</label>
-                                    <span class="display-field" data-field="gpa"></span>
-                                    <input type="number" id="gpa_input" name="gpa" class="edit-field" style="display:none;" min="0" max="4" step="0.01" placeholder="e.g. 3.75">
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                                <div class="profile-field" data-role="faculty student">
-                                    <label><i class="fas fa-microscope"></i> Research Interests</label>
-                                    <span class="display-field" data-field="research_interests"></span>
-                                    <textarea id="research_interests_input" name="research_interests" class="edit-field" style="display:none;" rows="3" placeholder="Research areas, interests, ongoing projects"></textarea>
-                                    <i class="fas fa-edit edit-icon"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div id="message" class="form-message"></div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary btn-submit">
-                                <i class="fas fa-save"></i>
-                                Save Changes
-                            </button>
-                            <button type="button" class="btn btn-secondary btn-cancel" onclick="location.reload()">
-                                <i class="fas fa-times"></i>
-                                Cancel
-                            </button>
-                        </div>
-                    </form>
+                    </div>
                 </div>
 
-                <!-- Change Password Section -->
-                <div id="change-password" class="profile-page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-key"></i> Change Password</h2>
-                        <p class="page-subtitle">Update your account password</p>
+                <!-- Skills & Expertise Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon skills-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Skills & Expertise</h3>
                     </div>
-                    <form id="password-form" class="password-form">
-                        <div class="form-card">
-                            <div class="input-group">
-                                <label for="current-password">
-                                    <i class="fas fa-lock"></i>
-                                    Current Password
-                                </label>
-                                <input type="password" id="current-password" required placeholder="Enter your current password">
-                            </div>
-                            <div class="input-group">
-                                <label for="new-password">
-                                    <i class="fas fa-lock"></i>
-                                    New Password
-                                </label>
-                                <input type="password" id="new-password" required placeholder="Enter new password">
-                            </div>
-                            <div class="input-group">
-                                <label for="confirm-password">
-                                    <i class="fas fa-lock"></i>
-                                    Confirm New Password
-                                </label>
-                                <input type="password" id="confirm-password" required placeholder="Confirm new password">
-                            </div>
-                        </div>
-                        <div id="password-message" class="form-message"></div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary btn-submit">
-                                <i class="fas fa-check"></i>
-                                Change Password
-                            </button>
-                        </div>
-                    </form>
+                    <div class="card-body">
+                        <div id="skills-view" class="skills-container"></div>
+                    </div>
                 </div>
 
-                <!-- Privacy Settings Section -->
-                <div id="privacy-settings" class="profile-page">
-                    <div class="page-header">
-                        <h2><i class="fas fa-shield-alt"></i> Privacy Settings</h2>
-                        <p class="page-subtitle">Manage your privacy and visibility preferences</p>
+                <!-- Activity Analytics Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon analytics-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Activity Overview</h3>
                     </div>
-                    <form id="privacy-form" class="privacy-form">
-                        <div class="form-card">
-                            <div class="privacy-option">
-                                <div class="option-header">
-                                    <input type="checkbox" id="is_profile_public" name="is_profile_public">
-                                    <label for="is_profile_public" class="option-title">
-                                        <i class="fas fa-eye"></i>
-                                        Public Profile
-                                    </label>
-                                </div>
-                                <p class="option-description">Make my profile visible in the public directory</p>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Details Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon professional-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Professional Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Current Company</span>
+                                <span id="current-company-view" class="info-value"></span>
                             </div>
-                            
-                            <div class="privacy-option">
-                                <div class="option-header">
-                                    <input type="checkbox" id="is_email_visible" name="is_email_visible">
-                                    <label for="is_email_visible" class="option-title">
-                                        <i class="fas fa-envelope"></i>
-                                        Show Email
-                                    </label>
-                                </div>
-                                <p class="option-description">Make my email address visible on my profile</p>
+                            <div class="info-item">
+                                <span class="info-label">Job Title</span>
+                                <span id="job-title-view" class="info-value"></span>
                             </div>
-                            
-                            <div class="privacy-option">
-                                <div class="option-header">
-                                    <input type="checkbox" id="is_company_visible" name="is_company_visible">
-                                    <label for="is_company_visible" class="option-title">
-                                        <i class="fas fa-building"></i>
-                                        Show Company Info
-                                    </label>
-                                </div>
-                                <p class="option-description">Make my current company and job title visible</p>
+                            <div class="info-item">
+                                <span class="info-label">City</span>
+                                <span id="city-view" class="info-value"></span>
                             </div>
-                            
-                            <div class="privacy-option">
-                                <div class="option-header">
-                                    <input type="checkbox" id="is_location_visible" name="is_location_visible">
-                                    <label for="is_location_visible" class="option-title">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        Show Location
-                                    </label>
-                                </div>
-                                <p class="option-description">Make my city visible on my profile</p>
+                            <div class="info-item">
+                                <span class="info-label">LinkedIn</span>
+                                <a id="linkedin-view" class="info-link" target="_blank">
+                                    <i class="fab fa-linkedin"></i> View Profile
+                                </a>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Experience</span>
+                                <span id="experience-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Industry</span>
+                                <span id="industry-view" class="info-value"></span>
                             </div>
                         </div>
-                        <div id="privacy-message" class="form-message"></div>
-                        <div class="form-actions">
-                            <button type="submit" class="btn btn-primary btn-submit">
-                                <i class="fas fa-save"></i>
-                                Save Settings
-                            </button>
+                    </div>
+                </div>
+
+                <!-- Additional Stats Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon stats-icon">
+                            <i class="fas fa-chart-pie"></i>
                         </div>
-                    </form>
+                        <h3>Detailed Statistics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="detailed-stats-grid">
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="total-likes">0</h4>
+                                    <p>Total Likes Received</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="total-comments">0</h4>
+                                    <p>Total Comments</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="profile-views">0</h4>
+                                    <p>Profile Views</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="network-score">0</h4>
+                                    <p>Network Score</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="member-since">-</h4>
+                                    <p>Member Since</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="activity-streak">0</h4>
+                                    <p>Day Activity Streak</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Details Card -->
+                <div class="profile-card" style="display:none;">
+                    <div class="card-header">
+                        <div class="card-icon professional-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Professional Details (Old)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid" style="display:none;">
+                            <div class="info-item">
+                                <span class="info-label">Current Company</span>
+                                <span id="current-company-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Job Title</span>
+                                <span id="job-title-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">City</span>
+                                <span id="city-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">LinkedIn</span>
+                                <a id="linkedin-view-old" class="info-link" target="_blank">
+                                    <i class="fab fa-linkedin"></i> View Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Contact Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="contact-info">
+                            <i class="fas fa-envelope"></i>
+                            <span id="email-view"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blog Posts Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon blog-icon">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <h3>Blog Posts</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="user-blog-posts" class="user-posts-container"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </main>
-    
+
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
         </div>
     </footer>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
-    <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
-    <script src="js/auto-hide-navbar.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/profile.js"></script>
+    <script src="js/view-profile.js"></script>
 </body>
 </html>

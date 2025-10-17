@@ -147,12 +147,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <li class="nav-dropdown profile-submenu">
                         <a href="#" class="dropdown-toggle"><i class="fas fa-user"></i> My Profiles <i class="fas fa-chevron-left"></i></a>
                         <ul class="dropdown-menu">
-                            <li><a href="view-profile.html?email=${loggedInUserEmail}"><i class="fas fa-user"></i> Main Profile</a></li>
+                            <li><a href="profile.html?email=${loggedInUserEmail}"><i class="fas fa-user"></i> Main Profile</a></li>
                             <li><a href="social-profile.html?userId=${userId}"><i class="fas fa-id-card"></i> Social Profile</a></li>
                             ${mentorProfileLink}
                         </ul>
                     </li>
-                    <li><a href="profile.html"><i class="fas fa-cog"></i> Settings</a></li>
+                    <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
                     <li><a href="my-blogs.html"><i class="fas fa-feather-alt"></i> My Blogs</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button id="theme-toggle-btn" class="theme-toggle-button"><i class="fas fa-moon"></i><span>Toggle Theme</span></button></li>

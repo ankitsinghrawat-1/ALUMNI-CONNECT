@@ -1001,7 +1001,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Share profile button handler
     if (profileShareBtn) {
         profileShareBtn.addEventListener('click', () => {
-            const profileUrl = window.location.origin + '/client/view-profile.html?email=' + encodeURIComponent(userEmail);
+            const profileUrl = window.location.origin + '/client/profile.html?email=' + encodeURIComponent(userEmail);
             if (navigator.share) {
                 navigator.share({
                     title: 'My Profile',
@@ -1028,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (socialProfileNavLink) {
             socialProfileNavLink.addEventListener('click', (e) => {
                 e.preventDefault();
-                window.location.href = `social-profile.html?userId=${userId}`;
+                window.location.href = `edit-social-profile.html?userId=${userId}`;
             });
         }
 

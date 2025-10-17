@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - AlumniConnect</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/profile-modern.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links"></ul>
+        </nav>
+    </header>
+
+    <main class="profile-main modern-edit-profile">
+        <div class="profile-container">
+            <!-- Sidebar Navigation -->
+            <div class="profile-sidebar">
+                <div class="sidebar-header">
+                    <h3><i class="fas fa-cog"></i> Settings</h3>
+                </div>
+                <nav class="profile-nav">
+                    <ul>
+                        <li>
+                            <a href="edit-profile.html" class="profile-link">
+                                <i class="fas fa-user-edit"></i>
+                                <span>Edit Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="edit-social-profile.html" class="profile-link">
+                                <i class="fas fa-share-alt"></i>
+                                <span>Social Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="edit-mentor-profile.html" class="profile-link" id="mentor-profile-nav-link" style="display: none;">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <span>Mentor Profile</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="my-blogs.html" class="profile-link">
+                                <i class="fas fa-blog"></i>
+                                <span>My Blogs</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="profile-link active" data-tab="change-password">
+                                <i class="fas fa-key"></i>
+                                <span>Change Password</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#" class="profile-link" data-tab="privacy-settings">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>Privacy Settings</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="profile-content">
+                <div class="page-header-modern">
+                    <div class="page-header-content">
+                        <div class="page-header-title">
+                            <h2><i class="fas fa-cog"></i> Settings Hub</h2>
+                            <p class="page-subtitle">Manage your account settings and preferences</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Change Password Tab -->
+                <div class="profile-tab-content" id="change-password-tab" style="display: block;">
+                    <div class="form-card">
+                        <div class="form-section-header">
+                            <h3><i class="fas fa-key"></i> Change Password</h3>
+                            <p>Update your password to keep your account secure</p>
+                        </div>
+                        <form id="password-form">
+                            <div class="form-group">
+                                <label for="current-password"><i class="fas fa-lock"></i> Current Password</label>
+                                <input type="password" id="current-password" name="current-password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="new-password"><i class="fas fa-lock"></i> New Password</label>
+                                <input type="password" id="new-password" name="new-password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirm-password"><i class="fas fa-lock"></i> Confirm New Password</label>
+                                <input type="password" id="confirm-password" name="confirm-password" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-check"></i> Update Password
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Privacy Settings Tab -->
+                <div class="profile-tab-content" id="privacy-settings-tab" style="display: none;">
+                    <div class="form-card">
+                        <div class="form-section-header">
+                            <h3><i class="fas fa-shield-alt"></i> Privacy Settings</h3>
+                            <p>Control who can see your profile information</p>
+                        </div>
+                        <form id="privacy-form">
+                            <div class="privacy-option">
+                                <div class="privacy-option-info">
+                                    <h4><i class="fas fa-globe"></i> Public Profile</h4>
+                                    <p>Allow other users to view your profile</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="is_profile_public" name="is_profile_public">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="privacy-option">
+                                <div class="privacy-option-info">
+                                    <h4><i class="fas fa-envelope"></i> Show Email</h4>
+                                    <p>Display your email address on your profile</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="is_email_visible" name="is_email_visible">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="privacy-option">
+                                <div class="privacy-option-info">
+                                    <h4><i class="fas fa-briefcase"></i> Show Company</h4>
+                                    <p>Display your current company on your profile</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="is_company_visible" name="is_company_visible">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="privacy-option">
+                                <div class="privacy-option-info">
+                                    <h4><i class="fas fa-map-marker-alt"></i> Show Location</h4>
+                                    <p>Display your city/location on your profile</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" id="is_location_visible" name="is_location_visible">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Save Privacy Settings
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>
