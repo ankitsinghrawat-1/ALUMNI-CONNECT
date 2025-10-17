@@ -114,15 +114,14 @@
    ======================================== */
 
 .content-wrapper {
-    display: grid;
-    grid-template-columns: 200px 1fr;
+    display: flex;
     gap: 2rem;
-    align-items: start;
+    align-items: flex-start;
 }
 
 @media (max-width: 1024px) {
     .content-wrapper {
-        grid-template-columns: 1fr;
+        flex-direction: column;
     }
 }
 
@@ -210,9 +209,7 @@
    CENTER CONTENT
    ======================================== */
 
-.center-content {
-    max-width: 800px;
-}
+/* Center content is handled in the flex layout */
 
 /* ========================================
    PAGE HERO
@@ -853,16 +850,11 @@ select.edit-field {
     display: none;
 }
 
-/* Content wrapper adjustment for right sidebar */
-.content-wrapper {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-}
-
+/* Center content takes available space */
 .center-content {
     flex: 1;
     min-width: 0; /* Allows flex item to shrink below content size */
+    max-width: 800px;
 }
 
 /* ========================================
