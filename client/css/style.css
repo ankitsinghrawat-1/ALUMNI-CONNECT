@@ -198,15 +198,15 @@ h1, h2, h3, h4, h5, h6 {
     transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.action-icon-btn::after {
-    content: attr(data-tooltip);
+.action-icon-btn .btn-text {
     margin-left: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
     opacity: 0;
+    max-width: 0;
+    overflow: hidden;
     transform: translateX(-10px);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
 }
 
 /* Expand button on hover to show text */
@@ -216,8 +216,9 @@ h1, h2, h3, h4, h5, h6 {
     padding-right: 1rem;
 }
 
-.action-icon-btn:hover::after {
+.action-icon-btn:hover .btn-text {
     opacity: 1;
+    max-width: 200px;
     transform: translateX(0);
 }
 
