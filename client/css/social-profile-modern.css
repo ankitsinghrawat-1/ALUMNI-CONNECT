@@ -3,26 +3,25 @@
    Inspired by view-profile and mentor-profile designs
    ==================================================================== */
 
-/* Enhanced Profile Header Section with modern gradient */
+/* Enhanced Profile Header Section - Compact */
 .social-profile-main .profile-header-section {
     background: var(--bg-primary);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    margin-bottom: var(--spacing-xl);
-    box-shadow: var(--shadow-md);
+    margin-bottom: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
     transition: all var(--transition-base);
     animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .social-profile-main .profile-header-section:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-/* Enhanced Cover Photo with animated gradient */
+/* Enhanced Cover Photo - Compact */
 .social-profile-main .profile-cover {
-    height: 240px;
+    height: 160px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     position: relative;
     overflow: hidden;
@@ -65,51 +64,58 @@
     }
 }
 
-/* Enhanced Profile Avatar with ring effect */
+/* Compact Profile Info Wrapper */
+.social-profile-main .profile-info-wrapper {
+    padding: 0 var(--spacing-lg) var(--spacing-lg);
+}
+
+/* Enhanced Profile Avatar - Compact */
 .social-profile-main .profile-avatar-container {
     position: relative;
-    margin-top: -80px;
-    margin-bottom: var(--spacing-lg);
+    margin-top: -50px;
+    margin-bottom: var(--spacing-md);
 }
 
 .social-profile-main .profile-avatar-container::before {
     content: '';
     position: absolute;
-    top: -3px;
-    left: -3px;
-    right: -3px;
-    bottom: -3px;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
     border-radius: 50%;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     z-index: 0;
-    opacity: 0.6;
+    opacity: 0.5;
 }
 
-/* Enhanced Profile Statistics Section */
+/* Enhanced Profile Statistics Section - Compact */
 .social-profile-main .profile-stats-section {
-    padding: 0 var(--spacing-xl);
-    margin-bottom: var(--spacing-2xl);
+    padding: 0 var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
 }
 
 .social-profile-main .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-xl);
+    gap: var(--spacing-md);
 }
 
 .social-profile-main .stat-box {
-    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    background: var(--bg-primary);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-lg);
-    padding: var(--spacing-xl);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: var(--spacing-lg);
+    text-align: center;
+    gap: var(--spacing-sm);
     transition: all 0.3s ease;
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-sm);
-    min-height: 100px;
+    min-height: auto;
 }
 
 .social-profile-main .stat-box::before {
@@ -140,13 +146,13 @@
 }
 
 .social-profile-main .stat-box .stat-icon {
-    width: 60px;
-    height: 60px;
+    width: 40px;
+    height: 40px;
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 1.75rem;
+    font-size: 1.25rem;
     color: white;
     position: relative;
     z-index: 1;
@@ -176,46 +182,47 @@
 }
 
 .social-profile-main .stat-box .stat-content h4 {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--text-primary);
-    margin: 0 0 0.5rem;
-    line-height: 1.2;
+    margin: 0;
+    line-height: 1;
 }
 
 .social-profile-main .stat-box .stat-content p {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: var(--text-secondary);
     margin: 0;
     font-weight: 500;
-    line-height: 1.4;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .social-profile-main .profile-avatar {
     position: relative;
     z-index: 1;
-    width: 160px;
-    height: 160px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    border: 6px solid var(--bg-primary);
+    border: 4px solid var(--bg-primary);
     object-fit: cover;
-    box-shadow: var(--shadow-lg);
+    box-shadow: var(--shadow-md);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .social-profile-main .profile-avatar:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0.2),
-                0 0 0 20px rgba(102, 126, 234, 0.1);
+    transform: scale(1.03);
+    box-shadow: var(--shadow-lg);
 }
 
-/* Enhanced Profile Stats with gradient icons */
+/* Enhanced Profile Stats - Compact */
 .social-profile-main .profile-stats {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--spacing-xl);
-    margin-top: var(--spacing-xl);
-    padding-top: var(--spacing-xl);
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    padding-top: var(--spacing-md);
     border-top: 1px solid var(--border-light);
 }
 
@@ -226,9 +233,9 @@
     gap: var(--spacing-xs);
     cursor: pointer;
     transition: all var(--transition-fast);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    background: linear-gradient(135deg, transparent 0%, var(--bg-tertiary) 100%);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-md);
+    background: transparent;
     position: relative;
     overflow: hidden;
 }
@@ -251,28 +258,25 @@
 }
 
 .social-profile-main .stat-item:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    background: var(--bg-hover);
 }
 
 .social-profile-main .stat-value {
-    font-size: var(--font-size-3xl);
+    font-size: var(--font-size-xl);
     font-weight: 700;
     color: var(--text-primary);
     transition: all var(--transition-fast);
 }
 
 .social-profile-main .stat-item:hover .stat-value {
-    transform: scale(1.15);
     color: var(--primary-blue);
 }
 
 .social-profile-main .stat-label {
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--text-secondary);
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 /* Enhanced Profile Actions with modern button styles */
@@ -725,20 +729,25 @@
 @media (max-width: 768px) {
     .social-profile-main .profile-stats {
         grid-template-columns: repeat(2, 1fr);
-        gap: var(--spacing-md);
+        gap: var(--spacing-sm);
     }
 
     .social-profile-main .profile-cover {
-        height: 180px;
-    }
-
-    .social-profile-main .profile-avatar {
-        width: 120px;
         height: 120px;
     }
 
+    .social-profile-main .profile-avatar {
+        width: 80px;
+        height: 80px;
+    }
+
     .social-profile-main .profile-avatar-container {
-        margin-top: -60px;
+        margin-top: -40px;
+    }
+    
+    .social-profile-main .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-sm);
     }
 
     .social-profile-main .profile-actions {
@@ -761,14 +770,18 @@
         grid-template-columns: 1fr;
     }
 
-    .social-profile-main .stat-card {
-        padding: var(--spacing-md);
+    .social-profile-main .stats-grid {
+        grid-template-columns: 1fr;
     }
 
-    .social-profile-main .stat-icon {
-        width: 50px;
-        height: 50px;
-        font-size: 1.5rem;
+    .social-profile-main .stat-card {
+        padding: var(--spacing-sm);
+    }
+
+    .social-profile-main .stat-box .stat-icon {
+        width: 35px;
+        height: 35px;
+        font-size: 1rem;
     }
 }
 
