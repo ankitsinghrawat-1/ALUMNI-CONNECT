@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ${mentorProfileLink}
                         </ul>
                     </li>
+                    <li><a href="profile.html"><i class="fas fa-cog"></i> Settings</a></li>
                     <li><a href="my-blogs.html"><i class="fas fa-feather-alt"></i> My Blogs</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><button id="theme-toggle-btn" class="theme-toggle-button"><i class="fas fa-moon"></i><span>Toggle Theme</span></button></li>
