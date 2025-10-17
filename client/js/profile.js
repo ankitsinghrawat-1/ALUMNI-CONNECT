@@ -871,12 +871,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const formData = new FormData(form);
                 
-                // Add additional data from display fields that may have been updated via modal
+                // Add data from display fields - these contain the actual edited values
+                // Hidden input fields might not be properly captured, so we read from display fields
                 document.querySelectorAll('.display-field[data-field]').forEach(element => {
                     const fieldName = element.getAttribute('data-field');
                     const fieldValue = element.textContent === 'Not set' ? '' : element.textContent;
-                    if (fieldName && fieldValue && !formData.has(fieldName)) {
-                        formData.append(fieldName, fieldValue);
+                    if (fieldName) {
+                        // Always set the value from display field (overwrite if exists)
+                        formData.set(fieldName, fieldValue);
                     }
                 });
                 
