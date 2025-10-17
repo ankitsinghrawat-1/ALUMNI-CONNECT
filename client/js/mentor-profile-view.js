@@ -404,33 +404,75 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isOwner) {
             // Show icon-only buttons for owner with tooltips
             profileActions.innerHTML = `
+                <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                    <i class="fas fa-th-large"></i>
+                </a>
                 <a href="edit-mentor-profile.html?id=${currentMentor.mentor_id}" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile">
                     <i class="fas fa-edit"></i>
                 </a>
                 <a href="mentor-requests.html" class="action-icon-btn action-icon-secondary" data-tooltip="View Requests">
                     <i class="fas fa-inbox"></i>
                 </a>
+                <button id="message-btn-owner" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
+                    <i class="fas fa-envelope"></i>
+                </button>
                 <button id="delete-profile-btn" class="action-icon-btn action-icon-danger" data-tooltip="Delete Profile">
                     <i class="fas fa-trash-alt"></i>
                 </button>
+                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                    <i class="fas fa-share-alt"></i>
+                </button>
             `;
             document.getElementById('delete-profile-btn').addEventListener('click', handleDeleteProfile);
+            document.getElementById('message-btn-owner').addEventListener('click', () => {
+                window.location.href = 'messages.html';
+            });
+            document.getElementById('share-profile-btn').addEventListener('click', () => {
+                const profileUrl = window.location.href;
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Mentor Profile',
+                        url: profileUrl
+                    }).catch(() => {});
+                } else {
+                    navigator.clipboard.writeText(profileUrl);
+                    showToast('Profile link copied to clipboard!', 'success');
+                }
+            });
         } else {
             // Show icon-only buttons for visitors
             const loggedIn = localStorage.getItem('alumniConnectToken');
             if (loggedIn) {
                 profileActions.innerHTML = `
+                    <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                        <i class="fas fa-th-large"></i>
+                    </a>
                     <button id="send-request-btn" class="action-icon-btn action-icon-primary" data-tooltip="Send Request">
                         <i class="fas fa-paper-plane"></i>
                     </button>
-                    <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Send Message">
-                        <i class="fas fa-comments"></i>
+                    <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
+                        <i class="fas fa-envelope"></i>
+                    </button>
+                    <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                        <i class="fas fa-share-alt"></i>
                     </button>
                 `;
                 // Add event listeners for these buttons
                 document.getElementById('send-request-btn').addEventListener('click', openRequestModal);
                 document.getElementById('message-btn').addEventListener('click', () => {
                     showToast('Messaging functionality coming soon!', 'info');
+                });
+                document.getElementById('share-profile-btn').addEventListener('click', () => {
+                    const profileUrl = window.location.href;
+                    if (navigator.share) {
+                        navigator.share({
+                            title: 'Mentor Profile',
+                            url: profileUrl
+                        }).catch(() => {});
+                    } else {
+                        navigator.clipboard.writeText(profileUrl);
+                        showToast('Profile link copied to clipboard!', 'success');
+                    }
                 });
             } else {
                 profileActions.innerHTML = `
