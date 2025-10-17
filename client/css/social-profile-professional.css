@@ -1902,3 +1902,157 @@ button:focus-visible,
 }
 
 
+
+/* ====================================================================
+   VIEW PROFILE LAYOUT COMPATIBILITY
+   ==================================================================== */
+
+/* Social links in card layout */
+.profile-card .profile-social-links {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.profile-card .social-link {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    font-weight: 500;
+}
+
+.profile-card .social-link:hover {
+    background: var(--primary-blue);
+    color: white;
+    transform: translateX(4px);
+}
+
+.profile-card .social-link i {
+    font-size: 1.25rem;
+    width: 24px;
+    text-align: center;
+}
+
+/* Info grid styles */
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+}
+
+.info-label {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.info-label i {
+    color: var(--primary-blue);
+}
+
+.info-value {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+.info-link {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.info-link:hover {
+    text-decoration: underline;
+}
+
+.mentor-badge-text {
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+/* Card icons */
+.card-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 1.25rem;
+}
+
+.about-icon {
+    background: rgba(10, 102, 194, 0.1);
+    color: var(--primary-blue);
+}
+
+.contact-icon {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.skills-icon {
+    background: rgba(255, 152, 0, 0.1);
+    color: #FF9800;
+}
+
+.social-icon {
+    background: rgba(156, 39, 176, 0.1);
+    color: #9C27B0;
+}
+
+/* Bio text */
+.bio-text {
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+    color: var(--text-primary);
+}
+
+/* Ensure profile content view has proper spacing */
+.profile-content-view {
+    padding: 0 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-content-view .profile-card {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* Stats section override for social profile */
+.social-profile-main .profile-stats-section {
+    margin: var(--spacing-xl) 0;
+}
+
+.social-profile-main .stat-box {
+    cursor: pointer;
+}
+
+.social-profile-main .stat-box:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Make followers and following stats clickable */
+#followers-stat,
+#following-stat {
+    cursor: pointer;
+}
+
