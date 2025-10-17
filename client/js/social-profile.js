@@ -98,6 +98,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('mentor-badge').style.display = 'flex';
             }
             
+            // Show the extended info grid if any items are visible
+            const extendedInfoGrid = document.getElementById('profile-extended-info');
+            if (profileUser.skills || profileUser.interests || profileUser.current_project || profileUser.available_mentor) {
+                extendedInfoGrid.style.display = 'grid';
+            }
+            
             // Update social links
             let hasSocialLinks = false;
             
