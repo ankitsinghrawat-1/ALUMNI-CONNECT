@@ -2131,3 +2131,36 @@ button:focus-visible,
     margin-top: 0.5rem;
 }
 
+
+/* ====================================================================
+   IMPROVED BUTTON SPACING, TRANSITIONS, AND ICON CENTERING
+   ==================================================================== */
+
+/* Increase gap between icon and text in buttons */
+.action-icon-btn {
+    gap: 0.625rem !important;  /* Increased from 0.5rem */
+}
+
+/* Slower transition for better UX */
+.action-icon-btn {
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;  /* Increased from 0.3s to 0.5s */
+}
+
+/* Perfect icon centering within button */
+.action-icon-btn i {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    line-height: 1 !important;
+    font-size: 1rem !important;
+    width: 1rem !important;
+    height: 1rem !important;
+}
+
+/* Ensure text aligns properly with centered icons */
+.action-icon-btn .btn-text {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+}
+
