@@ -199,8 +199,8 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.4px;
     line-height: 1.5;
     text-align: center;
-    display: inline-block;
-    min-width: max-content;
+    display: block;
+    width: max-content;
     max-width: 250px;
 }
 
