@@ -2193,14 +2193,55 @@ button:focus-visible,
     padding-bottom: 1.75rem !important;  /* Increased to accommodate both button rows */
 }
 
-/* Minimize button margins to keep ALL buttons within white header container */
+/* Split profile-info into left (name/bio) and right (buttons) */
+.social-profile-main .profile-info {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 2rem !important;
+    width: 100% !important;
+}
+
+.social-profile-main .profile-info-left {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.social-profile-main .profile-info-right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 0.5rem !important;
+}
+
+/* Buttons on the right side */
 .social-profile-main .profile-actions-regular {
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.25rem !important;  /* Further reduced from 0.375rem */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    justify-content: flex-end !important;
 }
 
 .social-profile-main .profile-actions-create {
-    margin-top: 0.25rem !important;  /* Further reduced from 0.375rem */
-    margin-bottom: 0 !important;  /* No bottom margin - buttons end at padding boundary */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    justify-content: flex-end !important;
+}
+
+/* Mobile responsive - stack buttons below name/bio */
+@media (max-width: 768px) {
+    .social-profile-main .profile-info {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .social-profile-main .profile-info-right {
+        align-items: stretch !important;
+    }
+    
+    .social-profile-main .profile-actions-regular,
+    .social-profile-main .profile-actions-create {
+        justify-content: flex-start !important;
+    }
 }
 

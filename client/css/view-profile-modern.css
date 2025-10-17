@@ -1100,14 +1100,55 @@ html.dark-mode .glass-card {
     padding-bottom: 1.75rem !important;  /* Increased to accommodate both button rows */
 }
 
-/* Minimize button margins to keep ALL buttons within white header container */
+/* Split profile-info into left (name/bio) and right (buttons) */
+.modern-profile .profile-info {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-start !important;
+    gap: 2rem !important;
+    width: 100% !important;
+}
+
+.modern-profile .profile-info-left {
+    flex: 1 !important;
+    min-width: 0 !important;
+}
+
+.modern-profile .profile-info-right {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    gap: 0.5rem !important;
+}
+
+/* Buttons on the right side */
 .modern-profile .profile-actions-regular {
-    margin-top: 0.5rem !important;
-    margin-bottom: 0.25rem !important;  /* Minimized for compact layout */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    justify-content: flex-end !important;
 }
 
 .modern-profile .profile-actions-create {
-    margin-top: 0.25rem !important;  /* Minimized spacing */
-    margin-bottom: 0 !important;  /* No bottom margin - buttons end at padding boundary */
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    justify-content: flex-end !important;
+}
+
+/* Mobile responsive - stack buttons below name/bio */
+@media (max-width: 768px) {
+    .modern-profile .profile-info {
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+    
+    .modern-profile .profile-info-right {
+        align-items: stretch !important;
+    }
+    
+    .modern-profile .profile-actions-regular,
+    .modern-profile .profile-actions-create {
+        justify-content: flex-start !important;
+    }
 }
 
