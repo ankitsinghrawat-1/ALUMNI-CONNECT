@@ -159,7 +159,8 @@
 }
 
 /* Dark Mode Variables */
-.dark-mode {
+.dark-mode,
+html.dark-mode {
     --bg-primary: #000000;
     --bg-secondary: #16181C;
     --bg-tertiary: #202327;
@@ -172,6 +173,26 @@
     --border-light: #2F3336;
     --border-medium: #3E4144;
     --border-dark: #536471;
+}
+
+/* Ensure posts use dark background in dark mode */
+html.dark-mode .social-profile-main .post-card,
+html.dark-mode .social-profile-main .thread-card,
+html.dark-mode .social-profile-main .story-card {
+    background: #000000 !important;
+    border-color: #2F3336 !important;
+}
+
+html.dark-mode .social-profile-main .post-card-content {
+    background: transparent !important;
+}
+
+html.dark-mode .social-profile-main .posts-grid {
+    background: transparent !important;
+}
+
+html.dark-mode .social-profile-main .tab-content {
+    background: transparent !important;
 }
 
 /* ====================================================================
