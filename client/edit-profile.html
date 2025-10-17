@@ -26,52 +26,76 @@
         </nav>
     </header>
 
-    <main class="modern-redesign-main">
-        <div class="modern-layout">
-            <!-- Top Navigation Bar -->
-            <div class="top-nav-bar">
-                <div class="breadcrumb">
-                    <a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a>
-                    <span class="separator">/</span>
-                    <span class="current">Edit Profile</span>
+    <main class="settings-page">
+        <div class="settings-container">
+            <!-- Sidebar Navigation -->
+            <aside class="settings-sidebar">
+                <div class="settings-sidebar-header">
+                    <h2><i class="fas fa-user-edit"></i> Edit Profile</h2>
                 </div>
-                <div class="top-actions">
-                    <button onclick="location.href='settings.html'" class="btn-ghost">
-                        <i class="fas fa-cog"></i>
-                        <span>Settings</span>
-                    </button>
-                </div>
-            </div>
+                <nav>
+                    <ul class="settings-nav">
+                        <!-- Profile Section -->
+                        <li class="settings-nav-section">
+                            <div class="settings-nav-section-title">Profile</div>
+                            <ul>
+                                <li class="settings-nav-item">
+                                    <a href="#" class="settings-nav-link active">
+                                        <i class="fas fa-user-edit"></i>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#" class="settings-nav-link" id="social-profile-nav-link">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>Social Profile</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#" class="settings-nav-link" id="mentor-profile-nav-link" style="display: none;">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        <span>Mentor Profile</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-            <!-- Main Content Wrapper -->
-            <div class="content-wrapper">
-                <!-- Left Sidebar with Quick Links -->
-                <aside class="quick-nav">
-                    <div class="quick-nav-header">
-                        <span class="quick-nav-title">Quick Links</span>
-                    </div>
-                    <nav class="quick-nav-list">
-                        <a href="#" class="quick-nav-item" id="social-profile-nav-link">
-                            <i class="fas fa-share-alt"></i>
-                            <span>Social Profile</span>
-                        </a>
-                        <a href="#" class="quick-nav-item" id="mentor-profile-nav-link" style="display: none;">
-                            <i class="fas fa-chalkboard-teacher"></i>
-                            <span>Mentor Profile</span>
-                        </a>
-                        <a href="my-blogs.html" class="quick-nav-item">
-                            <i class="fas fa-blog"></i>
-                            <span>My Blogs</span>
-                        </a>
-                        <a href="settings.html" class="quick-nav-item">
-                            <i class="fas fa-cog"></i>
-                            <span>All Settings</span>
-                        </a>
-                    </nav>
-                </aside>
+                        <!-- Sections Quick Nav -->
+                        <li class="settings-nav-section">
+                            <div class="settings-nav-section-title">Sections</div>
+                            <ul>
+                                <li class="settings-nav-item">
+                                    <a href="#section-basic" class="settings-nav-link section-link" data-section="basic">
+                                        <i class="fas fa-user"></i>
+                                        <span>Basic Info</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#section-social" class="settings-nav-link section-link" data-section="social">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>Social Links</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#section-professional" class="settings-nav-link section-link" data-section="professional">
+                                        <i class="fas fa-briefcase"></i>
+                                        <span>Professional</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#section-academic" class="settings-nav-link section-link" data-section="academic">
+                                        <i class="fas fa-graduation-cap"></i>
+                                        <span>Academic</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
 
-                <!-- Center Content Area -->
-                <div class="center-content">
+            <!-- Main Content Area -->
+            <div class="settings-content">
                     <!-- Page Hero Header -->
                     <div class="page-hero">
                         <div class="hero-content">
