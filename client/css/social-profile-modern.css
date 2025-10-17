@@ -89,16 +89,14 @@
     opacity: 0.5;
 }
 
-/* Enhanced Profile Statistics Section - Compact */
-.social-profile-main .profile-stats-section {
-    padding: 0 var(--spacing-lg);
-    margin-bottom: var(--spacing-lg);
-}
-
+/* Enhanced Statistics Grid Inside Header */
 .social-profile-main .stats-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--border-light);
 }
 
 .social-profile-main .stat-box {
@@ -279,18 +277,14 @@
     font-weight: 500;
 }
 
-/* Enhanced Profile Actions with modern button styles */
+/* Enhanced Profile Actions - No Box Styling */
 .social-profile-main .profile-actions {
     display: flex;
     gap: var(--spacing-md);
     flex-wrap: wrap;
     align-items: center;
     justify-content: flex-end;
-    margin-top: var(--spacing-lg);
-    padding: var(--spacing-lg);
-    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
-    border-radius: var(--radius-lg);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    margin-top: var(--spacing-md);
 }
 
 .social-profile-main .action-icon-btn {
