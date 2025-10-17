@@ -427,33 +427,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    const sendMessageBtn = document.getElementById('send-message-btn');
-    if (sendMessageBtn) {
-        sendMessageBtn.addEventListener('click', async () => {
-            const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-            if (!loggedInUserEmail) {
-                showToast('Please log in to send a message.', 'info');
-                return;
-            }
-
-            try {
-                // This will create or find the conversation
-                await window.api.post('/messages', {
-                    receiver_email: userEmail,
-                    content: `Hello!` 
-                });
-                window.location.href = 'messages.html';
-            } catch (error) {
-                showToast('Could not start a conversation.', 'error');
-            }
-        });
-    }
-
-    // Show/hide Edit and Create buttons based on profile ownership
+    // Show/hide buttons based on profile ownership
     const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
     const isOwnProfile = loggedInUserEmail && loggedInUserEmail === userEmail;
     
     const editBtn = document.getElementById('edit-profile-btn');
+    const sendMessageBtn = document.getElementById('send-message-btn');
     const mentorProfileLink = document.getElementById('mentor-profile-link');
     
     // Show Edit Profile button only on own profile
@@ -462,6 +441,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         editBtn.addEventListener('click', () => {
             window.location.href = 'profile.html';
         });
+    }
+    
+    // Show Message button only for visitors (not on own profile)
+    if (sendMessageBtn) {
+        if (!isOwnProfile) {
+            sendMessageBtn.style.display = 'inline-flex';
+            sendMessageBtn.addEventListener('click', async () => {
+                if (!loggedInUserEmail) {
+                    showToast('Please log in to send a message.', 'info');
+                    return;
+                }
+
+                try {
+                    // This will create or find the conversation
+                    await window.api.post('/messages', {
+                        receiver_email: userEmail,
+                        content: `Hello!` 
+                    });
+                    window.location.href = 'messages.html';
+                } catch (error) {
+                    showToast('Could not start a conversation.', 'error');
+                }
+            });
+        } else {
+            sendMessageBtn.style.display = 'none';
+        }
     }
     
     // Note: Mentor Profile button visibility will be set in fetchUserProfile when user data is loaded
