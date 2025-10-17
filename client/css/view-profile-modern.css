@@ -1073,17 +1073,21 @@ html.dark-mode .glass-card {
    FIX BUTTON GROUP SPACING TO PREVENT OVERLAP
    ==================================================================== */
 
-/* Add proper margin to prevent overlap during scroll */
+/* Add proper margin to prevent overlap during scroll and keep within header */
 .profile-actions-regular {
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.75rem !important;
     position: relative;
     z-index: 1;
+    justify-content: flex-start !important;
 }
 
 .profile-actions-create {
     margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
     position: relative;
     z-index: 1;
     clear: both;
+    justify-content: flex-start !important;
 }
 

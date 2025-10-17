@@ -632,11 +632,11 @@ html.dark-mode .social-profile-main .tab-content {
 }
 
 .profile-actions-regular {
-    justify-content: flex-end;
+    justify-content: flex-start;
 }
 
 .profile-actions-create {
-    justify-content: flex-end;
+    justify-content: flex-start;
     margin-top: var(--spacing-xs);
 }
 
@@ -2122,9 +2122,9 @@ button:focus-visible,
     box-shadow: none !important;
 }
 
-/* Ensure buttons have clean margins */
+/* Ensure buttons have clean margins and stay within header */
 .profile-actions-regular {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
 }
 
 .profile-actions-create {
@@ -2170,13 +2170,15 @@ button:focus-visible,
 
 /* Add proper margin to prevent overlap during scroll */
 .profile-actions-regular {
-    margin-bottom: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+    margin-top: 0.75rem !important;
     position: relative;
     z-index: 1;
 }
 
 .profile-actions-create {
     margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
     position: relative;
     z-index: 1;
     clear: both;
