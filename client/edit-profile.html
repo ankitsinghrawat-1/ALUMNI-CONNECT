@@ -72,8 +72,6 @@
 
                 <!-- Center Content Area -->
                 <div class="center-content">
-                <!-- Center Content Area -->
-                <div class="center-content">
                     <!-- Page Hero Header -->
                     <div class="page-hero">
                         <div class="hero-content">
@@ -85,7 +83,7 @@
 
                     <form id="profile-form">
                         <!-- Profile Picture Card -->
-                        <div class="profile-card profile-pic-card">
+                        <div class="profile-card profile-pic-card" id="section-profile-pic">
                             <div class="card-header">
                                 <h3 class="card-title"><i class="fas fa-camera"></i> Profile Picture</h3>
                                 <p class="card-subtitle">Upload a professional photo</p>
@@ -113,7 +111,7 @@
                         </div>
 
                         <!-- Basic Information Card -->
-                        <div class="profile-card">
+                        <div class="profile-card" id="section-basic-info">
                             <div class="card-header">
                                 <h3 class="card-title"><i class="fas fa-user"></i> Basic Information</h3>
                                 <p class="card-subtitle">Your personal details</p>
@@ -162,7 +160,7 @@
                         </div>
 
                         <!-- Social Links Card -->
-                        <div class="profile-card" data-role="alumni student faculty">
+                        <div class="profile-card" data-role="alumni student faculty" id="section-social-links">
                             <div class="card-header">
                                 <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Links</h3>
                                 <p class="card-subtitle">Connect your social profiles</p>
@@ -298,7 +296,7 @@
                         </div>
 
                         <!-- Professional Details Card -->
-                        <div class="profile-card" data-role="alumni faculty employer">
+                        <div class="profile-card" data-role="alumni faculty employer" id="section-professional">
                             <div class="card-header">
                                 <h3 class="card-title"><i class="fas fa-briefcase"></i> Professional Details</h3>
                                 <p class="card-subtitle">Your work and experience information</p>
@@ -395,7 +393,7 @@
                         </div>
 
                         <!-- Academic Details Card -->
-                        <div class="profile-card" data-role="alumni student">
+                        <div class="profile-card" data-role="alumni student" id="section-academic">
                             <div class="card-header">
                                 <h3 class="card-title"><i class="fas fa-graduation-cap"></i> Academic Information</h3>
                                 <p class="card-subtitle">Your educational background</p>
@@ -475,6 +473,31 @@
                         </div>
                     </form>
                 </div>
+
+                <!-- Right Sidebar with Section Tabs -->
+                <aside class="section-nav">
+                    <div class="section-nav-header">
+                        <span class="section-nav-title">Sections</span>
+                    </div>
+                    <nav class="section-nav-list">
+                        <a href="#section-basic-info" class="section-nav-item active" data-section="basic-info">
+                            <i class="fas fa-user"></i>
+                            <span>Basic Info</span>
+                        </a>
+                        <a href="#section-social-links" class="section-nav-item" data-section="social-links" data-role="alumni student faculty">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Social Links</span>
+                        </a>
+                        <a href="#section-professional" class="section-nav-item" data-section="professional" data-role="alumni faculty employer">
+                            <i class="fas fa-briefcase"></i>
+                            <span>Professional</span>
+                        </a>
+                        <a href="#section-academic" class="section-nav-item" data-section="academic" data-role="alumni student">
+                            <i class="fas fa-graduation-cap"></i>
+                            <span>Academic</span>
+                        </a>
+                    </nav>
+                </aside>
             </div>
         </div>
     </main>
@@ -491,5 +514,60 @@
     <script src="js/auto-hide-navbar.js"></script>
     <script src="js/api.js"></script>
     <script src="js/profile.js"></script>
+    
+    <!-- Section Navigation Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scroll to sections
+        const sectionNavItems = document.querySelectorAll('.section-nav-item');
+        
+        sectionNavItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    // Remove active class from all items
+                    sectionNavItems.forEach(navItem => navItem.classList.remove('active'));
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Smooth scroll to section
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Update active state on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.getAttribute('id');
+                    sectionNavItems.forEach(item => {
+                        const itemHref = item.getAttribute('href');
+                        if (itemHref === `#${sectionId}`) {
+                            sectionNavItems.forEach(navItem => navItem.classList.remove('active'));
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all sections
+        const sections = document.querySelectorAll('[id^="section-"]');
+        sections.forEach(section => observer.observe(section));
+    });
+    </script>
 </body>
 </html>

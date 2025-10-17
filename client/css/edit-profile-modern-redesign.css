@@ -760,3 +760,176 @@ select.edit-field {
 .profile-field[data-role]:not([data-role*="alumni"]):not([data-role*="student"]):not([data-role*="faculty"]):not([data-role*="employer"]):not([data-role*="institute"]) {
     display: none;
 }
+
+/* ========================================
+   RIGHT SIDEBAR - SECTION NAVIGATION
+   ======================================== */
+
+.section-nav {
+    width: 250px;
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+    flex-shrink: 0;
+}
+
+.dark-mode .section-nav {
+    background: #1a1f2e;
+    border: 1px solid #2d3748;
+}
+
+.section-nav-header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.dark-mode .section-nav-header {
+    border-bottom-color: #2d3748;
+}
+
+.section-nav-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.section-nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.section-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.section-nav-item:hover {
+    background: #f1f5f9;
+    color: #475569;
+    transform: translateX(2px);
+}
+
+.dark-mode .section-nav-item:hover {
+    background: #2d3748;
+    color: #cbd5e1;
+}
+
+.section-nav-item i {
+    width: 20px;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.section-nav-item.active {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    color: white;
+    box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.3);
+}
+
+.section-nav-item.active:hover {
+    transform: translateX(0);
+    background: linear-gradient(135deg, #5558e3 0%, #7c4ee8 100%);
+}
+
+/* Hide sections based on role */
+.section-nav-item[data-role] {
+    display: none;
+}
+
+/* Content wrapper adjustment for right sidebar */
+.content-wrapper {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.center-content {
+    flex: 1;
+    min-width: 0; /* Allows flex item to shrink below content size */
+}
+
+/* ========================================
+   RESPONSIVE - SECTION NAV
+   ======================================== */
+
+/* Tablet */
+@media (max-width: 1199px) {
+    .section-nav {
+        width: 100%;
+        position: relative;
+        top: 0;
+        margin-bottom: 2rem;
+        order: -1; /* Place above content */
+    }
+    
+    .section-nav-list {
+        flex-direction: row;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    
+    .section-nav-list::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .section-nav-item {
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .content-wrapper {
+        flex-direction: column;
+    }
+}
+
+/* Mobile */
+@media (max-width: 767px) {
+    .section-nav {
+        padding: 1rem;
+    }
+    
+    .section-nav-header {
+        display: none;
+    }
+    
+    .section-nav-list {
+        gap: 0.5rem;
+    }
+    
+    .section-nav-item {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.875rem;
+    }
+    
+    .section-nav-item span {
+        display: none;
+    }
+    
+    .section-nav-item i {
+        margin: 0;
+    }
+}
+
+/* Smooth scroll for anchor navigation */
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 120px;
+}
