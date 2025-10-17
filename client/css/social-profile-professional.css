@@ -626,10 +626,26 @@ html.dark-mode .social-profile-main .tab-content {
 /* Profile Actions */
 .profile-actions {
     display: flex;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
     flex-wrap: wrap;
     align-items: center;
+}
+
+.profile-actions-regular {
     justify-content: flex-end;
+}
+
+.profile-actions-create {
+    justify-content: flex-end;
+    margin-top: var(--spacing-xs);
+}
+
+.profile-name-section {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
 }
 
 .profile-actions .btn,
@@ -647,6 +663,7 @@ html.dark-mode .social-profile-main .tab-content {
     white-space: nowrap !important;
     border: 1px solid transparent !important;
     text-decoration: none !important;
+    background: transparent;
 }
 
 .action-icon-btn .btn-text {
@@ -1227,6 +1244,15 @@ html.dark-mode .social-profile-main .tab-content {
         justify-content: flex-start;
         width: 100%;
         gap: var(--spacing-xs);
+    }
+    
+    .profile-actions-regular {
+        justify-content: flex-start;
+    }
+    
+    .profile-actions-create {
+        justify-content: flex-start;
+        margin-top: var(--spacing-xs);
     }
     
     .profile-actions .btn,

@@ -54,7 +54,8 @@
                                 </span>
                             </div>
                             
-                            <div class="profile-actions">
+                            <!-- Regular Action Buttons -->
+                            <div class="profile-actions profile-actions-regular">
                                 <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
                                     <i class="fas fa-edit"></i>
                                     <span class="btn-text">Edit</span>
@@ -67,14 +68,6 @@
                                     <i class="fas fa-envelope"></i>
                                     <span class="btn-text">Message</span>
                                 </button>
-                                <a href="add-story.html" id="add-story-btn" class="action-icon-btn action-icon-accent" data-tooltip="Add Story" style="display: none;">
-                                    <i class="fas fa-plus-circle"></i>
-                                    <span class="btn-text">Story</span>
-                                </a>
-                                <a href="add-thread.html" id="add-thread-btn" class="action-icon-btn action-icon-primary" data-tooltip="Add Thread" style="display: none;">
-                                    <i class="fas fa-plus"></i>
-                                    <span class="btn-text">Thread</span>
-                                </a>
                                 <a href="view-profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile">
                                     <i class="fas fa-id-card"></i>
                                     <span class="btn-text">Profile</span>
@@ -82,6 +75,18 @@
                                 <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
                                     <i class="fas fa-share-alt"></i>
                                 </button>
+                            </div>
+                            
+                            <!-- Separate Add Story and Add Thread Buttons -->
+                            <div class="profile-actions profile-actions-create" style="display: none;">
+                                <a href="add-story.html" id="add-story-btn" class="action-icon-btn action-icon-accent" data-tooltip="Add Story">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span class="btn-text">Add Story</span>
+                                </a>
+                                <a href="add-thread.html" id="add-thread-btn" class="action-icon-btn action-icon-primary" data-tooltip="Add Thread">
+                                    <i class="fas fa-plus"></i>
+                                    <span class="btn-text">Add Thread</span>
+                                </a>
                             </div>
                         </div>
                         <p id="profile-title" class="profile-title"></p>
