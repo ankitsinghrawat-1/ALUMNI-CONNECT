@@ -115,6 +115,252 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: var(--box-shadow-subtle);
 }
 
+/* Modern Icon-Based Action Buttons */
+.action-btn-modern {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn-modern i {
+    font-size: 0.875rem;
+}
+
+.action-btn-modern:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.action-btn-modern:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Icon-only action buttons with tooltip */
+.action-icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.action-icon-btn i {
+    transition: transform 0.2s ease;
+}
+
+.action-icon-btn:hover {
+    transform: translateY(-2px);
+}
+
+.action-icon-btn:hover i {
+    transform: scale(1.1);
+}
+
+.action-icon-btn:active {
+    transform: translateY(0);
+}
+
+/* Tooltip for icon buttons */
+.action-icon-btn::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(5px);
+    background: #2c3e50;
+    color: #ffffff;
+    padding: 0.625rem 1rem;
+    border-radius: 6px;
+    font-size: 0.813rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10000;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
+    letter-spacing: 0.4px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.action-icon-btn::before {
+    content: '';
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-bottom-color: #2c3e50;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 10000;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.action-icon-btn:hover::after,
+.action-icon-btn:hover::before {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+html.dark-mode .action-icon-btn::after {
+    background: #f8f9fa;
+    color: #1a252f;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+html.dark-mode .action-icon-btn::before {
+    border-bottom-color: #f8f9fa;
+}
+
+.action-btn-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-color) 100%);
+    color: white;
+}
+
+.action-btn-primary:hover {
+    background: linear-gradient(135deg, var(--primary-dark-color) 0%, var(--primary-color) 100%);
+}
+
+.action-btn-secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 1.5px solid var(--primary-color);
+}
+
+html.dark-mode .action-btn-secondary {
+    background: var(--surface-color);
+    border-color: var(--primary-color);
+}
+
+.action-btn-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+.action-btn-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+}
+
+.action-btn-danger:hover {
+    background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+}
+
+.action-btn-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+}
+
+.action-btn-success:hover {
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+/* Icon button color variants */
+.action-icon-primary {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark-color) 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+}
+
+.action-icon-primary:hover {
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.4);
+}
+
+.action-icon-secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 2px 8px rgba(74, 144, 226, 0.2);
+}
+
+html.dark-mode .action-icon-secondary {
+    background: var(--surface-color);
+}
+
+.action-icon-secondary:hover {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+}
+
+.action-icon-danger {
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3);
+}
+
+.action-icon-danger:hover {
+    box-shadow: 0 4px 16px rgba(231, 76, 60, 0.4);
+}
+
+.action-icon-success {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    color: white;
+    box-shadow: 0 2px 8px rgba(46, 204, 113, 0.3);
+}
+
+.action-icon-success:hover {
+    box-shadow: 0 4px 16px rgba(46, 204, 113, 0.4);
+}
+
+/* Icon-only action buttons (for inline editing, etc.) */
+.icon-btn-modern {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(74, 144, 226, 0.1);
+    color: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+}
+
+.icon-btn-modern:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: scale(1.1);
+}
+
+.icon-btn-modern:active {
+    transform: scale(0.95);
+}
+
+html.dark-mode .icon-btn-modern {
+    background: rgba(93, 169, 240, 0.15);
+}
+
+/* Profile action buttons container */
+.profile-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
 .btn-logout {
     background-color: var(--error-color);
     color: #fff;
@@ -1643,6 +1889,12 @@ main {
     gap: 0.5rem;
 }
 
+.skills-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
 .skill-tag {
     background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
     color: white;
@@ -1650,6 +1902,20 @@ main {
     border-radius: 15px;
     font-size: 0.8rem;
     font-weight: 500;
+}
+
+.expertise-tag {
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: #333;
+    padding: 0.25rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.expertise-section,
+.skills-section {
+    margin-bottom: 0.5rem;
 }
 
 .more-skills {

@@ -446,7 +446,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                             ${title ? `<div class="connection-title">${title}</div>` : ''}
                         </div>
                         <div class="connection-action">
-                            <a href="social-profile.html?userId=${user.user_id}" class="btn btn-primary">View Profile</a>
+                            <a href="social-profile.html?userId=${user.user_id}" class="action-icon-btn action-icon-primary" data-tooltip="View Profile">
+                                <i class="fas fa-eye"></i>
+                            </a>
                         </div>
                     </div>
                 `;

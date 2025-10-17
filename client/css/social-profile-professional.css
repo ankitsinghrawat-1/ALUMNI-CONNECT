@@ -248,9 +248,12 @@
 .profile-header-section {
     background: var(--bg-primary);
     border: 1px solid var(--border-light);
-    border-radius: var(--radius-xl);
+    border-radius: 0;
     overflow: hidden;
     margin-bottom: var(--spacing-xl);
+    margin-left: calc(-1 * var(--spacing-xl));
+    margin-right: calc(-1 * var(--spacing-xl));
+    width: calc(100% + 2 * var(--spacing-xl));
 }
 
 /* Cover Photo */
@@ -259,6 +262,7 @@
     background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
     position: relative;
     overflow: hidden;
+    width: 100%;
 }
 
 .cover-gradient {

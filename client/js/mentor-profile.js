@@ -1,4 +1,5 @@
 // Mentor Profile Page - Combined View/Edit Mode
+// Version: Icon-only buttons with tooltips (Updated 2025-10-16)
 document.addEventListener('DOMContentLoaded', async () => {
     // Get mentor ID from URL parameter
     const urlParams = new URLSearchParams(window.location.search);
@@ -240,12 +241,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     
     function addInlineEditButtons() {
-        // Add edit button to each section header
+        // Define which sections are editable
+        const editableSections = [
+            'About',
+            'Specializations', 
+            'Skills',
+            'Details',
+            'Availability',
+            'Languages',
+            'Connect'
+        ];
+        
+        // Add edit button to main sections (h2)
         const sections = document.querySelectorAll('#view-mode .profile-section h2');
         sections.forEach(section => {
-            if (!section.querySelector('.edit-section-btn')) {
+            const sectionText = section.textContent.trim();
+            const isEditable = editableSections.some(editableSection => 
+                sectionText.includes(editableSection)
+            );
+            
+            if (isEditable && !section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
-                editBtn.className = 'edit-section-btn';
+                editBtn.className = 'icon-btn-modern edit-section-btn';
                 editBtn.innerHTML = '<i class="fas fa-edit"></i>';
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
@@ -253,12 +270,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
         
-        // Add edit button to sidebar sections
+        // Add edit button to sidebar sections (h3)
         const sidebarSections = document.querySelectorAll('#view-mode .sidebar-card h3');
         sidebarSections.forEach(section => {
-            if (!section.querySelector('.edit-section-btn')) {
+            const sectionText = section.textContent.trim();
+            const isEditable = editableSections.some(editableSection => 
+                sectionText.includes(editableSection)
+            );
+            
+            if (isEditable && !section.querySelector('.edit-section-btn')) {
                 const editBtn = document.createElement('button');
-                editBtn.className = 'edit-section-btn';
+                editBtn.className = 'icon-btn-modern edit-section-btn';
                 editBtn.innerHTML = '<i class="fas fa-edit"></i>';
                 editBtn.title = 'Edit this section';
                 editBtn.onclick = switchToEditMode;
@@ -402,30 +424,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderProfileActions() {
         if (isOwner) {
-            // Show Edit Profile button for owner
+            // Show icon-only buttons for owner with tooltips
             profileActions.innerHTML = `
-                <button id="edit-profile-btn" class="btn btn-primary">
-                    <i class="fas fa-edit"></i> Edit Profile
+                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile">
+                    <i class="fas fa-edit"></i>
                 </button>
-                <a href="mentor-requests.html" class="btn btn-secondary">
-                    <i class="fas fa-inbox"></i> View Requests
+                <a href="mentor-requests.html" class="action-icon-btn action-icon-secondary" data-tooltip="View Requests">
+                    <i class="fas fa-inbox"></i>
                 </a>
-                <button id="delete-profile-btn" class="btn btn-danger">
-                    <i class="fas fa-trash"></i> Delete Profile
+                <button id="delete-profile-btn" class="action-icon-btn action-icon-danger" data-tooltip="Delete Profile">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
             `;
             document.getElementById('edit-profile-btn').addEventListener('click', switchToEditMode);
             document.getElementById('delete-profile-btn').addEventListener('click', handleDeleteProfile);
         } else {
-            // Show Send Request button for others
+            // Show icon-only buttons for visitors
             const loggedIn = localStorage.getItem('alumniConnectToken');
             if (loggedIn) {
                 profileActions.innerHTML = `
-                    <button id="send-request-btn" class="btn btn-primary">
-                        <i class="fas fa-paper-plane"></i> Send Request
+                    <button id="send-request-btn" class="action-icon-btn action-icon-primary" data-tooltip="Send Request">
+                        <i class="fas fa-paper-plane"></i>
                     </button>
-                    <button id="message-btn" class="btn btn-secondary">
-                        <i class="fas fa-comments"></i> Message
+                    <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Send Message">
+                        <i class="fas fa-comments"></i>
                     </button>
                 `;
                 // Add event listeners for these buttons
@@ -435,8 +457,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             } else {
                 profileActions.innerHTML = `
-                    <a href="login.html" class="btn btn-primary">
-                        <i class="fas fa-sign-in-alt"></i> Sign In to Connect
+                    <a href="login.html" class="action-icon-btn action-icon-primary" data-tooltip="Sign In to Connect">
+                        <i class="fas fa-sign-in-alt"></i>
                     </a>
                 `;
             }

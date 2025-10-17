@@ -725,30 +725,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 saveBtn.disabled = true;
             }
             
-            // Create form data with ALL current profile data to prevent data loss
+            // Create form data with only the field being updated
             const formData = new FormData();
-            
-            // Add all display field values to preserve existing data
-            document.querySelectorAll('.display-field[data-field]').forEach(element => {
-                const fieldName = element.getAttribute('data-field');
-                const fieldValue = element.textContent === 'Not set' ? '' : element.textContent;
-                if (fieldName) {
-                    formData.append(fieldName, fieldValue);
-                }
-            });
-            
-            // Add all input field values to preserve form data
-            document.querySelectorAll('input[name], textarea[name], select[name]').forEach(input => {
-                if (input.name && input.name !== 'profile_picture') {
-                    if (input.type === 'checkbox') {
-                        formData.set(input.name, input.checked ? '1' : '0');
-                    } else {
-                        formData.set(input.name, input.value || '');
-                    }
-                }
-            });
-            
-            // Override with the new value being saved
             formData.set(field, value);
             
             const result = await window.api.putForm('/users/profile', formData);
