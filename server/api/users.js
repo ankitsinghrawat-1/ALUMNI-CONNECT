@@ -290,10 +290,11 @@ module.exports = (pool, upload) => {
     router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
         const userId = req.user.userId;
         const { 
-            full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, 
-            department, industry, skills, phone_number, website, experience_years, specialization, 
-            current_position, research_interests, achievements, certifications, languages, current_year, 
-            gpa, expected_graduation, company_size, founded_year, student_count
+            full_name, bio, company, job_title, city, address, country, linkedin_profile, twitter_profile, github_profile,
+            institute_name, major, graduation_year, department, industry, skills, phone_number, website, 
+            experience_years, specialization, current_position, research_interests, achievements, certifications, 
+            languages, current_year, gpa, expected_graduation, company_size, founded_year, student_count,
+            availability_status
         } = req.body;
         let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
 
@@ -302,10 +303,11 @@ module.exports = (pool, upload) => {
         const user = userRows[0];
         
         const updateFields = { 
-            full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, 
-            department, industry, skills, phone_number, website, experience_years, specialization, 
-            current_position, research_interests, achievements, certifications, languages, current_year, 
-            gpa, expected_graduation, company_size, founded_year, student_count
+            full_name, bio, company, job_title, city, address, country, linkedin_profile, twitter_profile, github_profile,
+            institute_name, major, graduation_year, department, industry, skills, phone_number, website, 
+            experience_years, specialization, current_position, research_interests, achievements, certifications, 
+            languages, current_year, gpa, expected_graduation, company_size, founded_year, student_count,
+            availability_status
         };
         
         // Handle empty values - don't set full_name to null as it's required

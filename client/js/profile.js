@@ -1012,6 +1012,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Setup sidebar navigation for social and mentor profiles
+    const socialProfileNavLink = document.getElementById('social-profile-nav-link');
+    const mentorProfileNavLink = document.getElementById('mentor-profile-nav-link');
+
+    // Get current user data to set up profile navigation
+    try {
+        const userData = await window.api.get('/users/profile');
+        const userId = userData.user_id;
+        const isMentor = userData.is_mentor;
+
+        // Setup social profile link
+        if (socialProfileNavLink) {
+            socialProfileNavLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = `social-profile.html?userId=${userId}`;
+            });
+        }
+
+        // Setup mentor profile link (only show if user is a mentor)
+        if (mentorProfileNavLink && isMentor) {
+            mentorProfileNavLink.style.display = 'block';
+            mentorProfileNavLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = `edit-mentor-profile.html`;
+            });
+        }
+    } catch (error) {
+        console.error('Error setting up profile navigation:', error);
+    }
+
     await fetchUserProfile();
     await fetchPrivacySettings();
 });

@@ -660,3 +660,193 @@ html.dark-mode .modern-edit-profile {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Enhanced Profile Navigation Links */
+.modern-edit-profile .profile-nav a#social-profile-nav-link {
+    position: relative;
+}
+
+.modern-edit-profile .profile-nav a#social-profile-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    background: linear-gradient(to bottom, #1d9bf0, #0a66c2);
+    border-radius: 2px;
+    transition: height 0.3s ease;
+}
+
+.modern-edit-profile .profile-nav a#social-profile-nav-link:hover::before {
+    height: 60%;
+}
+
+.modern-edit-profile .profile-nav a#mentor-profile-nav-link {
+    position: relative;
+}
+
+.modern-edit-profile .profile-nav a#mentor-profile-nav-link::before {
+    content: '';
+    position: absolute;
+    left: -0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 0;
+    background: linear-gradient(to bottom, #f59e0b, #d97706);
+    border-radius: 2px;
+    transition: height 0.3s ease;
+}
+
+.modern-edit-profile .profile-nav a#mentor-profile-nav-link:hover::before {
+    height: 60%;
+}
+
+/* Enhanced hover animations for profile links */
+.modern-edit-profile .profile-nav a {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.modern-edit-profile .profile-nav a:hover {
+    transform: translateX(4px);
+}
+
+/* Gradient text effect for active navigation */
+.modern-edit-profile .profile-nav a.active span {
+    background: linear-gradient(135deg, var(--primary-blue), #1d9bf0);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+}
+
+/* Enhanced input focus effects */
+.modern-edit-profile .edit-field:focus,
+.modern-edit-profile .modal-input:focus,
+.modern-edit-profile .modal-textarea:focus,
+.modern-edit-profile .dropdown-input:focus {
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(10, 102, 194, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Smooth transitions for profile field edits */
+.modern-edit-profile .profile-field {
+    transition: all 0.3s ease;
+}
+
+.modern-edit-profile .profile-field:hover {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: 0.75rem;
+    margin: 0 -0.75rem;
+}
+
+/* Enhanced button styles */
+.modern-edit-profile .btn-primary {
+    background: linear-gradient(135deg, var(--primary-blue), #1d9bf0);
+    border: none;
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+    transition: all 0.3s ease;
+}
+
+.modern-edit-profile .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(10, 102, 194, 0.4);
+}
+
+.modern-edit-profile .btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Profile picture section enhancements */
+.modern-edit-profile .profile-pic-section {
+    background: linear-gradient(135deg, rgba(10, 102, 194, 0.05), rgba(29, 155, 240, 0.05));
+    padding: 2rem;
+    border-radius: var(--radius-xl);
+    margin-bottom: 2rem;
+}
+
+.modern-edit-profile .pic-wrapper {
+    position: relative;
+}
+
+.modern-edit-profile .pic-wrapper::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-blue), #1d9bf0);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: -1;
+}
+
+.modern-edit-profile .pic-wrapper:hover::after {
+    opacity: 0.1;
+}
+
+/* Section tabs enhancements */
+.modern-edit-profile .profile-section-tab {
+    position: relative;
+    overflow: hidden;
+}
+
+.modern-edit-profile .profile-section-tab::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-blue), #1d9bf0);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+}
+
+.modern-edit-profile .profile-section-tab.active::before {
+    transform: translateX(0);
+}
+
+/* Enhanced verification badge styling */
+.verification-status-display {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-lg);
+    font-size: 0.875rem;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+.verification-status-display.verified {
+    background: linear-gradient(135deg, rgba(22, 163, 74, 0.1), rgba(34, 197, 94, 0.1));
+    color: var(--success-color);
+}
+
+.verification-status-display.pending {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.1), rgba(251, 191, 36, 0.1));
+    color: #f59e0b;
+}
+
+.verification-status-display.unverified {
+    background: linear-gradient(135deg, rgba(156, 163, 175, 0.1), rgba(209, 213, 219, 0.1));
+    color: var(--text-tertiary);
+}
+
+/* Glassmorphism effect for cards */
+@supports (backdrop-filter: blur(10px)) {
+    .modern-edit-profile .form-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+    }
+    
+    html.dark-mode .modern-edit-profile .form-card {
+        background: rgba(30, 39, 50, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
