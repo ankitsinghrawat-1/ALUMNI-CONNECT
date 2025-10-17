@@ -188,14 +188,15 @@ h1, h2, h3, h4, h5, h6 {
     min-width: 40px;
     overflow: hidden;
     white-space: nowrap;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 8px; /* Rounded rectangle, not circle */
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Faster: 0.2s instead of 0.3s */
 }
 
 .action-icon-btn i {
     min-width: 20px;
     text-align: center;
     flex-shrink: 0;
-    transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Faster */
 }
 
 .action-icon-btn .btn-text {
@@ -206,7 +207,7 @@ h1, h2, h3, h4, h5, h6 {
     max-width: 0;
     overflow: hidden;
     transform: translateX(-10px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); /* Faster */
 }
 
 /* Expand button on hover to show text */
@@ -214,6 +215,7 @@ h1, h2, h3, h4, h5, h6 {
     width: auto;
     padding-left: 0.75rem;
     padding-right: 1rem;
+    border-radius: 8px; /* Maintain rounded rectangle shape when expanded */
 }
 
 .action-icon-btn:hover .btn-text {
