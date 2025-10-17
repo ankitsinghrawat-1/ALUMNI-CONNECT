@@ -37,7 +37,7 @@
                 <a href="application-management.html" class="nav-item"><i class="fas fa-file-alt"></i> Applications</a>
             </nav>
             <div class="sidebar-footer">
-                 <a href="profile.html" class="nav-item"><i class="fas fa-user"></i> Your Profile</a>
+                 <a href="#" onclick="window.location.href=`profile.html?email=${localStorage.getItem('loggedInUserEmail')}`" class="nav-item"><i class="fas fa-user"></i> Your Profile</a>
                  <a href="#" id="admin-logout-btn" class="nav-item"><i class="fas fa-sign-out-alt"></i> Logout</a>
             </div>
         </aside>
