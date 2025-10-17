@@ -51,12 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('profile-name').textContent = profileUser.full_name;
             
-            // Use consistent verification badge across all pages
-            const badgeContainer = document.getElementById('verified-badge-container');
             if (profileUser.verification_status === 'verified') {
-                badgeContainer.innerHTML = '<span class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i> Verified</span>';
-            } else {
-                badgeContainer.innerHTML = '';
+                document.getElementById('verification-badge').style.display = 'inline';
             }
 
             const titleParts = [];
@@ -77,17 +73,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('likes-count').textContent = data.stats.likes_received;
             document.getElementById('activity-likes').textContent = data.stats.likes_received;
             document.getElementById('activity-comments').textContent = data.stats.comments_received;
-
-            // Update new statistics section
-            const totalPosts = data.stats.threads || 0;
-            const totalConnections = (data.stats.followers || 0) + (data.stats.following || 0);
-            const totalEngagement = (data.stats.likes_received || 0) + (data.stats.comments_received || 0);
-            const activityScore = Math.round((totalPosts * 10) + (totalEngagement * 2) + (totalConnections * 5));
-
-            document.getElementById('posts-stat-count').textContent = totalPosts;
-            document.getElementById('connections-stat-count').textContent = totalConnections;
-            document.getElementById('engagement-stat-count').textContent = totalEngagement;
-            document.getElementById('activity-stat-score').textContent = activityScore;
 
             // Update profile links
             const viewProfileBtn = document.getElementById('view-full-profile-btn');

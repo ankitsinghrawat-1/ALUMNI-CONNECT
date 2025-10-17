@@ -6,7 +6,6 @@
     <title>Social Profile - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/social-profile-professional.css">
-    <link rel="stylesheet" href="css/social-profile-modern.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script>
@@ -50,62 +49,83 @@
                 </div>
                 
                 <div class="profile-info-wrapper">
-                    <div class="profile-header-grid">
-                        <!-- Left Column: Avatar, Basic Info, About, and Details -->
-                        <div class="profile-left-column">
-                            <div class="profile-avatar-container">
-                                <img id="profile-avatar" src="" alt="Profile" class="profile-avatar">
+                    <div class="profile-avatar-container">
+                        <img id="profile-avatar" src="" alt="Profile" class="profile-avatar">
+                    </div>
+                    
+                    <div class="profile-main-info">
+                        <div class="profile-name-section">
+                            <div class="profile-name-wrapper">
+                                <h1 id="profile-name">Loading...</h1>
+                                <span id="verification-badge" class="verification-badge" style="display: none;">
+                                    <i class="fas fa-check-circle"></i>
+                                </span>
                             </div>
                             
-                            <div class="profile-basic-info">
-                                <div class="profile-name-wrapper">
-                                    <h1 id="profile-name">Loading...</h1>
-                                    <div id="verified-badge-container"></div>
-                                </div>
-                                
-                                <p id="profile-title" class="profile-title"></p>
+                            <div class="profile-actions">
+                                <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                                    <i class="fas fa-th-large"></i>
+                                    <span class="btn-text">Dashboard</span>
+                                </a>
+                                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
+                                    <i class="fas fa-edit"></i>
+                                    <span class="btn-text">Edit Profile</span>
+                                </button>
+                                <button id="follow-btn" class="action-icon-btn action-icon-primary" data-tooltip="Follow" style="display: none;">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span class="btn-text">Follow</span>
+                                </button>
+                                <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="btn-text">Message</span>
+                                </button>
+                                <a href="view-profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile">
+                                    <i class="fas fa-id-card"></i>
+                                    <span class="btn-text">Full Profile</span>
+                                </a>
+                                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span class="btn-text">Share Profile</span>
+                                </button>
                             </div>
-                            
-                            <!-- About and Details in Left Column -->
-                            <div class="profile-bio-section">
-                                <h3 class="section-heading">About</h3>
-                                <p id="profile-bio" class="profile-bio"></p>
+                        </div>
+                        <p id="profile-title" class="profile-title"></p>
+                        <p id="profile-bio" class="profile-bio"></p>
+                        
+                        <!-- Additional Profile Details -->
+                        <div class="profile-details" id="profile-details">
+                            <div class="detail-item" id="location-detail" style="display: none;">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="profile-location"></span>
                             </div>
-                            
-                            <!-- Additional Profile Details -->
-                            <div class="profile-details" id="profile-details">
-                                <div class="detail-item" id="location-detail" style="display: none;">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                    <span id="profile-location"></span>
-                                </div>
-                                <div class="detail-item" id="website-detail" style="display: none;">
-                                    <i class="fas fa-link"></i>
-                                    <a href="#" id="profile-website" target="_blank" rel="noopener"></a>
-                                </div>
-                                <div class="detail-item" id="joined-detail">
-                                    <i class="fas fa-calendar"></i>
-                                    <span>Joined <span id="profile-joined"></span></span>
+                            <div class="detail-item" id="website-detail" style="display: none;">
+                                <i class="fas fa-link"></i>
+                                <a href="#" id="profile-website" target="_blank" rel="noopener"></a>
+                            </div>
+                            <div class="detail-item" id="joined-detail">
+                                <i class="fas fa-calendar"></i>
+                                <span>Joined <span id="profile-joined"></span></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Extended Profile Info -->
+                        <div class="profile-extended-info" id="profile-extended-info">
+                            <div class="extended-item" id="skills-detail" style="display: none;">
+                                <i class="fas fa-code"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Skills:</span>
+                                    <span id="profile-skills"></span>
                                 </div>
                             </div>
-                            
-                            <!-- Extended Profile Info -->
-                            <div class="profile-extended-info" id="profile-extended-info">
-                                <div class="extended-item" id="skills-detail" style="display: none;">
-                                    <i class="fas fa-code"></i>
-                                    <div class="extended-content">
-                                        <span class="extended-label">Skills:</span>
-                                        <span id="profile-skills"></span>
-                                    </div>
+                            <div class="extended-item" id="interests-detail" style="display: none;">
+                                <i class="fas fa-heart"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Interests:</span>
+                                    <span id="profile-interests"></span>
                                 </div>
-                                <div class="extended-item" id="interests-detail" style="display: none;">
-                                    <i class="fas fa-heart"></i>
-                                    <div class="extended-content">
-                                        <span class="extended-label">Interests:</span>
-                                        <span id="profile-interests"></span>
-                                    </div>
-                                </div>
-                                <div class="extended-item" id="project-detail" style="display: none;">
-                                    <i class="fas fa-project-diagram"></i>
+                            </div>
+                            <div class="extended-item" id="project-detail" style="display: none;">
+                                <i class="fas fa-project-diagram"></i>
                                 <div class="extended-content">
                                     <span class="extended-label">Current Project:</span>
                                     <span id="profile-project"></span>
@@ -129,32 +149,6 @@
                                 <i class="fab fa-github"></i>
                             </a>
                         </div>
-                    </div>
-                    
-                    <!-- Right Column: Action Buttons -->
-                    <div class="profile-right-column">
-                        <div class="profile-actions">
-                            <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard" title="Dashboard">
-                                <i class="fas fa-th-large"></i>
-                            </a>
-                            <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" title="Edit Profile" style="display: none;">
-                                <i class="fas fa-edit"></i>
-                            </button>
-                            <button id="follow-btn" class="action-icon-btn action-icon-primary" data-tooltip="Follow" title="Follow" style="display: none;">
-                                <i class="fas fa-user-plus"></i>
-                            </button>
-                            <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message" title="Message">
-                                <i class="fas fa-envelope"></i>
-                            </button>
-                            <a href="view-profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile" title="Full Profile">
-                                <i class="fas fa-id-card"></i>
-                            </a>
-                            <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile" title="Share Profile">
-                                <i class="fas fa-share-alt"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
                         
                         <div class="profile-stats">
                             <div class="stat-item">
@@ -172,46 +166,6 @@
                             <div class="stat-item">
                                 <span class="stat-value" id="likes-count">0</span>
                                 <span class="stat-label">Likes</span>
-                            </div>
-                        </div>
-                        
-                        <!-- Enhanced Statistics Grid Inside Header -->
-                        <div class="stats-grid">
-                            <div class="stat-box" data-aos="fade-up">
-                                <div class="stat-icon">
-                                    <i class="fas fa-th"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h4 id="posts-stat-count">0</h4>
-                                    <p>Total Posts</p>
-                                </div>
-                            </div>
-                            <div class="stat-box" data-aos="fade-up" data-aos-delay="100">
-                                <div class="stat-icon">
-                                    <i class="fas fa-users"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h4 id="connections-stat-count">0</h4>
-                                    <p>Connections</p>
-                                </div>
-                            </div>
-                            <div class="stat-box" data-aos="fade-up" data-aos-delay="200">
-                                <div class="stat-icon">
-                                    <i class="fas fa-heart"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h4 id="engagement-stat-count">0</h4>
-                                    <p>Total Engagement</p>
-                                </div>
-                            </div>
-                            <div class="stat-box" data-aos="fade-up" data-aos-delay="300">
-                                <div class="stat-icon">
-                                    <i class="fas fa-fire"></i>
-                                </div>
-                                <div class="stat-content">
-                                    <h4 id="activity-stat-score">0</h4>
-                                    <p>Activity Score</p>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -441,6 +395,15 @@
                         </button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+                <h3 id="connections-modal-title">Followers</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body" id="connections-list">
+                <!-- Users list will be loaded here -->
             </div>
         </div>
     </div>
