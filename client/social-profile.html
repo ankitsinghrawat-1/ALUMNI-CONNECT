@@ -51,7 +51,7 @@
                 
                 <div class="profile-info-wrapper">
                     <div class="profile-header-grid">
-                        <!-- Left Column: Avatar and Basic Info -->
+                        <!-- Left Column: Avatar, Basic Info, About, and Details -->
                         <div class="profile-left-column">
                             <div class="profile-avatar-container">
                                 <img id="profile-avatar" src="" alt="Profile" class="profile-avatar">
@@ -64,38 +64,9 @@
                                 </div>
                                 
                                 <p id="profile-title" class="profile-title"></p>
-                                
-                                <div class="profile-actions">
-                                    <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
-                                        <i class="fas fa-th-large"></i>
-                                        <span class="btn-text">Dashboard</span>
-                                    </a>
-                                    <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
-                                        <i class="fas fa-edit"></i>
-                                        <span class="btn-text">Edit Profile</span>
-                                    </button>
-                                    <button id="follow-btn" class="action-icon-btn action-icon-primary" data-tooltip="Follow" style="display: none;">
-                                        <i class="fas fa-user-plus"></i>
-                                        <span class="btn-text">Follow</span>
-                                    </button>
-                                    <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
-                                        <i class="fas fa-envelope"></i>
-                                        <span class="btn-text">Message</span>
-                                    </button>
-                                    <a href="view-profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile">
-                                        <i class="fas fa-id-card"></i>
-                                        <span class="btn-text">Full Profile</span>
-                                    </a>
-                                    <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
-                                        <i class="fas fa-share-alt"></i>
-                                        <span class="btn-text">Share Profile</span>
-                                    </button>
-                                </div>
                             </div>
-                        </div>
-                        
-                        <!-- Right Column: Bio and Details -->
-                        <div class="profile-right-column">
+                            
+                            <!-- About and Details in Left Column -->
                             <div class="profile-bio-section">
                                 <h3 class="section-heading">About</h3>
                                 <p id="profile-bio" class="profile-bio"></p>
@@ -158,6 +129,38 @@
                                 <i class="fab fa-github"></i>
                             </a>
                         </div>
+                    </div>
+                    
+                    <!-- Right Column: Action Buttons -->
+                    <div class="profile-right-column">
+                        <div class="profile-actions">
+                            <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                                <i class="fas fa-th-large"></i>
+                                <span class="btn-text">Dashboard</span>
+                            </a>
+                            <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
+                                <i class="fas fa-edit"></i>
+                                <span class="btn-text">Edit Profile</span>
+                            </button>
+                            <button id="follow-btn" class="action-icon-btn action-icon-primary" data-tooltip="Follow" style="display: none;">
+                                <i class="fas fa-user-plus"></i>
+                                <span class="btn-text">Follow</span>
+                            </button>
+                            <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
+                                <i class="fas fa-envelope"></i>
+                                <span class="btn-text">Message</span>
+                            </button>
+                            <a href="view-profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile">
+                                <i class="fas fa-id-card"></i>
+                                <span class="btn-text">Full Profile</span>
+                            </a>
+                            <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                                <i class="fas fa-share-alt"></i>
+                                <span class="btn-text">Share Profile</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
                         
                         <div class="profile-stats">
                             <div class="stat-item">

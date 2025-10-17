@@ -88,6 +88,9 @@
 /* Right Column */
 .social-profile-main .profile-right-column {
     padding-top: var(--spacing-md);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 /* Profile Bio Section */
@@ -414,14 +417,16 @@
     margin-top: var(--spacing-lg);
 }
 
-/* Enhanced Profile Actions - Centered Below Title */
+/* Enhanced Profile Actions - Right Column */
 .social-profile-main .profile-actions {
     display: flex;
     gap: var(--spacing-md);
     flex-wrap: wrap;
-    align-items: center;
-    justify-content: center;
-    margin-top: var(--spacing-lg);
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin-top: 0;
+    flex-direction: column;
+    width: 100%;
 }
 
 .social-profile-main .action-icon-btn {
@@ -438,6 +443,8 @@
     border: 1px solid transparent;
     position: relative;
     overflow: hidden;
+    width: 100%;
+    justify-content: center;
 }
 
 .social-profile-main .action-icon-btn::before {
