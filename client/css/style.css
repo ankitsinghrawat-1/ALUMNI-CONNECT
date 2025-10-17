@@ -177,62 +177,52 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(0);
 }
 
-/* Redesigned Tooltip for icon buttons - Better visibility */
+/* Magic Expanding Buttons - Icon expands to show text on hover */
+.action-icon-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.action-icon-btn i {
+    min-width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+    transition: margin 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 .action-icon-btn::after {
     content: attr(data-tooltip);
-    position: absolute;
-    bottom: calc(100% + 12px);
-    left: 50%;
-    transform: translateX(-50%);
-    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-    color: #ffffff;
-    padding: 0.625rem 1rem;
-    border-radius: 8px;
+    margin-left: 0.5rem;
     font-size: 0.875rem;
     font-weight: 500;
-    white-space: nowrap;
     opacity: 0;
-    visibility: hidden;
+    transform: translateX(-10px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
-    letter-spacing: 0.3px;
-    line-height: 1.4;
-    text-align: center;
-    min-width: max-content;
-    max-width: 200px;
 }
 
-.action-icon-btn::before {
-    content: '';
-    position: absolute;
-    bottom: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    border: 8px solid transparent;
-    border-top-color: #1e293b;
-    opacity: 0;
-    visibility: hidden;
-    pointer-events: none;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 10000;
+/* Expand button on hover to show text */
+.action-icon-btn:hover {
+    width: auto;
+    padding-left: 0.75rem;
+    padding-right: 1rem;
 }
 
-.action-icon-btn:hover::after,
-.action-icon-btn:hover::before {
+.action-icon-btn:hover::after {
     opacity: 1;
-    visibility: visible;
+    transform: translateX(0);
 }
 
-html.dark-mode .action-icon-btn::after {
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-    color: #0f172a;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.1);
-}
-
-html.dark-mode .action-icon-btn::before {
-    border-top-color: #f8fafc;
+.action-icon-btn:hover i {
+    margin-right: 0;
 }
 
 .action-btn-primary {
