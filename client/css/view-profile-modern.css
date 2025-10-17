@@ -1095,8 +1095,19 @@ html.dark-mode .glass-card {
    FIX BUTTON POSITIONING TO STAY INSIDE HEADER CONTAINER
    ==================================================================== */
 
-/* Ensure profile header content has enough padding for buttons */
+/* Ensure profile header content has enough padding for buttons to fit within */
 .modern-profile .profile-header-content {
-    padding-bottom: 1.5rem !important;  /* Reduced from 2rem to make more compact */
+    padding-bottom: 1.75rem !important;  /* Increased to accommodate both button rows */
+}
+
+/* Minimize button margins to keep ALL buttons within white header container */
+.modern-profile .profile-actions-regular {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.25rem !important;  /* Minimized for compact layout */
+}
+
+.modern-profile .profile-actions-create {
+    margin-top: 0.25rem !important;  /* Minimized spacing */
+    margin-bottom: 0 !important;  /* No bottom margin - buttons end at padding boundary */
 }
 

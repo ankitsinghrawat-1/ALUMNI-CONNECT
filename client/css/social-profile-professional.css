@@ -2188,19 +2188,19 @@ button:focus-visible,
    FIX BUTTON POSITIONING TO STAY INSIDE HEADER CONTAINER
    ==================================================================== */
 
-/* Ensure profile header content has enough padding for buttons */
+/* Ensure profile header content has enough padding for buttons to fit within */
 .social-profile-main .profile-header-content {
-    padding-bottom: 1.5rem !important;  /* Reduced from 2rem to make more compact */
+    padding-bottom: 1.75rem !important;  /* Increased to accommodate both button rows */
 }
 
-/* Reduce button margins to keep within container */
+/* Minimize button margins to keep ALL buttons within white header container */
 .social-profile-main .profile-actions-regular {
-    margin-top: 0.5rem !important;  /* Reduced from 0.75rem */
-    margin-bottom: 0.375rem !important;  /* Reduced from 0.5rem */
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.25rem !important;  /* Further reduced from 0.375rem */
 }
 
 .social-profile-main .profile-actions-create {
-    margin-top: 0.375rem !important;  /* Reduced from 0.5rem */
-    margin-bottom: 0 !important;
+    margin-top: 0.25rem !important;  /* Further reduced from 0.375rem */
+    margin-bottom: 0 !important;  /* No bottom margin - buttons end at padding boundary */
 }
 
