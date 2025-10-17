@@ -1046,7 +1046,7 @@ html.dark-mode .glass-card {
     gap: 0.625rem !important;  /* Increased from 0.5rem */
 }
 
-/* Slower transition for better UX */
+/* Slower transition for better UX - applies to both hover and unhover */
 .action-icon-btn {
     transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;  /* Increased from 0.3s to 0.5s */
 }
@@ -1067,5 +1067,23 @@ html.dark-mode .glass-card {
     display: inline-flex;
     align-items: center;
     line-height: 1;
+}
+
+/* ====================================================================
+   FIX BUTTON GROUP SPACING TO PREVENT OVERLAP
+   ==================================================================== */
+
+/* Add proper margin to prevent overlap during scroll */
+.profile-actions-regular {
+    margin-bottom: 0.75rem !important;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-actions-create {
+    margin-top: 0.5rem !important;
+    position: relative;
+    z-index: 1;
+    clear: both;
 }
 
