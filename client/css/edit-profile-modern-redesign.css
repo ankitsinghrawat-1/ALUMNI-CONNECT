@@ -1,0 +1,422 @@
+/* ====================================================================
+   EDIT PROFILE PAGE - SETTINGS STYLE LAYOUT
+   Matching the professional settings page design
+   ==================================================================== */
+
+/* Import/use same design system as settings page */
+
+/* Profile-specific card styles */
+.profile-card {
+    background: var(--settings-card-bg, #ffffff);
+    border: 1px solid var(--settings-border, #d0d7de);
+    border-radius: var(--settings-radius-lg, 12px);
+    margin-bottom: 1.5rem;
+    box-shadow: var(--settings-shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.04));
+    transition: box-shadow 0.2s ease;
+}
+
+.dark-mode .profile-card {
+    background: #161b22;
+    border-color: #30363d;
+}
+
+.profile-card:hover {
+    box-shadow: var(--settings-shadow-md, 0 2px 8px rgba(0, 0, 0, 0.06));
+}
+
+.card-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--settings-border-light, #e5e7eb);
+}
+
+.dark-mode .card-header {
+    border-bottom-color: #21262d;
+}
+
+.card-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--settings-text-primary, #24292f);
+    margin: 0 0 0.25rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dark-mode .card-title {
+    color: #c9d1d9;
+}
+
+.card-title i {
+    color: var(--settings-primary, #0969DA);
+    font-size: 1rem;
+}
+
+.card-subtitle {
+    font-size: 0.8125rem;
+    color: var(--settings-text-secondary, #57606a);
+    margin: 0;
+}
+
+.dark-mode .card-subtitle {
+    color: #8b949e;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+/* Profile Picture Section */
+.avatar-upload-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+}
+
+.avatar-preview {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    flex-shrink: 0;
+}
+
+.avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--settings-border, #d0d7de);
+}
+
+.dark-mode .avatar-img {
+    border-color: #30363d;
+}
+
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    cursor: pointer;
+}
+
+.avatar-preview:hover .avatar-overlay {
+    opacity: 1;
+}
+
+.overlay-btn {
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.avatar-info {
+    flex: 1;
+}
+
+.btn-upload {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: var(--settings-primary, #0969DA);
+    color: white;
+    border: none;
+    border-radius: var(--settings-radius, 6px);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.btn-upload:hover {
+    background: var(--settings-primary-hover, #0860CA);
+}
+
+.avatar-hint {
+    font-size: 0.8125rem;
+    color: var(--settings-text-tertiary, #6e7781);
+    margin: 0.75rem 0 0 0;
+}
+
+.dark-mode .avatar-hint {
+    color: #8b949e;
+}
+
+/* Form Grid Layout */
+.form-grid {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.profile-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.profile-field label {
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--settings-text-primary, #24292f);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.dark-mode .profile-field label {
+    color: #c9d1d9;
+}
+
+.profile-field label i {
+    width: 16px;
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--settings-text-tertiary, #6e7781);
+}
+
+.display-field {
+    font-size: 0.875rem;
+    color: var(--settings-text-secondary, #57606a);
+    padding: 0.625rem;
+    background: var(--settings-bg, #f6f8fa);
+    border: 1px solid var(--settings-border-light, #e5e7eb);
+    border-radius: var(--settings-radius, 6px);
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+}
+
+.dark-mode .display-field {
+    background: #0d1117;
+    border-color: #21262d;
+    color: #8b949e;
+}
+
+.display-field:empty::before {
+    content: 'Not specified';
+    color: var(--settings-text-tertiary, #6e7781);
+    font-style: italic;
+}
+
+.dark-mode .display-field:empty::before {
+    color: #6e7681;
+}
+
+.edit-field {
+    font-size: 0.875rem;
+    padding: 0.625rem;
+    border: 1px solid var(--settings-border, #d0d7de);
+    border-radius: var(--settings-radius, 6px);
+    background: var(--settings-card-bg, #ffffff);
+    color: var(--settings-text-primary, #24292f);
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.dark-mode .edit-field {
+    background: #161b22;
+    border-color: #30363d;
+    color: #c9d1d9;
+}
+
+.edit-field:focus {
+    outline: none;
+    border-color: var(--settings-primary, #0969DA);
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+}
+
+textarea.edit-field {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Save Button */
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--settings-success, #1a7f37);
+    color: white;
+    border: none;
+    border-radius: var(--settings-radius, 6px);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-save:hover {
+    background: #1a7f37;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .btn-save {
+    background: #238636;
+}
+
+.dark-mode .btn-save:hover {
+    background: #2ea043;
+}
+
+.btn-save:active {
+    transform: translateY(0);
+}
+
+/* Verification Badge */
+#profile-verified-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+#profile-verified-badge.verified {
+    background: #dafbe1;
+    color: #1a7f37;
+}
+
+.dark-mode #profile-verified-badge.verified {
+    background: rgba(35, 134, 54, 0.15);
+    color: #3fb950;
+}
+
+#profile-verified-badge.pending {
+    background: #fff8c5;
+    color: #9a6700;
+}
+
+.dark-mode #profile-verified-badge.pending {
+    background: rgba(187, 128, 9, 0.15);
+    color: #f0b72f;
+}
+
+#profile-verified-badge.not-verified {
+    background: #f5f5f5;
+    color: #6e7781;
+}
+
+.dark-mode #profile-verified-badge.not-verified {
+    background: rgba(110, 118, 129, 0.15);
+    color: #8b949e;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .settings-container {
+        flex-direction: column;
+    }
+    
+    .settings-sidebar {
+        width: 100%;
+        position: relative;
+        top: 0;
+    }
+    
+    .avatar-upload-container {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .settings-container {
+        padding: 1rem;
+    }
+    
+    .card-header,
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .avatar-preview {
+        width: 100px;
+        height: 100px;
+    }
+}
+
+/* Page Hero (if needed) */
+.page-hero {
+    margin-bottom: 2rem;
+}
+
+.hero-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--settings-text-primary, #24292f);
+    margin: 0 0 0.5rem 0;
+}
+
+.dark-mode .hero-title {
+    color: #c9d1d9;
+}
+
+.hero-subtitle {
+    font-size: 0.9375rem;
+    color: var(--settings-text-secondary, #57606a);
+    margin: 0;
+}
+
+.dark-mode .hero-subtitle {
+    color: #8b949e;
+}
+
+/* Section scroll padding for smooth scroll */
+html {
+    scroll-padding-top: 100px;
+    scroll-behavior: smooth;
+}
+
+/* Additional profile-specific utilities */
+.settings-content {
+    flex: 1;
+    max-width: 800px;
+}
+
+/* Make sure form doesn't add extra spacing */
+#profile-form {
+    margin: 0;
+}
+
+/* Loading state */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

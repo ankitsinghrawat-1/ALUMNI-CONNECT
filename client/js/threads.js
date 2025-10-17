@@ -341,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="comment-author">
                             <img src="${commentProfilePic}" alt="${comment.author}">
                             <div>
-                                <strong><a href="view-profile.html?email=${comment.author_email}">${sanitizeHTML(comment.author)}</a></strong>
+                                <strong><a href="profile.html?email=${comment.author_email}">${sanitizeHTML(comment.author)}</a></strong>
                                 <small>${timeAgo(comment.created_at)}</small>
                             </div>
                         </div>

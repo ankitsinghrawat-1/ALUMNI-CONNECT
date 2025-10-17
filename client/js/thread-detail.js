@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <a href="social-profile.html?userId=${thread.user_id}" class="btn btn-secondary btn-sm">
                     <i class="fas fa-user"></i> View Social Profile
                 </a>
-                <a href="view-profile.html?email=${thread.author_email}" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;">
+                <a href="profile.html?email=${thread.author_email}" class="btn btn-secondary btn-sm" style="margin-top: 0.5rem;">
                     <i class="fas fa-id-card"></i> Full Profile
                 </a>
             </div>
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div class="comment-author-modern">
                     <img src="${commentProfilePic}" alt="${comment.author}">
                     <div class="comment-author-info">
-                        <strong><a href="view-profile.html?email=${comment.author_email}">${sanitizeHTML(comment.author)}</a></strong>
+                        <strong><a href="profile.html?email=${comment.author_email}">${sanitizeHTML(comment.author)}</a></strong>
                         <small><i class="far fa-clock"></i> ${timeAgo(comment.created_at)}</small>
                     </div>
                 </div>

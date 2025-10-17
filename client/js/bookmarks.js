@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ${alumnus.email ? `<div><i class="fas fa-envelope" style="color: #667eea; margin-right: 0.5rem;"></i>${alumnus.email}</div>` : ''}
                 </div>
                 
-                <button class="view-profile-btn" style="width: 100%; padding: 0.75rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="window.location.href='view-profile.html?id=${alumnus.user_id}'">
+                <button class="view-profile-btn" style="width: 100%; padding: 0.75rem; background: #667eea; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s;" onclick="window.location.href='profile.html?id=${alumnus.user_id}'">
                     <i class="fas fa-user"></i> View Profile
                 </button>
             </div>

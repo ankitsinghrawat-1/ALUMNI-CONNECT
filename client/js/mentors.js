@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     let buttonsHtml = '';
 
                     // Always show view profile button
-                    buttonsHtml += `<a href="view-profile.html?email=${mentor.email}" class="btn btn-secondary">View Profile</a>`;
+                    buttonsHtml += `<a href="profile.html?email=${mentor.email}" class="btn btn-secondary">View Profile</a>`;
 
                     if (requestStatus) {
                         switch (requestStatus.status) {

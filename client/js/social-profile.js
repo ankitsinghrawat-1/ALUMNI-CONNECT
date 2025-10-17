@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             // Update profile links
             const viewProfileBtn = document.getElementById('view-full-profile-btn');
-            viewProfileBtn.href = `view-profile.html?email=${profileUser.email}`;
+            viewProfileBtn.href = `profile.html?email=${profileUser.email}`;
             
             // Update profile details
             if (profileUser.location) {

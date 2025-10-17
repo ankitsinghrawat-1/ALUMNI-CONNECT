@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             viewProfileBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                window.location.href = `view-profile.html?email=${encodeURIComponent(alumnus.email)}`;
+                window.location.href = `profile.html?email=${encodeURIComponent(alumnus.email)}`;
             });
         }
 
@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             viewFullProfileBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                window.location.href = `view-profile.html?email=${encodeURIComponent(alumnus.email)}`;
+                window.location.href = `profile.html?email=${encodeURIComponent(alumnus.email)}`;
             });
         }
 
@@ -478,7 +478,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     e.stopPropagation();
                     quickActionsMenu.classList.remove('active');
                     
-                    const profileUrl = `${window.location.origin}/view-profile.html?email=${encodeURIComponent(alumnus.email)}`;
+                    const profileUrl = `${window.location.origin}/profile.html?email=${encodeURIComponent(alumnus.email)}`;
                     
                     if (navigator.share) {
                         navigator.share({
@@ -1005,7 +1005,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (modalViewProfileBtn) {
         modalViewProfileBtn.addEventListener('click', () => {
             if (currentModalUser) {
-                window.location.href = `view-profile.html?email=${encodeURIComponent(currentModalUser.email)}`;
+                window.location.href = `profile.html?email=${encodeURIComponent(currentModalUser.email)}`;
             }
         });
     }

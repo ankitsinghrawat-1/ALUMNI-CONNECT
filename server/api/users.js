@@ -289,26 +289,33 @@ module.exports = (pool, upload) => {
 
     router.put('/profile', upload.single('profile_picture'), asyncHandler(async (req, res) => {
         const userId = req.user.userId;
-        const { 
-            full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, 
-            department, industry, skills, phone_number, website, experience_years, specialization, 
-            current_position, research_interests, achievements, certifications, languages, current_year, 
-            gpa, expected_graduation, company_size, founded_year, student_count
-        } = req.body;
-        let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
-
+        
         const [userRows] = await pool.query('SELECT profile_pic_url FROM users WHERE user_id = ?', [userId]);
         if (userRows.length === 0) { return res.status(404).json({ message: 'User not found' }); }
         const user = userRows[0];
         
-        const updateFields = { 
-            full_name, bio, company, job_title, city, linkedin_profile, institute_name, major, graduation_year, 
-            department, industry, skills, phone_number, website, experience_years, specialization, 
-            current_position, research_interests, achievements, certifications, languages, current_year, 
-            gpa, expected_graduation, company_size, founded_year, student_count
-        };
+        // Only include fields that are actually present in the request body
+        // This prevents accidentally setting fields to null when doing partial updates
+        const allowedFields = [
+            'full_name', 'bio', 'company', 'job_title', 'city', 'address', 'country', 
+            'linkedin_profile', 'twitter_profile', 'github_profile',
+            'institute_name', 'major', 'graduation_year', 'department', 'industry', 
+            'skills', 'phone_number', 'website', 'experience_years', 'specialization', 
+            'current_position', 'research_interests', 'achievements', 'certifications', 
+            'languages', 'current_year', 'gpa', 'expected_graduation', 
+            'company_size', 'founded_year', 'student_count', 'availability_status'
+        ];
         
-        // Handle empty values - don't set full_name to null as it's required
+        const updateFields = {};
+        
+        // Only add fields that are present in req.body
+        for (const field of allowedFields) {
+            if (field in req.body) {
+                updateFields[field] = req.body[field];
+            }
+        }
+        
+        // Handle empty values - convert empty strings to null, except for full_name
         for (const key in updateFields) {
             if (updateFields[key] === '' || updateFields[key] === null || updateFields[key] === undefined) {
                 if (key === 'full_name') {
@@ -325,6 +332,7 @@ module.exports = (pool, upload) => {
             delete updateFields.full_name;
         }
         
+        let profile_pic_url = req.file ? `uploads/${req.file.filename}` : undefined;
         if (profile_pic_url) {
             updateFields.profile_pic_url = profile_pic_url;
             if (user.profile_pic_url) {

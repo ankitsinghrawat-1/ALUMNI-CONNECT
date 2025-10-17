@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                     
                     return `
-                    <a href="view-profile.html?email=${member.email}" class="member-item-sidebar">
+                    <a href="profile.html?email=${member.email}" class="member-item-sidebar">
                         <img src="${member.profile_pic_url ? `http://localhost:3000/${member.profile_pic_url}` : createInitialsAvatar(member.full_name)}" alt="${member.full_name}" class="alumnus-pic">
                         <div class="member-sidebar-info">
                             <span>${sanitizeHTML(member.full_name)}</span>

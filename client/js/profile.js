@@ -871,12 +871,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             try {
                 const formData = new FormData(form);
                 
-                // Add additional data from display fields that may have been updated via modal
+                // Add data from display fields - these contain the actual edited values
+                // Hidden input fields might not be properly captured, so we read from display fields
                 document.querySelectorAll('.display-field[data-field]').forEach(element => {
                     const fieldName = element.getAttribute('data-field');
                     const fieldValue = element.textContent === 'Not set' ? '' : element.textContent;
-                    if (fieldName && fieldValue && !formData.has(fieldName)) {
-                        formData.append(fieldName, fieldValue);
+                    if (fieldName) {
+                        // Always set the value from display field (overwrite if exists)
+                        formData.set(fieldName, fieldValue);
                     }
                 });
                 
@@ -999,7 +1001,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Share profile button handler
     if (profileShareBtn) {
         profileShareBtn.addEventListener('click', () => {
-            const profileUrl = window.location.origin + '/client/view-profile.html?email=' + encodeURIComponent(userEmail);
+            const profileUrl = window.location.origin + '/client/profile.html?email=' + encodeURIComponent(userEmail);
             if (navigator.share) {
                 navigator.share({
                     title: 'My Profile',
@@ -1010,6 +1012,36 @@ document.addEventListener('DOMContentLoaded', async () => {
                 showToast('Profile link copied to clipboard!', 'success');
             }
         });
+    }
+
+    // Setup sidebar navigation for social and mentor profiles
+    const socialProfileNavLink = document.getElementById('social-profile-nav-link');
+    const mentorProfileNavLink = document.getElementById('mentor-profile-nav-link');
+
+    // Get current user data to set up profile navigation
+    try {
+        const userData = await window.api.get('/users/profile');
+        const userId = userData.user_id;
+        const isMentor = userData.is_mentor;
+
+        // Setup social profile link
+        if (socialProfileNavLink) {
+            socialProfileNavLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = `edit-social-profile.html?userId=${userId}`;
+            });
+        }
+
+        // Setup mentor profile link (only show if user is a mentor)
+        if (mentorProfileNavLink && isMentor) {
+            mentorProfileNavLink.style.display = 'block';
+            mentorProfileNavLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = `edit-mentor-profile.html`;
+            });
+        }
+    } catch (error) {
+        console.error('Error setting up profile navigation:', error);
     }
 
     await fetchUserProfile();
