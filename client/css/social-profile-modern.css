@@ -69,6 +69,41 @@
     padding: 0 var(--spacing-lg) var(--spacing-lg);
 }
 
+/* Two Column Grid Layout */
+.social-profile-main .profile-header-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-2xl);
+    align-items: start;
+}
+
+/* Left Column */
+.social-profile-main .profile-left-column {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* Right Column */
+.social-profile-main .profile-right-column {
+    padding-top: var(--spacing-md);
+}
+
+/* Profile Bio Section */
+.social-profile-main .profile-bio-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.social-profile-main .section-heading {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    margin: 0 0 var(--spacing-md);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
 /* Enhanced Profile Avatar - Compact */
 .social-profile-main .profile-avatar-container {
     position: relative;
@@ -281,8 +316,10 @@
 .social-profile-main .profile-name-wrapper {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 0.75rem;
     margin-bottom: 0.5rem;
+    flex-wrap: wrap;
 }
 
 .social-profile-main .profile-name-wrapper h1 {
@@ -292,49 +329,99 @@
     color: var(--text-primary);
 }
 
-/* Consistent Verified Badge Styling */
+/* Enhanced Verified Badge Styling */
 .social-profile-main .verified-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.25rem 0.75rem;
-    background: rgba(29, 155, 240, 0.1);
-    border: 1px solid #1d9bf0;
+    padding: 0.375rem 1rem;
+    background: linear-gradient(135deg, rgba(29, 155, 240, 0.15) 0%, rgba(29, 155, 240, 0.05) 100%);
+    border: 2px solid #1d9bf0;
     border-radius: var(--radius-full);
     color: #1d9bf0;
     font-size: 0.875rem;
-    font-weight: 600;
+    font-weight: 700;
     white-space: nowrap;
+    box-shadow: 0 2px 8px rgba(29, 155, 240, 0.2);
+    transition: all 0.3s ease;
+}
+
+.social-profile-main .verified-badge:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 155, 240, 0.3);
 }
 
 .social-profile-main .verified-badge i {
-    font-size: 0.875rem;
+    font-size: 1rem;
+    animation: verifiedPulse 2s ease-in-out infinite;
+}
+
+@keyframes verifiedPulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
 }
 
 /* Profile Title and Bio */
 .social-profile-main .profile-title {
     font-size: 1.125rem;
     color: var(--text-secondary);
-    margin: 0 0 0.75rem;
+    margin: 0 0 var(--spacing-lg);
     font-weight: 500;
 }
 
 .social-profile-main .profile-bio {
     font-size: 1rem;
-    line-height: 1.6;
+    line-height: 1.8;
     color: var(--text-primary);
-    margin: 0 0 1.5rem;
-    max-width: 600px;
+    margin: 0;
+    text-align: left;
 }
 
-/* Enhanced Profile Actions - Relocated Below Title/Bio */
+/* Profile Details */
+.social-profile-main .profile-details {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-lg);
+    background: var(--bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-light);
+}
+
+.social-profile-main .detail-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    font-size: 0.9375rem;
+    color: var(--text-primary);
+}
+
+.social-profile-main .detail-item:last-child {
+    margin-bottom: 0;
+}
+
+.social-profile-main .detail-item i {
+    color: var(--primary-blue);
+    width: 20px;
+    text-align: center;
+}
+
+/* Extended Profile Info */
+.social-profile-main .profile-extended-info {
+    margin-top: var(--spacing-lg);
+}
+
+/* Enhanced Profile Actions - Centered Below Title */
 .social-profile-main .profile-actions {
     display: flex;
     gap: var(--spacing-md);
     flex-wrap: wrap;
     align-items: center;
-    justify-content: flex-start;
-    margin-top: var(--spacing-md);
+    justify-content: center;
+    margin-top: var(--spacing-lg);
 }
 
 .social-profile-main .action-icon-btn {
@@ -771,6 +858,12 @@
 
 /* Responsive Enhancements */
 @media (max-width: 768px) {
+    /* Stack columns on mobile */
+    .social-profile-main .profile-header-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-lg);
+    }
+    
     .social-profile-main .profile-stats {
         grid-template-columns: repeat(2, 1fr);
         gap: var(--spacing-sm);
