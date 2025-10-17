@@ -308,23 +308,45 @@ document.addEventListener('DOMContentLoaded', async () => {
             const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
             const isOwnProfile = loggedInUserEmail && loggedInUserEmail === email;
             
-            // Update action buttons based on whether it's own profile
-            const profileActions = document.querySelector('.profile-actions');
-            if (isOwnProfile && profileActions) {
-                profileActions.innerHTML = `
-                    <a href="profile.html" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile">
-                        <i class="fas fa-user-edit"></i>
-                    </a>
-                    <a id="social-profile-link" href="social-profile.html?userId=${user.user_id}" class="action-icon-btn action-icon-secondary" data-tooltip="Social Profile">
-                        <i class="fas fa-users"></i>
-                    </a>
-                `;
-            }
-            
-            // Always update social profile link with user_id if available
+            // Update social profile link with user_id if available
             const socialProfileLink = document.getElementById('social-profile-link');
             if (socialProfileLink && user.user_id) {
                 socialProfileLink.href = `social-profile.html?userId=${user.user_id}`;
+            }
+            
+            // Handle button visibility based on profile ownership
+            const editBtn = document.getElementById('edit-profile-btn');
+            const sendMessageBtn = document.getElementById('send-message-btn');
+            
+            if (isOwnProfile) {
+                // Show Edit button on own profile
+                if (editBtn) {
+                    editBtn.style.display = 'inline-flex';
+                    editBtn.addEventListener('click', () => {
+                        window.location.href = 'profile.html';
+                    });
+                }
+                // Hide Message button on own profile
+                if (sendMessageBtn) {
+                    sendMessageBtn.style.display = 'none';
+                }
+            } else {
+                // Hide Edit button on others' profiles
+                if (editBtn) {
+                    editBtn.style.display = 'none';
+                }
+                // Show Message button on others' profiles
+                if (sendMessageBtn) {
+                    sendMessageBtn.style.display = 'inline-flex';
+                    sendMessageBtn.addEventListener('click', async () => {
+                        try {
+                            // Future: Implement messaging
+                            showToast('Messaging feature coming soon!', 'info');
+                        } catch (error) {
+                            showToast('Error opening message', 'error');
+                        }
+                    });
+                }
             }
             
             if (user.message && user.message.includes('private')) {
@@ -427,49 +449,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     };
 
-    // Show/hide buttons based on profile ownership
-    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
-    const isOwnProfile = loggedInUserEmail && loggedInUserEmail === userEmail;
-    
-    const editBtn = document.getElementById('edit-profile-btn');
-    const sendMessageBtn = document.getElementById('send-message-btn');
-    const mentorProfileLink = document.getElementById('mentor-profile-link');
-    
-    // Show Edit Profile button only on own profile
-    if (isOwnProfile && editBtn) {
-        editBtn.style.display = 'inline-flex';
-        editBtn.addEventListener('click', () => {
-            window.location.href = 'profile.html';
-        });
-    }
-    
-    // Show Message button only for visitors (not on own profile)
-    if (sendMessageBtn) {
-        if (!isOwnProfile) {
-            sendMessageBtn.style.display = 'inline-flex';
-            sendMessageBtn.addEventListener('click', async () => {
-                if (!loggedInUserEmail) {
-                    showToast('Please log in to send a message.', 'info');
-                    return;
-                }
-
-                try {
-                    // This will create or find the conversation
-                    await window.api.post('/messages', {
-                        receiver_email: userEmail,
-                        content: `Hello!` 
-                    });
-                    window.location.href = 'messages.html';
-                } catch (error) {
-                    showToast('Could not start a conversation.', 'error');
-                }
-            });
-        } else {
-            sendMessageBtn.style.display = 'none';
-        }
-    }
-    
-    // Note: Mentor Profile button visibility will be set in fetchUserProfile when user data is loaded
+    // Note: Button visibility logic is handled in fetchUserProfile function where user data is available
     
     // Share profile button handler
     const shareProfileBtn = document.getElementById('share-profile-btn');
