@@ -402,57 +402,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderProfileActions() {
         if (isOwner) {
-            // Show modern buttons with text labels for owner
+            // Show icon-only buttons for owner with tooltips
             profileActions.innerHTML = `
-                <a href="edit-mentor-profile.html?id=${currentMentor.mentor_id}" class="action-icon-btn action-icon-primary">
+                <a href="edit-mentor-profile.html?id=${currentMentor.mentor_id}" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile">
                     <i class="fas fa-edit"></i>
-                    <span>Edit Profile</span>
                 </a>
-                <a href="mentor-requests.html" class="action-icon-btn action-icon-secondary">
+                <a href="mentor-requests.html" class="action-icon-btn action-icon-secondary" data-tooltip="View Requests">
                     <i class="fas fa-inbox"></i>
-                    <span>View Requests</span>
                 </a>
-                <button id="message-btn" class="action-icon-btn action-icon-secondary">
-                    <i class="fas fa-comments"></i>
-                    <span>Message</span>
-                </button>
-                <button id="delete-profile-btn" class="action-icon-btn action-icon-danger">
+                <button id="delete-profile-btn" class="action-icon-btn action-icon-danger" data-tooltip="Delete Profile">
                     <i class="fas fa-trash-alt"></i>
-                    <span>Delete Profile</span>
-                </button>
-                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary">
-                    <i class="fas fa-share-alt"></i>
-                    <span>Share Profile</span>
                 </button>
             `;
             document.getElementById('delete-profile-btn').addEventListener('click', handleDeleteProfile);
-            document.getElementById('message-btn').addEventListener('click', () => {
-                showToast('Messaging functionality coming soon!', 'info');
-            });
-            document.getElementById('share-profile-btn').addEventListener('click', () => {
-                const profileUrl = window.location.href;
-                if (navigator.share) {
-                    navigator.share({
-                        title: 'Mentor Profile',
-                        url: profileUrl
-                    }).catch(() => {});
-                } else {
-                    navigator.clipboard.writeText(profileUrl);
-                    showToast('Profile link copied to clipboard!', 'success');
-                }
-            });
         } else {
-            // Show modern buttons with text labels for visitors
+            // Show icon-only buttons for visitors
             const loggedIn = localStorage.getItem('alumniConnectToken');
             if (loggedIn) {
                 profileActions.innerHTML = `
-                    <button id="send-request-btn" class="action-icon-btn action-icon-primary">
+                    <button id="send-request-btn" class="action-icon-btn action-icon-primary" data-tooltip="Send Request">
                         <i class="fas fa-paper-plane"></i>
-                        <span>Send Request</span>
                     </button>
-                    <button id="message-btn" class="action-icon-btn action-icon-secondary">
+                    <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Send Message">
                         <i class="fas fa-comments"></i>
-                        <span>Send Message</span>
                     </button>
                 `;
                 // Add event listeners for these buttons
@@ -462,9 +434,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             } else {
                 profileActions.innerHTML = `
-                    <a href="login.html" class="action-icon-btn action-icon-primary">
+                    <a href="login.html" class="action-icon-btn action-icon-primary" data-tooltip="Sign In to Connect">
                         <i class="fas fa-sign-in-alt"></i>
-                        <span>Sign In to Connect</span>
                     </a>
                 `;
             }

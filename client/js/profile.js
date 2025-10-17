@@ -965,53 +965,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // Setup header action buttons
-    const socialProfileLink = document.getElementById('social-profile-link-header');
-    const mentorProfileLink = document.getElementById('mentor-profile-link-header');
-    const profileMessageBtn = document.getElementById('profile-message-btn');
-    const profileShareBtn = document.getElementById('profile-share-btn');
-
-    // Get current user ID for links
-    let currentUserId = null;
-    try {
-        const userData = await window.api.get('/auth/me');
-        currentUserId = userData.userId || userData.user_id;
-    } catch (error) {
-        console.error('Error fetching user ID:', error);
-    }
-
-    // Update links with user ID
-    if (currentUserId && socialProfileLink) {
-        socialProfileLink.href = `social-profile.html?userId=${currentUserId}`;
-    }
-
-    if (currentUserId && mentorProfileLink) {
-        mentorProfileLink.href = `mentor-profile.html?id=${currentUserId}`;
-    }
-
-    // Message button handler
-    if (profileMessageBtn) {
-        profileMessageBtn.addEventListener('click', () => {
-            window.location.href = 'messages.html';
-        });
-    }
-
-    // Share profile button handler
-    if (profileShareBtn) {
-        profileShareBtn.addEventListener('click', () => {
-            const profileUrl = window.location.origin + '/client/view-profile.html?email=' + encodeURIComponent(userEmail);
-            if (navigator.share) {
-                navigator.share({
-                    title: 'My Profile',
-                    url: profileUrl
-                }).catch(() => {});
-            } else {
-                navigator.clipboard.writeText(profileUrl);
-                showToast('Profile link copied to clipboard!', 'success');
-            }
-        });
-    }
-
     await fetchUserProfile();
     await fetchPrivacySettings();
 });
