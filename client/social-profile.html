@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Social Profile - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/social-profile-redesigned.css">
+    <link rel="stylesheet" href="css/social-profile-professional.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script>
@@ -89,7 +89,6 @@
                                 </button>
                             </div>
                         </div>
-                        
                         <p id="profile-title" class="profile-title"></p>
                         <p id="profile-bio" class="profile-bio"></p>
                         
@@ -109,6 +108,35 @@
                             </div>
                         </div>
                         
+                        <!-- Extended Profile Info -->
+                        <div class="profile-extended-info" id="profile-extended-info">
+                            <div class="extended-item" id="skills-detail" style="display: none;">
+                                <i class="fas fa-code"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Skills:</span>
+                                    <span id="profile-skills"></span>
+                                </div>
+                            </div>
+                            <div class="extended-item" id="interests-detail" style="display: none;">
+                                <i class="fas fa-heart"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Interests:</span>
+                                    <span id="profile-interests"></span>
+                                </div>
+                            </div>
+                            <div class="extended-item" id="project-detail" style="display: none;">
+                                <i class="fas fa-project-diagram"></i>
+                                <div class="extended-content">
+                                    <span class="extended-label">Current Project:</span>
+                                    <span id="profile-project"></span>
+                                </div>
+                            </div>
+                            <div class="extended-item" id="mentor-badge" style="display: none;">
+                                <i class="fas fa-chalkboard-teacher"></i>
+                                <span class="mentor-badge">Available for Mentoring</span>
+                            </div>
+                        </div>
+                        
                         <!-- Social Links -->
                         <div class="profile-social-links" id="profile-social-links" style="display: none;">
                             <a href="#" id="linkedin-link" class="social-link" target="_blank" rel="noopener" style="display: none;">
@@ -122,7 +150,6 @@
                             </a>
                         </div>
                         
-                        <!-- Stats Row - Instagram Style -->
                         <div class="profile-stats">
                             <div class="stat-item">
                                 <span class="stat-value" id="threads-count">0</span>
@@ -145,82 +172,7 @@
                 </div>
             </section>
 
-            <!-- Additional Stats Section - Colored Cards -->
-            <section class="additional-stats-section">
-                <div class="additional-stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon-wrapper stat-icon-purple">
-                            <i class="fas fa-th"></i>
-                        </div>
-                        <div class="stat-card-content">
-                            <h3 id="total-posts-stat">0</h3>
-                            <p>Total Posts</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon-wrapper stat-icon-pink">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-card-content">
-                            <h3 id="connections-stat">0</h3>
-                            <p>Connections</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon-wrapper stat-icon-cyan">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="stat-card-content">
-                            <h3 id="engagement-stat">0</h3>
-                            <p>Total Engagement</p>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon-wrapper stat-icon-green">
-                            <i class="fas fa-fire"></i>
-                        </div>
-                        <div class="stat-card-content">
-                            <h3 id="activity-stat">0</h3>
-                            <p>Activity Score</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Tab Navigation -->
-            <nav class="profile-tabs">
-                <button class="tab-btn active" data-tab="posts">
-                    <i class="fas fa-image"></i> Posts
-                </button>
-                <button class="tab-btn" data-tab="threads">
-                    <i class="fas fa-comments"></i> Threads
-                </button>
-                <button class="tab-btn" data-tab="stories">
-                    <i class="fas fa-book-open"></i> Stories
-                </button>
-                <button class="tab-btn" data-tab="activity">
-                    <i class="fas fa-chart-line"></i> Activity
-                </button>
-            </nav>
-
-            <!-- Content Area -->
-            <div class="profile-content">
-                <div id="posts-content" class="tab-content active">
-                    <div id="posts-grid"></div>
-                    <p class="loading-message">Loading posts...</p>
-                </div>
-                <div id="threads-content" class="tab-content">
-                    <div id="threads-list"></div>
-                </div>
-                <div id="stories-content" class="tab-content">
-                    <div id="stories-grid"></div>
-                </div>
-                <div id="activity-content" class="tab-content">
-                    <div id="activity-list"></div>
-                </div>
-            </div>
-
-            <!-- Story Highlights Section (Hidden by default) -->
+            <!-- Story Highlights Section -->
             <section class="highlights-section" id="highlights-section" style="display: none;">
                 <h3 class="section-title">
                     <i class="fas fa-bookmark"></i> Story Highlights
