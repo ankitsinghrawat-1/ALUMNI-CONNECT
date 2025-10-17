@@ -435,6 +435,33 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Show/hide Edit and Create buttons based on profile ownership
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    const isOwnProfile = loggedInUserEmail && loggedInUserEmail === userEmail;
+    
+    const editBtn = document.getElementById('edit-profile-btn');
+    const followBtn = document.getElementById('follow-btn');
+    const createActionsDiv = document.querySelector('.profile-actions-create');
+    
+    if (isOwnProfile) {
+        // Show Edit and Create buttons on own profile
+        if (editBtn) {
+            editBtn.style.display = 'inline-flex';
+            editBtn.addEventListener('click', () => {
+                window.location.href = 'edit-profile.html';
+            });
+        }
+        if (createActionsDiv) {
+            createActionsDiv.style.display = 'flex';
+        }
+    } else {
+        // Show Follow button on others' profiles
+        if (followBtn) {
+            followBtn.style.display = 'inline-flex';
+            // TODO: Add follow/unfollow logic here
+        }
+    }
+    
     // Share profile button handler
     const shareProfileBtn = document.getElementById('share-profile-btn');
     if (shareProfileBtn) {

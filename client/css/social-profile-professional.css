@@ -2092,3 +2092,19 @@ button:focus-visible,
     justify-content: flex-start;
 }
 
+
+/* ====================================================================
+   IMPROVED BUTTON ICON CENTERING
+   ==================================================================== */
+
+.action-icon-btn i {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.action-icon-btn {
+    justify-content: center !important;
+}
+
