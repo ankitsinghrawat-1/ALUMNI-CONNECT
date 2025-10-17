@@ -177,62 +177,62 @@ h1, h2, h3, h4, h5, h6 {
     transform: translateY(0);
 }
 
-/* Tooltip for icon buttons */
+/* Redesigned Tooltip for icon buttons - Better visibility */
 .action-icon-btn::after {
     content: attr(data-tooltip);
     position: absolute;
-    top: calc(100% + 10px);
+    bottom: calc(100% + 12px);
     left: 50%;
-    transform: translateX(-50%) translateY(5px);
-    background: #2c3e50;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
     color: #ffffff;
-    padding: 0.5rem 0.875rem;
-    border-radius: 6px;
-    font-size: 0.8125rem;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
     font-weight: 500;
     white-space: nowrap;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.15);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
     letter-spacing: 0.3px;
     line-height: 1.4;
     text-align: center;
     min-width: max-content;
-    max-width: none;
-    width: max-content;
+    max-width: 200px;
 }
 
 .action-icon-btn::before {
     content: '';
     position: absolute;
-    top: calc(100% + 4px);
+    bottom: calc(100% + 4px);
     left: 50%;
     transform: translateX(-50%);
-    border: 6px solid transparent;
-    border-bottom-color: #2c3e50;
+    border: 8px solid transparent;
+    border-top-color: #1e293b;
     opacity: 0;
+    visibility: hidden;
     pointer-events: none;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 10000;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }
 
 .action-icon-btn:hover::after,
 .action-icon-btn:hover::before {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    visibility: visible;
 }
 
 html.dark-mode .action-icon-btn::after {
-    background: #f8f9fa;
-    color: #1a252f;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    color: #0f172a;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 html.dark-mode .action-icon-btn::before {
-    border-bottom-color: #f8f9fa;
+    border-top-color: #f8fafc;
 }
 
 .action-btn-primary {

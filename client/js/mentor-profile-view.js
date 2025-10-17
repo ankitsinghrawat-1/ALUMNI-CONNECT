@@ -403,6 +403,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function renderProfileActions() {
         if (isOwner) {
             // Show icon-only buttons for owner with tooltips
+            // Owner should NOT see Message button (can't message themselves)
             profileActions.innerHTML = `
                 <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
                     <i class="fas fa-th-large"></i>
@@ -413,9 +414,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <a href="mentor-requests.html" class="action-icon-btn action-icon-secondary" data-tooltip="View Requests">
                     <i class="fas fa-inbox"></i>
                 </a>
-                <button id="message-btn-owner" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
-                    <i class="fas fa-envelope"></i>
-                </button>
                 <button id="delete-profile-btn" class="action-icon-btn action-icon-danger" data-tooltip="Delete Profile">
                     <i class="fas fa-trash-alt"></i>
                 </button>
@@ -424,9 +422,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 </button>
             `;
             document.getElementById('delete-profile-btn').addEventListener('click', handleDeleteProfile);
-            document.getElementById('message-btn-owner').addEventListener('click', () => {
-                window.location.href = 'messages.html';
-            });
             document.getElementById('share-profile-btn').addEventListener('click', () => {
                 const profileUrl = window.location.href;
                 if (navigator.share) {
@@ -441,6 +436,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         } else {
             // Show icon-only buttons for visitors
+            // Visitors should NOT see View Requests or Delete Profile buttons
             const loggedIn = localStorage.getItem('alumniConnectToken');
             if (loggedIn) {
                 profileActions.innerHTML = `
