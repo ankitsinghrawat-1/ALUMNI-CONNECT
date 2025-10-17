@@ -672,10 +672,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     const setupEditButton = () => {
         const editBtn = document.getElementById('edit-profile-btn');
         const followBtn = document.getElementById('follow-btn');
+        const addStoryBtn = document.getElementById('add-story-btn');
+        const addThreadBtn = document.getElementById('add-thread-btn');
         
         if (editBtn && isOwnProfile) {
             editBtn.style.display = 'inline-flex';
             editBtn.addEventListener('click', openEditProfileModal);
+            
+            // Show Add Story and Add Thread buttons only on own profile
+            if (addStoryBtn) {
+                addStoryBtn.style.display = 'inline-flex';
+            }
+            if (addThreadBtn) {
+                addThreadBtn.style.display = 'inline-flex';
+            }
             
             // Extra safeguard: Ensure follow button is hidden for own profile
             if (followBtn) {
