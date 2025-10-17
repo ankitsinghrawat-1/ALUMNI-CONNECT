@@ -62,14 +62,26 @@
 
 .social-profile-main .back-btn {
     background: transparent !important;
-    color: #0F1419 !important;
-    border: 1px solid #CFD9DE !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-medium) !important;
     padding: 0.5rem 1rem !important;
 }
 
 .social-profile-main .back-btn:hover {
-    background: #f7f9f9 !important;
-    border-color: #536471 !important;
+    background: var(--bg-hover) !important;
+    border-color: var(--text-secondary) !important;
+}
+
+/* Ensure Add Story button is visible in dark mode */
+.social-profile-main .btn-secondary {
+    background: transparent !important;
+    color: var(--text-primary) !important;
+    border: 1px solid var(--border-medium) !important;
+}
+
+.social-profile-main .btn-secondary:hover {
+    background: var(--bg-hover) !important;
+    border-color: var(--text-primary) !important;
 }
 
 /* ====================================================================
@@ -372,16 +384,24 @@
     gap: var(--spacing-sm);
 }
 
-.verified-badge {
-    width: 24px;
-    height: 24px;
-    background: var(--primary-blue);
+.verification-badge,
+.social-profile-main .verified-badge {
+    width: 20px;
+    height: 20px;
+    background: #1d9bf0;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: var(--font-size-xs);
+    font-size: 0.7rem;
+    margin-left: 0.5rem;
+    flex-shrink: 0;
+}
+
+.verification-badge i,
+.social-profile-main .verified-badge i {
+    font-size: 0.7rem;
 }
 
 .profile-headline {
