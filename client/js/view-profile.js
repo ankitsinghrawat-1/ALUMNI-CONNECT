@@ -409,6 +409,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Fetch blogs and stats
             const blogs = await fetchUserBlogs(email);
             await fetchUserStatistics(email);
+            
+            // Show Mentor Profile button if user is a mentor
+            const mentorProfileLink = document.getElementById('mentor-profile-link');
+            if (mentorProfileLink && user.is_mentor) {
+                mentorProfileLink.style.display = 'inline-flex';
+                mentorProfileLink.href = `mentor-profile.html?email=${email}`;
+            }
 
             // Initialize scroll animations after content is loaded
             setTimeout(() => {
@@ -457,11 +464,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
     
-    // Show Mentor Profile button if user is a mentor
-    if (mentorProfileLink && profileUser.is_mentor) {
-        mentorProfileLink.style.display = 'inline-flex';
-        mentorProfileLink.href = `mentor-profile.html?email=${userEmail}`;
-    }
+    // Note: Mentor Profile button visibility will be set in fetchUserProfile when user data is loaded
     
     // Share profile button handler
     const shareProfileBtn = document.getElementById('share-profile-btn');
