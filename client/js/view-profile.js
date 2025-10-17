@@ -349,6 +349,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             document.getElementById('profile-subheader').textContent = `${user.job_title || 'N/A'} at ${user.current_company || 'N/A'}`;
+            
+            // Populate inline bio in header
+            const bioInline = document.getElementById('profile-bio-inline');
+            if (bioInline) {
+                bioInline.textContent = user.bio || 'No bio available.';
+            }
+            
             document.getElementById('bio-view').textContent = user.bio || 'No bio available.';
             document.getElementById('university-view').textContent = user.university || 'N/A';
             document.getElementById('graduation-year-view').textContent = user.graduation_year || 'N/A';
