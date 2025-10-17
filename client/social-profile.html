@@ -51,56 +51,45 @@
                             </span>
                         </div>
                         <p id="profile-title" class="profile-subheader"></p>
+                        <p id="profile-bio" class="profile-bio-inline"></p>
                         
-                        <!-- Regular Action Buttons -->
-                        <div class="profile-actions profile-actions-regular">
-                            <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
-                                <i class="fas fa-edit"></i>
-                                <span class="btn-text">Edit</span>
-                            </button>
-                            <button id="follow-btn" class="action-icon-btn action-icon-primary" data-tooltip="Follow" style="display: none;">
-                                <i class="fas fa-user-plus"></i>
-                                <span class="btn-text">Follow</span>
-                            </button>
-                            <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
-                                <i class="fas fa-envelope"></i>
-                                <span class="btn-text">Message</span>
-                            </button>
-                            <a href="view-profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile">
-                                <i class="fas fa-id-card"></i>
-                                <span class="btn-text">Profile</span>
-                            </a>
-                            <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
-                                <i class="fas fa-share-alt"></i>
-                            </button>
+                        <!-- Action Buttons Container with reduced width -->
+                        <div class="profile-actions-container">
+                            <!-- Regular Action Buttons -->
+                            <div class="profile-actions profile-actions-regular">
+                                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
+                                    <i class="fas fa-edit"></i>
+                                    <span class="btn-text">Edit</span>
+                                </button>
+                                <button id="follow-btn" class="action-icon-btn action-icon-primary" data-tooltip="Follow" style="display: none;">
+                                    <i class="fas fa-user-plus"></i>
+                                    <span class="btn-text">Follow</span>
+                                </button>
+                                <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="btn-text">Message</span>
+                                </button>
+                                <a href="view-profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile">
+                                    <i class="fas fa-id-card"></i>
+                                    <span class="btn-text">Profile</span>
+                                </a>
+                                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                                    <i class="fas fa-share-alt"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Separate Add Story and Add Thread Buttons -->
+                            <div class="profile-actions profile-actions-create" style="display: none;">
+                                <a href="add-story.html" id="add-story-btn" class="action-icon-btn action-icon-accent" data-tooltip="Add Story">
+                                    <i class="fas fa-plus-circle"></i>
+                                    <span class="btn-text">Add Story</span>
+                                </a>
+                                <a href="add-thread.html" id="add-thread-btn" class="action-icon-btn action-icon-primary" data-tooltip="Add Thread">
+                                    <i class="fas fa-plus"></i>
+                                    <span class="btn-text">Add Thread</span>
+                                </a>
+                            </div>
                         </div>
-                        
-                        <!-- Separate Add Story and Add Thread Buttons -->
-                        <div class="profile-actions profile-actions-create" style="display: none;">
-                            <a href="add-story.html" id="add-story-btn" class="action-icon-btn action-icon-accent" data-tooltip="Add Story">
-                                <i class="fas fa-plus-circle"></i>
-                                <span class="btn-text">Add Story</span>
-                            </a>
-                            <a href="add-thread.html" id="add-thread-btn" class="action-icon-btn action-icon-primary" data-tooltip="Add Thread">
-                                <i class="fas fa-plus"></i>
-                                <span class="btn-text">Add Thread</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Profile Bio Card -->
-            <div class="profile-content-view">
-                <div class="profile-card">
-                    <div class="card-header">
-                        <div class="card-icon about-icon">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <h3>About</h3>
-                    </div>
-                    <div class="card-body">
-                        <p id="profile-bio" class="bio-text"></p>
                     </div>
                 </div>
             </div>
@@ -171,6 +160,18 @@
                                 <span class="info-label"><i class="fas fa-calendar"></i> Joined</span>
                                 <span id="profile-joined" class="info-value"></span>
                             </div>
+                            <div class="info-item" id="email-detail" style="display: none;">
+                                <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
+                                <span id="profile-email" class="info-value"></span>
+                            </div>
+                            <div class="info-item" id="phone-detail" style="display: none;">
+                                <span class="info-label"><i class="fas fa-phone"></i> Phone</span>
+                                <span id="profile-phone" class="info-value"></span>
+                            </div>
+                            <div class="info-item" id="department-detail" style="display: none;">
+                                <span class="info-label"><i class="fas fa-building"></i> Department</span>
+                                <span id="profile-department" class="info-value"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -196,6 +197,18 @@
                             <div class="info-item" id="project-detail" style="display: none;">
                                 <span class="info-label"><i class="fas fa-project-diagram"></i> Current Project</span>
                                 <span id="profile-project" class="info-value"></span>
+                            </div>
+                            <div class="info-item" id="experience-detail" style="display: none;">
+                                <span class="info-label"><i class="fas fa-briefcase"></i> Years of Experience</span>
+                                <span id="profile-experience" class="info-value"></span>
+                            </div>
+                            <div class="info-item" id="education-detail" style="display: none;">
+                                <span class="info-label"><i class="fas fa-graduation-cap"></i> Education</span>
+                                <span id="profile-education" class="info-value"></span>
+                            </div>
+                            <div class="info-item" id="languages-detail" style="display: none;">
+                                <span class="info-label"><i class="fas fa-language"></i> Languages</span>
+                                <span id="profile-languages" class="info-value"></span>
                             </div>
                             <div class="info-item" id="mentor-badge" style="display: none;">
                                 <span class="info-label"><i class="fas fa-chalkboard-teacher"></i> Mentoring</span>

@@ -2056,3 +2056,39 @@ button:focus-visible,
     cursor: pointer;
 }
 
+
+/* ====================================================================
+   INLINE BIO AND BUTTON CONTAINER STYLES
+   ==================================================================== */
+
+/* Inline bio below name and title */
+.profile-bio-inline {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--text-primary);
+    margin: 0.75rem 0 1rem 0;
+    max-width: 700px;
+}
+
+/* Reduced width button container */
+.profile-actions-container {
+    max-width: 600px;
+    margin-top: 1rem;
+}
+
+.profile-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.profile-actions-regular {
+    justify-content: flex-start;
+    margin-bottom: 0.5rem;
+}
+
+.profile-actions-create {
+    justify-content: flex-start;
+}
+

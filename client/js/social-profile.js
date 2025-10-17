@@ -100,6 +100,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     `${monthNames[joinedDate.getMonth()]} ${joinedDate.getFullYear()}`;
             }
             
+            // Additional profile details
+            if (profileUser.email) {
+                document.getElementById('email-detail').style.display = 'flex';
+                document.getElementById('profile-email').textContent = profileUser.email;
+            }
+            
+            if (profileUser.phone) {
+                document.getElementById('phone-detail').style.display = 'flex';
+                document.getElementById('profile-phone').textContent = profileUser.phone;
+            }
+            
+            if (profileUser.department) {
+                document.getElementById('department-detail').style.display = 'flex';
+                document.getElementById('profile-department').textContent = profileUser.department;
+            }
+            
             // Update extended profile info
             let hasExtendedInfo = false;
             if (profileUser.skills) {
@@ -117,6 +133,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (profileUser.current_project) {
                 document.getElementById('profile-project').textContent = profileUser.current_project;
                 document.getElementById('project-detail').style.display = 'flex';
+                hasExtendedInfo = true;
+            }
+            
+            // Additional professional info
+            if (profileUser.experience || profileUser.years_experience) {
+                const experience = profileUser.experience || profileUser.years_experience;
+                document.getElementById('profile-experience').textContent = experience;
+                document.getElementById('experience-detail').style.display = 'flex';
+                hasExtendedInfo = true;
+            }
+            
+            if (profileUser.education || profileUser.degree) {
+                const education = profileUser.education || profileUser.degree;
+                document.getElementById('profile-education').textContent = education;
+                document.getElementById('education-detail').style.display = 'flex';
+                hasExtendedInfo = true;
+            }
+            
+            if (profileUser.languages) {
+                document.getElementById('profile-languages').textContent = profileUser.languages;
+                document.getElementById('languages-detail').style.display = 'flex';
                 hasExtendedInfo = true;
             }
             
