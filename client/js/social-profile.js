@@ -51,8 +51,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             document.getElementById('profile-name').textContent = profileUser.full_name;
             
+            // Use consistent verification badge across all pages
+            const badgeContainer = document.getElementById('verified-badge-container');
             if (profileUser.verification_status === 'verified') {
-                document.getElementById('verification-badge').style.display = 'inline';
+                badgeContainer.innerHTML = '<span class="verified-badge" title="Verified"><i class="fas fa-check-circle"></i> Verified</span>';
+            } else {
+                badgeContainer.innerHTML = '';
             }
 
             const titleParts = [];
