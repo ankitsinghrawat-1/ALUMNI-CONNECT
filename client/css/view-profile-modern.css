@@ -1124,7 +1124,7 @@ html.dark-mode .glass-card {
 
 /* Buttons on the right side */
 .modern-profile .profile-actions-regular {
-    margin-top: 0 !important;
+    margin-top: 50px !important;
     margin-bottom: 0 !important;
     justify-content: flex-end !important;
 }
