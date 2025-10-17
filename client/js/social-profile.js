@@ -71,8 +71,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('followers-count').textContent = data.stats.followers;
             document.getElementById('following-count').textContent = data.stats.following;
             document.getElementById('likes-count').textContent = data.stats.likes_received;
-            document.getElementById('activity-likes').textContent = data.stats.likes_received;
-            document.getElementById('activity-comments').textContent = data.stats.comments_received;
+            
+            // Update additional stats
+            document.getElementById('total-posts-stat').textContent = data.stats.threads;
+            document.getElementById('connections-stat').textContent = data.stats.followers + data.stats.following;
+            document.getElementById('engagement-stat').textContent = data.stats.likes_received + (data.stats.comments_received || 0);
+            
+            // Calculate activity score (posts + followers + likes)
+            const activityScore = Math.min(100, Math.floor((data.stats.threads * 5 + data.stats.followers * 2 + data.stats.likes_received) / 10));
+            document.getElementById('activity-stat').textContent = activityScore;
 
             // Update profile links
             const viewProfileBtn = document.getElementById('view-full-profile-btn');
@@ -706,6 +713,28 @@ document.addEventListener('DOMContentLoaded', async () => {
             closeEditProfileModal();
             closeConnectionsModal();
         }
+    });
+
+    // Tab switching functionality
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+    
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Add active class to clicked button
+            button.classList.add('active');
+            
+            // Show corresponding content
+            const tabName = button.getAttribute('data-tab');
+            const targetContent = document.getElementById(`${tabName}-content`);
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        });
     });
 
     // Initialize
