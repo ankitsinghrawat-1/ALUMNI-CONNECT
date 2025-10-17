@@ -74,6 +74,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('activity-likes').textContent = data.stats.likes_received;
             document.getElementById('activity-comments').textContent = data.stats.comments_received;
 
+            // Update new statistics section
+            const totalPosts = data.stats.threads || 0;
+            const totalConnections = (data.stats.followers || 0) + (data.stats.following || 0);
+            const totalEngagement = (data.stats.likes_received || 0) + (data.stats.comments_received || 0);
+            const activityScore = Math.round((totalPosts * 10) + (totalEngagement * 2) + (totalConnections * 5));
+
+            document.getElementById('posts-stat-count').textContent = totalPosts;
+            document.getElementById('connections-stat-count').textContent = totalConnections;
+            document.getElementById('engagement-stat-count').textContent = totalEngagement;
+            document.getElementById('activity-stat-score').textContent = activityScore;
+
             // Update profile links
             const viewProfileBtn = document.getElementById('view-full-profile-btn');
             viewProfileBtn.href = `view-profile.html?email=${profileUser.email}`;

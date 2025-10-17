@@ -1,0 +1,797 @@
+/* ====================================================================
+   SOCIAL PROFILE PAGE - MODERN REDESIGN
+   Inspired by view-profile and mentor-profile designs
+   ==================================================================== */
+
+/* Enhanced Profile Header Section with modern gradient */
+.social-profile-main .profile-header-section {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    margin-bottom: var(--spacing-xl);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.social-profile-main .profile-header-section:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+}
+
+/* Enhanced Cover Photo with animated gradient */
+.social-profile-main .profile-cover {
+    height: 240px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+}
+
+.social-profile-main .cover-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, 
+        rgba(102, 126, 234, 0.9) 0%, 
+        rgba(118, 75, 162, 0.9) 50%,
+        rgba(237, 100, 166, 0.9) 100%
+    );
+    animation: gradientShift 15s ease infinite;
+    z-index: 0;
+}
+
+@keyframes gradientShift {
+    0%, 100% { 
+        background: linear-gradient(135deg, 
+            rgba(102, 126, 234, 0.9) 0%, 
+            rgba(118, 75, 162, 0.9) 50%,
+            rgba(237, 100, 166, 0.9) 100%
+        );
+    }
+    33% { 
+        background: linear-gradient(135deg, 
+            rgba(118, 75, 162, 0.9) 0%, 
+            rgba(237, 100, 166, 0.9) 50%,
+            rgba(102, 126, 234, 0.9) 100%
+        );
+    }
+    66% { 
+        background: linear-gradient(135deg, 
+            rgba(237, 100, 166, 0.9) 0%, 
+            rgba(102, 126, 234, 0.9) 50%,
+            rgba(118, 75, 162, 0.9) 100%
+        );
+    }
+}
+
+/* Enhanced Profile Avatar with ring effect */
+.social-profile-main .profile-avatar-container {
+    position: relative;
+    margin-top: -80px;
+    margin-bottom: var(--spacing-lg);
+}
+
+.social-profile-main .profile-avatar-container::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    z-index: 0;
+    opacity: 0.6;
+}
+
+/* Enhanced Profile Statistics Section */
+.social-profile-main .profile-stats-section {
+    padding: 0 var(--spacing-xl);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.social-profile-main .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xl);
+}
+
+.social-profile-main .stat-box {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    min-height: 100px;
+}
+
+.social-profile-main .stat-box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+    border-radius: var(--radius-lg);
+}
+
+.social-profile-main .stat-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.social-profile-main .stat-box:hover::before {
+    opacity: 1;
+}
+
+.social-profile-main .stat-box:hover .stat-icon {
+    animation: pulse 1s ease infinite;
+}
+
+.social-profile-main .stat-box .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: white;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+}
+
+.social-profile-main .stat-box:nth-child(1) .stat-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.social-profile-main .stat-box:nth-child(2) .stat-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.social-profile-main .stat-box:nth-child(3) .stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.social-profile-main .stat-box:nth-child(4) .stat-icon {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.social-profile-main .stat-box .stat-content {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.social-profile-main .stat-box .stat-content h4 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.5rem;
+    line-height: 1.2;
+}
+
+.social-profile-main .stat-box .stat-content p {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 500;
+    line-height: 1.4;
+}
+
+.social-profile-main .profile-avatar {
+    position: relative;
+    z-index: 1;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 6px solid var(--bg-primary);
+    object-fit: cover;
+    box-shadow: var(--shadow-lg);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-profile-main .profile-avatar:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(102, 126, 234, 0.2),
+                0 0 0 20px rgba(102, 126, 234, 0.1);
+}
+
+/* Enhanced Profile Stats with gradient icons */
+.social-profile-main .profile-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--spacing-xl);
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--border-light);
+}
+
+.social-profile-main .stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(135deg, transparent 0%, var(--bg-tertiary) 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-profile-main .stat-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 0;
+}
+
+.social-profile-main .stat-item:hover::before {
+    opacity: 1;
+}
+
+.social-profile-main .stat-item:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.social-profile-main .stat-value {
+    font-size: var(--font-size-3xl);
+    font-weight: 700;
+    color: var(--text-primary);
+    transition: all var(--transition-fast);
+}
+
+.social-profile-main .stat-item:hover .stat-value {
+    transform: scale(1.15);
+    color: var(--primary-blue);
+}
+
+.social-profile-main .stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-secondary);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Enhanced Profile Actions with modern button styles */
+.social-profile-main .profile-actions {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.social-profile-main .action-icon-btn {
+    padding: 0.625rem 1.25rem;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-profile-main .action-icon-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.social-profile-main .action-icon-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.social-profile-main .action-icon-primary {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(10, 102, 194, 0.3);
+}
+
+.social-profile-main .action-icon-primary:hover {
+    background: linear-gradient(135deg, var(--primary-blue-hover) 0%, var(--primary-blue) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(10, 102, 194, 0.4);
+}
+
+.social-profile-main .action-icon-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-medium);
+}
+
+.social-profile-main .action-icon-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--text-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Enhanced Tab Navigation */
+.social-profile-main .profile-tabs {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-xl);
+    margin-bottom: var(--spacing-xl);
+    padding: var(--spacing-md);
+    display: flex;
+    gap: var(--spacing-sm);
+    overflow-x: auto;
+    box-shadow: var(--shadow-sm);
+    animation: fadeInUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation-delay: 0.1s;
+    opacity: 0;
+    animation-fill-mode: forwards;
+}
+
+.social-profile-main .tab-btn {
+    padding: var(--spacing-md) var(--spacing-xl);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+}
+
+.social-profile-main .tab-btn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-blue) 100%);
+    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.social-profile-main .tab-btn:hover {
+    background: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.social-profile-main .tab-btn:hover::after {
+    width: 100%;
+}
+
+.social-profile-main .tab-btn.active {
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    color: var(--primary-blue);
+}
+
+.social-profile-main .tab-btn.active::after {
+    width: 100%;
+}
+
+/* Enhanced Post Cards */
+.social-profile-main .post-card,
+.social-profile-main .thread-card,
+.social-profile-main .story-card {
+    background: var(--bg-primary);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    opacity: 0;
+    animation-fill-mode: forwards;
+    position: relative;
+}
+
+.social-profile-main .post-card::before,
+.social-profile-main .thread-card::before,
+.social-profile-main .story-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.social-profile-main .post-card:hover::before,
+.social-profile-main .thread-card:hover::before,
+.social-profile-main .story-card:hover::before {
+    opacity: 1;
+}
+
+.social-profile-main .post-card:hover,
+.social-profile-main .thread-card:hover,
+.social-profile-main .story-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--primary-blue);
+}
+
+/* Staggered animation delays for cards */
+.social-profile-main .post-card:nth-child(1) { animation-delay: 0.1s; }
+.social-profile-main .post-card:nth-child(2) { animation-delay: 0.2s; }
+.social-profile-main .post-card:nth-child(3) { animation-delay: 0.3s; }
+.social-profile-main .post-card:nth-child(4) { animation-delay: 0.4s; }
+.social-profile-main .post-card:nth-child(5) { animation-delay: 0.5s; }
+.social-profile-main .post-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Enhanced Activity Stats Cards */
+.social-profile-main .activity-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.social-profile-main .stat-card {
+    background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+    border: 1px solid var(--border-light);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-xl);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+}
+
+.social-profile-main .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.social-profile-main .stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+}
+
+.social-profile-main .stat-card:hover::before {
+    opacity: 1;
+}
+
+.social-profile-main .stat-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    color: white;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+.social-profile-main .stat-card:hover .stat-icon {
+    animation: pulse 1s ease infinite;
+}
+
+.social-profile-main .stat-card:nth-child(1) .stat-icon {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.social-profile-main .stat-card:nth-child(2) .stat-icon {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.social-profile-main .stat-card:nth-child(3) .stat-icon {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.social-profile-main .stat-info {
+    flex: 1;
+    position: relative;
+    z-index: 1;
+}
+
+.social-profile-main .stat-number {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 0.25rem;
+    line-height: 1;
+}
+
+.social-profile-main .stat-text {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    margin: 0;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Enhanced Extended Profile Info */
+.social-profile-main .extended-item {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-sm);
+    padding: var(--spacing-sm) 0;
+    transition: all var(--transition-fast);
+}
+
+.social-profile-main .extended-item:hover {
+    padding-left: var(--spacing-sm);
+}
+
+.social-profile-main .extended-item i {
+    color: var(--primary-blue);
+    margin-top: 2px;
+    font-size: var(--font-size-lg);
+    flex-shrink: 0;
+    width: 24px;
+    text-align: center;
+}
+
+/* Enhanced Social Links */
+.social-profile-main .social-link {
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--bg-tertiary) 0%, var(--bg-secondary) 100%);
+    border-radius: 50%;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.social-profile-main .social-link::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: var(--primary-blue);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.social-profile-main .social-link:hover::before {
+    width: 100%;
+    height: 100%;
+}
+
+.social-profile-main .social-link:hover {
+    color: white;
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 6px 16px rgba(10, 102, 194, 0.3);
+}
+
+.social-profile-main .social-link i {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    font-size: var(--font-size-lg);
+    width: 1.25rem;
+    height: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+    display: inline-block !important;
+    background: none !important;
+    background-image: none !important;
+    background-color: transparent !important;
+}
+
+/* Enhanced Modal Styling */
+.social-profile-main .modal-content {
+    background: var(--bg-primary);
+    border-radius: var(--radius-xl);
+    max-width: 700px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+    box-shadow: var(--shadow-xl);
+    animation: scaleIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.social-profile-main .modal-header {
+    padding: var(--spacing-xl);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+}
+
+.social-profile-main .modal-header h2,
+.social-profile-main .modal-header h3 {
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.social-profile-main .modal-header i {
+    color: var(--primary-blue);
+}
+
+/* Enhanced Profile Completion Bar */
+.social-profile-main .profile-completion-bar {
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border-light);
+}
+
+.social-profile-main .completion-progress {
+    height: 8px;
+    background: var(--border-light);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin: var(--spacing-sm) 0;
+}
+
+.social-profile-main .completion-fill {
+    height: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.5s ease;
+    border-radius: var(--radius-full);
+}
+
+/* Responsive Enhancements */
+@media (max-width: 768px) {
+    .social-profile-main .profile-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+
+    .social-profile-main .profile-cover {
+        height: 180px;
+    }
+
+    .social-profile-main .profile-avatar {
+        width: 120px;
+        height: 120px;
+    }
+
+    .social-profile-main .profile-avatar-container {
+        margin-top: -60px;
+    }
+
+    .social-profile-main .profile-actions {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .social-profile-main .action-icon-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .social-profile-main .activity-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .social-profile-main .profile-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .social-profile-main .stat-card {
+        padding: var(--spacing-md);
+    }
+
+    .social-profile-main .stat-icon {
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+    }
+}
+
+/* Accessibility Enhancements */
+.social-profile-main .action-icon-btn:focus-visible,
+.social-profile-main .tab-btn:focus-visible,
+.social-profile-main .btn:focus-visible {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+}
+
+/* Smooth Scroll Behavior */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
