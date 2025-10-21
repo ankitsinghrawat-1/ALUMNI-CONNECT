@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const attendeesList = document.getElementById('attendees-list');
         if (attendees.length > 0) {
             attendeesList.innerHTML = attendees.map(attendee => `
-                <a href="view-profile.html?email=${attendee.email}" class="attendee-item" title="${sanitizeHTML(attendee.full_name)}">
+                <a href="profile.html?email=${attendee.email}" class="attendee-item" title="${sanitizeHTML(attendee.full_name)}">
                     <img src="${attendee.profile_pic_url ? `http://localhost:3000/${attendee.profile_pic_url}` : createInitialsAvatar(attendee.full_name)}" alt="${sanitizeHTML(attendee.full_name)}" class="attendee-pic">
                     <span>${sanitizeHTML(attendee.full_name)}</span>
                 </a>

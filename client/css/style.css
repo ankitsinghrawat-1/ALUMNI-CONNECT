@@ -17,6 +17,7 @@
     --success-color: #2ecc71;
     --error-color: #e74c3c;
     --danger-color: #dc3545;       /* Bootstrap-style red for danger actions */
+    --warning-color: #f39c12;      /* Orange/amber for warnings and partial states */
     --info-color: #3498db;
     
     --font-family: 'Poppins', sans-serif;
@@ -42,6 +43,7 @@ html.dark-mode {
     
     --success-color: #2ecc71;
     --error-color: #e74c3c;
+    --warning-color: #f39c12;      /* Orange/amber for warnings */
     --info-color: #3498db;
 }
 

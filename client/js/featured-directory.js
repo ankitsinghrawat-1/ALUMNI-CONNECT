@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
 
                     <div class="action-buttons">
-                        <button class="btn-view" onclick="window.location.href='view-profile.html?id=${alumnus.user_id}'">
+                        <button class="btn-view" onclick="window.location.href='profile.html?id=${alumnus.user_id}'">
                             <i class="fas fa-user"></i>
                             View Profile
                         </button>
