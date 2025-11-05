@@ -15,8 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             userId = currentUser.user_id;
             isOwnProfile = true;
         } else {
-            // Parse userId as integer for comparison
-            userId = parseInt(userId);
+            // Parse userId as integer for comparison, fallback to current user if invalid
+            const parsedUserId = parseInt(userId);
+            userId = !isNaN(parsedUserId) ? parsedUserId : currentUser.user_id;
             isOwnProfile = currentUser.user_id === userId;
         }
         
