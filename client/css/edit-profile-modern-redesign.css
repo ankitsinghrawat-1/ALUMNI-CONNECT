@@ -203,13 +203,12 @@
     min-height: 42px;
     display: flex;
     align-items: center;
-    cursor: pointer;
+    cursor: text;
     transition: all 0.2s ease;
     flex: 1;
 }
 
 .display-field:hover {
-    background: var(--settings-bg, #f6f8fa);
     border-color: var(--settings-primary, #0969DA);
 }
 
@@ -220,7 +219,6 @@
 }
 
 .dark-mode .display-field:hover {
-    background: #0d1117;
     border-color: #58a6ff;
 }
 
