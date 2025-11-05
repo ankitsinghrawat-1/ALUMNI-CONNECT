@@ -420,3 +420,229 @@ html {
 @keyframes spin {
     to { transform: rotate(360deg); }
 }
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 1.5rem;
+    background: var(--settings-bg, #f6f8fa);
+    border-top: 1px solid var(--settings-border-light, #e5e7eb);
+    margin-top: 2rem;
+    border-radius: 0 0 var(--settings-radius-lg, 12px) var(--settings-radius-lg, 12px);
+}
+
+.dark-mode .form-actions {
+    background: #0d1117;
+    border-top-color: #21262d;
+}
+
+.btn-submit,
+.btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--settings-success, #1a7f37);
+    color: white;
+    border: none;
+    border-radius: var(--settings-radius, 6px);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    text-decoration: none;
+}
+
+.btn-submit:hover,
+.btn-primary:hover {
+    background: #1a7f37;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode .btn-submit,
+.dark-mode .btn-primary {
+    background: #238636;
+}
+
+.dark-mode .btn-submit:hover,
+.dark-mode .btn-primary:hover {
+    background: #2ea043;
+}
+
+.btn-submit:active,
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-cancel,
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--settings-card-bg, #ffffff);
+    color: var(--settings-text-primary, #24292f);
+    border: 1px solid var(--settings-border, #d0d7de);
+    border-radius: var(--settings-radius, 6px);
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-cancel:hover,
+.btn-secondary:hover {
+    background: var(--settings-bg, #f6f8fa);
+    border-color: var(--settings-text-tertiary, #6e7781);
+}
+
+.dark-mode .btn-cancel,
+.dark-mode .btn-secondary {
+    background: #161b22;
+    border-color: #30363d;
+    color: #c9d1d9;
+}
+
+.dark-mode .btn-cancel:hover,
+.dark-mode .btn-secondary:hover {
+    background: #0d1117;
+    border-color: #8b949e;
+}
+
+/* Section Navigation (Right Sidebar) */
+.section-nav {
+    width: 240px;
+    position: sticky;
+    top: 100px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.section-nav-header {
+    padding: 1rem;
+    border-bottom: 1px solid var(--settings-border-light, #e5e7eb);
+}
+
+.dark-mode .section-nav-header {
+    border-bottom-color: #21262d;
+}
+
+.section-nav-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--settings-text-tertiary, #6e7781);
+}
+
+.section-nav-list {
+    padding: 1rem;
+}
+
+.section-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.75rem;
+    color: var(--settings-text-secondary, #57606a);
+    text-decoration: none;
+    border-radius: var(--settings-radius, 6px);
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+    cursor: pointer;
+}
+
+.dark-mode .section-nav-item {
+    color: #8b949e;
+}
+
+.section-nav-item:hover {
+    background: var(--settings-bg, #f6f8fa);
+    color: var(--settings-text-primary, #24292f);
+}
+
+.dark-mode .section-nav-item:hover {
+    background: #0d1117;
+    color: #c9d1d9;
+}
+
+.section-nav-item.active {
+    background: rgba(9, 105, 218, 0.1);
+    color: var(--settings-primary, #0969DA);
+    font-weight: 600;
+}
+
+.dark-mode .section-nav-item.active {
+    background: rgba(88, 166, 255, 0.1);
+    color: #58a6ff;
+}
+
+.section-nav-item i {
+    width: 18px;
+    text-align: center;
+    font-size: 0.95rem;
+}
+
+.section-nav-item[data-role] {
+    display: none;
+}
+
+/* Show/hide sections based on role */
+.section-nav-item[data-role*="alumni"],
+.section-nav-item[data-role*="student"],
+.section-nav-item[data-role*="faculty"],
+.section-nav-item[data-role*="employer"],
+.section-nav-item[data-role*="institute"] {
+    display: flex;
+}
+
+/* Form Message */
+.form-message {
+    padding: 1rem;
+    border-radius: var(--settings-radius, 6px);
+    margin-bottom: 1.5rem;
+    font-size: 0.875rem;
+    display: none;
+}
+
+.form-message.success {
+    background: #dafbe1;
+    color: #1a7f37;
+    border: 1px solid #a3e3ae;
+    display: block;
+}
+
+.dark-mode .form-message.success {
+    background: rgba(35, 134, 54, 0.15);
+    color: #3fb950;
+    border-color: rgba(35, 134, 54, 0.3);
+}
+
+.form-message.error {
+    background: #ffebe9;
+    color: #cf222e;
+    border: 1px solid #ff7b72;
+    display: block;
+}
+
+.dark-mode .form-message.error {
+    background: rgba(218, 54, 51, 0.15);
+    color: #ff7b72;
+    border-color: rgba(218, 54, 51, 0.3);
+}
+
+@media (max-width: 1200px) {
+    .section-nav {
+        display: none;
+    }
+}
+
