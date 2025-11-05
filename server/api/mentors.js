@@ -295,6 +295,87 @@ module.exports = (pool) => {
         }
     }));
 
+    // Get current mentor's profile for editing (must be before /:mentorId route)
+    router.get('/profile', verifyToken, asyncHandler(async (req, res) => {
+        const user_id = req.user.userId;
+        
+        // Get user profile data (for common fields)
+        const [users] = await pool.query(`
+            SELECT 
+                bio, job_title, company, skills, industry, experience_years,
+                languages, achievements, linkedin_profile, twitter_profile, github_profile
+            FROM users WHERE user_id = ?
+        `, [user_id]);
+        
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        const userProfile = users[0];
+        
+        // Get mentor profile
+        let [mentors] = await pool.query(`
+            SELECT * FROM mentors WHERE user_id = ?
+        `, [user_id]);
+        
+        // If no mentor profile exists, create a blank one
+        if (mentors.length === 0) {
+            await pool.query(`
+                INSERT INTO mentors (user_id, is_available, created_at)
+                VALUES (?, 1, CURRENT_TIMESTAMP)
+            `, [user_id]);
+            
+            // Fetch the newly created profile
+            [mentors] = await pool.query(`
+                SELECT * FROM mentors WHERE user_id = ?
+            `, [user_id]);
+        }
+        
+        const mentor = mentors[0];
+        const mentorId = mentor.mentor_id;
+
+        // Get specializations
+        const [specializations] = await pool.query(`
+            SELECT specialization, proficiency_level, years_experience
+            FROM mentor_specializations 
+            WHERE mentor_id = ?
+        `, [mentorId]);
+
+        // Get availability
+        const [availability] = await pool.query(`
+            SELECT day_of_week, start_time, end_time
+            FROM mentor_availability 
+            WHERE mentor_id = ?
+        `, [mentorId]);
+
+        // Merge user profile data with mentor data, prioritizing user profile for common fields
+        const mergedProfile = {
+            ...mentor,
+            // Use user profile data for common fields (these are the source of truth)
+            bio: userProfile.bio || mentor.bio || '',
+            job_title: userProfile.job_title || '',
+            company: userProfile.company || '',
+            skills: userProfile.skills || mentor.skills || '',
+            industry: userProfile.industry || mentor.industry || '',
+            experience_years: userProfile.experience_years || mentor.experience_years || 0,
+            languages: userProfile.languages || mentor.languages || '',
+            achievements: userProfile.achievements || '',
+            // Social links from user profile
+            linkedin_url: userProfile.linkedin_profile || mentor.linkedin_url || '',
+            twitter_url: userProfile.twitter_profile || '',
+            github_url: userProfile.github_profile || mentor.github_url || '',
+            communication_methods: mentor.communication_methods ? JSON.parse(mentor.communication_methods) : [],
+            specializations,
+            availability,
+            // Keep mentor-specific fields
+            hourly_rate: mentor.hourly_rate || 0,
+            timezone: mentor.timezone || 'UTC',
+            mentoring_style: mentor.mentoring_style || 'one_on_one'
+        };
+
+        res.json(mergedProfile);
+    }));
+
     // Get mentor details with comprehensive profile data
     router.get('/:mentorId', asyncHandler(async (req, res) => {
         const { mentorId } = req.params;
@@ -639,7 +720,7 @@ module.exports = (pool) => {
     }));
 
     // Update mentor profile
-    router.put('/profile', asyncHandler(async (req, res) => {
+    router.put('/profile', verifyToken, asyncHandler(async (req, res) => {
         const {
             expertise_areas,
             industry,
@@ -820,87 +901,6 @@ module.exports = (pool) => {
         } finally {
             connection.release();
         }
-    }));
-
-    // Get current mentor's profile for editing
-    router.get('/profile', asyncHandler(async (req, res) => {
-        const user_id = req.user.userId;
-        
-        // Get user profile data (for common fields)
-        const [users] = await pool.query(`
-            SELECT 
-                bio, job_title, company, skills, industry, experience_years,
-                languages, achievements, linkedin_profile, twitter_profile, github_profile
-            FROM users WHERE user_id = ?
-        `, [user_id]);
-        
-        if (users.length === 0) {
-            return res.status(404).json({ message: 'User not found' });
-        }
-        
-        const userProfile = users[0];
-        
-        // Get mentor profile
-        let [mentors] = await pool.query(`
-            SELECT * FROM mentors WHERE user_id = ?
-        `, [user_id]);
-        
-        // If no mentor profile exists, create a blank one
-        if (mentors.length === 0) {
-            await pool.query(`
-                INSERT INTO mentors (user_id, is_available, created_at)
-                VALUES (?, 1, CURRENT_TIMESTAMP)
-            `, [user_id]);
-            
-            // Fetch the newly created profile
-            [mentors] = await pool.query(`
-                SELECT * FROM mentors WHERE user_id = ?
-            `, [user_id]);
-        }
-        
-        const mentor = mentors[0];
-        const mentorId = mentor.mentor_id;
-
-        // Get specializations
-        const [specializations] = await pool.query(`
-            SELECT specialization, proficiency_level, years_experience
-            FROM mentor_specializations 
-            WHERE mentor_id = ?
-        `, [mentorId]);
-
-        // Get availability
-        const [availability] = await pool.query(`
-            SELECT day_of_week, start_time, end_time
-            FROM mentor_availability 
-            WHERE mentor_id = ?
-        `, [mentorId]);
-
-        // Merge user profile data with mentor data, prioritizing user profile for common fields
-        const mergedProfile = {
-            ...mentor,
-            // Use user profile data for common fields (these are the source of truth)
-            bio: userProfile.bio || mentor.bio || '',
-            job_title: userProfile.job_title || '',
-            company: userProfile.company || '',
-            skills: userProfile.skills || mentor.skills || '',
-            industry: userProfile.industry || mentor.industry || '',
-            experience_years: userProfile.experience_years || mentor.experience_years || 0,
-            languages: userProfile.languages || mentor.languages || '',
-            achievements: userProfile.achievements || '',
-            // Social links from user profile
-            linkedin_url: userProfile.linkedin_profile || mentor.linkedin_url || '',
-            twitter_url: userProfile.twitter_profile || '',
-            github_url: userProfile.github_profile || mentor.github_url || '',
-            communication_methods: mentor.communication_methods ? JSON.parse(mentor.communication_methods) : [],
-            specializations,
-            availability,
-            // Keep mentor-specific fields
-            hourly_rate: mentor.hourly_rate || 0,
-            timezone: mentor.timezone || 'UTC',
-            mentoring_style: mentor.mentoring_style || 'one_on_one'
-        };
-
-        res.json(mergedProfile);
     }));
 
     // Add achievement
