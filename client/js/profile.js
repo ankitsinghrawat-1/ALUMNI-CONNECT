@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     const updateProfileViewForRole = (role) => {
-        const profilePage = document.getElementById('edit-profile');
+        const profilePage = document.querySelector('.settings-page') || document.body;
         if (!profilePage) return;
 
         // Hide all role-specific fields
