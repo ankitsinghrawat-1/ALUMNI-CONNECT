@@ -79,18 +79,55 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inputField.focus();
             });
             
-            // Blur handler
-            function handleBlur() {
+            // Blur handler - saves to database
+            async function handleBlur() {
                 const newValue = inputField.value.trim();
+                const oldValue = displayField.getAttribute('data-original-value') || '';
+                
+                // Only save if value changed
+                if (newValue !== oldValue) {
+                    try {
+                        // Save to database
+                        const updateData = {};
+                        if (fieldName === 'available_mentor') {
+                            updateData[fieldName] = newValue === 'true';
+                        } else {
+                            updateData[fieldName] = newValue;
+                        }
+                        
+                        await window.api.put('/users/profile', updateData);
+                        
+                        // Update display after successful save
+                        if (fieldName === 'available_mentor') {
+                            displayField.textContent = newValue === 'true' ? 'Yes' : 'No';
+                        } else if (inputField.tagName === 'SELECT') {
+                            const selectedOption = inputField.options[inputField.selectedIndex];
+                            displayField.textContent = selectedOption ? selectedOption.text : '';
+                        } else {
+                            displayField.textContent = newValue || '';
+                        }
+                        
+                        // Update stored original value
+                        displayField.setAttribute('data-original-value', newValue);
+                        
+                        // Show success feedback
+                        showToast(`${fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} updated`, 'success');
+                    } catch (error) {
+                        console.error(`Error updating ${fieldName}:`, error);
+                        showToast(error.message || `Error updating ${fieldName}`, 'error');
+                        // Revert to old value on error
+                        inputField.value = oldValue;
+                    }
+                }
                 
                 // Update display
                 if (fieldName === 'available_mentor') {
-                    displayField.textContent = newValue === 'true' ? 'Yes' : 'No';
+                    displayField.textContent = inputField.value === 'true' ? 'Yes' : 'No';
                 } else if (inputField.tagName === 'SELECT') {
                     const selectedOption = inputField.options[inputField.selectedIndex];
                     displayField.textContent = selectedOption ? selectedOption.text : '';
                 } else {
-                    displayField.textContent = newValue || '';
+                    displayField.textContent = inputField.value || '';
                 }
                 
                 inputField.style.display = 'none';
