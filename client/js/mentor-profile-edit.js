@@ -17,9 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         'achievements': 'achievements',
         'linkedin_url': 'linkedin_url',
         'github_url': 'github_url',
-        'portfolio_url': 'portfolio_url',
-        'available_days': 'available_days',
-        'preferred_times': 'preferred_times'
+        'portfolio_url': 'portfolio_url'
     };
 
     // Load mentor profile data
@@ -46,6 +44,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                         displayField.textContent = styleMap[value] || value;
                     } else if (field === 'hourly_rate' && value) {
                         displayField.textContent = `$${value}/hour`;
+                    } else if (field === 'industry' && inputField.tagName === 'SELECT') {
+                        // For select fields, show selected option text
+                        const selectedOption = Array.from(inputField.options).find(opt => opt.value === value);
+                        displayField.textContent = selectedOption ? selectedOption.text : value;
+                    } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(field) && value) {
+                        // For URLs, show clickable link
+                        displayField.innerHTML = `<a href="${value}" target="_blank" rel="noopener">${value}</a>`;
                     } else {
                         displayField.textContent = value || '';
                     }
@@ -120,6 +125,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                         } else if (inputField.tagName === 'SELECT') {
                             const selectedOption = inputField.options[inputField.selectedIndex];
                             displayField.textContent = selectedOption ? selectedOption.text : '';
+                        } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(fieldName) && newValue) {
+                            // For URLs, show clickable link
+                            displayField.innerHTML = `<a href="${newValue}" target="_blank" rel="noopener">${newValue}</a>`;
                         } else {
                             displayField.textContent = newValue || '';
                         }
@@ -151,6 +159,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (inputField.tagName === 'SELECT') {
                     const selectedOption = inputField.options[inputField.selectedIndex];
                     displayField.textContent = selectedOption ? selectedOption.text : '';
+                } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(fieldName) && inputField.value) {
+                    // For URLs, show clickable link
+                    displayField.innerHTML = `<a href="${inputField.value}" target="_blank" rel="noopener">${inputField.value}</a>`;
                 } else {
                     displayField.textContent = inputField.value || '';
                 }

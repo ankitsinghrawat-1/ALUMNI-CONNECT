@@ -659,9 +659,7 @@ module.exports = (pool) => {
             availability,
             job_title,
             company,
-            achievements,
-            available_days,
-            preferred_times
+            achievements
         } = req.body;
         
         const user_id = req.user.userId;
@@ -899,9 +897,7 @@ module.exports = (pool) => {
             // Keep mentor-specific fields
             hourly_rate: mentor.hourly_rate || 0,
             timezone: mentor.timezone || 'UTC',
-            mentoring_style: mentor.mentoring_style || 'one_on_one',
-            available_days: mentor.available_days || '',
-            preferred_times: mentor.preferred_times || ''
+            mentoring_style: mentor.mentoring_style || 'one_on_one'
         };
 
         res.json(mergedProfile);
