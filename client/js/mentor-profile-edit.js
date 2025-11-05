@@ -49,8 +49,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const selectedOption = Array.from(inputField.options).find(opt => opt.value === value);
                         displayField.textContent = selectedOption ? selectedOption.text : value;
                     } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(field) && value) {
-                        // For URLs, show clickable link
-                        displayField.innerHTML = `<a href="${value}" target="_blank" rel="noopener">${value}</a>`;
+                        // For URLs, show clickable link (using DOM methods to prevent XSS)
+                        displayField.textContent = ''; // Clear existing content
+                        // Validate URL scheme to prevent javascript: and data: URLs
+                        try {
+                            const url = new URL(value);
+                            if (url.protocol === 'http:' || url.protocol === 'https:') {
+                                const link = document.createElement('a');
+                                link.href = url.href;
+                                link.target = '_blank';
+                                link.rel = 'noopener noreferrer';
+                                link.textContent = value;
+                                displayField.appendChild(link);
+                            } else {
+                                displayField.textContent = value;
+                            }
+                        } catch (e) {
+                            // Invalid URL, just display as text
+                            displayField.textContent = value;
+                        }
                     } else {
                         displayField.textContent = value || '';
                     }
@@ -126,8 +143,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                             const selectedOption = inputField.options[inputField.selectedIndex];
                             displayField.textContent = selectedOption ? selectedOption.text : '';
                         } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(fieldName) && newValue) {
-                            // For URLs, show clickable link
-                            displayField.innerHTML = `<a href="${newValue}" target="_blank" rel="noopener">${newValue}</a>`;
+                            // For URLs, show clickable link (using DOM methods to prevent XSS)
+                            displayField.textContent = ''; // Clear existing content
+                            // Validate URL scheme to prevent javascript: and data: URLs
+                            try {
+                                const url = new URL(newValue);
+                                if (url.protocol === 'http:' || url.protocol === 'https:') {
+                                    const link = document.createElement('a');
+                                    link.href = url.href;
+                                    link.target = '_blank';
+                                    link.rel = 'noopener noreferrer';
+                                    link.textContent = newValue;
+                                    displayField.appendChild(link);
+                                } else {
+                                    displayField.textContent = newValue;
+                                }
+                            } catch (e) {
+                                // Invalid URL, just display as text
+                                displayField.textContent = newValue;
+                            }
                         } else {
                             displayField.textContent = newValue || '';
                         }
@@ -160,8 +194,25 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const selectedOption = inputField.options[inputField.selectedIndex];
                     displayField.textContent = selectedOption ? selectedOption.text : '';
                 } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(fieldName) && inputField.value) {
-                    // For URLs, show clickable link
-                    displayField.innerHTML = `<a href="${inputField.value}" target="_blank" rel="noopener">${inputField.value}</a>`;
+                    // For URLs, show clickable link (using DOM methods to prevent XSS)
+                    displayField.textContent = ''; // Clear existing content
+                    // Validate URL scheme to prevent javascript: and data: URLs
+                    try {
+                        const url = new URL(inputField.value);
+                        if (url.protocol === 'http:' || url.protocol === 'https:') {
+                            const link = document.createElement('a');
+                            link.href = url.href;
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                            link.textContent = inputField.value;
+                            displayField.appendChild(link);
+                        } else {
+                            displayField.textContent = inputField.value;
+                        }
+                    } catch (e) {
+                        // Invalid URL, just display as text
+                        displayField.textContent = inputField.value;
+                    }
                 } else {
                     displayField.textContent = inputField.value || '';
                 }
