@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni Profile</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/view-profile-modern.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script>
+        (function() {
+            const theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
+    <script src="js/utils.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    
+    <header class="main-header">
+        <nav class="main-nav container">
+            <a href="index.html" class="logo">AlumniConnect</a>
+            <ul id="nav-links" class="nav-links">
+                </ul>
+        </nav>
+    </header>
+
+    <main class="profile-main-view modern-profile">
+        <div class="profile-container-view">
+            <!-- Profile Cover Section -->
+            <div class="profile-cover-section">
+                <div class="profile-cover-gradient"></div>
+                <button onclick="history.back()" class="back-btn-modern">
+                    <i class="fas fa-arrow-left"></i>
+                </button>
+            </div>
+
+            <!-- Profile Header Section -->
+            <div class="profile-header-view">
+                <div class="profile-header-content">
+                    <div class="profile-avatar-wrapper">
+                        <img id="profile-pic-view" class="profile-pic-view" src="" alt="Profile Picture" onerror="this.src=createInitialsAvatar('User')">
+                        <div class="avatar-ring"></div>
+                    </div>
+                    <div class="profile-info">
+                        <div class="profile-info-left">
+                            <div class="profile-name-wrapper">
+                                <h2 id="profile-name-view"></h2>
+                                <div id="verified-badge-container"></div>
+                            </div>
+                            <p id="profile-subheader" class="profile-subheader"></p>
+                            <p id="profile-bio-inline" class="profile-bio-inline"></p>
+                        </div>
+                        
+                        <div class="profile-info-right">
+                            <!-- View Profile Action Buttons -->
+                            <div class="profile-actions profile-actions-regular">
+                                <a href="dashboard.html" class="action-icon-btn action-icon-secondary" data-tooltip="Dashboard">
+                                    <i class="fas fa-th-large"></i>
+                                    <span class="btn-text">Dashboard</span>
+                                </a>
+                                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
+                                    <i class="fas fa-edit"></i>
+                                    <span class="btn-text">Edit Profile</span>
+                                </button>
+                                <button id="send-message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message" style="display: none;">
+                                    <i class="fas fa-envelope"></i>
+                                    <span class="btn-text">Message</span>
+                                </button>
+                                <a id="social-profile-link" href="social-profile.html" class="action-icon-btn action-icon-secondary" data-tooltip="Social Profile">
+                                    <i class="fas fa-users"></i>
+                                    <span class="btn-text">Social Profile</span>
+                                </a>
+                                <a id="mentor-profile-link" href="mentor-profile.html" class="action-icon-btn action-icon-secondary" data-tooltip="Mentor Profile" style="display: none;">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                    <span class="btn-text">Mentor Profile</span>
+                                </a>
+                                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
+                                    <i class="fas fa-share-alt"></i>
+                                    <span class="btn-text">Share</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Statistics -->
+            <div class="profile-stats-section">
+                <div class="stats-grid">
+                    <div class="stat-box" data-aos="fade-up">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="connections-count">0</h4>
+                            <p>Connections</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon">
+                            <i class="fas fa-blog"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="posts-count">0</h4>
+                            <p>Blog Posts</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="engagement-count">0</h4>
+                            <p>Engagement</p>
+                        </div>
+                    </div>
+                    <div class="stat-box" data-aos="fade-up" data-aos-delay="300">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h4 id="events-count">0</h4>
+                            <p>Events Attended</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Content Cards -->
+            <div class="profile-content-view">
+                <!-- About Section -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon about-icon">
+                            <i class="fas fa-info-circle"></i>
+                        </div>
+                        <h3>About Me</h3>
+                    </div>
+                    <div class="card-body">
+                        <p id="bio-view" class="bio-text"></p>
+                    </div>
+                </div>
+                
+                <!-- Academic Details Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon academic-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Academic Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">University</span>
+                                <span id="university-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Graduation Year</span>
+                                <span id="graduation-year-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Degree</span>
+                                <span id="degree-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Major</span>
+                                <span id="major-view" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills & Expertise Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon skills-icon">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <h3>Skills & Expertise</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="skills-view" class="skills-container"></div>
+                    </div>
+                </div>
+
+                <!-- Activity Analytics Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon analytics-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Activity Overview</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="chart-container">
+                            <canvas id="activityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Details Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon professional-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Professional Details</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Current Company</span>
+                                <span id="current-company-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Job Title</span>
+                                <span id="job-title-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">City</span>
+                                <span id="city-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">LinkedIn</span>
+                                <a id="linkedin-view" class="info-link" target="_blank">
+                                    <i class="fab fa-linkedin"></i> View Profile
+                                </a>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Experience</span>
+                                <span id="experience-view" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Industry</span>
+                                <span id="industry-view" class="info-value"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Additional Stats Section -->
+                <div class="profile-card" data-aos="fade-up">
+                    <div class="card-header">
+                        <div class="card-icon stats-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h3>Detailed Statistics</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="detailed-stats-grid">
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="total-likes">0</h4>
+                                    <p>Total Likes Received</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-comments"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="total-comments">0</h4>
+                                    <p>Total Comments</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-eye"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="profile-views">0</h4>
+                                    <p>Profile Views</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-user-friends"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="network-score">0</h4>
+                                    <p>Network Score</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="member-since">-</h4>
+                                    <p>Member Since</p>
+                                </div>
+                            </div>
+                            <div class="stat-detail-card">
+                                <div class="stat-detail-icon">
+                                    <i class="fas fa-fire"></i>
+                                </div>
+                                <div class="stat-detail-info">
+                                    <h4 id="activity-streak">0</h4>
+                                    <p>Day Activity Streak</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Details Card -->
+                <div class="profile-card" style="display:none;">
+                    <div class="card-header">
+                        <div class="card-icon professional-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <h3>Professional Details (Old)</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-grid" style="display:none;">
+                            <div class="info-item">
+                                <span class="info-label">Current Company</span>
+                                <span id="current-company-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Job Title</span>
+                                <span id="job-title-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">City</span>
+                                <span id="city-view-old" class="info-value"></span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">LinkedIn</span>
+                                <a id="linkedin-view-old" class="info-link" target="_blank">
+                                    <i class="fab fa-linkedin"></i> View Profile
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Contact Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="contact-info">
+                            <i class="fas fa-envelope"></i>
+                            <span id="email-view"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Blog Posts Card -->
+                <div class="profile-card">
+                    <div class="card-header">
+                        <div class="card-icon blog-icon">
+                            <i class="fas fa-feather-alt"></i>
+                        </div>
+                        <h3>Blog Posts</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="user-blog-posts" class="user-posts-container"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/view-profile.js"></script>
+</body>
+</html>
