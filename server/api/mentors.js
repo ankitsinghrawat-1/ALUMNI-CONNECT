@@ -364,7 +364,22 @@ module.exports = (pool) => {
             linkedin_url: userProfile.linkedin_profile || mentor.linkedin_url || '',
             twitter_url: userProfile.twitter_profile || '',
             github_url: userProfile.github_profile || mentor.github_url || '',
-            communication_methods: mentor.communication_methods ? JSON.parse(mentor.communication_methods) : [],
+            // Safely parse communication_methods JSON
+            communication_methods: (() => {
+                try {
+                    if (!mentor.communication_methods) return [];
+                    if (typeof mentor.communication_methods === 'string') {
+                        return JSON.parse(mentor.communication_methods);
+                    }
+                    if (Array.isArray(mentor.communication_methods)) {
+                        return mentor.communication_methods;
+                    }
+                    return [];
+                } catch (e) {
+                    console.error('Error parsing communication_methods:', e);
+                    return [];
+                }
+            })(),
             specializations,
             availability,
             // Keep mentor-specific fields
