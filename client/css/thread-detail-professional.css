@@ -1,11 +1,3 @@
-/* ====================================================================
-   THREAD DETAIL PAGE - PROFESSIONAL STYLING
-   LinkedIn & X Inspired Design for Discussion Detail View
-   ==================================================================== */
-
-/* ====================================================================
-   BASE OVERRIDES - Ensure professional styles take precedence
-   ==================================================================== */
 .thread-detail-main {
     background: #f7f9f9 !important;
     min-height: 100vh !important;
@@ -876,6 +868,7 @@
     margin-bottom: var(--spacing-xs);
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }

@@ -12,10 +12,6 @@ function initializeSocialFeedWebSocket(io) {
     io.on('connection', (socket) => {
         console.log('Client connected:', socket.id);
 
-        // ================================================================
-        // LIVE VIEWER TRACKING
-        // ================================================================
-
         /**
          * User starts viewing a thread
          */

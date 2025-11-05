@@ -4237,7 +4237,7 @@ body main {
     opacity: 1 !important;
     transform: translateX(0) !important; /* Slide into position */
 }
-}
+
 
 .static-page-main {
     padding: 3rem 0;
