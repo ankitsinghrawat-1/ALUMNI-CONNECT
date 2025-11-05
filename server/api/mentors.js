@@ -771,12 +771,12 @@ module.exports = (pool) => {
                 mentorUpdateValues.push(response_time_hours);
             }
             
-            // Always update timestamp
-            mentorUpdateFields.push('updated_at = CURRENT_TIMESTAMP');
-            mentorUpdateValues.push(mentorId);
-            
-            // Update mentors table
+            // Update mentors table if there are any mentor-specific fields
             if (mentorUpdateFields.length > 0) {
+                // Always update timestamp when there are changes
+                mentorUpdateFields.push('updated_at = CURRENT_TIMESTAMP');
+                mentorUpdateValues.push(mentorId);
+                
                 await connection.query(`
                     UPDATE mentors SET ${mentorUpdateFields.join(', ')}
                     WHERE mentor_id = ?
