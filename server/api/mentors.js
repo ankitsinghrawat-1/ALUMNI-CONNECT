@@ -639,7 +639,7 @@ module.exports = (pool) => {
     }));
 
     // Update mentor profile
-    router.put('/profile', verifyToken, asyncHandler(async (req, res) => {
+    router.put('/profile', asyncHandler(async (req, res) => {
         const {
             expertise_areas,
             industry,
@@ -823,7 +823,7 @@ module.exports = (pool) => {
     }));
 
     // Get current mentor's profile for editing
-    router.get('/profile', verifyToken, asyncHandler(async (req, res) => {
+    router.get('/profile', asyncHandler(async (req, res) => {
         const user_id = req.user.userId;
         
         // Get user profile data (for common fields)

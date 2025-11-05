@@ -2,8 +2,8 @@
 document.addEventListener('DOMContentLoaded', async () => {
     const form = document.getElementById('social-profile-form');
     
-    // Field mappings
-    const fields = {
+    // Field mappings - maps HTML data-field names to database column names
+    const fieldMappings = {
         'bio': 'bio',
         'job_title': 'job_title',
         'company': 'company',
@@ -12,9 +12,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         'interests': 'interests',
         'current_project': 'current_project',
         'website': 'website',
-        'linkedin': 'linkedin',
-        'twitter': 'twitter',
-        'github': 'github',
+        'linkedin': 'linkedin_profile',
+        'twitter': 'twitter_profile',
+        'github': 'github_profile',
         'available_mentor': 'available_mentor'
     };
 
@@ -24,14 +24,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             const data = await window.api.get('/users/profile');
             
             // Populate fields
-            Object.keys(fields).forEach(field => {
-                const displayField = document.querySelector(`[data-field="${field}"]`);
-                const inputField = document.getElementById(`${field}_input`);
+            Object.keys(fieldMappings).forEach(htmlField => {
+                const dbField = fieldMappings[htmlField];
+                const displayField = document.querySelector(`[data-field="${htmlField}"]`);
+                const inputField = document.getElementById(`${htmlField}_input`);
                 
                 if (displayField && inputField) {
-                    const value = data[field] || '';
+                    const value = data[dbField] || '';
                     
-                    if (field === 'available_mentor') {
+                    if (htmlField === 'available_mentor') {
                         displayField.textContent = value ? 'Yes' : 'No';
                         inputField.value = value ? 'true' : 'false';
                     } else {
@@ -60,6 +61,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     function setupInlineEditing() {
         document.querySelectorAll('.display-field[data-field]').forEach(displayField => {
             const fieldName = displayField.getAttribute('data-field');
+            const dbFieldName = fieldMappings[fieldName] || fieldName;
             const parent = displayField.closest('.profile-field');
             
             if (!parent) return;
@@ -87,12 +89,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 // Only save if value changed
                 if (newValue !== oldValue) {
                     try {
-                        // Save to database
+                        // Save to database using the correct database field name
                         const updateData = {};
                         if (fieldName === 'available_mentor') {
-                            updateData[fieldName] = newValue === 'true';
+                            updateData[dbFieldName] = newValue === 'true';
                         } else {
-                            updateData[fieldName] = newValue;
+                            updateData[dbFieldName] = newValue;
                         }
                         
                         await window.api.put('/users/profile', updateData);
@@ -165,13 +167,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const formData = {};
             
-            Object.keys(fields).forEach(field => {
-                const inputField = document.getElementById(`${field}_input`);
+            Object.keys(fieldMappings).forEach(htmlField => {
+                const dbField = fieldMappings[htmlField];
+                const inputField = document.getElementById(`${htmlField}_input`);
                 if (inputField) {
-                    if (field === 'available_mentor') {
-                        formData[field] = inputField.value === 'true';
+                    if (htmlField === 'available_mentor') {
+                        formData[dbField] = inputField.value === 'true';
                     } else {
-                        formData[field] = inputField.value;
+                        formData[dbField] = inputField.value;
                     }
                 }
             });
