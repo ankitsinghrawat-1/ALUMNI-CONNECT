@@ -252,14 +252,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         const profilePage = document.querySelector('.settings-page') || document.body;
         if (!profilePage) return;
 
-        // Hide all role-specific fields
-        profilePage.querySelectorAll('[data-role]').forEach(el => {
+        // Hide all role-specific fields (not cards, just fields)
+        profilePage.querySelectorAll('.profile-field[data-role]').forEach(el => {
             el.style.display = 'none';
         });
 
         // Show fields relevant to the current user's role
-        profilePage.querySelectorAll(`[data-role*="${role}"]`).forEach(el => {
+        profilePage.querySelectorAll(`.profile-field[data-role*="${role}"]`).forEach(el => {
             el.style.display = 'flex'; // Use flex for profile-field
+        });
+        
+        // Handle cards - show/hide based on whether they have any visible fields
+        profilePage.querySelectorAll('.profile-card[data-role]').forEach(card => {
+            const cardRole = card.getAttribute('data-role');
+            if (cardRole && cardRole.includes(role)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
         });
         
         // Adjust labels based on role
