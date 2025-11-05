@@ -1149,7 +1149,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     await fetchUserProfile();
     
     // Always apply role filtering, even if API fails
-    const userRole = localStorage.getItem('userRole');
     if (userRole) {
         updateProfileViewForRole(userRole);
     }
