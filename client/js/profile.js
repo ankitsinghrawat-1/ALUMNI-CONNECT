@@ -1046,11 +1046,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Setup inline editing for all display fields
     function setupInlineEditing() {
+        const userRole = localStorage.getItem('userRole');
+        
         document.querySelectorAll('.display-field[data-field]').forEach(displayField => {
             const fieldName = displayField.getAttribute('data-field');
             const parent = displayField.closest('.profile-field');
             
             if (!parent) return;
+            
+            // Check if this field should be visible for the current role
+            const fieldRole = parent.getAttribute('data-role');
+            if (fieldRole && !fieldRole.includes(userRole)) {
+                // This field is not for this role, skip setting up editing
+                return;
+            }
             
             // Find corresponding input field
             const inputField = parent.querySelector(`#${fieldName}_input, [name="${fieldName}"]`);
