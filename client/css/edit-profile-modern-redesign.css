@@ -198,7 +198,7 @@
     color: var(--settings-text-primary, #24292f);
     padding: 0.625rem 0.75rem;
     background: var(--settings-card-bg, #ffffff);
-    border: 1px solid var(--settings-border, #d0d7de);
+    border: 2px solid var(--settings-border, #d0d7de);
     border-radius: var(--settings-radius, 6px);
     min-height: 42px;
     display: flex;
@@ -212,6 +212,12 @@
     border-color: var(--settings-primary, #0969DA);
 }
 
+.display-field:focus {
+    outline: none;
+    border-color: var(--settings-primary, #0969DA);
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+}
+
 .dark-mode .display-field {
     background: #161b22;
     border-color: #30363d;
@@ -220,6 +226,11 @@
 
 .dark-mode .display-field:hover {
     border-color: #58a6ff;
+}
+
+.dark-mode .display-field:focus {
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.1);
 }
 
 .display-field:empty::before {

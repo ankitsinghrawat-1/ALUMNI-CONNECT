@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (!inputField) return;
             
             // Make display field clickable
-            displayField.style.cursor = 'pointer';
+            displayField.style.cursor = 'text';
             displayField.title = 'Click to edit';
             
             // Click handler
@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inputField.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        inputField.blur();
+                        handleBlur();
                     }
                 });
             }
