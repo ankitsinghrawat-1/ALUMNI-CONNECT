@@ -252,14 +252,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         const profilePage = document.querySelector('.settings-page') || document.body;
         if (!profilePage) return;
 
-        // Hide all role-specific fields
-        profilePage.querySelectorAll('[data-role]').forEach(el => {
+        // Hide all role-specific fields (not cards, just fields)
+        profilePage.querySelectorAll('.profile-field[data-role]').forEach(el => {
             el.style.display = 'none';
         });
 
         // Show fields relevant to the current user's role
-        profilePage.querySelectorAll(`[data-role*="${role}"]`).forEach(el => {
+        profilePage.querySelectorAll(`.profile-field[data-role*="${role}"]`).forEach(el => {
             el.style.display = 'flex'; // Use flex for profile-field
+        });
+        
+        // Handle cards - show/hide based on whether they have any visible fields
+        profilePage.querySelectorAll('.profile-card[data-role]').forEach(card => {
+            const cardRole = card.getAttribute('data-role');
+            if (cardRole && cardRole.includes(role)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
         });
         
         // Adjust labels based on role
@@ -1046,11 +1056,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Setup inline editing for all display fields
     function setupInlineEditing() {
+        const userRole = localStorage.getItem('userRole');
+        
         document.querySelectorAll('.display-field[data-field]').forEach(displayField => {
             const fieldName = displayField.getAttribute('data-field');
             const parent = displayField.closest('.profile-field');
             
             if (!parent) return;
+            
+            // Check if this field should be visible for the current role
+            const fieldRole = parent.getAttribute('data-role');
+            if (fieldRole && !fieldRole.includes(userRole)) {
+                // This field is not for this role, skip setting up editing
+                return;
+            }
             
             // Find corresponding input field
             const inputField = parent.querySelector(`#${fieldName}_input, [name="${fieldName}"]`);
@@ -1128,6 +1147,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await fetchUserProfile();
+    
+    // Always apply role filtering, even if API fails
+    if (userRole) {
+        updateProfileViewForRole(userRole);
+    }
     
     // Setup inline editing after profile is loaded
     setTimeout(setupInlineEditing, 500);
