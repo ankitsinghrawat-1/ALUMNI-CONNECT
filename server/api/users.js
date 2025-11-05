@@ -341,7 +341,10 @@ module.exports = (pool, upload) => {
             }
         }
 
-        await pool.query('UPDATE users SET ? WHERE user_id = ?', [updateFields, userId]);
+        // Only perform update if there are fields to update
+        if (Object.keys(updateFields).length > 0) {
+            await pool.query('UPDATE users SET ? WHERE user_id = ?', [updateFields, userId]);
+        }
 
         const [updatedUserRows] = await pool.query('SELECT * FROM users WHERE user_id = ?', [userId]);
         const updatedUser = updatedUserRows[0];
