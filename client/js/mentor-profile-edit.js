@@ -47,58 +47,94 @@ document.addEventListener('DOMContentLoaded', async () => {
                     
                     inputField.value = value;
                     
-                    // Show display field by default
-                    displayField.style.display = '';
-                    inputField.style.display = 'none';
+                    // Store original value
+                    displayField.setAttribute('data-original-value', value);
                     
-                    // Add click handler to toggle edit mode
-                    displayField.parentElement.style.cursor = 'pointer';
-                    displayField.parentElement.addEventListener('click', function(e) {
-                        if (e.target.closest('.display-field')) {
-                            toggleEdit(field);
-                        }
-                    });
+                    // Show display field by default
+                    displayField.style.display = 'flex';
+                    inputField.style.display = 'none';
                 }
             });
+            
+            // Setup inline editing after data is loaded
+            setupInlineEditing();
         } catch (error) {
             console.error('Error loading mentor profile:', error);
             showToast('Error loading mentor profile data', 'error');
         }
     }
 
-    // Toggle edit mode for a field
-    function toggleEdit(field) {
-        const displayField = document.querySelector(`[data-field="${field}"]`);
-        const inputField = document.getElementById(`${field}_input`);
-        
-        if (displayField && inputField) {
-            displayField.style.display = 'none';
-            inputField.style.display = 'block';
-            inputField.focus();
+    // Setup inline editing for all display fields
+    function setupInlineEditing() {
+        document.querySelectorAll('.display-field[data-field]').forEach(displayField => {
+            const fieldName = displayField.getAttribute('data-field');
+            const parent = displayField.closest('.profile-field');
             
-            // Add blur handler to save on blur
-            inputField.addEventListener('blur', function() {
-                const value = inputField.value;
+            if (!parent) return;
+            
+            const inputField = parent.querySelector(`#${fieldName}_input`);
+            
+            if (!inputField) return;
+            
+            // Make display field clickable
+            displayField.style.cursor = 'pointer';
+            displayField.title = 'Click to edit';
+            
+            // Click handler
+            displayField.addEventListener('click', function() {
+                displayField.style.display = 'none';
+                inputField.style.display = 'block';
+                inputField.focus();
+            });
+            
+            // Blur handler
+            function handleBlur() {
+                const newValue = inputField.value.trim();
                 
                 // Format display based on field type
-                if (field === 'mentoring_style') {
+                if (fieldName === 'mentoring_style') {
                     const styleMap = {
                         'one_on_one': 'One-on-One Sessions',
                         'group': 'Group Mentoring',
                         'workshop': 'Workshops',
                         'mixed': 'Mixed Approach'
                     };
-                    displayField.textContent = styleMap[value] || value;
-                } else if (field === 'hourly_rate' && value) {
-                    displayField.textContent = `$${value}/hour`;
+                    displayField.textContent = styleMap[newValue] || newValue;
+                } else if (fieldName === 'hourly_rate' && newValue) {
+                    displayField.textContent = `$${newValue}/hour`;
+                } else if (inputField.tagName === 'SELECT') {
+                    const selectedOption = inputField.options[inputField.selectedIndex];
+                    displayField.textContent = selectedOption ? selectedOption.text : '';
                 } else {
-                    displayField.textContent = value || '';
+                    displayField.textContent = newValue || '';
                 }
                 
-                displayField.style.display = '';
                 inputField.style.display = 'none';
-            }, { once: true });
-        }
+                displayField.style.display = 'flex';
+            }
+            
+            inputField.addEventListener('blur', handleBlur);
+            
+            // Enter key to save (except textareas)
+            if (inputField.tagName !== 'TEXTAREA') {
+                inputField.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        inputField.blur();
+                    }
+                });
+            }
+            
+            // Escape key to cancel
+            inputField.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    inputField.value = displayField.getAttribute('data-original-value') || '';
+                    inputField.style.display = 'none';
+                    displayField.style.display = 'flex';
+                }
+            });
+        });
     }
 
     // Handle form submission

@@ -1044,6 +1044,92 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error setting up profile navigation:', error);
     }
 
+    // Setup inline editing for all display fields
+    function setupInlineEditing() {
+        document.querySelectorAll('.display-field[data-field]').forEach(displayField => {
+            const fieldName = displayField.getAttribute('data-field');
+            const parent = displayField.closest('.profile-field');
+            
+            if (!parent) return;
+            
+            // Find corresponding input field
+            const inputField = parent.querySelector(`#${fieldName}_input, [name="${fieldName}"]`);
+            
+            if (!inputField) return;
+            
+            // Make display field clickable
+            displayField.style.cursor = 'pointer';
+            displayField.title = 'Click to edit';
+            
+            // Click handler to show input field
+            displayField.addEventListener('click', function() {
+                // Hide display field, show input
+                displayField.style.display = 'none';
+                inputField.style.display = 'block';
+                inputField.focus();
+                
+                // For selects, try to select current value
+                if (inputField.tagName === 'SELECT') {
+                    const currentText = displayField.textContent.trim();
+                    Array.from(inputField.options).forEach(option => {
+                        if (option.text === currentText || option.value === currentText) {
+                            inputField.value = option.value;
+                        }
+                    });
+                }
+            });
+            
+            // Blur handler to save and hide input
+            function handleBlur() {
+                const newValue = inputField.value.trim();
+                
+                // Update display field
+                if (inputField.tagName === 'SELECT') {
+                    const selectedOption = inputField.options[inputField.selectedIndex];
+                    displayField.textContent = selectedOption ? selectedOption.text : '';
+                } else {
+                    displayField.textContent = newValue || '';
+                }
+                
+                // Hide input, show display
+                inputField.style.display = 'none';
+                displayField.style.display = 'flex';
+                
+                // Save the value
+                if (newValue !== displayField.getAttribute('data-original-value')) {
+                    saveFieldValue(fieldName, newValue);
+                    displayField.setAttribute('data-original-value', newValue);
+                }
+            }
+            
+            inputField.addEventListener('blur', handleBlur);
+            
+            // Enter key to save (except for textareas)
+            if (inputField.tagName !== 'TEXTAREA') {
+                inputField.addEventListener('keydown', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        inputField.blur();
+                    }
+                });
+            }
+            
+            // Escape key to cancel
+            inputField.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    inputField.value = displayField.getAttribute('data-original-value') || '';
+                    inputField.style.display = 'none';
+                    displayField.style.display = 'flex';
+                }
+            });
+        });
+    }
+
     await fetchUserProfile();
+    
+    // Setup inline editing after profile is loaded
+    setTimeout(setupInlineEditing, 500);
+    
     await fetchPrivacySettings();
 });
