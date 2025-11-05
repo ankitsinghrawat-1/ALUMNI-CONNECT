@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Field mappings
     const fields = {
         'bio': 'bio',
+        'job_title': 'job_title',
+        'company': 'company',
         'industry': 'industry',
         'experience_years': 'experience_years',
         'hourly_rate': 'hourly_rate',
@@ -13,6 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         'skills': 'skills',
         'languages': 'languages',
         'achievements': 'achievements',
+        'linkedin_url': 'linkedin_url',
+        'github_url': 'github_url',
+        'portfolio_url': 'portfolio_url',
         'available_days': 'available_days',
         'preferred_times': 'preferred_times'
     };

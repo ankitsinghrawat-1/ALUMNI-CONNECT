@@ -77,6 +77,12 @@
                                     </a>
                                 </li>
                                 <li class="settings-nav-item">
+                                    <a href="#section-social" class="settings-nav-link section-link">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>Social Links</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
                                     <a href="#section-availability" class="settings-nav-link section-link">
                                         <i class="fas fa-calendar-alt"></i>
                                         <span>Availability</span>
@@ -113,7 +119,17 @@
                                         <textarea id="bio_input" name="bio" class="edit-field" style="display:none;" rows="6" required placeholder="Tell others about yourself, your experience, and what you can offer as a mentor..."></textarea>
                                     </div>
                                     <div class="profile-field">
-                                        <label><i class="fas fa-building"></i> Industry <span style="color: red;">*</span></label>
+                                        <label><i class="fas fa-briefcase"></i> Job Title</label>
+                                        <span class="display-field" data-field="job_title"></span>
+                                        <input type="text" id="job_title_input" name="job_title" class="edit-field" style="display:none;" placeholder="e.g., Senior Software Engineer">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-building"></i> Company</label>
+                                        <span class="display-field" data-field="company"></span>
+                                        <input type="text" id="company_input" name="company" class="edit-field" style="display:none;" placeholder="e.g., Tech Corp">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-industry"></i> Industry <span style="color: red;">*</span></label>
                                         <span class="display-field" data-field="industry"></span>
                                         <select id="industry_input" name="industry" class="edit-field" style="display:none;" required>
                                             <option value="">Select Industry</option>
@@ -197,6 +213,33 @@
                             </div>
                         </div>
 
+                        <!-- Social Links Card -->
+                        <div class="profile-card" id="section-social">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media Links</h3>
+                                <p class="card-subtitle">Connect your professional profiles</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-grid">
+                                    <div class="profile-field">
+                                        <label><i class="fab fa-linkedin"></i> LinkedIn Profile</label>
+                                        <span class="display-field" data-field="linkedin_url"></span>
+                                        <input type="url" id="linkedin_url_input" name="linkedin_url" class="edit-field" style="display:none;" placeholder="https://linkedin.com/in/yourprofile">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fab fa-github"></i> GitHub Profile</label>
+                                        <span class="display-field" data-field="github_url"></span>
+                                        <input type="url" id="github_url_input" name="github_url" class="edit-field" style="display:none;" placeholder="https://github.com/yourusername">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-link"></i> Portfolio URL</label>
+                                        <span class="display-field" data-field="portfolio_url"></span>
+                                        <input type="url" id="portfolio_url_input" name="portfolio_url" class="edit-field" style="display:none;" placeholder="https://yourportfolio.com">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Availability Card -->
                         <div class="profile-card" id="section-availability">
                             <div class="card-header">
@@ -246,6 +289,10 @@
                         <a href="#section-expertise" class="section-nav-item">
                             <i class="fas fa-tools"></i>
                             <span>Expertise</span>
+                        </a>
+                        <a href="#section-social" class="section-nav-item">
+                            <i class="fas fa-share-alt"></i>
+                            <span>Social Links</span>
                         </a>
                         <a href="#section-availability" class="section-nav-item">
                             <i class="fas fa-calendar-alt"></i>
