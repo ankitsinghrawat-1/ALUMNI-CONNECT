@@ -295,6 +295,102 @@ module.exports = (pool) => {
         }
     }));
 
+    // Get current mentor's profile for editing (must be before /:mentorId route)
+    router.get('/profile', verifyToken, asyncHandler(async (req, res) => {
+        const user_id = req.user.userId;
+        
+        // Get user profile data (for common fields)
+        const [users] = await pool.query(`
+            SELECT 
+                bio, job_title, company, skills, industry, experience_years,
+                languages, achievements, linkedin_profile, twitter_profile, github_profile
+            FROM users WHERE user_id = ?
+        `, [user_id]);
+        
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        
+        const userProfile = users[0];
+        
+        // Get mentor profile
+        let [mentors] = await pool.query(`
+            SELECT * FROM mentors WHERE user_id = ?
+        `, [user_id]);
+        
+        // If no mentor profile exists, create a blank one
+        if (mentors.length === 0) {
+            await pool.query(`
+                INSERT INTO mentors (user_id, is_available, created_at)
+                VALUES (?, 1, CURRENT_TIMESTAMP)
+            `, [user_id]);
+            
+            // Fetch the newly created profile
+            [mentors] = await pool.query(`
+                SELECT * FROM mentors WHERE user_id = ?
+            `, [user_id]);
+        }
+        
+        const mentor = mentors[0];
+        const mentorId = mentor.mentor_id;
+
+        // Get specializations
+        const [specializations] = await pool.query(`
+            SELECT specialization, proficiency_level, years_experience
+            FROM mentor_specializations 
+            WHERE mentor_id = ?
+        `, [mentorId]);
+
+        // Get availability
+        const [availability] = await pool.query(`
+            SELECT day_of_week, start_time, end_time
+            FROM mentor_availability 
+            WHERE mentor_id = ?
+        `, [mentorId]);
+
+        // Merge user profile data with mentor data, prioritizing user profile for common fields
+        const mergedProfile = {
+            ...mentor,
+            // Use user profile data for common fields (these are the source of truth)
+            bio: userProfile.bio || mentor.bio || '',
+            job_title: userProfile.job_title || '',
+            company: userProfile.company || '',
+            skills: userProfile.skills || mentor.skills || '',
+            industry: userProfile.industry || mentor.industry || '',
+            experience_years: userProfile.experience_years || mentor.experience_years || 0,
+            languages: userProfile.languages || mentor.languages || '',
+            achievements: userProfile.achievements || '',
+            // Social links from user profile
+            linkedin_url: userProfile.linkedin_profile || mentor.linkedin_url || '',
+            twitter_url: userProfile.twitter_profile || '',
+            github_url: userProfile.github_profile || mentor.github_url || '',
+            // Safely parse communication_methods JSON
+            communication_methods: (() => {
+                try {
+                    if (!mentor.communication_methods) return [];
+                    if (typeof mentor.communication_methods === 'string') {
+                        return JSON.parse(mentor.communication_methods);
+                    }
+                    if (Array.isArray(mentor.communication_methods)) {
+                        return mentor.communication_methods;
+                    }
+                    return [];
+                } catch (e) {
+                    console.error('Error parsing communication_methods:', e);
+                    return [];
+                }
+            })(),
+            specializations,
+            availability,
+            // Keep mentor-specific fields
+            hourly_rate: mentor.hourly_rate || 0,
+            timezone: mentor.timezone || 'UTC',
+            mentoring_style: mentor.mentoring_style || 'one_on_one'
+        };
+
+        res.json(mergedProfile);
+    }));
+
     // Get mentor details with comprehensive profile data
     router.get('/:mentorId', asyncHandler(async (req, res) => {
         const { mentorId } = req.params;
@@ -656,7 +752,10 @@ module.exports = (pool) => {
             portfolio_url,
             response_time_hours,
             specializations,
-            availability
+            availability,
+            job_title,
+            company,
+            achievements
         } = req.body;
         
         const user_id = req.user.userId;
@@ -681,21 +780,104 @@ module.exports = (pool) => {
         try {
             await connection.beginTransaction();
 
-            // Update mentor profile
-            await connection.query(`
-                UPDATE mentors SET 
-                    expertise_areas = ?, industry = ?, experience_years = ?, 
-                    hourly_rate = ?, bio = ?, skills = ?, languages = ?, 
-                    timezone = ?, mentoring_style = ?, communication_methods = ?,
-                    linkedin_url = ?, github_url = ?, portfolio_url = ?,
-                    response_time_hours = ?, updated_at = CURRENT_TIMESTAMP
-                WHERE mentor_id = ?
-            `, [
-                expertise_areas, industry, experience_years, hourly_rate,
-                bio, skills, languages, timezone, mentoring_style,
-                JSON.stringify(communication_methods), linkedin_url,
-                github_url, portfolio_url, response_time_hours, mentorId
-            ]);
+            // Update common fields in users table (these are shared across all profiles)
+            const userUpdateFields = [];
+            const userUpdateValues = [];
+            
+            if (bio !== undefined) {
+                userUpdateFields.push('bio = ?');
+                userUpdateValues.push(bio);
+            }
+            if (job_title !== undefined) {
+                userUpdateFields.push('job_title = ?');
+                userUpdateValues.push(job_title);
+            }
+            if (company !== undefined) {
+                userUpdateFields.push('company = ?');
+                userUpdateValues.push(company);
+            }
+            if (skills !== undefined) {
+                userUpdateFields.push('skills = ?');
+                userUpdateValues.push(skills);
+            }
+            if (industry !== undefined) {
+                userUpdateFields.push('industry = ?');
+                userUpdateValues.push(industry);
+            }
+            if (experience_years !== undefined) {
+                userUpdateFields.push('experience_years = ?');
+                userUpdateValues.push(experience_years);
+            }
+            if (languages !== undefined) {
+                userUpdateFields.push('languages = ?');
+                userUpdateValues.push(languages);
+            }
+            if (achievements !== undefined) {
+                userUpdateFields.push('achievements = ?');
+                userUpdateValues.push(achievements);
+            }
+            if (linkedin_url !== undefined) {
+                userUpdateFields.push('linkedin_profile = ?');
+                userUpdateValues.push(linkedin_url);
+            }
+            if (github_url !== undefined) {
+                userUpdateFields.push('github_profile = ?');
+                userUpdateValues.push(github_url);
+            }
+            
+            // Update users table if there are any common fields
+            if (userUpdateFields.length > 0) {
+                userUpdateValues.push(user_id);
+                await connection.query(`
+                    UPDATE users SET ${userUpdateFields.join(', ')}
+                    WHERE user_id = ?
+                `, userUpdateValues);
+            }
+
+            // Update mentor-specific fields in mentors table
+            const mentorUpdateFields = [];
+            const mentorUpdateValues = [];
+            
+            if (expertise_areas !== undefined) {
+                mentorUpdateFields.push('expertise_areas = ?');
+                mentorUpdateValues.push(expertise_areas);
+            }
+            if (hourly_rate !== undefined) {
+                mentorUpdateFields.push('hourly_rate = ?');
+                mentorUpdateValues.push(hourly_rate);
+            }
+            if (timezone !== undefined) {
+                mentorUpdateFields.push('timezone = ?');
+                mentorUpdateValues.push(timezone);
+            }
+            if (mentoring_style !== undefined) {
+                mentorUpdateFields.push('mentoring_style = ?');
+                mentorUpdateValues.push(mentoring_style);
+            }
+            if (communication_methods !== undefined) {
+                mentorUpdateFields.push('communication_methods = ?');
+                mentorUpdateValues.push(JSON.stringify(communication_methods));
+            }
+            if (portfolio_url !== undefined) {
+                mentorUpdateFields.push('portfolio_url = ?');
+                mentorUpdateValues.push(portfolio_url);
+            }
+            if (response_time_hours !== undefined) {
+                mentorUpdateFields.push('response_time_hours = ?');
+                mentorUpdateValues.push(response_time_hours);
+            }
+            
+            // Update mentors table if there are any mentor-specific fields
+            if (mentorUpdateFields.length > 0) {
+                // Always update timestamp when there are changes
+                mentorUpdateFields.push('updated_at = CURRENT_TIMESTAMP');
+                mentorUpdateValues.push(mentorId);
+                
+                await connection.query(`
+                    UPDATE mentors SET ${mentorUpdateFields.join(', ')}
+                    WHERE mentor_id = ?
+                `, mentorUpdateValues);
+            }
 
             // Update specializations if provided
             if (specializations && Array.isArray(specializations)) {
@@ -734,53 +916,6 @@ module.exports = (pool) => {
         } finally {
             connection.release();
         }
-    }));
-
-    // Get current mentor's profile for editing
-    router.get('/profile', verifyToken, asyncHandler(async (req, res) => {
-        const user_id = req.user.userId;
-        
-        // Get mentor profile
-        let [mentors] = await pool.query(`
-            SELECT * FROM mentors WHERE user_id = ?
-        `, [user_id]);
-        
-        // If no mentor profile exists, create a blank one
-        if (mentors.length === 0) {
-            await pool.query(`
-                INSERT INTO mentors (user_id, is_available, created_at)
-                VALUES (?, 1, CURRENT_TIMESTAMP)
-            `, [user_id]);
-            
-            // Fetch the newly created profile
-            [mentors] = await pool.query(`
-                SELECT * FROM mentors WHERE user_id = ?
-            `, [user_id]);
-        }
-        
-        const mentor = mentors[0];
-        const mentorId = mentor.mentor_id;
-
-        // Get specializations
-        const [specializations] = await pool.query(`
-            SELECT specialization, proficiency_level, years_experience
-            FROM mentor_specializations 
-            WHERE mentor_id = ?
-        `, [mentorId]);
-
-        // Get availability
-        const [availability] = await pool.query(`
-            SELECT day_of_week, start_time, end_time
-            FROM mentor_availability 
-            WHERE mentor_id = ?
-        `, [mentorId]);
-
-        res.json({
-            ...mentor,
-            communication_methods: mentor.communication_methods ? JSON.parse(mentor.communication_methods) : [],
-            specializations,
-            availability
-        });
     }));
 
     // Add achievement

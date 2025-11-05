@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Field mappings
     const fields = {
         'bio': 'bio',
+        'job_title': 'job_title',
+        'company': 'company',
         'industry': 'industry',
         'experience_years': 'experience_years',
         'hourly_rate': 'hourly_rate',
@@ -13,8 +15,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         'skills': 'skills',
         'languages': 'languages',
         'achievements': 'achievements',
-        'available_days': 'available_days',
-        'preferred_times': 'preferred_times'
+        'linkedin_url': 'linkedin_url',
+        'github_url': 'github_url',
+        'portfolio_url': 'portfolio_url'
     };
 
     // Load mentor profile data
@@ -41,6 +44,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                         displayField.textContent = styleMap[value] || value;
                     } else if (field === 'hourly_rate' && value) {
                         displayField.textContent = `$${value}/hour`;
+                    } else if (field === 'industry' && inputField.tagName === 'SELECT') {
+                        // For select fields, show selected option text
+                        const selectedOption = Array.from(inputField.options).find(opt => opt.value === value);
+                        displayField.textContent = selectedOption ? selectedOption.text : value;
+                    } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(field) && value) {
+                        // For URLs, show clickable link (using DOM methods to prevent XSS)
+                        displayField.textContent = ''; // Clear existing content
+                        // Validate URL scheme to prevent javascript: and data: URLs
+                        try {
+                            const url = new URL(value);
+                            if (url.protocol === 'http:' || url.protocol === 'https:') {
+                                const link = document.createElement('a');
+                                link.href = url.href;
+                                link.target = '_blank';
+                                link.rel = 'noopener noreferrer';
+                                link.textContent = value;
+                                displayField.appendChild(link);
+                            } else {
+                                displayField.textContent = value;
+                            }
+                        } catch (e) {
+                            // Invalid URL, just display as text
+                            displayField.textContent = value;
+                        }
                     } else {
                         displayField.textContent = value || '';
                     }
@@ -115,6 +142,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                         } else if (inputField.tagName === 'SELECT') {
                             const selectedOption = inputField.options[inputField.selectedIndex];
                             displayField.textContent = selectedOption ? selectedOption.text : '';
+                        } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(fieldName) && newValue) {
+                            // For URLs, show clickable link (using DOM methods to prevent XSS)
+                            displayField.textContent = ''; // Clear existing content
+                            // Validate URL scheme to prevent javascript: and data: URLs
+                            try {
+                                const url = new URL(newValue);
+                                if (url.protocol === 'http:' || url.protocol === 'https:') {
+                                    const link = document.createElement('a');
+                                    link.href = url.href;
+                                    link.target = '_blank';
+                                    link.rel = 'noopener noreferrer';
+                                    link.textContent = newValue;
+                                    displayField.appendChild(link);
+                                } else {
+                                    displayField.textContent = newValue;
+                                }
+                            } catch (e) {
+                                // Invalid URL, just display as text
+                                displayField.textContent = newValue;
+                            }
                         } else {
                             displayField.textContent = newValue || '';
                         }
@@ -146,6 +193,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 } else if (inputField.tagName === 'SELECT') {
                     const selectedOption = inputField.options[inputField.selectedIndex];
                     displayField.textContent = selectedOption ? selectedOption.text : '';
+                } else if (['linkedin_url', 'github_url', 'portfolio_url'].includes(fieldName) && inputField.value) {
+                    // For URLs, show clickable link (using DOM methods to prevent XSS)
+                    displayField.textContent = ''; // Clear existing content
+                    // Validate URL scheme to prevent javascript: and data: URLs
+                    try {
+                        const url = new URL(inputField.value);
+                        if (url.protocol === 'http:' || url.protocol === 'https:') {
+                            const link = document.createElement('a');
+                            link.href = url.href;
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                            link.textContent = inputField.value;
+                            displayField.appendChild(link);
+                        } else {
+                            displayField.textContent = inputField.value;
+                        }
+                    } catch (e) {
+                        // Invalid URL, just display as text
+                        displayField.textContent = inputField.value;
+                    }
                 } else {
                     displayField.textContent = inputField.value || '';
                 }
