@@ -87,11 +87,52 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inputField.focus();
             });
             
-            // Blur handler
-            function handleBlur() {
+            // Blur handler - saves to database
+            async function handleBlur() {
                 const newValue = inputField.value.trim();
+                const oldValue = displayField.getAttribute('data-original-value') || '';
                 
-                // Format display based on field type
+                // Only save if value changed
+                if (newValue !== oldValue) {
+                    try {
+                        // Save to database
+                        const updateData = {};
+                        updateData[fieldName] = newValue;
+                        
+                        await window.api.put('/mentors/profile', updateData);
+                        
+                        // Update display after successful save
+                        if (fieldName === 'mentoring_style') {
+                            const styleMap = {
+                                'one_on_one': 'One-on-One Sessions',
+                                'group': 'Group Mentoring',
+                                'workshop': 'Workshops',
+                                'mixed': 'Mixed Approach'
+                            };
+                            displayField.textContent = styleMap[newValue] || newValue;
+                        } else if (fieldName === 'hourly_rate' && newValue) {
+                            displayField.textContent = `$${newValue}/hour`;
+                        } else if (inputField.tagName === 'SELECT') {
+                            const selectedOption = inputField.options[inputField.selectedIndex];
+                            displayField.textContent = selectedOption ? selectedOption.text : '';
+                        } else {
+                            displayField.textContent = newValue || '';
+                        }
+                        
+                        // Update stored original value
+                        displayField.setAttribute('data-original-value', newValue);
+                        
+                        // Show success feedback
+                        showToast(`${fieldName.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())} updated`, 'success');
+                    } catch (error) {
+                        console.error(`Error updating ${fieldName}:`, error);
+                        showToast(error.message || `Error updating ${fieldName}`, 'error');
+                        // Revert to old value on error
+                        inputField.value = oldValue;
+                    }
+                }
+                
+                // Update display
                 if (fieldName === 'mentoring_style') {
                     const styleMap = {
                         'one_on_one': 'One-on-One Sessions',
@@ -99,14 +140,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                         'workshop': 'Workshops',
                         'mixed': 'Mixed Approach'
                     };
-                    displayField.textContent = styleMap[newValue] || newValue;
-                } else if (fieldName === 'hourly_rate' && newValue) {
-                    displayField.textContent = `$${newValue}/hour`;
+                    displayField.textContent = styleMap[inputField.value] || inputField.value;
+                } else if (fieldName === 'hourly_rate' && inputField.value) {
+                    displayField.textContent = `$${inputField.value}/hour`;
                 } else if (inputField.tagName === 'SELECT') {
                     const selectedOption = inputField.options[inputField.selectedIndex];
                     displayField.textContent = selectedOption ? selectedOption.text : '';
                 } else {
-                    displayField.textContent = newValue || '';
+                    displayField.textContent = inputField.value || '';
                 }
                 
                 inputField.style.display = 'none';
