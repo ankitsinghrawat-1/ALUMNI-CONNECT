@@ -1096,7 +1096,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 displayField.style.display = 'flex';
                 
                 // Save the value
-                if (newValue !== displayField.getAttribute('data-original-value')) {
+                const originalValue = displayField.getAttribute('data-original-value') || '';
+                if (newValue !== originalValue) {
                     saveFieldValue(fieldName, newValue);
                     displayField.setAttribute('data-original-value', newValue);
                 }
@@ -1109,7 +1110,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 inputField.addEventListener('keydown', (e) => {
                     if (e.key === 'Enter') {
                         e.preventDefault();
-                        inputField.blur();
+                        handleBlur();
                     }
                 });
             }
