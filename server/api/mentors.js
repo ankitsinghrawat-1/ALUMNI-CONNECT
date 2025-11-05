@@ -661,10 +661,18 @@ module.exports = (pool) => {
         
         const user_id = req.user.userId;
         
-        // Get mentor_id
-        const [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
+        // Get mentor_id or create if doesn't exist
+        let [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
+        
         if (mentor.length === 0) {
-            return res.status(404).json({ message: 'Mentor profile not found' });
+            // Create a blank mentor profile
+            await pool.query(`
+                INSERT INTO mentors (user_id, is_available, created_at)
+                VALUES (?, 1, CURRENT_TIMESTAMP)
+            `, [user_id]);
+            
+            // Fetch the newly created profile
+            [mentor] = await pool.query('SELECT mentor_id FROM mentors WHERE user_id = ?', [user_id]);
         }
         
         const mentorId = mentor[0].mentor_id;
@@ -733,12 +741,21 @@ module.exports = (pool) => {
         const user_id = req.user.userId;
         
         // Get mentor profile
-        const [mentors] = await pool.query(`
+        let [mentors] = await pool.query(`
             SELECT * FROM mentors WHERE user_id = ?
         `, [user_id]);
         
+        // If no mentor profile exists, create a blank one
         if (mentors.length === 0) {
-            return res.status(404).json({ message: 'Mentor profile not found' });
+            await pool.query(`
+                INSERT INTO mentors (user_id, is_available, created_at)
+                VALUES (?, 1, CURRENT_TIMESTAMP)
+            `, [user_id]);
+            
+            // Fetch the newly created profile
+            [mentors] = await pool.query(`
+                SELECT * FROM mentors WHERE user_id = ?
+            `, [user_id]);
         }
         
         const mentor = mentors[0];
