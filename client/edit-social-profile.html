@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Social Profile - AlumniConnect</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/view-profile-modern.css">
-    <link rel="stylesheet" href="css/social-profile-professional.css">
+    <link rel="stylesheet" href="css/settings-modern.css">
+    <link rel="stylesheet" href="css/edit-profile-modern-redesign.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <script>
@@ -19,6 +19,7 @@
     </script>
 </head>
 <body>
+    
     <header class="main-header">
         <nav class="main-nav container">
             <a href="index.html" class="logo">AlumniConnect</a>
@@ -26,475 +27,275 @@
         </nav>
     </header>
 
-    <main class="social-profile-main modern-profile">
-        <div class="profile-container-view">
-            <!-- Profile Cover Section -->
-            <div class="profile-cover-section">
-                <div class="profile-cover-gradient"></div>
-                <button onclick="history.back()" class="back-btn-modern">
-                    <i class="fas fa-arrow-left"></i> Back
-                </button>
-            </div>
+    <main class="settings-page">
+        <div class="settings-container">
+            <!-- Sidebar Navigation -->
+            <aside class="settings-sidebar">
+                <div class="settings-sidebar-header">
+                    <h2><i class="fas fa-share-alt"></i> Social Profile</h2>
+                </div>
+                <nav>
+                    <ul class="settings-nav">
+                        <!-- Profile Section -->
+                        <li class="settings-nav-section">
+                            <div class="settings-nav-section-title">Profile</div>
+                            <ul>
+                                <li class="settings-nav-item">
+                                    <a href="edit-profile.html" class="settings-nav-link">
+                                        <i class="fas fa-user-edit"></i>
+                                        <span>Edit Profile</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#" class="settings-nav-link active">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>Social Profile</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#" class="settings-nav-link" id="mentor-profile-nav-link" style="display: none;">
+                                        <i class="fas fa-chalkboard-teacher"></i>
+                                        <span>Mentor Profile</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
 
-            <!-- Profile Header Section -->
-            <div class="profile-header-view">
-                <div class="profile-header-content">
-                    <div class="profile-avatar-wrapper">
-                        <img id="profile-avatar" src="" alt="Profile" class="profile-pic-view" onerror="this.src=createInitialsAvatar('User')">
-                        <div class="avatar-ring"></div>
+                        <!-- Sections Quick Nav -->
+                        <li class="settings-nav-section">
+                            <div class="settings-nav-section-title">Sections</div>
+                            <ul>
+                                <li class="settings-nav-item">
+                                    <a href="#section-social-info" class="settings-nav-link section-link">
+                                        <i class="fas fa-user"></i>
+                                        <span>Social Info</span>
+                                    </a>
+                                </li>
+                                <li class="settings-nav-item">
+                                    <a href="#section-social-links" class="settings-nav-link section-link">
+                                        <i class="fas fa-share-alt"></i>
+                                        <span>Social Links</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+            </aside>
+
+            <!-- Main Content Area -->
+            <div class="settings-content">
+                    <!-- Page Hero Header -->
+                    <div class="page-hero">
+                        <div class="hero-content">
+                            <h1 class="hero-title">Edit Social Profile</h1>
+                            <p class="hero-subtitle">Update your social media presence and professional visibility</p>
+                        </div>
                     </div>
-                    <div class="profile-info">
-                        <div class="profile-info-left">
-                            <div class="profile-name-wrapper">
-                                <h2 id="profile-name">Loading...</h2>
-                                <span id="verification-badge" class="verification-badge" style="display: none;">
-                                    <i class="fas fa-check-circle"></i>
-                                </span>
+
+                    <form id="social-profile-form">
+                        <!-- Social Information Card -->
+                        <div class="profile-card" id="section-social-info">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-user"></i> Social Information</h3>
+                                <p class="card-subtitle">Your public social profile details</p>
                             </div>
-                            <p id="profile-title" class="profile-subheader"></p>
-                            <p id="profile-bio" class="profile-bio-inline"></p>
+                            <div class="card-body">
+                                <div class="form-grid">
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-user"></i> Bio</label>
+                                        <span class="display-field" data-field="bio"></span>
+                                        <textarea id="bio_input" name="bio" class="edit-field" style="display:none;" rows="4" maxlength="160" placeholder="Tell us about yourself..."></textarea>
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-briefcase"></i> Job Title</label>
+                                        <span class="display-field" data-field="job_title"></span>
+                                        <input type="text" id="job_title_input" name="job_title" class="edit-field" style="display:none;" placeholder="e.g. Software Engineer">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-building"></i> Company</label>
+                                        <span class="display-field" data-field="company"></span>
+                                        <input type="text" id="company_input" name="company" class="edit-field" style="display:none;" placeholder="e.g. Tech Corp">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-map-marker-alt"></i> Location</label>
+                                        <span class="display-field" data-field="location"></span>
+                                        <input type="text" id="location_input" name="location" class="edit-field" style="display:none;" placeholder="e.g. San Francisco, CA">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-code"></i> Skills & Expertise</label>
+                                        <span class="display-field" data-field="skills"></span>
+                                        <input type="text" id="skills_input" name="skills" class="edit-field" style="display:none;" placeholder="e.g. JavaScript, Python, Project Management">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-heart"></i> Interests</label>
+                                        <span class="display-field" data-field="interests"></span>
+                                        <input type="text" id="interests_input" name="interests" class="edit-field" style="display:none;" placeholder="e.g. AI/ML, Startups, Photography">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-project-diagram"></i> Current Project</label>
+                                        <span class="display-field" data-field="current_project"></span>
+                                        <input type="text" id="current_project_input" name="current_project" class="edit-field" style="display:none;" placeholder="e.g. Building a SaaS platform">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fas fa-globe"></i> Website</label>
+                                        <span class="display-field" data-field="website"></span>
+                                        <input type="url" id="website_input" name="website" class="edit-field" style="display:none;" placeholder="https://example.com">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Social Links Card -->
+                        <div class="profile-card" id="section-social-links">
+                            <div class="card-header">
+                                <h3 class="card-title"><i class="fas fa-share-alt"></i> Social Media Links</h3>
+                                <p class="card-subtitle">Connect your social profiles</p>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-grid">
+                                    <div class="profile-field">
+                                        <label><i class="fab fa-linkedin"></i> LinkedIn</label>
+                                        <span class="display-field" data-field="linkedin"></span>
+                                        <input type="url" id="linkedin_input" name="linkedin" class="edit-field" style="display:none;" placeholder="https://linkedin.com/in/yourprofile">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fab fa-twitter"></i> Twitter/X</label>
+                                        <span class="display-field" data-field="twitter"></span>
+                                        <input type="text" id="twitter_input" name="twitter" class="edit-field" style="display:none;" placeholder="@yourusername">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label><i class="fab fa-github"></i> GitHub</label>
+                                        <span class="display-field" data-field="github"></span>
+                                        <input type="text" id="github_input" name="github" class="edit-field" style="display:none;" placeholder="yourusername">
+                                    </div>
+                                    <div class="profile-field">
+                                        <label>
+                                            <i class="fas fa-chalkboard-teacher"></i> Available for Mentoring
+                                        </label>
+                                        <span class="display-field" data-field="available_mentor"></span>
+                                        <select id="available_mentor_input" name="available_mentor" class="edit-field" style="display:none;">
+                                            <option value="false">No</option>
+                                            <option value="true">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div class="profile-info-right">
-                            <!-- Add Story and Add Thread Buttons (Top) -->
-                            <div class="profile-actions profile-actions-create" style="display: none;">
-                                <a href="add-story.html" id="add-story-btn" class="action-icon-btn action-icon-accent" data-tooltip="Add Story">
-                                    <i class="fas fa-plus-circle"></i>
-                                    <span class="btn-text">Add Story</span>
-                                </a>
-                                <a href="add-thread.html" id="add-thread-btn" class="action-icon-btn action-icon-primary" data-tooltip="Add Thread">
-                                    <i class="fas fa-plus"></i>
-                                    <span class="btn-text">Add Thread</span>
-                                </a>
-                            </div>
-                            
-                            <!-- Regular Action Buttons (Bottom) -->
-                            <div class="profile-actions profile-actions-regular">
-                                <button id="edit-profile-btn" class="action-icon-btn action-icon-primary" data-tooltip="Edit Profile" style="display: none;">
-                                    <i class="fas fa-edit"></i>
-                                    <span class="btn-text">Edit</span>
-                                </button>
-                                <button id="follow-btn" class="action-icon-btn action-icon-primary" data-tooltip="Follow" style="display: none;">
-                                    <i class="fas fa-user-plus"></i>
-                                    <span class="btn-text">Follow</span>
-                                </button>
-                                <button id="message-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Message">
-                                    <i class="fas fa-envelope"></i>
-                                    <span class="btn-text">Message</span>
-                                </button>
-                                <a href="profile.html" id="view-full-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Full Profile">
-                                    <i class="fas fa-id-card"></i>
-                                    <span class="btn-text">Profile</span>
-                                </a>
-                                <button id="share-profile-btn" class="action-icon-btn action-icon-secondary" data-tooltip="Share Profile">
-                                    <i class="fas fa-share-alt"></i>
-                                    <span class="btn-text">Share</span>
-                                </button>
-                            </div>
+                        <div id="message" class="form-message"></div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-submit">
+                                <i class="fas fa-save"></i>
+                                Save All Changes
+                            </button>
+                            <button type="button" class="btn btn-secondary btn-cancel" onclick="location.reload()">
+                                <i class="fas fa-times"></i>
+                                Cancel
+                            </button>
                         </div>
-                    </div>
+                    </form>
                 </div>
-            </div>
-            
-            <!-- Profile Statistics -->
-            <div class="profile-stats-section">
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-icon">
-                            <i class="fas fa-comment"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h4 id="threads-count">0</h4>
-                            <p>Posts</p>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h4 id="followers-count">0</h4>
-                            <p>Followers</p>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-icon">
-                            <i class="fas fa-user-friends"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h4 id="following-count">0</h4>
-                            <p>Following</p>
-                        </div>
-                    </div>
-                    <div class="stat-box">
-                        <div class="stat-icon">
-                            <i class="fas fa-heart"></i>
-                        </div>
-                        <div class="stat-content">
-                            <h4 id="likes-count">0</h4>
-                            <p>Likes</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Profile Content Cards -->
-            <div class="profile-content-view">
-                <!-- Profile Details Card -->
-                <div class="profile-card" id="profile-details-card">
-                    <div class="card-header">
-                        <div class="card-icon contact-icon">
-                            <i class="fas fa-address-card"></i>
-                        </div>
-                        <h3>Profile Details</h3>
+                <!-- Right Sidebar with Section Tabs -->
+                <aside class="section-nav">
+                    <div class="section-nav-header">
+                        <span class="section-nav-title">Sections</span>
                     </div>
-                    <div class="card-body">
-                        <div class="info-grid" id="profile-details">
-                            <div class="info-item" id="location-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-map-marker-alt"></i> Location</span>
-                                <span id="profile-location" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="website-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-link"></i> Website</span>
-                                <a href="#" id="profile-website" class="info-value info-link" target="_blank" rel="noopener"></a>
-                            </div>
-                            <div class="info-item" id="joined-detail">
-                                <span class="info-label"><i class="fas fa-calendar"></i> Joined</span>
-                                <span id="profile-joined" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="email-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-envelope"></i> Email</span>
-                                <span id="profile-email" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="phone-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-phone"></i> Phone</span>
-                                <span id="profile-phone" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="department-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-building"></i> Department</span>
-                                <span id="profile-department" class="info-value"></span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Extended Info Card -->
-                <div class="profile-card" id="profile-extended-card">
-                    <div class="card-header">
-                        <div class="card-icon skills-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <h3>Professional Info</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-grid" id="profile-extended-info">
-                            <div class="info-item" id="skills-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-code"></i> Skills</span>
-                                <span id="profile-skills" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="interests-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-heart"></i> Interests</span>
-                                <span id="profile-interests" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="project-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-project-diagram"></i> Current Project</span>
-                                <span id="profile-project" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="experience-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-briefcase"></i> Years of Experience</span>
-                                <span id="profile-experience" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="education-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-graduation-cap"></i> Education</span>
-                                <span id="profile-education" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="languages-detail" style="display: none;">
-                                <span class="info-label"><i class="fas fa-language"></i> Languages</span>
-                                <span id="profile-languages" class="info-value"></span>
-                            </div>
-                            <div class="info-item" id="mentor-badge" style="display: none;">
-                                <span class="info-label"><i class="fas fa-chalkboard-teacher"></i> Mentoring</span>
-                                <span class="info-value mentor-badge-text">Available for Mentoring</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Social Links Card -->
-                <div class="profile-card" id="social-links-card" style="display: none;">
-                    <div class="card-header">
-                        <div class="card-icon social-icon">
+                    <nav class="section-nav-list">
+                        <a href="#section-social-info" class="section-nav-item active">
+                            <i class="fas fa-user"></i>
+                            <span>Social Info</span>
+                        </a>
+                        <a href="#section-social-links" class="section-nav-item">
                             <i class="fas fa-share-alt"></i>
-                        </div>
-                        <h3>Social Links</h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="profile-social-links" id="profile-social-links">
-                            <a href="#" id="linkedin-link" class="social-link" target="_blank" rel="noopener" style="display: none;">
-                                <i class="fab fa-linkedin"></i>
-                                <span>LinkedIn</span>
-                            </a>
-                            <a href="#" id="twitter-link" class="social-link" target="_blank" rel="noopener" style="display: none;">
-                                <i class="fab fa-twitter"></i>
-                                <span>Twitter</span>
-                            </a>
-                            <a href="#" id="github-link" class="social-link" target="_blank" rel="noopener" style="display: none;">
-                                <i class="fab fa-github"></i>
-                                <span>GitHub</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Story Highlights Section -->
-            <section class="highlights-section" id="highlights-section" style="display: none;">
-                <h3 class="section-title">
-                    <i class="fas fa-bookmark"></i> Story Highlights
-                </h3>
-                <div class="highlights-container" id="highlights-container">
-                    <!-- Highlights will be loaded here -->
-                </div>
-            </section>
-
-            <!-- Tabs Navigation -->
-            <nav class="profile-tabs">
-                <button class="tab-btn active" data-tab="posts">
-                    <i class="fas fa-th"></i> Posts
-                </button>
-                <button class="tab-btn" data-tab="threads">
-                    <i class="fas fa-comments"></i> Threads
-                </button>
-                <button class="tab-btn" data-tab="stories">
-                    <i class="fas fa-images"></i> Stories
-                </button>
-                <button class="tab-btn" data-tab="activity">
-                    <i class="fas fa-chart-line"></i> Activity
-                </button>
-            </nav>
-
-            <!-- Tab Content -->
-            <div class="tab-content">
-                <!-- Posts Tab -->
-                <div id="posts-tab" class="tab-pane active">
-                    <div class="posts-grid" id="posts-grid">
-                        <div class="loading-container">
-                            <div class="modern-spinner">
-                                <div class="spinner-ring"></div>
-                            </div>
-                            <p>Loading posts...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Threads Tab -->
-                <div id="threads-tab" class="tab-pane">
-                    <div class="threads-list" id="threads-list">
-                        <div class="loading-container">
-                            <div class="modern-spinner">
-                                <div class="spinner-ring"></div>
-                            </div>
-                            <p>Loading threads...</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Stories Tab -->
-                <div id="stories-tab" class="tab-pane">
-                    <div class="stories-grid" id="stories-grid">
-                        <div class="info-message">
-                            <i class="fas fa-clock"></i>
-                            <p>Active stories expire after 24 hours</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Activity Tab -->
-                <div id="activity-tab" class="tab-pane">
-                    <div class="activity-stats">
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-heart"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="stat-number" id="activity-likes">0</span>
-                                <span class="stat-text">Total Likes Received</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-comment"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="stat-number" id="activity-comments">0</span>
-                                <span class="stat-text">Total Comments Received</span>
-                            </div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon">
-                                <i class="fas fa-share"></i>
-                            </div>
-                            <div class="stat-info">
-                                <span class="stat-number" id="activity-shares">0</span>
-                                <span class="stat-text">Total Shares</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            <span>Social Links</span>
+                        </a>
+                    </nav>
+                </aside>
             </div>
         </div>
     </main>
-
-    <!-- Followers/Following Modal -->
-    <div id="connections-modal" class="modal">
-        <div class="modal-content connections-modal-content">
-            <div class="modal-header">
-                <h2 id="connections-modal-title">Connections</h2>
-                <button class="modal-close" onclick="closeConnectionsModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body" id="connections-modal-body">
-                <!-- Connections list will be loaded here -->
-            </div>
-        </div>
-    </div>
-
-    <!-- Edit Profile Modal -->
-    <div id="edit-profile-modal" class="modal">
-        <div class="modal-content edit-profile-modal-content">
-            <div class="modal-header">
-                <h2>Edit Social Profile</h2>
-                <button class="modal-close" onclick="closeEditProfileModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="edit-profile-form" class="edit-profile-form">
-                    <div class="form-group">
-                        <label for="edit-bio">
-                            <i class="fas fa-user"></i> Bio
-                        </label>
-                        <textarea id="edit-bio" name="bio" rows="4" maxlength="160" placeholder="Tell us about yourself..."></textarea>
-                        <span class="char-count" id="bio-char-count">0/160</span>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-job-title">
-                            <i class="fas fa-briefcase"></i> Job Title
-                        </label>
-                        <input type="text" id="edit-job-title" name="job_title" placeholder="e.g. Software Engineer">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-company">
-                            <i class="fas fa-building"></i> Company
-                        </label>
-                        <input type="text" id="edit-company" name="company" placeholder="e.g. Tech Corp">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-location">
-                            <i class="fas fa-map-marker-alt"></i> Location
-                        </label>
-                        <input type="text" id="edit-location" name="location" placeholder="e.g. San Francisco, CA">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-skills">
-                            <i class="fas fa-code"></i> Skills & Expertise
-                        </label>
-                        <input type="text" id="edit-skills" name="skills" placeholder="e.g. JavaScript, Python, Project Management">
-                        <small class="field-hint">Separate multiple skills with commas</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-interests">
-                            <i class="fas fa-heart"></i> Interests
-                        </label>
-                        <input type="text" id="edit-interests" name="interests" placeholder="e.g. AI/ML, Startups, Photography">
-                        <small class="field-hint">What are you passionate about?</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-current-project">
-                            <i class="fas fa-project-diagram"></i> Current Project/Activity
-                        </label>
-                        <input type="text" id="edit-current-project" name="current_project" placeholder="e.g. Building a SaaS platform">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-website">
-                            <i class="fas fa-globe"></i> Website
-                        </label>
-                        <input type="url" id="edit-website" name="website" placeholder="https://example.com">
-                    </div>
-                    
-                    <div class="form-section-title">
-                        <i class="fas fa-share-alt"></i> Social Media Links
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-linkedin">
-                            <i class="fab fa-linkedin"></i> LinkedIn
-                        </label>
-                        <input type="url" id="edit-linkedin" name="linkedin" placeholder="https://linkedin.com/in/yourprofile">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-twitter">
-                            <i class="fab fa-twitter"></i> Twitter/X
-                        </label>
-                        <input type="text" id="edit-twitter" name="twitter" placeholder="@yourusername">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="edit-github">
-                            <i class="fab fa-github"></i> GitHub
-                        </label>
-                        <input type="text" id="edit-github" name="github" placeholder="yourusername">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="checkbox-label">
-                            <input type="checkbox" id="edit-available-mentor" name="available_mentor">
-                            <i class="fas fa-chalkboard-teacher"></i> Available for mentoring
-                        </label>
-                        <small class="field-hint">Let others know you're open to mentoring opportunities</small>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="button" class="btn btn-secondary" onclick="closeEditProfileModal()">Cancel</button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Highlight Viewer Modal -->
-    <div id="highlight-viewer-modal" class="modal">
-        <div class="modal-content highlight-viewer-content">
-            <span class="close">&times;</span>
-            <div class="highlight-viewer" id="highlight-viewer">
-                <!-- Highlight stories will be displayed here -->
-            </div>
-        </div>
-    </div>
-
+    
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2025 AlumniConnect. All Rights Reserved.</p>
         </div>
     </footer>
-
+    
     <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
     <script src="js/utils.js"></script>
     <script src="js/auth.js"></script>
+    <script src="js/auto-hide-navbar.js"></script>
     <script src="js/api.js"></script>
-    <script src="js/social-feed-utils.js"></script>
-    <script src="js/social-profile.js"></script>
+    <script src="js/social-profile-edit.js"></script>
+    
+    <!-- Section Navigation Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scroll to sections
+        const sectionNavItems = document.querySelectorAll('.section-nav-item');
+        
+        sectionNavItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetSection = document.querySelector(targetId);
+                
+                if (targetSection) {
+                    // Remove active class from all items
+                    sectionNavItems.forEach(navItem => navItem.classList.remove('active'));
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Smooth scroll to section
+                    targetSection.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Update active state on scroll
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const sectionId = entry.target.getAttribute('id');
+                    sectionNavItems.forEach(item => {
+                        const itemHref = item.getAttribute('href');
+                        if (itemHref === `#${sectionId}`) {
+                            sectionNavItems.forEach(navItem => navItem.classList.remove('active'));
+                            item.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+        
+        // Observe all sections
+        const sections = document.querySelectorAll('[id^="section-"]');
+        sections.forEach(section => observer.observe(section));
+
+        // Setup mentor profile nav link
+        const mentorProfileNavLink = document.getElementById('mentor-profile-nav-link');
+        if (mentorProfileNavLink) {
+            window.api.get('/users/profile').then(userData => {
+                if (userData.is_mentor) {
+                    mentorProfileNavLink.style.display = 'block';
+                    mentorProfileNavLink.href = 'edit-mentor-profile.html';
+                }
+            }).catch(error => {
+                console.log('Could not check mentor status');
+            });
+        }
+    });
+    </script>
 </body>
 </html>

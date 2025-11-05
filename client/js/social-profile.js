@@ -1,23 +1,25 @@
 // client/js/social-profile.js
 document.addEventListener('DOMContentLoaded', async () => {
     const params = new URLSearchParams(window.location.search);
-    const userId = params.get('userId') || params.get('id');
+    let userId = params.get('userId') || params.get('id');
     let currentUser = null;
     let profileUser = null;
     let isOwnProfile = false;
 
-    if (!userId) {
-        showToast('User ID not provided', 'error');
-        setTimeout(() => {
-            window.location.href = 'threads.html';
-        }, 2000);
-        return;
-    }
-
-    // Get current user
+    // Get current user first
     try {
         currentUser = await window.api.get('/users/profile');
-        isOwnProfile = currentUser.user_id === parseInt(userId);
+        
+        // If no userId provided, default to current user (for edit mode)
+        if (!userId) {
+            userId = currentUser.user_id;
+            isOwnProfile = true;
+        } else {
+            // Parse userId as integer for comparison, fallback to current user if invalid
+            const parsedUserId = parseInt(userId);
+            userId = !isNaN(parsedUserId) ? parsedUserId : currentUser.user_id;
+            isOwnProfile = currentUser.user_id === userId;
+        }
         
         // Immediately hide follow button and message button if viewing own profile
         if (isOwnProfile) {

@@ -1,26 +1,27 @@
-// client/js/mentor-profile-edit.js
+// client/js/social-profile-edit.js
 document.addEventListener('DOMContentLoaded', async () => {
-    const form = document.getElementById('mentor-profile-form');
+    const form = document.getElementById('social-profile-form');
     
     // Field mappings
     const fields = {
         'bio': 'bio',
-        'industry': 'industry',
-        'experience_years': 'experience_years',
-        'hourly_rate': 'hourly_rate',
-        'timezone': 'timezone',
-        'mentoring_style': 'mentoring_style',
+        'job_title': 'job_title',
+        'company': 'company',
+        'location': 'location',
         'skills': 'skills',
-        'languages': 'languages',
-        'achievements': 'achievements',
-        'available_days': 'available_days',
-        'preferred_times': 'preferred_times'
+        'interests': 'interests',
+        'current_project': 'current_project',
+        'website': 'website',
+        'linkedin': 'linkedin',
+        'twitter': 'twitter',
+        'github': 'github',
+        'available_mentor': 'available_mentor'
     };
 
-    // Load mentor profile data
-    async function loadMentorProfile() {
+    // Load profile data
+    async function loadProfileData() {
         try {
-            const data = await window.api.get('/mentors/profile');
+            const data = await window.api.get('/users/profile');
             
             // Populate fields
             Object.keys(fields).forEach(field => {
@@ -30,22 +31,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (displayField && inputField) {
                     const value = data[field] || '';
                     
-                    // Format display based on field type
-                    if (field === 'mentoring_style') {
-                        const styleMap = {
-                            'one_on_one': 'One-on-One Sessions',
-                            'group': 'Group Mentoring',
-                            'workshop': 'Workshops',
-                            'mixed': 'Mixed Approach'
-                        };
-                        displayField.textContent = styleMap[value] || value;
-                    } else if (field === 'hourly_rate' && value) {
-                        displayField.textContent = `$${value}/hour`;
+                    if (field === 'available_mentor') {
+                        displayField.textContent = value ? 'Yes' : 'No';
+                        inputField.value = value ? 'true' : 'false';
                     } else {
                         displayField.textContent = value || '';
+                        inputField.value = value;
                     }
-                    
-                    inputField.value = value;
                     
                     // Store original value
                     displayField.setAttribute('data-original-value', value);
@@ -59,8 +51,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Setup inline editing after data is loaded
             setupInlineEditing();
         } catch (error) {
-            console.error('Error loading mentor profile:', error);
-            showToast('Error loading mentor profile data', 'error');
+            console.error('Error loading profile:', error);
+            showToast('Error loading profile data', 'error');
         }
     }
 
@@ -97,21 +89,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                     try {
                         // Save to database
                         const updateData = {};
-                        updateData[fieldName] = newValue;
+                        if (fieldName === 'available_mentor') {
+                            updateData[fieldName] = newValue === 'true';
+                        } else {
+                            updateData[fieldName] = newValue;
+                        }
                         
-                        await window.api.put('/mentors/profile', updateData);
+                        await window.api.put('/users/profile', updateData);
                         
                         // Update display after successful save
-                        if (fieldName === 'mentoring_style') {
-                            const styleMap = {
-                                'one_on_one': 'One-on-One Sessions',
-                                'group': 'Group Mentoring',
-                                'workshop': 'Workshops',
-                                'mixed': 'Mixed Approach'
-                            };
-                            displayField.textContent = styleMap[newValue] || newValue;
-                        } else if (fieldName === 'hourly_rate' && newValue) {
-                            displayField.textContent = `$${newValue}/hour`;
+                        if (fieldName === 'available_mentor') {
+                            displayField.textContent = newValue === 'true' ? 'Yes' : 'No';
                         } else if (inputField.tagName === 'SELECT') {
                             const selectedOption = inputField.options[inputField.selectedIndex];
                             displayField.textContent = selectedOption ? selectedOption.text : '';
@@ -133,16 +121,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
                 
                 // Update display
-                if (fieldName === 'mentoring_style') {
-                    const styleMap = {
-                        'one_on_one': 'One-on-One Sessions',
-                        'group': 'Group Mentoring',
-                        'workshop': 'Workshops',
-                        'mixed': 'Mixed Approach'
-                    };
-                    displayField.textContent = styleMap[inputField.value] || inputField.value;
-                } else if (fieldName === 'hourly_rate' && inputField.value) {
-                    displayField.textContent = `$${inputField.value}/hour`;
+                if (fieldName === 'available_mentor') {
+                    displayField.textContent = inputField.value === 'true' ? 'Yes' : 'No';
                 } else if (inputField.tagName === 'SELECT') {
                     const selectedOption = inputField.options[inputField.selectedIndex];
                     displayField.textContent = selectedOption ? selectedOption.text : '';
@@ -188,26 +168,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             Object.keys(fields).forEach(field => {
                 const inputField = document.getElementById(`${field}_input`);
                 if (inputField) {
-                    formData[field] = inputField.value;
+                    if (field === 'available_mentor') {
+                        formData[field] = inputField.value === 'true';
+                    } else {
+                        formData[field] = inputField.value;
+                    }
                 }
             });
             
             try {
-                await window.api.put('/mentors/profile', formData);
-                showToast('Mentor profile updated successfully!', 'success');
+                await window.api.put('/users/profile', formData);
+                showToast('Social profile updated successfully!', 'success');
                 
                 // Reload the profile data
                 setTimeout(() => {
-                    loadMentorProfile();
+                    loadProfileData();
                 }, 1000);
                 
             } catch (error) {
-                console.error('Error updating mentor profile:', error);
-                showToast(error.message || 'Error updating mentor profile', 'error');
+                console.error('Error updating profile:', error);
+                showToast(error.message || 'Error updating profile', 'error');
             }
         });
     }
 
     // Load initial data
-    await loadMentorProfile();
+    await loadProfileData();
 });
