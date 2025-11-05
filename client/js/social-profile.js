@@ -12,10 +12,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         // If no userId provided, default to current user (for edit mode)
         if (!userId) {
-            userId = currentUser.user_id.toString();
+            userId = currentUser.user_id;
             isOwnProfile = true;
         } else {
-            isOwnProfile = currentUser.user_id === parseInt(userId);
+            // Parse userId as integer for comparison
+            userId = parseInt(userId);
+            isOwnProfile = currentUser.user_id === userId;
         }
         
         // Immediately hide follow button and message button if viewing own profile
